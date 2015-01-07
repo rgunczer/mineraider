@@ -19,8 +19,13 @@ public class SwapAnimation extends BaseAnimation {
 	private float prevDiff2;
 	
 	private final float animSpeed = 0.3f;
-	
-	public SwapAnimation(GemPosition firstSelectedGem, GemPosition secondSelectedGem, boolean undo) {			
+
+    // ctor
+	public SwapAnimation() {
+
+    }
+
+    public void init(GemPosition firstSelectedGem, GemPosition secondSelectedGem, boolean undo) {
 		this.undo = undo;
 		
 		firstSelectedGem.visible = false;

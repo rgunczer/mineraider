@@ -34,7 +34,6 @@ import com.almagems.mineraider.RockData;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.Match3.State;
 import com.almagems.mineraider.anims.AnimationManager;
-import com.almagems.mineraider.anims.SwapHint;
 import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.MineCart;
 import com.almagems.mineraider.objects.Model;
@@ -53,7 +52,7 @@ public class Level extends Scene {
 		SwipeRight,
 		SwipeUp,
 		SwipeDown
-	};	
+	}
 	
 	private SwipeDir swipeDir = SwipeDir.SwipeNone;
 	
@@ -187,27 +186,27 @@ public class Level extends Scene {
 			if (selectedGem == null) {
 				match3.hints();	
 			} else {
-				if (match3.firstSelectedGem == null) {
+				if (match3.firstSelected == null) {
 					
-					match3.firstSelectedGem = selectedGem; 
+					match3.firstSelected = selectedGem;
 					
-					if (match3.firstSelectedGem != null) {
-						String gemName = match3.getGemTypeString(match3.firstSelectedGem.gemType);
+					if (match3.firstSelected != null) {
+						String gemName = match3.getGemTypeString(match3.firstSelected.gemType);
 						//System.out.println("1st Selected Gem: " + match3.firstSelectedGem.boardX + "," + match3.firstSelectedGem.boardY + " " + match3.firstSelectedGem.gemType + " " + gemName);				
 					} else {
 						//System.out.println("No gem selected");
 					}
 				} else {
-					match3.secondSelectedGem = selectedGem;
+					match3.secondSelected = selectedGem;
 					
-					if (match3.secondSelectedGem != null) {
-						String gemName = match3.getGemTypeString(match3.secondSelectedGem.gemType);
+					if (match3.secondSelected != null) {
+						String gemName = match3.getGemTypeString(match3.secondSelected.gemType);
 						//System.out.println("2nd Selected Gem: " + match3.firstSelectedGem.boardX + "," + match3.firstSelectedGem.boardY + " " + match3.firstSelectedGem.gemType + " " + gemName);
 		
-						if (match3.firstSelectedGem == match3.secondSelectedGem) {
+						if (match3.firstSelected == match3.secondSelected) {
 							//System.out.println("Same Gems are selected");
-							match3.firstSelectedGem = null;
-							match3.secondSelectedGem = null;
+							match3.firstSelected = null;
+							match3.secondSelected = null;
 							return;
 						}
 						match3.handle();
@@ -219,7 +218,7 @@ public class Level extends Scene {
 	
 	@Override
 	public void handleTouchDrag(float normalizedX, float normalizedY) {			
-		if (match3.firstSelectedGem != null) {			
+		if (match3.firstSelected != null) {
 			final float minDiff = 0.15f; 
 			
 			float diffX = Math.abs(touchDownX - normalizedX);
@@ -255,32 +254,32 @@ public class Level extends Scene {
 	@Override
 	public void handleTouchRelease(float normalizedX, float normalizedY) {
 		if (match3.state == State.Idle) {		
-			if (match3.firstSelectedGem != null && swipeDir != SwipeDir.SwipeNone) {
-				int x = match3.firstSelectedGem.boardX;
-				int y = match3.firstSelectedGem.boardY;
+			if (match3.firstSelected != null && swipeDir != SwipeDir.SwipeNone) {
+				int x = match3.firstSelected.boardX;
+				int y = match3.firstSelected.boardY;
 				
 				switch(swipeDir) {
 				case SwipeDown:
 					if ( (y - 1) >= 0 ) {
-						match3.secondSelectedGem = match3.board[x][y-1];
+						match3.secondSelected = match3.board[x][y-1];
 					}
 					break;
 					
 				case SwipeUp:
 					if ( (y + 1) < MAX_BOARD_SIZE) { 
-						match3.secondSelectedGem = match3.board[x][y+1];
+						match3.secondSelected = match3.board[x][y+1];
 					}
 					break;
 					
 				case SwipeLeft:
 					if ( (x - 1) >= 0 ) {
-						match3.secondSelectedGem = match3.board[x-1][y];
+						match3.secondSelected = match3.board[x-1][y];
 					}
 					break;
 					
 				case SwipeRight:
 					if ( (x + 1) < MAX_BOARD_SIZE) { 
-						match3.secondSelectedGem = match3.board[x+1][y];
+						match3.secondSelected = match3.board[x+1][y];
 					}
 					break;
 					
@@ -289,7 +288,7 @@ public class Level extends Scene {
 					break;
 				}
 				
-				if (match3.firstSelectedGem != null && match3.secondSelectedGem != null) {
+				if (match3.firstSelected != null && match3.secondSelected != null) {
 					match3.handle();
 				}
 			}
@@ -491,7 +490,7 @@ public class Level extends Scene {
 		glDisable(GL_DEPTH_TEST);
 		*/
 		visuals.pointLightShader.setTexture(visuals.textureGems);
-		Body body = null;
+		Body body;
 		int size = physics.boxes.size();
 		for(int i = 0; i < size; ++i) {
 			body = physics.boxes.get(i);
@@ -521,7 +520,7 @@ public class Level extends Scene {
 	private void drawPhysicsGemsFixtures() {		
 		EdgeDrawer edgeDrawer = new EdgeDrawer(100);
 		int size = physics.boxes.size();
-		Body body = null;
+		Body body;
 		for(int i = 0; i < size; ++i) {
 			body = physics.boxes.get(i);
 			Vec2 pos = body.getPosition();
@@ -780,13 +779,13 @@ public class Level extends Scene {
 	}	
 	
 	void drawSelectionMarker() {				
-		if (match3.firstSelectedGem != null) {						
+		if (match3.firstSelected != null) {
 			elapsed += 0.3f;
 			float d = (((float)Math.sin(elapsed) + 1f) / 2f) * 0.075f;
 			//System.out.println("d is: " + d);
 					
 			visuals.dirLightShader.setTexture(visuals.textureGems);
-			ObjectPosition op = new ObjectPosition(match3.firstSelectedGem.op);			
+			ObjectPosition op = new ObjectPosition(match3.firstSelected.op);
 			op.tz -= 0.1f;
 			op.setScale(1.0f+d, 1.0f+d, 1.0f);
 
@@ -807,7 +806,7 @@ public class Level extends Scene {
 		
 		visuals.pointLightShader.setTexture(visuals.textureGems);
 		
-		float scale = 0f;
+		float scale;
 		for(int y = 0; y < yMax; ++y) {
 			for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
 				GemPosition gp = match3.board[x][y];
@@ -924,7 +923,7 @@ public class Level extends Scene {
 //		drawRock(visuals.rock7, -10.0f, y, z, degree);		
 //		drawRock(visuals.rock8, -13.5f, y, z, degree);
 	
-		RockData rock = null;
+		RockData rock;
 		int size = rocks.size();
 		for (int i = 0; i < size; ++i) {
 			rock = rocks.get(i);

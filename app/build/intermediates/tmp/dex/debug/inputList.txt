@@ -1,0 +1,3 @@
+/Users/rgunczer/AndroidStudioProjects/mineraider/app/build/intermediates/classes/debug
+/Users/rgunczer/AndroidStudioProjects/mineraider/app/build/intermediates/pre-dexed/debug/jbox2d-library-2.2.1.1-d460ddeea667d58614983e75ec4f70a5573a9c0c.jar
+/Users/rgunczer/AndroidStudioProjects/mineraider/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-8b8508ec52b500375c0a90839a695e9980f16d39.jar

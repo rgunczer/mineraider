@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/rgunczer/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/Users/rgunczer/AndroidStudioProjects/mineraider/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-8b8508ec52b500375c0a90839a695e9980f16d39.jar" />
+    </item>
+    <item
+        jar="/Users/rgunczer/AndroidStudioProjects/mineraider/app/libs/jbox2d-library-2.2.1.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4f21646d52bb51b56cbc3359c0f8fb223098ee04">
+        <dex dex="/Users/rgunczer/AndroidStudioProjects/mineraider/app/build/intermediates/pre-dexed/debug/jbox2d-library-2.2.1.1-d460ddeea667d58614983e75ec4f70a5573a9c0c.jar" />
+    </item>
+
+</items>

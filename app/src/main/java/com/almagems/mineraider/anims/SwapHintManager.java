@@ -29,7 +29,6 @@ public class SwapHintManager {
     public boolean isEmpty() {
         return live.size() == 0;
     }
-
     public int count() {
         return live.size();
     }

@@ -78,12 +78,7 @@ public class Level extends Scene {
 		
 		animManager = new AnimationManager();
 		match3 = new Match3(animManager);
-		
-		for(int i = 0; i < MAX_GEM_TYPES; ++i) {
-			match3.registerGemTypeName(i, visuals.gems[i].name);
-			//System.out.println("number of vertices: " + visuals.gems[i].numVertices);
-		}		
-		
+
 		initBoardGeometry();		
 				
 		match3.placeInitialGems();
@@ -173,7 +168,6 @@ public class Level extends Scene {
 	@Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
 		swipeDir = SwipeDir.SwipeNone;
-		
 		touchDownX = normalizedX;
 		touchDownY = normalizedY;
 				
@@ -182,35 +176,20 @@ public class Level extends Scene {
 			GemPosition selectedGem = getSelectedGemFromRay(ray);
 			
 			doEditorStuff(selectedGem);
-								
+
 			if (selectedGem == null) {
-				match3.hints();	
+				match3.showOrHideHints();
 			} else {
 				if (match3.firstSelected == null) {
-					
 					match3.firstSelected = selectedGem;
-					
-					if (match3.firstSelected != null) {
-						String gemName = match3.getGemTypeString(match3.firstSelected.gemType);
-						//System.out.println("1st Selected Gem: " + match3.firstSelectedGem.boardX + "," + match3.firstSelectedGem.boardY + " " + match3.firstSelectedGem.gemType + " " + gemName);				
-					} else {
-						//System.out.println("No gem selected");
-					}
 				} else {
 					match3.secondSelected = selectedGem;
-					
-					if (match3.secondSelected != null) {
-						String gemName = match3.getGemTypeString(match3.secondSelected.gemType);
-						//System.out.println("2nd Selected Gem: " + match3.firstSelectedGem.boardX + "," + match3.firstSelectedGem.boardY + " " + match3.firstSelectedGem.gemType + " " + gemName);
-		
-						if (match3.firstSelected == match3.secondSelected) {
-							//System.out.println("Same Gems are selected");
-							match3.firstSelected = null;
-							match3.secondSelected = null;
-							return;
-						}
-						match3.handle();
-					}
+                    if (match3.firstSelected == match3.secondSelected) { // Same Gems are selected
+                        match3.firstSelected = null;
+                        match3.secondSelected = null;
+                    } else {
+                        match3.handle();
+                    }
 				}
 			}
 		}		
@@ -288,13 +267,13 @@ public class Level extends Scene {
 					break;
 				}
 				
-				if (match3.firstSelected != null && match3.secondSelected != null) {
+				if (match3.secondSelected != null) {
 					match3.handle();
 				}
 			}
 		}
-	}	
-		
+	}
+
 	private void doEditorStuff(GemPosition selectedGem) {		
 		if (selectedGem == null) {
 			return;
@@ -411,7 +390,7 @@ public class Level extends Scene {
 	}
 		
 	private void initBoardGeometry() {
-		float posX = 0f;
+		float posX;
 		float posY = -2f;
 		
 		if (Constants.DRAW_BUFFER_BOARD) {

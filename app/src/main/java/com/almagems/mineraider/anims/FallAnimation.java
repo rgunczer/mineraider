@@ -9,20 +9,27 @@ import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.objects.Model;
 import com.almagems.mineraider.util.MyColor;
 
-public class FallAnimation extends BaseAnimation {
+public class FallAnimation {
+    public static Visuals visuals;
+
 	public GemPosition animGemFrom;
 	public GemPosition animGemTo;
-	
+
+    public boolean done;
+
 	//private final float easing = 0.1f;
 	//private final float spring = 0.03f;
 	private float vy = 0.0f;
 	//private final float friction = 0.9f;
 	private final float g = 0.065f;
 	private int bounceCounter = 0;
-	
+
+    // ctor
 	public FallAnimation(GemPosition from, GemPosition to) {
 		//System.out.println("FallAnimation ctor... from (" + from.boardX + "," + from.boardY + "), to (" + to.boardX + "," + to.boardY + ")");		
-		this.animGemFrom = new GemPosition(from);
+		this.done = false;
+
+        this.animGemFrom = new GemPosition(from);
 		this.animGemTo = new GemPosition(to);
 		
 		this.animGemFrom.gemType = from.gemType;
@@ -34,13 +41,8 @@ public class FallAnimation extends BaseAnimation {
 		vy = 0.1f;
 		bounceCounter = 0;
 	}	
-	
-	@Override
-	public void prepare() {
-	}
-	
-	@Override
-	public void update() {		
+
+	public void update() {
 		if (!done) {				
 			//System.out.println("FallAnimation update... from(" + animGemFrom.boardX + "," + animGemFrom.boardY + ") to(" + animGemTo.boardX + "," + animGemTo.boardY + ")");
 			vy += g;
@@ -58,15 +60,11 @@ public class FallAnimation extends BaseAnimation {
 		}
 	}
 
-	@Override
 	public void draw() {
-		
 		//MyColor color = new MyColor(0f, 0f, 0f);
-		Visuals visuals = Visuals.getInstance();		
+
 		Model gem = visuals.gems[animGemFrom.gemType];
-		visuals.pointLightShader.useProgram();
-		visuals.pointLightShader.setTexture(visuals.textureGems);
-/*		
+/*
 		animGemFrom.op.setScale(1.1f, 1.1f, 1.1f);		
 		visuals.calcMatricesForObject(animGemFrom.op);
 		

@@ -1,5 +1,6 @@
 uniform mat4 u_MvpMatrix;
 uniform float u_Time;
+uniform float u_PointSize;
 
 attribute vec3 a_Position;
 attribute vec3 a_Color;
@@ -17,5 +18,5 @@ void main()
 	vec3 currentPosition = a_Position + (a_DirectionVector * v_ElapsedTime);
 	currentPosition.y += gravityFactor;
 	gl_Position = u_MvpMatrix * vec4(currentPosition, 1.0);
-	gl_PointSize = 90.0; //30.0 + 90 * (1.0 - v_ElapsedTime * 0.5); 
+	gl_PointSize = u_PointSize; //30.0 + 90 * (1.0 - v_ElapsedTime * 0.5);
 }

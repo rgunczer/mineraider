@@ -23,9 +23,11 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
 import android.widget.Toast;
 
+import com.almagems.mineraider.anims.FallGroupAnimation;
 import com.almagems.mineraider.scenes.Level;
 import com.almagems.mineraider.scenes.Menu;
 import com.almagems.mineraider.scenes.Scene;
+import com.almagems.mineraider.shaders.ParticleShader;
 
 
 public class MineRaiderRenderer implements Renderer { 
@@ -84,7 +86,7 @@ public class MineRaiderRenderer implements Renderer {
 				
 		visuals = Visuals.getInstance();
 		visuals.init(context);
-		
+
 		try {		
 			visuals.loadAssets();
 		} catch (final Exception ex) {
@@ -116,6 +118,8 @@ public class MineRaiderRenderer implements Renderer {
 		h = height;
 		glViewport(0, 0, width, height);
 		current.surfaceChanged(width, height);
+
+        ParticleShader.pointSize = w * 0.1f;
 	}
 
 	@Override

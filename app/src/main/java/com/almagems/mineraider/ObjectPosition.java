@@ -20,21 +20,25 @@ public class ObjectPosition {
 	
 	// cctor
 	public ObjectPosition(ObjectPosition another) {
-		// translate
-		this.tx = another.tx;
-		this.ty = another.ty;
-		this.tz = another.tz;
-
-		// rotate
-		this.rx = another.rx;
-		this.ry = another.ry;
-		this.rz = another.rz;
-		
-		// scale
-		this.sx = another.sx;
-		this.sy = another.sy;
-		this.sz = another.sz;	
+        init(another);
 	}
+
+    public void init(ObjectPosition another) {
+        // translate
+        this.tx = another.tx;
+        this.ty = another.ty;
+        this.tz = another.tz;
+
+        // rotate
+        this.rx = another.rx;
+        this.ry = another.ry;
+        this.rz = another.rz;
+
+        // scale
+        this.sx = another.sx;
+        this.sy = another.sy;
+        this.sz = another.sz;
+    }
 	
 	public void init(float tx, float ty, float tz,
 					 float sx, float sy, float sz) {

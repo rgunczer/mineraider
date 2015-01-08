@@ -53,7 +53,8 @@ public class Menu extends Scene {
 			};		
 		
 		vertexArrayBg = new VertexArray(vertexDataBg);
-		
+
+        float scale = width / 1080f;
 		float tx0, tx1, ty0, ty1;
 		float x, y;
 		
@@ -63,9 +64,9 @@ public class Menu extends Scene {
 		tx1 = (2.0f + 350.0f) / tw;
 		ty0 = ((th - 2.0f) - 286f) / th;
 		ty1 = ((th - 2.0f)) / th; 
-				
-		x = (350f / width);
-		y = (286f / width);
+
+		x = (350f / width) * scale;
+		y = (286f / width) * scale;
 		float[] vertexDataTitle = {
 				// x, y, z, 	s, t,			
 				-x, -y, 0.0f, 	tx0, ty0,
@@ -86,8 +87,8 @@ public class Menu extends Scene {
 		ty0 = ((th - 415f) - 125f)  / th;
 		ty1 = ((th - 415f)) / th; 
 				
-		x = (241f / width);
-		y = (125f / width);
+		x = (241f / width) * scale;
+		y = (125f / width) * scale;
 		float[] vertexDataAbout = {
 				// x, y, z, 	s, t,			
 				-x, -y, 0.0f, 	tx0, ty0,
@@ -109,8 +110,8 @@ public class Menu extends Scene {
 		ty0 = ((th - 290f) - 123f) / th;
 		ty1 = ((th - 290f)) / th; 
 				
-		x = (291f / width);
-		y = (123f / width);
+		x = (291f / width) * scale;
+		y = (123f / width) * scale;
 		float[] vertexDataOptions = {
 				// x, y, z, 	s, t,			
 				-x, -y, 0.0f, 	tx0, ty0,
@@ -133,8 +134,8 @@ public class Menu extends Scene {
 		ty0 = ((th - 542f) - 121f ) / th; // 0f
 		ty1 = ((th - 542f) ) / th; 	// 1f
 		
-		x = (214f / width);
-		y = (121f / width);
+		x = (214f / width) * scale;
+		y = (121f / width) * scale;
 		float[] vertexDataPlay = {
 				// x, y, z, 	s, t,			
 				-x, -y, 0.0f, 	tx0, ty0,

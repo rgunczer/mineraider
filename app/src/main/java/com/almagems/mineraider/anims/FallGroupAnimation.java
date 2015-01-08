@@ -9,19 +9,42 @@ import java.util.ArrayList;
 public class FallGroupAnimation extends BaseAnimation {
 
     private static Visuals visuals;
+    private ArrayList<FallAnimation> pool = new ArrayList<FallAnimation>();
 	private ArrayList<FallAnimation> list = new ArrayList<FallAnimation>();
 
 	public FallGroupAnimation() {
 		visuals = Visuals.getInstance();
         FallAnimation.visuals = visuals;
-        done = false;
+        isDone = false;
 	}
 
     public void add(GemPosition from, GemPosition to) {
-        list.add( new FallAnimation(from, to) );
+        FallAnimation fall = getFromPool();
+        fall.init(from, to);
+        list.add( fall ); // new FallAnimation(from, to)
     }
 
+    private FallAnimation getFromPool() {
+        FallAnimation fall;
+        int size = pool.size();
+        if (size > 0) {
+            fall = pool.get( size - 1 );
+            pool.remove( size - 1 );
+        } else {
+            fall = new FallAnimation();
+        }
+        return fall;
+    }
+
+    @Override
     public void reset() {
+        isDone = false;
+        FallAnimation fall;
+        int size = list.size();
+        for (int i = 0; i < size; ++i) {
+            fall = list.get(i);
+            pool.add(fall);
+        }
         list.clear();
     }
 
@@ -43,15 +66,16 @@ public class FallGroupAnimation extends BaseAnimation {
 	
 	@Override
 	public void update() {
-		done = true;
-		FallAnimation item;
+		isDone = true;
+		FallAnimation fall;
 		int size = list.size();
 		for (int i = 0; i < size; ++i) {
-			item = list.get(i);
-			item.update();
+			fall = list.get(i);
+			fall.update();
 			
-			if (!item.done)
-				done = false;
+			if (!fall.isDone) {
+                isDone = false;
+            }
 		}
 	}
 
@@ -60,11 +84,11 @@ public class FallGroupAnimation extends BaseAnimation {
         visuals.pointLightShader.useProgram();
         visuals.pointLightShader.setTexture(visuals.textureGems);
 
+        FallAnimation fall;
         int size = list.size();
-		FallAnimation item;
 		for (int i = 0; i < size; ++i) {
-			item = list.get(i);
-			item.draw();
+			fall = list.get(i);
+			fall.draw();
 		}
 	}
 }

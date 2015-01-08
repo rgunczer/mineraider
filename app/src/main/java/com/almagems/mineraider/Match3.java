@@ -12,14 +12,9 @@ import com.almagems.mineraider.anims.SwapHintManager;
 import com.almagems.mineraider.util.MyUtils;
 
 public class Match3 {
-	
-	public enum State {
-		Idle,
-		WaitForAnimToComplete
-	}
-	
-	public State state;
-    private int[] gemTypesCounter = new int[MAX_GEM_TYPES];
+
+	public boolean isAnimating;
+    private int[] gemTypesArray = new int[MAX_GEM_TYPES];
 	public GemPosition[][] board = new GemPosition[MAX_BOARD_SIZE][MAX_BOARD_SIZE*2];
     private GemPosition[][] tempBoard = new GemPosition[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
 	public GemPosition firstSelected;
@@ -27,14 +22,19 @@ public class Match3 {
     public final SwapHintManager swapHintManager;
 	private AnimationManager animManager;
     private final SwapAnimation swapAnim;
+    private final FallGroupAnimation pooledFallGroupAnim;
+    private final PopAnimation pooledPopAnimation;
+    public final ScoreCounter scoreCounter;
 
     // ctor
-	public Match3(AnimationManager animManager) {
-
-        state = State.Idle;
+	public Match3(AnimationManager animManager, ScoreCounter scoreCounter) {
+        isAnimating = true;
         this.animManager = animManager;
+        this.scoreCounter = scoreCounter;
         swapHintManager = new SwapHintManager();
         swapAnim = new SwapAnimation();
+        pooledFallGroupAnim = new FallGroupAnimation();
+        pooledPopAnimation = new PopAnimation();
 
         for (int y = 0; y < MAX_BOARD_SIZE * 2; ++y) {
             for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
@@ -50,31 +50,31 @@ public class Match3 {
     }
 
 	private void placeTestGems() {		
-		board[0][2].gemType = GEM_TYPE_2;
-		board[1][2].gemType = GEM_TYPE_1;
-		board[2][2].gemType = GEM_TYPE_1;
+		board[0][2].type = GEM_TYPE_2;
+		board[1][2].type = GEM_TYPE_1;
+		board[2][2].type = GEM_TYPE_1;
 		
-		board[0][1].gemType = GEM_TYPE_1;
+		board[0][1].type = GEM_TYPE_1;
 				
-		board[0][0].gemType = GEM_TYPE_2;
+		board[0][0].type = GEM_TYPE_2;
 				
-		board[0][3].gemType = GEM_TYPE_2;
-		board[1][3].gemType = GEM_TYPE_3;
-		board[2][3].gemType = GEM_TYPE_3;
+		board[0][3].type = GEM_TYPE_2;
+		board[1][3].type = GEM_TYPE_3;
+		board[2][3].type = GEM_TYPE_3;
 		
-		board[3][2].gemType = GEM_TYPE_3;
+		board[3][2].type = GEM_TYPE_3;
 				
-		board[0][5].gemType = GEM_TYPE_2;
-		board[1][5].gemType = GEM_TYPE_1;
-		board[2][5].gemType = GEM_TYPE_1;
+		board[0][5].type = GEM_TYPE_2;
+		board[1][5].type = GEM_TYPE_1;
+		board[2][5].type = GEM_TYPE_1;
 		
-		board[3][4].gemType = GEM_TYPE_1;
+		board[3][4].type = GEM_TYPE_1;
 	}
 		
 	private void emptyBoard() {
 		for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
 			for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
-				board[x][y].gemType = GEM_TYPE_NONE;
+				board[x][y].type = GEM_TYPE_NONE;
 			}
 		}
 	}
@@ -90,9 +90,9 @@ public class Match3 {
 			
 			for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
 				for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
-					if (board[x][y].gemType == GEM_TYPE_NONE) {
+					if (board[x][y].type == GEM_TYPE_NONE) {
 						do {
-							board[x][y].gemType = getRandomGemType();
+							board[x][y].type = randomGemType();
 						} while ( isMatch(x, y) );
 					}				
 				}
@@ -103,7 +103,7 @@ public class Match3 {
 		} while (hintCount == 0);		
 	}
 	
-	private int getRandomGemType() {
+	private int randomGemType() {
 		return MyUtils.randInt(0, MAX_GEM_TYPES - 1);
 	}
 	
@@ -112,17 +112,12 @@ public class Match3 {
 		if (gp == null)
 			return false;
 				
-		if (x < 0 || x > MAX_BOARD_SIZE - 1) {
-			//System.out.println("out of board X axis...");
-			return false;
-		}
-		
-		if (y < 0 || y > MAX_BOARD_SIZE - 1) {
-			//System.out.println("out of board Y axis...");
+		if ( (x < 0 || x > MAX_BOARD_SIZE - 1) || (y < 0 || y > MAX_BOARD_SIZE - 1) ) {
+			//System.out.println("out of board...");
 			return false;
 		}
 
-        return board[x][y].gemType != GEM_TYPE_NONE && board[x][y].gemType == gp.gemType;
+        return board[x][y].type != GEM_TYPE_NONE && board[x][y].type == gp.type;
     }
 	
 	private int rowMatchCount(int x, int y) {
@@ -185,13 +180,10 @@ public class Match3 {
 	}
 	
 	private boolean isMatch(int x, int y) {
-		//System.out.println("Match3 isMatch (" + x + "," + y + ")...");
 		return rowMatchCount(x, y) > 2 || colMatchCount(x, y) > 2;
 	}
 	
-	private void removeGems(PopAnimation anim, int x, int y) {
-		//System.out.println("Match3 removeGems from position (" + x + "," + y + ")");
-
+	private void removeGems(PopAnimation anim, int x, int y, boolean combo) {
 		GemPosition current = board[x][y];
 		int step;
 		
@@ -222,12 +214,20 @@ public class Match3 {
 				++step;
 			}
 		}
+
+        scoreCounter.addScore(anim.count(), combo);
+
+        if (!combo) {
+            if (anim.count() > 3) {
+                scoreCounter.addBonusForMoreThan3Match();
+            }
+        }
 	}
 		
 	private void fillBufferBoard() {
 		for(int y = MAX_BOARD_SIZE; y < MAX_BOARD_SIZE * 2; ++y) {
 			for(int x = 0; x < MAX_BOARD_SIZE; ++x) {				
-				board[x][y].gemType = getRandomGemType();
+				board[x][y].type = randomGemType();
 				board[x][y].visible = true;				
 			}
 		}
@@ -245,7 +245,7 @@ public class Match3 {
     private void saveBoardToTemp() {
         for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
             for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
-                tempBoard[x][y].gemType = board[x][y].gemType;
+                tempBoard[x][y].type = board[x][y].type;
                 tempBoard[x][y].visible = board[x][y].visible;
             }
         }
@@ -255,7 +255,7 @@ public class Match3 {
         for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
             for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
                 board[x][y].visible = tempBoard[x][y].visible;
-                board[x][y].gemType = tempBoard[x][y].gemType;
+                board[x][y].type = tempBoard[x][y].type;
             }
         }
     }
@@ -263,13 +263,13 @@ public class Match3 {
 	public void countGemTypesOnBoard() {
 		//System.out.println("Match countGemTypesOnBoard...");
 		for(int i = 0; i < MAX_GEM_TYPES; ++i) {
-            gemTypesCounter[i] = 0;
+            gemTypesArray[i] = 0;
         }
 		
 		for (int x = 0; x < MAX_BOARD_SIZE; ++x) {			
 			for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
-				if (board[x][y].gemType != -1) {
-					++gemTypesCounter[ board[x][y].gemType ];
+				if (board[x][y].type != -1) {
+					++gemTypesArray[ board[x][y].type ];
 				}
 			}
 		}
@@ -297,7 +297,7 @@ public class Match3 {
 			for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
 				gap = 0;
 				for(int y = 0; y < MAX_BOARD_SIZE * 2; ++y) {
-					if (board[x][y].gemType == GEM_TYPE_NONE) {
+					if (board[x][y].type == GEM_TYPE_NONE) {
 						++gap;
 					} else { 
 						if ( (gap > 0) &&  (y - gap < MAX_BOARD_SIZE) ) {
@@ -315,7 +315,7 @@ public class Match3 {
 				fromY = fallAnim.animGemFrom.boardY;
 				toY = fallAnim.animGemTo.boardY;
 				
-				board[boardX][toY].gemType = board[boardX][fromY].gemType;
+				board[boardX][toY].type = board[boardX][fromY].type;
 			}
 			
 			hintCount = countHints();
@@ -358,9 +358,9 @@ public class Match3 {
 	}
 	
 	private void swapGems(GemPosition first, GemPosition second) {
-		int temp = first.gemType;
-		first.gemType = second.gemType;
-		second.gemType = temp;
+		int temp = first.type;
+		first.type = second.type;
+		second.type = temp;
 	}
 	
 	public void showOrHideHints() {
@@ -407,39 +407,34 @@ public class Match3 {
 	
 	private void addAnimToManager(BaseAnimation anim) {
 		animManager.add(anim);
-		state = State.WaitForAnimToComplete;
+		isAnimating = true;
 	}
 	
 	public void update() {
-		//System.out.println("match3 state is: " + state);
-		animManager.update();		
-		
-		if (state == State.WaitForAnimToComplete) {
-			if (animManager.isDone()) {
+		if (isAnimating) {
+            animManager.update();
+            if (animManager.isDone()) {
 				handleAnimCompleted();
 			}
 		}
 	}
 	
 	private void handleAnimCompleted() {
-		BaseAnimation finishedAnim = animManager.finishedAnim;
-		state = State.Idle;
+		BaseAnimation finishedAnim = animManager.finished;
+		isAnimating = false;
 		
 		if (finishedAnim instanceof SwapAnimation) {
 			swapAnimFinished((SwapAnimation)finishedAnim);
-            // TODO: return finished anim to the pool
 		}
 		
 		if (finishedAnim instanceof FallGroupAnimation) {
 			fallGroupAnimFinished((FallGroupAnimation)finishedAnim);
-            // TODO: return finished anim to the pool
 		}
 		
 		if (finishedAnim instanceof PopAnimation) {
 			popAnimFinished((PopAnimation)finishedAnim);
-            // TODO: return finished anim to the pool
 		}
-		animManager.finishedAnim = null;
+		animManager.finished = null;
 	}
 	
 	private void swapAnimFinished(SwapAnimation swapAnim) {
@@ -462,12 +457,16 @@ public class Match3 {
 				PopAnimation anim = getPopAnimation();
 				
 				if (first) {
-					removeGems(anim, secondSelected.boardX, secondSelected.boardY);
+					removeGems(anim, secondSelected.boardX, secondSelected.boardY, false);
 				}
 				
 				if (second) {
-					removeGems(anim, firstSelected.boardX, firstSelected.boardY);
+					removeGems(anim, firstSelected.boardX, firstSelected.boardY, false);
 				}
+
+                if (first && second) {
+                    scoreCounter.addBonusForPerfectSwap();
+                }
 				
 				firstSelected = null;
 				secondSelected = null;
@@ -491,9 +490,9 @@ public class Match3 {
 			fromY = fallAnim.animGemFrom.boardY;
 			toY = fallAnim.animGemTo.boardY;
 			
-			board[boardX][toY].gemType = board[boardX][fromY].gemType;
+			board[boardX][toY].type = board[boardX][fromY].type;
 			board[boardX][toY].visible = true;
-			board[boardX][fromY].gemType = GEM_TYPE_NONE;
+			board[boardX][fromY].type = GEM_TYPE_NONE;
 		}
 
 		PopAnimation anim = getPopAnimation();
@@ -501,61 +500,56 @@ public class Match3 {
 		for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
 			for(int x = 0; x < MAX_BOARD_SIZE; ++x) {
 				if (isMatch(x, y)) {
-					removeGems(anim, x, y);
+					removeGems(anim, x, y, true);
 				}
 			}
 		}
 		
-		if (!anim.list.isEmpty()) {
+		if (!anim.isEmpty()) {
 			//System.out.println("COMBO(S)!!!");
 			addAnimToManager(anim);
-		}		
+		}
 	}
 	
 	private void popAnimFinished(PopAnimation popAnim) {
         GemPosition gp;
-        int size = popAnim.list.size();
+        int size = popAnim.count();
 		for(int i = 0; i < size; ++i) {
-            gp = popAnim.list.get(i);
-			board[gp.boardX][gp.boardY].gemType = GEM_TYPE_NONE;
+            gp = popAnim.getAt(i);
+			board[gp.boardX][gp.boardY].type = GEM_TYPE_NONE;
 		}
 		
 		FallGroupAnimation anim = getFallGroupAnimation();
+        anim.reset();
 		fallGems(anim);
 		
 		if (!anim.isEmpty()) {
-			addAnimToManager(anim);
-		}
+            addAnimToManager(anim);
+        }
 	}
 	
 	public void createInitialFallAnim() {
 		FallGroupAnimation anim = getFallGroupAnimation();
+        anim.reset();
 		
 		for(int y = 0; y < MAX_BOARD_SIZE*2; ++y) {
 			for(int x = 0; x < MAX_BOARD_SIZE; ++x) {
 				if (y < MAX_BOARD_SIZE) {
-					board[x][y+MAX_BOARD_SIZE].gemType = board[x][y].gemType;
+					board[x][y+MAX_BOARD_SIZE].type = board[x][y].type;
                     anim.add(/*from*/board[x][y + MAX_BOARD_SIZE], /*to*/board[x][y]);
 				}
 				board[x][y].visible = false;
 			}
-		}				
+		}
 		addAnimToManager(anim);
 	}
 
     private PopAnimation getPopAnimation() {
-        return new PopAnimation();
+        pooledPopAnimation.reset();
+        return pooledPopAnimation;
     }
 
     private FallGroupAnimation getFallGroupAnimation() {
-        return new FallGroupAnimation();
-    }
-
-    private void returnPopAnimation() {
-
-    }
-
-    private void returnFallGroupAnimation() {
-
+        return pooledFallGroupAnim;
     }
 }

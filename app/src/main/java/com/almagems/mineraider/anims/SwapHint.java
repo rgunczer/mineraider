@@ -4,31 +4,32 @@ import com.almagems.mineraider.GemPosition;
 import com.almagems.mineraider.ObjectPosition;
 
 public class SwapHint {
-
 	public final ObjectPosition op;
 	
 	private float animStep = 0.0f;
 	private float centerX = 0.0f;
 	private float centerY = 0.0f;
-	private float limit = 0.25f;
-	
+    private boolean isHorizontal;
+    private static float limit = 0.25f;
+
+    // ctor
 	public SwapHint() {
         op = new ObjectPosition();
     }
 
     public void init(GemPosition first, GemPosition second) {
-		float x = 0.0f;
-		float y = 0.0f;
-		float z = -1.5f;
+		float x;
+		float y;
+		float z = first.op.tz + 0.6f;
 		float r = 0.0f;
-		
+		float diff;
 		animStep = 0.025f;
-		
+
 		// calc position
 		if (first.boardX == second.boardX) { // same col
+            isHorizontal = false;
 			x = first.op.tx;
-			y = 0.0f;
-			float diff = Math.abs(first.op.ty - second.op.ty);
+			diff = Math.abs(first.op.ty - second.op.ty);
 			
 			if (first.boardY > second.boardY) {
 				y = first.op.ty - (diff / 2.0f);
@@ -36,29 +37,28 @@ public class SwapHint {
 				y = first.op.ty + (diff / 2.0f);
 			}
 			r = 90.0f;			
-		} else if (first.boardY == second.boardY) { // same row
+		} else { //if (first.boardY == second.boardY) { // same row
+            isHorizontal = true;
 			y = first.op.ty;
-			float diff = Math.abs(first.op.tx - second.op.tx);
+			diff = Math.abs(first.op.tx - second.op.tx);
 			
 			if (first.boardX > second.boardX) {
 				x = first.op.tx - (diff / 2.0f);
 			} else {
-				x = first.op.tx + (diff / 2.0f);
+                x = first.op.tx + (diff / 2.0f);
 			}			
-		} else {
-			//System.out.println("Could not be hint here!");
 		}
 	
 		op.setPosition(x, y, z);
-		op.setScale(1.2f, 1.2f, 1.2f);
+		op.setScale(1.2f, 1.2f, 1.0f);
 		op.setRot(0f, 0f, r);
 		
 		centerX = op.tx;
 		centerY = op.ty;
 	}
 
-	public void update() {	
-		if (op.rz == 0.0f) {
+	public void update() {
+        if (isHorizontal) {
 			op.tx += animStep;
 			
 			if (op.tx > centerX + limit) {
@@ -66,9 +66,7 @@ public class SwapHint {
 			} else if (op.tx < centerX - limit) {
 				animStep *= -1.0f;
 			}
-		}
-		
-		if (op.rz == 90.0f) {
+		} else {
 			op.ty += animStep;
 			
 			if (op.ty > centerY + limit) {
@@ -78,16 +76,4 @@ public class SwapHint {
 			}
 		}
 	}
-	
-//	@Override
-//	public void draw() {
-//		Visuals visuals = Visuals.getInstance();
-//		visuals.calcMatricesForObject(_op);
-//		visuals.dirLightShader.useProgram();
-//		Model gem = visuals.hintMarker;
-//		visuals.dirLightShader.setTexture(visuals.textureHintArrow);
-//		visuals.dirLightShader.setUniforms(gem.color, visuals.lightColor, visuals.lightNorm);
-//		gem.bindData(visuals.dirLightShader);
-//		gem.draw();
-//	}
 }

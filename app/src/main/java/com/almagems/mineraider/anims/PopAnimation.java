@@ -16,35 +16,79 @@ public class PopAnimation extends BaseAnimation {
 	public enum State {
 		Pop,
 		Fall
-	};
-	
-	public ArrayList<GemPosition> list = new ArrayList<GemPosition>();
+	}
+
+    public static Physics physics;
+
+    private ArrayList<GemPosition> pool = new ArrayList<GemPosition>();
+	private ArrayList<GemPosition> list = new ArrayList<GemPosition>();
 	public State state = State.Pop;
 		
 	// ctor
 	public PopAnimation() {
 	}
-	
-	public void add(GemPosition item) {						
-		for (GemPosition gp : list) {
-			if (gp.boardX == item.boardX && gp.boardY == item.boardY)
-				return;
-		}		
+
+    @Override
+    public void reset() {
+        isDone = false;
+        state = State.Pop;
+
+        int size = list.size();
+        for(int i = 0; i < size; ++i) {
+            pool.add( list.get(i) );
+        }
+        list.clear();
+    }
+
+    public boolean isEmpty() {
+        return (list.size() == 0);
+    }
+
+    public int count() {
+        return list.size();
+    }
+
+    public GemPosition getAt(int index) {
+        return list.get(index);
+    }
+
+    private GemPosition getFromPool() {
+        GemPosition gp;
+        int size = pool.size();
+        if (size > 0) {
+            gp = pool.get( size - 1 );
+            pool.remove( size - 1 );
+        } else {
+            gp = new GemPosition();
+        }
+        return gp;
+    }
+
+	public void add(GemPosition item) {
+        GemPosition gp;
+        int size = list.size();
+		for (int i = 0; i < size; ++i) {
+            gp = list.get(i);
+			if (gp.boardX == item.boardX && gp.boardY == item.boardY) {
+                return;
+            }
+		}
 		item.visible = false;
-		GemPosition gp = new GemPosition(item);
+		gp = getFromPool(); //new GemPosition(item);
+        gp.init(item);
 		list.add(gp);
 	}
 
 	private void addPhysicsEntity(float x, float y, int gemType) {
-		Physics physics = Physics.getInstance();
+        System.out.println("addPhysicsEntity for gemType: " + gemType);
 		Random rand = new Random();
 		float d = Constants.GEM_FRAGMENT_SIZE;
-		float x1 = x + (rand.nextFloat() - 0.5f);
-		float x2 = x + (rand.nextFloat() - 0.5f);
-		float x3 = x + (rand.nextFloat() - 0.5f);
-		float y1 = y + (rand.nextFloat() - 0.5f);
-		float y2 = y + (rand.nextFloat() - 0.5f);
-		float y3 = y + (rand.nextFloat() - 0.5f);
+		float x1 = x + (rand.nextFloat() - d);
+		float x2 = x + (rand.nextFloat() - d);
+		float x3 = x + (rand.nextFloat() - d);
+		float y1 = y + (rand.nextFloat() - d);
+		float y2 = y + (rand.nextFloat() - d);
+		float y3 = y + (rand.nextFloat() - d);
 		
 		switch(gemType) {
 		case GEM_TYPE_0:
@@ -95,7 +139,7 @@ public class PopAnimation extends BaseAnimation {
 	public void prepare() {
 		ParticleManager particleManager = ParticleManager.getInstance();		
 		for(GemPosition item : list) {
-			particleManager.addParticleEmitterAt(item.op.tx, item.op.ty, item.gemType);
+			particleManager.addParticleEmitterAt(item.op.tx, item.op.ty, item.type);
 		}
 	}
 	
@@ -119,9 +163,9 @@ public class PopAnimation extends BaseAnimation {
 			
 		case Fall:							
 			for(GemPosition item : list) {
-				addPhysicsEntity(item.op.tx, item.op.ty, item.gemType);																				
+				addPhysicsEntity(item.op.tx, item.op.ty, item.type);
 			}
-			done = true;
+			isDone = true;
 			break;
 		}
 	}

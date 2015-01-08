@@ -1,13 +1,8 @@
 package com.almagems.mineraider.anims;
 
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
-
 import com.almagems.mineraider.GemPosition;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.objects.Model;
-import com.almagems.mineraider.util.MyColor;
 
 public class FallAnimation {
     public static Visuals visuals;
@@ -15,7 +10,7 @@ public class FallAnimation {
 	public GemPosition animGemFrom;
 	public GemPosition animGemTo;
 
-    public boolean done;
+    public boolean isDone;
 
 	//private final float easing = 0.1f;
 	//private final float spring = 0.03f;
@@ -23,27 +18,32 @@ public class FallAnimation {
 	//private final float friction = 0.9f;
 	private final float g = 0.065f;
 	private int bounceCounter = 0;
+    private Model gem;
 
     // ctor
-	public FallAnimation(GemPosition from, GemPosition to) {
-		//System.out.println("FallAnimation ctor... from (" + from.boardX + "," + from.boardY + "), to (" + to.boardX + "," + to.boardY + ")");		
-		this.done = false;
+	public FallAnimation() {
+    }
+
+    public void init(GemPosition from, GemPosition to) {
+		this.isDone = false;
 
         this.animGemFrom = new GemPosition(from);
 		this.animGemTo = new GemPosition(to);
 		
-		this.animGemFrom.gemType = from.gemType;
+		this.animGemFrom.type = from.type;
 		this.animGemFrom.op.setPosition(from.op.tx, from.op.ty, from.op.tz);
 		this.animGemFrom.op.setScale(from.op.sx, from.op.sy, from.op.sz);
 		
 		this.animGemTo.op.setPosition(to.op.tx, to.op.ty, to.op.tz);
-		
+
+        gem = visuals.gems[ from.type ];
+
 		vy = 0.1f;
 		bounceCounter = 0;
 	}	
 
 	public void update() {
-		if (!done) {				
+		if (!isDone) {
 			//System.out.println("FallAnimation update... from(" + animGemFrom.boardX + "," + animGemFrom.boardY + ") to(" + animGemTo.boardX + "," + animGemTo.boardY + ")");
 			vy += g;
 			animGemFrom.op.ty -= vy;
@@ -55,30 +55,16 @@ public class FallAnimation {
 			}
 			
 			if (bounceCounter > 4) {
-				done = true;
+				isDone = true;
 			}
 		}
 	}
 
 	public void draw() {
-		//MyColor color = new MyColor(0f, 0f, 0f);
-
-		Model gem = visuals.gems[animGemFrom.gemType];
-/*
-		animGemFrom.op.setScale(1.1f, 1.1f, 1.1f);		
+		animGemFrom.op.setScale(1f, 1f, 1f);
 		visuals.calcMatricesForObject(animGemFrom.op);
-		
-				
-		visuals.pointLightShader.setUniforms(color, visuals.lightColor, visuals.lightNorm);
-		gem.bindData(visuals.pointLightShader);
-		gem.draw();
-		*/
-		animGemFrom.op.setScale(1f, 1f, 1f);		
-		visuals.calcMatricesForObject(animGemFrom.op);
-		//glDisable(GL_DEPTH_TEST);
 		visuals.pointLightShader.setUniforms(gem.color, visuals.lightColor, visuals.lightNorm);
 		gem.bindData(visuals.pointLightShader);
 		gem.draw();
-		//glEnable(GL_DEPTH_TEST);
 	}
 }

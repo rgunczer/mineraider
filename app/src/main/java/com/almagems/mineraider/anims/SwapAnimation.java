@@ -37,8 +37,8 @@ public class SwapAnimation extends BaseAnimation {
 		this.firstAnim = new GemPosition(first);
 		this.secondAnim = new GemPosition(second);
 		
-		this.firstAnim.gemType = first.gemType;
-		this.secondAnim.gemType = second.gemType;
+		this.firstAnim.type = first.type;
+		this.secondAnim.type = second.type;
 		
 		this.firstAnim.op.setPosition(first.op.tx, first.op.ty, first.op.tz);
 		this.secondAnim.op.setPosition(second.op.tx, second.op.ty, second.op.tz);
@@ -74,7 +74,7 @@ public class SwapAnimation extends BaseAnimation {
 			}
 		} else {
 			//System.out.println("Unable to animate not in the same row or column!");
-			done = true;
+			isDone = true;
 		}			
 
 		// calc prevDiff
@@ -92,9 +92,13 @@ public class SwapAnimation extends BaseAnimation {
 			prevDiff2 = Math.abs(first.op.tx - secondAnim.op.tx);									
 		}
 		
-		done = false;
+		isDone = false;
 	}
-	
+
+    @Override
+    public void reset() {
+    }
+
 	@Override
 	public void prepare() {
 	}
@@ -124,7 +128,7 @@ public class SwapAnimation extends BaseAnimation {
 			}
 
 			if (don1 && don2) {
-				done = true;
+				isDone = true;
 			}
 		} else {
 			firstAnim.op.setPosition(firstAnim.op.tx + firstAnim.animDirAndStep, firstAnim.op.ty, firstAnim.op.tz);
@@ -149,7 +153,7 @@ public class SwapAnimation extends BaseAnimation {
 			}
 
 			if (don1 && don2) {
-				done = true;
+				isDone = true;
 			}			
 		}
 	}
@@ -161,14 +165,14 @@ public class SwapAnimation extends BaseAnimation {
 		
 		visuals.dirLightShader.setTexture(visuals.textureGems);
 		
-		gem = visuals.gems[firstAnim.gemType];
+		gem = visuals.gems[firstAnim.type];
 		visuals.calcMatricesForObject(firstAnim.op);
 		visuals.dirLightShader.useProgram();
 		visuals.dirLightShader.setUniforms(gem.color, visuals.lightColor, visuals.lightNorm);
 		gem.bindData(visuals.dirLightShader);
 		gem.draw();
 
-		gem = visuals.gems[secondAnim.gemType];
+		gem = visuals.gems[secondAnim.type];
 		visuals.calcMatricesForObject(secondAnim.op);
 		visuals.dirLightShader.useProgram();
 		visuals.dirLightShader.setUniforms(gem.color, visuals.lightColor, visuals.lightNorm);

@@ -23,7 +23,6 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
 import android.widget.Toast;
 
-import com.almagems.mineraider.anims.FallGroupAnimation;
 import com.almagems.mineraider.scenes.Level;
 import com.almagems.mineraider.scenes.Menu;
 import com.almagems.mineraider.scenes.Scene;
@@ -35,7 +34,8 @@ public class MineRaiderRenderer implements Renderer {
 	private int h;
 	
 	private long frameStartTimeMS;
-	
+
+    private Scene playerSelect;
 	private Scene menu;
 	private Scene level;
 	private Scene current;
@@ -109,7 +109,7 @@ public class MineRaiderRenderer implements Renderer {
 		}
 		
 		current = level;
-		//current = menu;		
+		//current = menu;
 	}
 
 	@Override

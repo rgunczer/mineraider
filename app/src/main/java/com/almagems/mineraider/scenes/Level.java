@@ -13,7 +13,6 @@ import static android.opengl.Matrix.setIdentityM;
 import static android.opengl.Matrix.translateM;
 import static com.almagems.mineraider.Constants.GEM_TYPE_NONE;
 import static com.almagems.mineraider.Constants.MAX_BOARD_SIZE;
-import static com.almagems.mineraider.Constants.MAX_GEM_TYPES;
 
 import java.util.ArrayList;
 
@@ -32,8 +31,8 @@ import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.RockData;
 import com.almagems.mineraider.Visuals;
-import com.almagems.mineraider.Match3.State;
 import com.almagems.mineraider.anims.AnimationManager;
+import com.almagems.mineraider.anims.PopAnimation;
 import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.MineCart;
 import com.almagems.mineraider.objects.Model;
@@ -43,6 +42,7 @@ import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Vector;
 import com.almagems.mineraider.util.Geometry.Point;
 import com.almagems.mineraider.util.Geometry.Ray;
+import com.almagems.mineraider.ScoreCounter;
 
 public class Level extends Scene {
 
@@ -66,6 +66,7 @@ public class Level extends Scene {
 	public ArrayList<MineCart> mineCarts = new ArrayList<MineCart>();
 	
 	private AnimationManager animManager;
+    private ScoreCounter scoreCounter;
 	private ParticleManager particleManager;
 
 	private ArrayList<RockData> rocks = new ArrayList<RockData>();
@@ -77,7 +78,8 @@ public class Level extends Scene {
 		physics = Physics.getInstance();
 		
 		animManager = new AnimationManager();
-		match3 = new Match3(animManager);
+        scoreCounter = new ScoreCounter();
+		match3 = new Match3(animManager, scoreCounter);
 
 		initBoardGeometry();		
 				
@@ -113,7 +115,11 @@ public class Level extends Scene {
 		x = -30f;
 		mineCart = new MineCart(x, y);
 		mineCarts.add(mineCart);
-		ClassicSingleton.getInstance().cart2 = mineCart;		
+		ClassicSingleton.getInstance().cart2 = mineCart;
+
+
+        PopAnimation.physics = physics;
+
 	}
 	
 	@Override
@@ -167,11 +173,14 @@ public class Level extends Scene {
 	
 	@Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
+
+        scoreCounter.dump();
+
 		swipeDir = SwipeDir.SwipeNone;
 		touchDownX = normalizedX;
 		touchDownY = normalizedY;
-				
-		if (match3.state == State.Idle) {
+
+		if (!match3.isAnimating) {
 			Ray ray = convertNormalized2DPointToRay(touchDownX, touchDownY);
 			GemPosition selectedGem = getSelectedGemFromRay(ray);
 			
@@ -232,7 +241,7 @@ public class Level extends Scene {
 
 	@Override
 	public void handleTouchRelease(float normalizedX, float normalizedY) {
-		if (match3.state == State.Idle) {		
+		if (!match3.isAnimating) {
 			if (match3.firstSelected != null && swipeDir != SwipeDir.SwipeNone) {
 				int x = match3.firstSelected.boardX;
 				int y = match3.firstSelected.boardY;
@@ -790,8 +799,8 @@ public class Level extends Scene {
 			for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
 				GemPosition gp = match3.board[x][y];
 				
-				if (gp.gemType != GEM_TYPE_NONE && gp.visible) {
-					Model gem = visuals.gems[gp.gemType];
+				if (gp.type != GEM_TYPE_NONE && gp.visible) {
+					Model gem = visuals.gems[gp.type];
 														
 					if (color.r == 0.0f) {
 						scale = 0.1f;

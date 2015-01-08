@@ -6,12 +6,12 @@ import com.almagems.mineraider.util.Geometry.Sphere;
 
 public class GemPosition {
 
-	public final int boardX;
-	public final int boardY;
+	public int boardX;
+	public int boardY;
 
 	public ObjectPosition op = new ObjectPosition();	
 	public Sphere boundingSphere;
-	public int gemType;	
+	public int type;
 	public float animDirAndStep = 0.0f;
 	public String animAxis;
 	public boolean visible = true;	
@@ -24,24 +24,27 @@ public class GemPosition {
 	public GemPosition(int boardX, int boardY) {
 		this.boardX = boardX;
 		this.boardY = boardY;
-		this.gemType = GEM_TYPE_NONE;		
+		this.type = GEM_TYPE_NONE;
 	}
 	
 	// cctor
 	public GemPosition(GemPosition another) {
-		this.boardX = another.boardX;
-		this.boardY = another.boardY;
-	
-		this.op = new ObjectPosition(another.op);
-		
-		this.boundingSphere = another.boundingSphere;
-		this.gemType = another.gemType;
-		this.animDirAndStep = another.animDirAndStep;
-		this.animAxis = another.animAxis;
-		this.visible = another.visible;		
-		
+        init(another);
 	}
-	
+
+    public void init(GemPosition another) {
+        this.boardX = another.boardX;
+        this.boardY = another.boardY;
+
+        this.op.init(another.op);
+
+        this.boundingSphere = another.boundingSphere;
+        this.type = another.type;
+        this.animDirAndStep = another.animDirAndStep;
+        this.animAxis = another.animAxis;
+        this.visible = another.visible;
+    }
+
 	public void init( float tx, float ty, float tz,
 			 		  float sx, float sy, float sz) {
 	

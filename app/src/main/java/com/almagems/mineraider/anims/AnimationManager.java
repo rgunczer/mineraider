@@ -1,36 +1,36 @@
 package com.almagems.mineraider.anims;
 
 public class AnimationManager {	
-	private BaseAnimation anim;	
-	public BaseAnimation finishedAnim;
+	private BaseAnimation running;
+	public BaseAnimation finished;
 	
 	public AnimationManager() {		
 	}
 	
 	public void add(BaseAnimation anim) {
-		this.finishedAnim = null;
-		this.anim = anim;		 
-		this.anim.prepare();
+		finished = null;
+		running = anim;
+		running.prepare();
 	}
 	
 	public void update() {		
-		if (anim != null) {
-			anim.update();
+		if (running != null) {
+			running.update();
 			
-			if (anim.done) {
-				finishedAnim = anim;
-				anim = null;
+			if (running.isDone) {
+				finished = running;
+				running = null;
 			}
 		}
 	}
 	
 	public void draw() {
-		if (anim != null) {
-			anim.draw();
+		if (running != null) {
+			running.draw();
 		}
 	}
 	
 	public boolean isDone() {
-		return anim == null;
+		return running == null;
 	}
 }

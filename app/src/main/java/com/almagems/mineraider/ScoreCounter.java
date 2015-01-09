@@ -2,9 +2,11 @@ package com.almagems.mineraider;
 
 public class ScoreCounter {
 
-    private static int bonusForPerfectSwap = 20; // valid match in both place
-    private static int bonusForMoreThan3Match = 10;
-    //private static int bonusFor
+    private static final int bonusForPerfectSwap = 20; // valid match in both place
+    private static final int bonusFor4Match = 10;
+    private static final int bonusFor5Match = 13;
+    private static final int bonusFor6Match = 16;
+    private static final int bonusFor6PlusMatch = 20;
 
     private int score;
     private int bonus;
@@ -22,16 +24,49 @@ public class ScoreCounter {
     public void addScore(int count, boolean combo) { // gems popped
         int multiplier = combo ? 1 : 2;
         score += count * multiplier;
+
+        if (!combo) {
+            calcBonusForScore(count);
+        }
     }
 
-    public void addBonusForPerfectSwap() { // perfect swap is: swap resulting 6 match in both places
+    public void addBonusForPerfectSwap() {
         score += bonusForPerfectSwap;
         bonus += bonusForPerfectSwap;
     }
 
-    public void addBonusForMoreThan3Match() {
-        score += bonusForMoreThan3Match;
-        bonus += bonusForMoreThan3Match;
+    private void calcBonusForScore(int count) {
+        System.out.println("calcBonusForScore... [" + score + "]");
+        switch (count) {
+            case 3:
+                // no bonus for plain match3
+                break;
+
+            case 4:
+                score += bonusFor4Match;
+                bonus += bonusFor4Match;
+                break;
+
+            case 5:
+                score += bonusFor5Match;
+                bonus += bonusFor5Match;
+                break;
+
+            case 6:
+                score += bonusFor6Match;
+                bonus += bonusFor6Match;
+                break;
+
+            default: // more than 6 match?
+                if (count > 6) {
+                    score += bonusFor6PlusMatch;
+                    bonus += bonusFor6PlusMatch;
+                } else {
+                    //System.out.println("unexpected behaviour in addScore calc bonus");
+                    throw new RuntimeException("Unexpected behaviour in addScore calc bonus");
+                }
+                break;
+        }
     }
 
     public String toString() {

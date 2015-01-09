@@ -13,10 +13,11 @@ import com.almagems.mineraider.util.MyUtils;
 
 public class Match3 {
 
+    public int boardSize;
 	public boolean isAnimating;
     private int[] gemTypesArray = new int[MAX_GEM_TYPES];
-	public GemPosition[][] board = new GemPosition[MAX_BOARD_SIZE][MAX_BOARD_SIZE*2];
-    private GemPosition[][] tempBoard = new GemPosition[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
+	public GemPosition[][] board;
+    private GemPosition[][] tempBoard;
 	public GemPosition firstSelected;
 	public GemPosition secondSelected;
     public final SwapHintManager swapHintManager;
@@ -27,7 +28,8 @@ public class Match3 {
     public final ScoreCounter scoreCounter;
 
     // ctor
-	public Match3(AnimationManager animManager, ScoreCounter scoreCounter) {
+	public Match3(int boardSize, AnimationManager animManager, ScoreCounter scoreCounter) {
+        this.boardSize = boardSize;
         isAnimating = true;
         this.animManager = animManager;
         this.scoreCounter = scoreCounter;
@@ -35,15 +37,21 @@ public class Match3 {
         swapAnim = new SwapAnimation();
         pooledFallGroupAnim = new FallGroupAnimation();
         pooledPopAnimation = new PopAnimation();
+        createBoards();
+    }
 
-        for (int y = 0; y < MAX_BOARD_SIZE * 2; ++y) {
-            for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
+    private void createBoards() {
+        board = new GemPosition[boardSize][boardSize*2];
+        tempBoard = new GemPosition[boardSize][boardSize];
+
+        for (int y = 0; y < boardSize * 2; ++y) {
+            for (int x = 0; x < boardSize; ++x) {
                 board[x][y] = new GemPosition(x, y);
             }
         }
 
-        for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
-            for (int y = 0; y < MAX_BOARD_SIZE; ++y) {
+        for (int x = 0; x < boardSize; ++x) {
+            for (int y = 0; y < boardSize; ++y) {
                 tempBoard[x][y] = new GemPosition(x, y);
             }
         }
@@ -72,8 +80,8 @@ public class Match3 {
 	}
 		
 	private void emptyBoard() {
-		for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
-			for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
+		for(int y = 0; y < boardSize; ++y) {
+			for (int x = 0; x < boardSize; ++x) {
 				board[x][y].type = GEM_TYPE_NONE;
 			}
 		}
@@ -88,8 +96,8 @@ public class Match3 {
 			emptyBoard();
 			placeTestGems();
 			
-			for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
-				for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
+			for(int y = 0; y < boardSize; ++y) {
+				for (int x = 0; x < boardSize; ++x) {
 					if (board[x][y].type == GEM_TYPE_NONE) {
 						do {
 							board[x][y].type = randomGemType();
@@ -112,7 +120,7 @@ public class Match3 {
 		if (gp == null)
 			return false;
 				
-		if ( (x < 0 || x > MAX_BOARD_SIZE - 1) || (y < 0 || y > MAX_BOARD_SIZE - 1) ) {
+		if ( (x < 0 || x > boardSize - 1) || (y < 0 || y > boardSize - 1) ) {
 			//System.out.println("out of board...");
 			return false;
 		}
@@ -216,17 +224,11 @@ public class Match3 {
 		}
 
         scoreCounter.addScore(anim.count(), combo);
-
-        if (!combo) {
-            if (anim.count() > 3) {
-                scoreCounter.addBonusForMoreThan3Match();
-            }
-        }
 	}
 		
 	private void fillBufferBoard() {
-		for(int y = MAX_BOARD_SIZE; y < MAX_BOARD_SIZE * 2; ++y) {
-			for(int x = 0; x < MAX_BOARD_SIZE; ++x) {				
+		for(int y = boardSize; y < boardSize * 2; ++y) {
+			for(int x = 0; x < boardSize; ++x) {
 				board[x][y].type = randomGemType();
 				board[x][y].visible = true;				
 			}
@@ -243,8 +245,8 @@ public class Match3 {
 	}
 
     private void saveBoardToTemp() {
-        for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
-            for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
+        for (int x = 0; x < boardSize; ++x) {
+            for(int y = 0; y < boardSize; ++y) {
                 tempBoard[x][y].type = board[x][y].type;
                 tempBoard[x][y].visible = board[x][y].visible;
             }
@@ -252,8 +254,8 @@ public class Match3 {
     }
 
     private void restoreBoardFromTemp() {
-        for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
-            for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
+        for (int x = 0; x < boardSize; ++x) {
+            for(int y = 0; y < boardSize; ++y) {
                 board[x][y].visible = tempBoard[x][y].visible;
                 board[x][y].type = tempBoard[x][y].type;
             }
@@ -266,8 +268,8 @@ public class Match3 {
             gemTypesArray[i] = 0;
         }
 		
-		for (int x = 0; x < MAX_BOARD_SIZE; ++x) {			
-			for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
+		for (int x = 0; x < boardSize; ++x) {
+			for(int y = 0; y < boardSize; ++y) {
 				if (board[x][y].type != -1) {
 					++gemTypesArray[ board[x][y].type ];
 				}
@@ -294,13 +296,13 @@ public class Match3 {
 			fillBufferBoard();
             restoreBoardFromTemp();
 
-			for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
+			for (int x = 0; x < boardSize; ++x) {
 				gap = 0;
-				for(int y = 0; y < MAX_BOARD_SIZE * 2; ++y) {
+				for(int y = 0; y < boardSize * 2; ++y) {
 					if (board[x][y].type == GEM_TYPE_NONE) {
 						++gap;
 					} else { 
-						if ( (gap > 0) &&  (y - gap < MAX_BOARD_SIZE) ) {
+						if ( (gap > 0) &&  (y - gap < boardSize) ) {
 							anim.add(/*from*/board[x][y], /*to*/board[x][y - gap]);
 						}
 					}
@@ -376,10 +378,10 @@ public class Match3 {
 		GemPosition first, second;
         swapHintManager.reset();
 		
-		for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
-			for(int x = 0; x < MAX_BOARD_SIZE; ++x) {
+		for(int y = 0; y < boardSize; ++y) {
+			for(int x = 0; x < boardSize; ++x) {
 				
-				if (x < MAX_BOARD_SIZE - 1) {
+				if (x < boardSize - 1) {
 					first = board[x][y];
 					second = board[x+1][y];
 					swapGems(first, second);
@@ -390,7 +392,7 @@ public class Match3 {
 					swapGems(first, second);
 				}
 				
-				if (y < MAX_BOARD_SIZE - 1) {
+				if (y < boardSize - 1) {
 					first = board[x][y];
 					second = board[x][y+1];
 					swapGems(first, second);
@@ -497,8 +499,8 @@ public class Match3 {
 
 		PopAnimation anim = getPopAnimation();
 
-		for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
-			for(int x = 0; x < MAX_BOARD_SIZE; ++x) {
+		for(int y = 0; y < boardSize; ++y) {
+			for(int x = 0; x < boardSize; ++x) {
 				if (isMatch(x, y)) {
 					removeGems(anim, x, y, true);
 				}
@@ -532,11 +534,11 @@ public class Match3 {
 		FallGroupAnimation anim = getFallGroupAnimation();
         anim.reset();
 		
-		for(int y = 0; y < MAX_BOARD_SIZE*2; ++y) {
-			for(int x = 0; x < MAX_BOARD_SIZE; ++x) {
-				if (y < MAX_BOARD_SIZE) {
-					board[x][y+MAX_BOARD_SIZE].type = board[x][y].type;
-                    anim.add(/*from*/board[x][y + MAX_BOARD_SIZE], /*to*/board[x][y]);
+		for(int y = 0; y < boardSize*2; ++y) {
+			for(int x = 0; x < boardSize; ++x) {
+				if (y < boardSize) {
+					board[x][y+boardSize].type = board[x][y].type;
+                    anim.add(/*from*/board[x][y + boardSize], /*to*/board[x][y]);
 				}
 				board[x][y].visible = false;
 			}

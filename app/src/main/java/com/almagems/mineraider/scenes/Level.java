@@ -11,11 +11,11 @@ import static android.opengl.Matrix.multiplyMV;
 import static android.opengl.Matrix.rotateM;
 import static android.opengl.Matrix.setIdentityM;
 import static android.opengl.Matrix.translateM;
-import static com.almagems.mineraider.Constants.GEM_TYPE_NONE;
-import static com.almagems.mineraider.Constants.MAX_BOARD_SIZE;
+import static com.almagems.mineraider.Constants.*;
 
 import java.util.ArrayList;
 
+// box2d
 import org.jbox2d.collision.shapes.EdgeShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -26,6 +26,7 @@ import org.jbox2d.dynamics.Fixture;
 import com.almagems.mineraider.ClassicSingleton;
 import com.almagems.mineraider.Constants;
 import com.almagems.mineraider.GemPosition;
+import com.almagems.mineraider.HUD;
 import com.almagems.mineraider.Match3;
 import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Physics;
@@ -55,7 +56,9 @@ public class Level extends Scene {
 	}
 	
 	private SwipeDir swipeDir = SwipeDir.SwipeNone;
-	
+
+    private final HUD hud;
+
 	private Physics physics;
 	private Match3 match3;
 
@@ -76,10 +79,12 @@ public class Level extends Scene {
 	public Level() {
 		visuals = Visuals.getInstance();
 		physics = Physics.getInstance();
-		
+
+        hud = new HUD();
+
 		animManager = new AnimationManager();
         scoreCounter = new ScoreCounter();
-		match3 = new Match3(animManager, scoreCounter);
+		match3 = new Match3(6, animManager, scoreCounter);
 
 		initBoardGeometry();		
 				
@@ -133,7 +138,8 @@ public class Level extends Scene {
 		visuals.updateViewProjMatrix();
 		
 		physics.update();
-		match3.update();			
+		match3.update();
+        hud.update();
 	}
 	
 	@Override
@@ -164,11 +170,13 @@ public class Level extends Scene {
 		drawPickAxes();
 		drawHelmets();
 		
-		glDisable(GL_DEPTH_TEST);
+		//glDisable(GL_DEPTH_TEST);
 		//drawPhysicsGemsFixtures();
 		//drawPhysicsEdges();
 		
 		particleManager.draw();
+
+        hud.draw();
 	}
 	
 	@Override
@@ -184,7 +192,7 @@ public class Level extends Scene {
 			Ray ray = convertNormalized2DPointToRay(touchDownX, touchDownY);
 			GemPosition selectedGem = getSelectedGemFromRay(ray);
 			
-			doEditorStuff(selectedGem);
+			//doEditorStuff(selectedGem);
 
 			if (selectedGem == null) {
 				match3.showOrHideHints();
@@ -254,7 +262,7 @@ public class Level extends Scene {
 					break;
 					
 				case SwipeUp:
-					if ( (y + 1) < MAX_BOARD_SIZE) { 
+					if ( (y + 1) < match3.boardSize) {
 						match3.secondSelected = match3.board[x][y+1];
 					}
 					break;
@@ -266,7 +274,7 @@ public class Level extends Scene {
 					break;
 					
 				case SwipeRight:
-					if ( (x + 1) < MAX_BOARD_SIZE) { 
+					if ( (x + 1) < match3.boardSize) {
 						match3.secondSelected = match3.board[x+1][y];
 					}
 					break;
@@ -283,8 +291,12 @@ public class Level extends Scene {
 		}
 	}
 
-	private void doEditorStuff(GemPosition selectedGem) {		
-		if (selectedGem == null) {
+	private void doEditorStuff(GemPosition selectedGem) {
+        if (match3.boardSize != 8) {
+            throw new RuntimeException("Invalid board size for doEditorStuff must be 8, now is:" + match3.boardSize);
+        }
+
+		if (null == selectedGem) {
 			return;
 		}
 		
@@ -292,13 +304,13 @@ public class Level extends Scene {
 			return;
 		}
 					
-		if (selectedGem.boardX == 0 && selectedGem.boardY == 0) {
+		if ((selectedGem.boardX == 0) && (selectedGem.boardY == 0)) {
 			rocks.add( new RockData() );
 			return;
 		}
 
 		// dump
-		if (selectedGem.boardX == 7 && selectedGem.boardY == 7) {				
+		if ((selectedGem.boardX == 7) && (selectedGem.boardY == 7)) {
 			//for (RockData rd : rocks) {
 			int size = rocks.size();
 			for(int i = 0; i < size; ++i) {
@@ -312,7 +324,7 @@ public class Level extends Scene {
 			RockData rd = rocks.get(rocks.size() - 1);
 			
 			// gemtype
-			if (selectedGem.boardX == 1 && selectedGem.boardY == 1) {			
+			if ((selectedGem.boardX == 1) && (selectedGem.boardY == 1)) {
 				++rd.rockId;
 				if (rd.rockId > 8) {
 					rd.rockId = 0;
@@ -320,38 +332,38 @@ public class Level extends Scene {
 			}
 		
 			// degree
-			if (selectedGem.boardX == 2 && selectedGem.boardY == 2) {
+			if ((selectedGem.boardX == 2) && (selectedGem.boardY == 2)) {
 				rd.degree -= 2.0f;						
 			}			
 
-			if (selectedGem.boardX == 0 && selectedGem.boardY == 2) {					
+			if ((selectedGem.boardX == 0) && (selectedGem.boardY == 2)) {
 				rd.degree += 2.0f;
 			}
 			
 			// z
-			if (selectedGem.boardX == 0 && selectedGem.boardY == 7) {			
+			if ((selectedGem.boardX == 0) && (selectedGem.boardY == 7)) {
 				rd.z -= step;
 			}
 				
-			if (selectedGem.boardX == 0 && selectedGem.boardY == 6) { 			
+			if ((selectedGem.boardX == 0) && (selectedGem.boardY == 6)) {
 				rd.z += step;		
 			}
 		
 			// 	x
-			if (selectedGem.boardX == 0 && selectedGem.boardY == 1) {				
+			if ((selectedGem.boardX == 0) && (selectedGem.boardY == 1)) {
 				rd.x -= step;			
 			}
 		
-			if (selectedGem.boardX == 2 && selectedGem.boardY == 1) { 			
+			if ((selectedGem.boardX == 2) && (selectedGem.boardY == 1)) {
 				rd.x += step;			
 			}
 				
 			// y
-			if (selectedGem.boardX == 1 && selectedGem.boardY == 2) { 					
+			if ((selectedGem.boardX == 1) && (selectedGem.boardY == 2)) {
 				rd.y += step;			
 			}
 		
-			if (selectedGem.boardX == 1 && selectedGem.boardY == 0) { 					
+			if ((selectedGem.boardX == 1) && (selectedGem.boardY == 0)) {
 				rd.y -= step;			
 			}
 		}
@@ -387,8 +399,8 @@ public class Level extends Scene {
 	}	
 	
 	private GemPosition getSelectedGemFromRay(Ray ray) {		
-		for(int y = 0; y < MAX_BOARD_SIZE; ++y) {
-			for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
+		for(int y = 0; y < match3.boardSize; ++y) {
+			for (int x = 0; x < match3.boardSize; ++x) {
 				GemPosition gp = match3.board[x][y];				
 				if ( Geometry.intersects(gp.boundingSphere, ray) ) {
 					return gp;
@@ -408,14 +420,14 @@ public class Level extends Scene {
 		
 		float gemDistance = 2.4f;
 		
-		for(int y = 0; y < MAX_BOARD_SIZE*2; ++y) {
-			posX = -(((MAX_BOARD_SIZE - 1) * gemDistance) / 2.0f);
-			for (int x = 0; x < MAX_BOARD_SIZE; ++x) {				
+		for(int y = 0; y < match3.boardSize*2; ++y) {
+			posX = -(((match3.boardSize - 1) * gemDistance) / 2.0f);
+			for (int x = 0; x < match3.boardSize; ++x) {
 				match3.board[x][y].init(posX, posY, -2.0f,	1.0f, 1.0f, 1.0f);
 				posX += gemDistance;
 			}
 			posY += gemDistance;
-			if (y == MAX_BOARD_SIZE - 1)
+			if (y == match3.boardSize - 1)
 				posY += 1.0f;
 		}			
 	}
@@ -489,7 +501,7 @@ public class Level extends Scene {
 				float d = Constants.GEM_FRAGMENT_SIZE;
 				
 				Integer integer = (Integer)body.m_userData;
-				int gemType = integer.intValue();
+				int gemType = integer;
 				Model gem = visuals.gems[gemType];				
 				_op.setPosition(pos.x, pos.y, 1.0f);							
 				_op.setRot(0f, 0f, degree);
@@ -787,16 +799,16 @@ public class Level extends Scene {
 	
 	void drawBoardGems(MyColor color) {	
 		//r+=0.25f;
-		int yMax = MAX_BOARD_SIZE;
+		int yMax = match3.boardSize;
 		if (Constants.DRAW_BUFFER_BOARD) {
-			yMax = MAX_BOARD_SIZE * 2;
+			yMax = match3.boardSize * 2;
 		}
 		
 		visuals.pointLightShader.setTexture(visuals.textureGems);
 		
 		float scale;
 		for(int y = 0; y < yMax; ++y) {
-			for (int x = 0; x < MAX_BOARD_SIZE; ++x) {
+			for (int x = 0; x < match3.boardSize; ++x) {
 				GemPosition gp = match3.board[x][y];
 				
 				if (gp.type != GEM_TYPE_NONE && gp.visible) {

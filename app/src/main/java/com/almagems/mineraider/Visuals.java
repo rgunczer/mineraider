@@ -2,7 +2,6 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glViewport;
 import static android.opengl.Matrix.invertM;
 import static android.opengl.Matrix.multiplyMM;
 import static android.opengl.Matrix.multiplyMV;
@@ -14,14 +13,7 @@ import static android.opengl.Matrix.translateM;
 import static android.opengl.Matrix.invertM;
 import static android.opengl.Matrix.transposeM;
 import static android.opengl.Matrix.orthoM;
-import static com.almagems.mineraider.Constants.GEM_TYPE_0;
-import static com.almagems.mineraider.Constants.GEM_TYPE_1;
-import static com.almagems.mineraider.Constants.GEM_TYPE_2;
-import static com.almagems.mineraider.Constants.GEM_TYPE_3;
-import static com.almagems.mineraider.Constants.GEM_TYPE_4;
-import static com.almagems.mineraider.Constants.GEM_TYPE_5;
-import static com.almagems.mineraider.Constants.GEM_TYPE_6;
-import static com.almagems.mineraider.Constants.MAX_GEM_TYPES;
+import static com.almagems.mineraider.Constants.*;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -66,7 +58,6 @@ public class Visuals {
 	public int textureGems;	
 	public int textureHintArrow;
 	public int textureCart;
-	public int textureMineCartWheel;
 	public int textureRailRoad;
 	public int textureParticle;
 	public int textureFloor;
@@ -81,6 +72,7 @@ public class Visuals {
 	public int textureMenuItems;
 	public int texturePickAxe;
 	public int textureHelmet;
+    public int textureFonts;
 	
 	// models
 	public Model[] gems = new Model[MAX_GEM_TYPES];
@@ -129,7 +121,8 @@ public class Visuals {
 	private final float[] mLightPosInWorldSpace = new float[4];
 	public final float[] mLightPosInEyeSpace = new float[4];
 	private float[] mLightModelMatrix = new float[16];
-	
+
+    // ctor
 	private Visuals() {
 		System.out.println("Visuals ctor...");		
 	}	
@@ -311,9 +304,10 @@ public class Visuals {
 		textureMenuItems = TextureHelper.loadTexture(context, R.drawable.menu_items);
 		texturePickAxe = TextureHelper.loadTexture(context, R.drawable.pickaxe_texture);
 		textureHelmet = TextureHelper.loadTexture(context, R.drawable.helmet_texture);
+        textureFonts = TextureHelper.loadTexture(context, R.drawable.fontsandroid);
 	}
 	
-	public void noTexture() {
+	public void bindNoTexture() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	

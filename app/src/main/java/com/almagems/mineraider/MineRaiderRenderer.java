@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.almagems.mineraider.scenes.Level;
 import com.almagems.mineraider.scenes.Menu;
+import com.almagems.mineraider.scenes.PlayerSelect;
 import com.almagems.mineraider.scenes.Scene;
 import com.almagems.mineraider.shaders.ParticleShader;
 
@@ -99,6 +100,8 @@ public class MineRaiderRenderer implements Renderer {
 			});
 			return;
 		}
+
+
 					
 		if (level == null) {
 			level = new Level();
@@ -107,7 +110,12 @@ public class MineRaiderRenderer implements Renderer {
 		if (menu == null) {
 			menu = new Menu();
 		}
-		
+
+        if (playerSelect == null) {
+            playerSelect = new PlayerSelect();
+        }
+
+
 		current = level;
 		//current = menu;
 	}

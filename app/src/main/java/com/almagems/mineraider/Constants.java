@@ -4,7 +4,6 @@ package com.almagems.mineraider;
 public class Constants {
 	public static final int BYTES_PER_FLOAT = 4;
 	public static final int MAX_GEM_TYPES = 7;
-	public static final int MAX_BOARD_SIZE = 8;
 
 	public static final int GEM_TYPE_NONE = -1;
 	public static final int GEM_TYPE_0 = 0;

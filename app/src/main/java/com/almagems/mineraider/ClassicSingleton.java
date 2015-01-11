@@ -4,13 +4,13 @@ import com.almagems.mineraider.objects.MineCart;
 
 public class ClassicSingleton {
 	private static ClassicSingleton instance = null;
-	
 	public MineRaiderRenderer renderer = null;
 	public MineCart cart1 = null;
 	public MineCart cart2 = null;
-	
+    public ScoreCounter scoreCounter = null;
+
 	protected ClassicSingleton() {
-		
+        scoreCounter = new ScoreCounter();
 	}
 	
 	public static ClassicSingleton getInstance() {
@@ -23,6 +23,14 @@ public class ClassicSingleton {
 	public void showSceneLevel() {
 		renderer.showSceneLevel();
 	}
+
+    public int getScore() {
+        return scoreCounter.getScore();
+    }
+
+    public void setScore(int score) {
+        scoreCounter.setScore(score);
+    }
 	
 //	public void spawnParticleEmitterAt(float x, float y, int gemType) {
 //		//System.out.println("Spawn particle emitter at: " + x + ", " + y);

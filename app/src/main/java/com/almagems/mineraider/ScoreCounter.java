@@ -7,6 +7,7 @@ public class ScoreCounter {
     private static final int bonusFor5Match = 13;
     private static final int bonusFor6Match = 16;
     private static final int bonusFor6PlusMatch = 20;
+    private static final int bonusForCombo = 1;
 
     private int score;
     private int bonus;
@@ -22,17 +23,20 @@ public class ScoreCounter {
     }
 
     public void addScore(int count, boolean combo) { // gems popped
-        int multiplier = combo ? 1 : 2;
-        score += count * multiplier;
+        System.out.println("Add Score is:" + count + (combo ? "combo" : ""));
+        //int multiplier = combo ? 1 : 2;
+        score += count; // * multiplier;
+        if (combo)
+            score += bonusForCombo;
 
-        if (!combo) {
-            calcBonusForScore(count);
-        }
+//        if (!combo) {
+//            calcBonusForScore(count);
+//        }
     }
 
     public void addBonusForPerfectSwap() {
-        score += bonusForPerfectSwap;
-        bonus += bonusForPerfectSwap;
+        //score += bonusForPerfectSwap;
+        //bonus += bonusForPerfectSwap;
     }
 
     private void calcBonusForScore(int count) {
@@ -70,8 +74,13 @@ public class ScoreCounter {
     }
 
     public String toString() {
-        return "Score is: [" + this.score + "], bonus is: [" + this.bonus + "]";
+        return "Score is: [" + this.score + "]";
     }
+
+    public int getScore() {
+        return score;
+    }
+    public void setScore(int score) { this.score = score; }
 
     public void dump() {
         System.out.println(this.toString());

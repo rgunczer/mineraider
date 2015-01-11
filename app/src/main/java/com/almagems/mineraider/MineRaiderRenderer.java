@@ -53,7 +53,7 @@ public class MineRaiderRenderer implements Renderer {
 	
 	public void showSceneLevel() {
 		visuals.setProjectionMatrix3D(w, h);
-		
+		level.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
 		current = level;
 	}
 	
@@ -116,8 +116,8 @@ public class MineRaiderRenderer implements Renderer {
         }
 
 
-		current = level;
-		//current = menu;
+		//current = level;
+		current = menu;
 	}
 
 	@Override
@@ -125,9 +125,17 @@ public class MineRaiderRenderer implements Renderer {
 		w = width;
 		h = height;
 		glViewport(0, 0, width, height);
-		current.surfaceChanged(width, height);
+
+        Visuals.screenWidth = width;
+        Visuals.screenHeight = height;
+        Visuals.aspectRatio = width > height ? (float)width / (float)height : (float)height / (float)width;
 
         ParticleShader.pointSize = w * 0.1f;
+
+
+
+
+        current.surfaceChanged(width, height);
 	}
 
 	@Override

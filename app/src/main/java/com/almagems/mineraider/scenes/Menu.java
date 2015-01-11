@@ -13,9 +13,11 @@ import static android.opengl.GLES20.glBlendFunc;
 import com.almagems.mineraider.ClassicSingleton;
 import com.almagems.mineraider.Constants;
 import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.shaders.TextureShader;
-import com.almagems.mineraider.util.Vector;
+import com.almagems.mineraider.util.MyColor;
+import com.almagems.mineraider.util.Text;
 
 public class Menu extends Scene {
 		
@@ -24,9 +26,13 @@ public class Menu extends Scene {
 	private VertexArray vertexArrayPlay;
 	private VertexArray vertexArrayOptions;
 	private VertexArray vertexArrayAbout;
+
+    private Text text;
+    private Text credits;
 	
 	private float aspect;
-	
+
+    // ctor
 	public Menu() {
 		
 	}
@@ -36,20 +42,25 @@ public class Menu extends Scene {
 		// TODO Auto-generated method stub
 		final float tw = 512f;
 		final float th = 1024f;
+
+        float r = 1f;
+        float g = 1f;
+        float b = 1f;
+        float a = 1f;
 		
 		visuals.setProjectionMatrix2D(width, height);
 		
 		aspect = width > height ? (float)width / (float)height : (float)height / (float)width;
 				
 		float[] vertexDataBg = { 
-				// x, y, z, 			s, t,			
-				-1.0f, -aspect, 0.0f, 	0.0f, 0.0f,
-				 1.0f, -aspect, 0.0f,	1.0f, 0.0f,
-				 1.0f,  aspect, 0.0f,	1.0f, 1.0f,
+				// x, y, z, 			                s, t,
+				-1.0f, -aspect, 0.0f,   r, g, b, a,     0.0f, 0.0f,
+				 1.0f, -aspect, 0.0f,	r, g, b, a,     1.0f, 0.0f,
+				 1.0f,  aspect, 0.0f,	r, g, b, a,     1.0f, 1.0f,
 				 
-				-1.0f, -aspect, 0.0f,	0.0f, 0.0f,
-			 	 1.0f,  aspect, 0.0f,	1.0f, 1.0f,
-				-1.0f,  aspect, 0.0f,	0.0f, 1.0f
+				-1.0f, -aspect, 0.0f,	r, g, b, a,     0.0f, 0.0f,
+			 	 1.0f,  aspect, 0.0f,	r, g, b, a,     1.0f, 1.0f,
+				-1.0f,  aspect, 0.0f,	r, g, b, a,     0.0f, 1.0f
 			};		
 		
 		vertexArrayBg = new VertexArray(vertexDataBg);
@@ -68,14 +79,14 @@ public class Menu extends Scene {
 		x = (350f / width) * scale;
 		y = (286f / width) * scale;
 		float[] vertexDataTitle = {
-				// x, y, z, 	s, t,			
-				-x, -y, 0.0f, 	tx0, ty0,
-				 x, -y, 0.0f,	tx1, ty0,
-				 x,  y, 0.0f,	tx1, ty1,
+				// x, y, z, 	                s, t,
+				-x, -y, 0.0f, 	r, g, b, a,     tx0, ty0,
+				 x, -y, 0.0f,	r, g, b, a,     tx1, ty0,
+				 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
 				 
-				-x, -y, 0.0f,	tx0, ty0,
-			 	 x,  y, 0.0f,	tx1, ty1,
-				-x,  y, 0.0f,	tx0, ty1				
+				-x, -y, 0.0f,	r, g, b, a,     tx0, ty0,
+			 	 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
+				-x,  y, 0.0f,	r, g, b, a,     tx0, ty1
 		};
 		
 		vertexArrayTitle = new VertexArray(vertexDataTitle);
@@ -90,14 +101,14 @@ public class Menu extends Scene {
 		x = (241f / width) * scale;
 		y = (125f / width) * scale;
 		float[] vertexDataAbout = {
-				// x, y, z, 	s, t,			
-				-x, -y, 0.0f, 	tx0, ty0,
-				 x, -y, 0.0f,	tx1, ty0,
-				 x,  y, 0.0f,	tx1, ty1,
+				// x, y, z, 	                s, t,
+				-x, -y, 0.0f, 	r, g, b, a,     tx0, ty0,
+				 x, -y, 0.0f,	r, g, b, a,     tx1, ty0,
+				 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
 				 
-				-x, -y, 0.0f,	tx0, ty0,
-			 	 x,  y, 0.0f,	tx1, ty1,
-				-x,  y, 0.0f,	tx0, ty1				
+				-x, -y, 0.0f,	r, g, b, a,     tx0, ty0,
+			 	 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
+				-x,  y, 0.0f,	r, g, b, a,     tx0, ty1
 		};
 		
 		vertexArrayAbout = new VertexArray(vertexDataAbout);
@@ -113,20 +124,22 @@ public class Menu extends Scene {
 		x = (291f / width) * scale;
 		y = (123f / width) * scale;
 		float[] vertexDataOptions = {
-				// x, y, z, 	s, t,			
-				-x, -y, 0.0f, 	tx0, ty0,
-				 x, -y, 0.0f,	tx1, ty0,
-				 x,  y, 0.0f,	tx1, ty1,
+				// x, y, z, 	                s, t,
+				-x, -y, 0.0f, 	r, g, b, a,     tx0, ty0,
+				 x, -y, 0.0f,	r, g, b, a,     tx1, ty0,
+				 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
 				 
-				-x, -y, 0.0f,	tx0, ty0,
-			 	 x,  y, 0.0f,	tx1, ty1,
-				-x,  y, 0.0f,	tx0, ty1				
+				-x, -y, 0.0f,	r, g, b, a,     tx0, ty0,
+			 	 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
+				-x,  y, 0.0f,	r, g, b, a,     tx0, ty1
 		};
 		
 		vertexArrayOptions = new VertexArray(vertexDataOptions);
 
 		
-		
+		g = 0f;
+        b = 0f;
+
 //	"filename": "menu_play.png",
 //	"frame": {"x":2,"y":542,"w":214,"h":121},
 		tx0 = 2f / tw;
@@ -137,23 +150,30 @@ public class Menu extends Scene {
 		x = (214f / width) * scale;
 		y = (121f / width) * scale;
 		float[] vertexDataPlay = {
-				// x, y, z, 	s, t,			
-				-x, -y, 0.0f, 	tx0, ty0,
-				 x, -y, 0.0f,	tx1, ty0,
-				 x,  y, 0.0f,	tx1, ty1,
+				// x, y, z, 	                s, t,
+				-x, -y, 0.0f, 	r, g, b, a,     tx0, ty0,
+				 x, -y, 0.0f,	r, g, b, a,     tx1, ty0,
+				 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
 				 
-				-x, -y, 0.0f,	tx0, ty0,
-			 	 x,  y, 0.0f,	tx1, ty1,
-				-x,  y, 0.0f,	tx0, ty1				
+				-x, -y, 0.0f,	r, g, b, a,     tx0, ty0,
+			 	 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
+				-x,  y, 0.0f,	r, g, b, a,     tx0, ty1
 		};
 		
-		vertexArrayPlay = new VertexArray(vertexDataPlay);			
+		vertexArrayPlay = new VertexArray(vertexDataPlay);
+
+        text = new Text();
+        text.init(-0.95f, -Visuals.aspectRatio, "ANDREA", new MyColor(1f, 1f, 0f, 1f), 0.5f);
+
+        credits = new Text();
+        credits.init(-0.85f, 1.0f, "CREDITS", new MyColor(0f, 0f, 1f, 1f), 1.5f);
 	}
 
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
 		super.update();
+        visuals.updateViewProjMatrix();
 	}
 
 	@Override
@@ -170,7 +190,13 @@ public class Menu extends Scene {
 		drawPlay();
 		drawOptions();
 		drawAbout();
+        drawText();
 	}
+
+    private void drawText() {
+        text.draw();
+        credits.draw();
+    }
 	
 	private void drawAbout() {
 		ObjectPosition op = new ObjectPosition();
@@ -181,7 +207,7 @@ public class Menu extends Scene {
 		visuals.calcMatricesForObject(op);		
 		visuals.textureShader.useProgram();
 		visuals.textureShader.setTexture(visuals.textureMenuItems);
-		visuals.textureShader.setUniforms(visuals.modelProjMatrix);
+		visuals.textureShader.setUniforms(visuals.mvpMatrix);
 		
 		bindData(visuals.textureShader, vertexArrayAbout);
 		glDrawArrays(GL_TRIANGLES, 0, 6);				
@@ -196,7 +222,7 @@ public class Menu extends Scene {
 		visuals.calcMatricesForObject(op);		
 		visuals.textureShader.useProgram();
 		visuals.textureShader.setTexture(visuals.textureMenuItems);
-		visuals.textureShader.setUniforms(visuals.modelProjMatrix);
+		visuals.textureShader.setUniforms(visuals.mvpMatrix);
 		
 		bindData(visuals.textureShader, vertexArrayOptions);
 		glDrawArrays(GL_TRIANGLES, 0, 6);				
@@ -211,7 +237,7 @@ public class Menu extends Scene {
 		visuals.calcMatricesForObject(op);		
 		visuals.textureShader.useProgram();
 		visuals.textureShader.setTexture(visuals.textureMenuItems);
-		visuals.textureShader.setUniforms(visuals.modelProjMatrix);
+		visuals.textureShader.setUniforms(visuals.mvpMatrix);
 		
 		bindData(visuals.textureShader, vertexArrayPlay);
 		glDrawArrays(GL_TRIANGLES, 0, 6);		
@@ -226,7 +252,7 @@ public class Menu extends Scene {
 		visuals.calcMatricesForObject(op);		
 		visuals.textureShader.useProgram();
 		visuals.textureShader.setTexture(visuals.textureMenuItems);
-		visuals.textureShader.setUniforms(visuals.modelProjMatrix);
+		visuals.textureShader.setUniforms(visuals.mvpMatrix);
 		
 		bindData(visuals.textureShader, vertexArrayTitle);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -241,7 +267,7 @@ public class Menu extends Scene {
 		visuals.calcMatricesForObject(op);		
 		visuals.textureShader.useProgram();
 		visuals.textureShader.setTexture(visuals.textureMenu);
-		visuals.textureShader.setUniforms(visuals.projectionMatrix);
+		visuals.textureShader.setUniforms(visuals.mvpMatrix);
 		
 		bindData(visuals.textureShader, vertexArrayBg);
 		glDrawArrays(GL_TRIANGLES, 0, 6);			
@@ -270,10 +296,10 @@ public class Menu extends Scene {
 		
 	public void bindData(TextureShader textureProgram, VertexArray vertexArray) {		
 		final int POSITION_COMPONENT_COUNT = 3;
-		final int NORMAL_COMPONENT_COUNT = 0;
+        final int COLOR_COMPONENT_COUNT = 4;
 		final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;				
-		final int STRIDE = (POSITION_COMPONENT_COUNT + 
-							NORMAL_COMPONENT_COUNT + 
+		final int STRIDE = (POSITION_COMPONENT_COUNT +
+                            COLOR_COMPONENT_COUNT +
 							TEXTURE_COORDINATES_COMPONENT_COUNT ) * Constants.BYTES_PER_FLOAT;		
 		
 		vertexArray.setVertexAttribPointer(
@@ -281,12 +307,19 @@ public class Menu extends Scene {
 				textureProgram.getPositionAttributeLocation(), 
 				POSITION_COMPONENT_COUNT, 
 				STRIDE);
-		
+
+        vertexArray.setVertexAttribPointer(
+                POSITION_COMPONENT_COUNT,
+                textureProgram.getColorAttributeLocation(),
+                COLOR_COMPONENT_COUNT,
+                STRIDE);
+
 		vertexArray.setVertexAttribPointer(
-				POSITION_COMPONENT_COUNT, 
+				POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT,
 				textureProgram.getTextureAttributeLocation(), 
 				TEXTURE_COORDINATES_COMPONENT_COUNT, 
-				STRIDE);				
+				STRIDE);
+
 	}
 	
 	

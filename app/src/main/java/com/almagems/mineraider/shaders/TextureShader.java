@@ -14,6 +14,7 @@ public class TextureShader extends BaseShader {
 		
 	// attribute locations
 	private final int aPositionLocation;
+    private final int aColorLocation;
 	private final int aTextureCoordinatesLocation;
 	
 	public TextureShader(Context context) throws Exception {
@@ -25,6 +26,7 @@ public class TextureShader extends BaseShader {
 		
 		// retrieve attribute location for the shader program
 		aPositionLocation = glGetAttribLocation(program, A_POSITION);
+        aColorLocation = glGetAttribLocation(program, "a_Color");
 		aTextureCoordinatesLocation = glGetAttribLocation(program, A_TEXTURE_COORDINATES);
 	}
 
@@ -36,7 +38,7 @@ public class TextureShader extends BaseShader {
 	public int getPositionAttributeLocation() {
 		return aPositionLocation;
 	}
-	
+	public int getColorAttributeLocation() { return aColorLocation; }
 	public int getTextureAttributeLocation() {
 		return aTextureCoordinatesLocation;
 	}

@@ -26,18 +26,32 @@ import com.almagems.mineraider.shaders.PixelLightShader;
 import com.almagems.mineraider.shaders.DirLightShader;
 import com.almagems.mineraider.shaders.PointLightShader;
 import com.almagems.mineraider.shaders.TextureShader;
+import com.almagems.mineraider.util.FontData;
 import com.almagems.mineraider.util.MatrixHelper;
 import com.almagems.mineraider.util.ModelLoader;
+import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.TextureHelper;
+import com.almagems.mineraider.util.TexturedQuad;
 import com.almagems.mineraider.util.Vector;
 import com.almagems.mineraider.util.MyColor;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Visuals {	
 	private static Visuals instance = null;
-	
+
+    public static float screenWidth;
+    public static float screenHeight;
+    public static float aspectRatio;
+
 	public Context context;
-		
+
+    // custom
 	public MyColor color = new  MyColor(1f, 1f, 1f);
+    public Map<String, TexturedQuad> fonts = new HashMap<String, TexturedQuad>();
+
 	
 	// matrices
 	public final float[] invertedViewProjectionMatrix = new float[16];
@@ -73,6 +87,7 @@ public class Visuals {
 	public int texturePickAxe;
 	public int textureHelmet;
     public int textureFonts;
+    public int textureIkon;
 	
 	// models
 	public Model[] gems = new Model[MAX_GEM_TYPES];
@@ -142,6 +157,7 @@ public class Visuals {
 		loadModels();
 		loadShaders();
 		loadTextures();
+        initFontDesc();
 	}	
 	
 	private void loadShaders() throws Exception {
@@ -305,8 +321,9 @@ public class Visuals {
 		texturePickAxe = TextureHelper.loadTexture(context, R.drawable.pickaxe_texture);
 		textureHelmet = TextureHelper.loadTexture(context, R.drawable.helmet_texture);
         textureFonts = TextureHelper.loadTexture(context, R.drawable.fontsandroid);
+        textureIkon = TextureHelper.loadTexture(context, R.drawable.ikon_texture);
 	}
-	
+
 	public void bindNoTexture() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -320,7 +337,9 @@ public class Visuals {
 		} else {
 			orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f); // portrait
 		}
-				
+
+        setIdentityM(viewMatrix, 0);
+
 //		orthoM(projectionMatrix, 0, 0f, width, 0f, height, 0f, 100f);
 		//setLookAtM(viewMatrix, 0, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f);
 	}
@@ -435,4 +454,138 @@ public class Visuals {
 		}
 		return Color.rgb(255, 255, 255);		
 	}
+
+    private void initFontDesc() {
+        // irrlicht font maker control points to text format:
+        // rawFonts.add( new FontData('%char%', new Rectangle(%left%f, %bottom%f, %width%f, %height%f) ) );
+        final ArrayList<FontData> rawFonts = new ArrayList<FontData>(100);
+        rawFonts.add( new FontData(' ', new Rectangle(1f, 100f, 10f, 100f) ) );
+        rawFonts.add( new FontData('!', new Rectangle(11f, 100f, 39f, 100f) ) );
+        rawFonts.add( new FontData('"', new Rectangle(50f, 100f, 47f, 100f) ) );
+        rawFonts.add( new FontData('#', new Rectangle(97f, 100f, 75f, 100f) ) );
+        rawFonts.add( new FontData('$', new Rectangle(172f, 100f, 51f, 100f) ) );
+        rawFonts.add( new FontData('%', new Rectangle(223f, 100f, 64f, 100f) ) );
+        rawFonts.add( new FontData('&', new Rectangle(287f, 100f, 58f, 100f) ) );
+        rawFonts.add( new FontData('\'', new Rectangle(345f, 100f, 38f, 100f) ) );
+        rawFonts.add( new FontData('(', new Rectangle(383f, 100f, 45f, 100f) ) );
+        rawFonts.add( new FontData(')', new Rectangle(428f, 100f, 45f, 100f) ) );
+        rawFonts.add( new FontData('*', new Rectangle(473f, 100f, 49f, 100f) ) );
+        rawFonts.add( new FontData('+', new Rectangle(522f, 100f, 75f, 100f) ) );
+        rawFonts.add( new FontData(',', new Rectangle(597f, 100f, 35f, 100f) ) );
+        rawFonts.add( new FontData('-', new Rectangle(632f, 100f, 42f, 100f) ) );
+        rawFonts.add( new FontData('.', new Rectangle(674f, 100f, 35f, 100f) ) );
+        rawFonts.add( new FontData('/', new Rectangle(709f, 100f, 45f, 100f) ) );
+        rawFonts.add( new FontData('0', new Rectangle(754f, 100f, 51f, 100f) ) );
+        rawFonts.add( new FontData('1', new Rectangle(805f, 100f, 42f, 100f) ) );
+        rawFonts.add( new FontData('2', new Rectangle(847f, 100f, 48f, 100f) ) );
+        rawFonts.add( new FontData('3', new Rectangle(895f, 100f, 49f, 100f) ) );
+        rawFonts.add( new FontData('4', new Rectangle(944f, 100f, 50f, 100f) ) );
+        rawFonts.add( new FontData('5', new Rectangle(0f, 201f, 49f, 100f) ) );
+        rawFonts.add( new FontData('6', new Rectangle(49f, 201f, 51f, 100f) ) );
+        rawFonts.add( new FontData('7', new Rectangle(100f, 201f, 47f, 100f) ) );
+        rawFonts.add( new FontData('8', new Rectangle(147f, 201f, 51f, 100f) ) );
+        rawFonts.add( new FontData('9', new Rectangle(198f, 201f, 51f, 100f) ) );
+        rawFonts.add( new FontData(':', new Rectangle(249f, 201f, 35f, 100f) ) );
+        rawFonts.add( new FontData(';', new Rectangle(284f, 201f, 35f, 100f) ) );
+        rawFonts.add( new FontData('<', new Rectangle(319f, 201f, 75f, 100f) ) );
+        rawFonts.add( new FontData('=', new Rectangle(394f, 201f, 75f, 100f) ) );
+        rawFonts.add( new FontData('>', new Rectangle(469f, 201f, 75f, 100f) ) );
+        rawFonts.add( new FontData('?', new Rectangle(544f, 201f, 49f, 100f) ) );
+        rawFonts.add( new FontData('@', new Rectangle(593f, 201f, 91f, 100f) ) );
+        rawFonts.add( new FontData('A', new Rectangle(684f, 201f, 53f, 100f) ) );
+        rawFonts.add( new FontData('B', new Rectangle(737f, 201f, 53f, 100f) ) );
+        rawFonts.add( new FontData('C', new Rectangle(790f, 201f, 50f, 100f) ) );
+        rawFonts.add( new FontData('D', new Rectangle(840f, 201f, 54f, 100f) ) );
+        rawFonts.add( new FontData('E', new Rectangle(894f, 201f, 51f, 100f) ) );
+        rawFonts.add( new FontData('F', new Rectangle(945f, 201f, 51f, 100f) ) );
+        rawFonts.add( new FontData('G', new Rectangle(0f, 302f, 53f, 100f) ) );
+        rawFonts.add( new FontData('H', new Rectangle(53f, 302f, 57f, 100f) ) );
+        rawFonts.add( new FontData('I', new Rectangle(110f, 302f, 42f, 100f) ) );
+        rawFonts.add( new FontData('J', new Rectangle(152f, 302f, 49f, 100f) ) );
+        rawFonts.add( new FontData('K', new Rectangle(201f, 302f, 55f, 100f) ) );
+        rawFonts.add( new FontData('L', new Rectangle(256f, 302f, 51f, 100f) ) );
+        rawFonts.add( new FontData('M', new Rectangle(307f, 302f, 62f, 100f) ) );
+        rawFonts.add( new FontData('N', new Rectangle(369f, 302f, 55f, 100f) ) );
+        rawFonts.add( new FontData('O', new Rectangle(424f, 302f, 53f, 100f) ) );
+        rawFonts.add( new FontData('P', new Rectangle(477f, 302f, 53f, 100f) ) );
+        rawFonts.add( new FontData('Q', new Rectangle(530f, 302f, 54f, 100f) ) );
+        rawFonts.add( new FontData('R', new Rectangle(584f, 302f, 54f, 100f) ) );
+        rawFonts.add( new FontData('S', new Rectangle(638f, 302f, 49f, 100f) ) );
+        rawFonts.add( new FontData('T', new Rectangle(687f, 302f, 53f, 100f) ) );
+        rawFonts.add( new FontData('U', new Rectangle(740f, 302f, 53f, 100f) ) );
+        rawFonts.add( new FontData('V', new Rectangle(793f, 302f, 54f, 100f) ) );
+        rawFonts.add( new FontData('W', new Rectangle(847f, 302f, 64f, 100f) ) );
+        rawFonts.add( new FontData('X', new Rectangle(911f, 302f, 55f, 100f) ) );
+        rawFonts.add( new FontData('Y', new Rectangle(966f, 302f, 53f, 100f) ) );
+        rawFonts.add( new FontData('Z', new Rectangle(0f, 403f, 52f, 100f) ) );
+        rawFonts.add( new FontData('[', new Rectangle(52f, 403f, 40f, 100f) ) );
+        rawFonts.add( new FontData('\\', new Rectangle(92f, 403f, 49f, 100f) ) );
+        rawFonts.add( new FontData(']', new Rectangle(141f, 403f, 40f, 100f) ) );
+        rawFonts.add( new FontData('^', new Rectangle(181f, 403f, 75f, 100f) ) );
+        rawFonts.add( new FontData('_', new Rectangle(256f, 403f, 67f, 100f) ) );
+        rawFonts.add( new FontData('`', new Rectangle(323f, 403f, 44f, 100f) ) );
+        rawFonts.add( new FontData('a', new Rectangle(367f, 403f, 50f, 100f) ) );
+        rawFonts.add( new FontData('b', new Rectangle(417f, 403f, 51f, 100f) ) );
+        rawFonts.add( new FontData('c', new Rectangle(468f, 403f, 47f, 100f) ) );
+        rawFonts.add( new FontData('d', new Rectangle(515f, 403f, 51f, 100f) ) );
+        rawFonts.add( new FontData('e', new Rectangle(566f, 403f, 49f, 100f) ) );
+        rawFonts.add( new FontData('f', new Rectangle(615f, 403f, 40f, 100f) ) );
+        rawFonts.add( new FontData('g', new Rectangle(655f, 403f, 51f, 100f) ) );
+        rawFonts.add( new FontData('h', new Rectangle(706f, 403f, 51f, 100f) ) );
+        rawFonts.add( new FontData('i', new Rectangle(757f, 403f, 39f, 100f) ) );
+        rawFonts.add( new FontData('j', new Rectangle(796f, 403f, 39f, 100f) ) );
+        rawFonts.add( new FontData('k', new Rectangle(835f, 403f, 51f, 100f) ) );
+        rawFonts.add( new FontData('l', new Rectangle(886f, 403f, 39f, 100f) ) );
+        rawFonts.add( new FontData('m', new Rectangle(925f, 403f, 62f, 100f) ) );
+        rawFonts.add( new FontData('n', new Rectangle(0f, 504f, 51f, 100f) ) );
+        rawFonts.add( new FontData('o', new Rectangle(51f, 504f, 50f, 100f) ) );
+        rawFonts.add( new FontData('p', new Rectangle(101f, 504f, 51f, 100f) ) );
+        rawFonts.add( new FontData('q', new Rectangle(152f, 504f, 51f, 100f) ) );
+        rawFonts.add( new FontData('r', new Rectangle(203f, 504f, 45f, 100f) ) );
+        rawFonts.add( new FontData('s', new Rectangle(248f, 504f, 46f, 100f) ) );
+        rawFonts.add( new FontData('t', new Rectangle(294f, 504f, 41f, 100f) ) );
+        rawFonts.add( new FontData('u', new Rectangle(335f, 504f, 51f, 100f) ) );
+        rawFonts.add( new FontData('v', new Rectangle(386f, 504f, 48f, 100f) ) );
+        rawFonts.add( new FontData('w', new Rectangle(434f, 504f, 58f, 100f) ) );
+        rawFonts.add( new FontData('x', new Rectangle(492f, 504f, 50f, 100f) ) );
+        rawFonts.add( new FontData('y', new Rectangle(542f, 504f, 47f, 100f) ) );
+        rawFonts.add( new FontData('z', new Rectangle(589f, 504f, 48f, 100f) ) );
+        rawFonts.add( new FontData('{', new Rectangle(637f, 504f, 43f, 100f) ) );
+        rawFonts.add( new FontData('|', new Rectangle(680f, 504f, 45f, 100f) ) );
+        rawFonts.add( new FontData('}', new Rectangle(725f, 504f, 43f, 100f) ) );
+        rawFonts.add( new FontData('~', new Rectangle(768f, 504f, 75f, 100f) ) );
+        rawFonts.add( new FontData('', new Rectangle(843f, 506f, 25f, 102f) ) );
+
+        final float tw = 1024f;
+        final float th = 512f;
+
+        FontData fontData;
+        TexturedQuad pFont;
+        float x, y, w, h;
+
+        int arrSize = rawFonts.size();
+        for (int i = 0; i < arrSize; ++i) {
+            fontData = rawFonts.get(i);
+
+            x = fontData.rect.x;
+            y = fontData.rect.y;
+            w = fontData.rect.w;
+            h = fontData.rect.h;
+
+            pFont = new TexturedQuad();
+            pFont.ch = fontData.ch;
+            pFont.w = w;
+            pFont.h = h;
+
+            // x								// y
+            pFont.tx_lo_left.x = x / tw;        pFont.tx_lo_left.y = (th - (y - h)) / th;  // 0
+            pFont.tx_lo_right.x = (x + w) / tw; pFont.tx_lo_right.y = (th - (y - h)) / th; // 1
+            pFont.tx_up_right.x = (x + w) / tw; pFont.tx_up_right.y = (th - y) / th;       // 2
+            pFont.tx_up_left.x = x / tw;        pFont.tx_up_left.y =  (th - y) / th;        // 3
+
+            fonts.put(String.valueOf(pFont.ch), pFont);
+        }
+    }
+
+
 }

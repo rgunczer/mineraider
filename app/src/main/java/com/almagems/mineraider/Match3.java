@@ -222,8 +222,6 @@ public class Match3 {
 				++step;
 			}
 		}
-
-        scoreCounter.addScore(anim.count(), combo);
 	}
 		
 	private void fillBufferBoard() {
@@ -466,6 +464,8 @@ public class Match3 {
 					removeGems(anim, firstSelected.boardX, firstSelected.boardY, false);
 				}
 
+                scoreCounter.addScore(anim.count(), /*combo*/false);
+
                 if (first && second) {
                     scoreCounter.addBonusForPerfectSwap();
                 }
@@ -510,6 +510,7 @@ public class Match3 {
 		if (!anim.isEmpty()) {
 			//System.out.println("COMBO(S)!!!");
 			addAnimToManager(anim);
+            scoreCounter.addScore(anim.count(), /*combo*/true);
 		}
 	}
 	

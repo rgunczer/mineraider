@@ -1,5 +1,6 @@
 package com.almagems.mineraider.scenes;
 
+import static android.opengl.GLES20.GL_BLEND;
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
 import static android.opengl.GLES20.GL_SRC_ALPHA;
@@ -69,7 +70,6 @@ public class Level extends Scene {
 	public ArrayList<MineCart> mineCarts = new ArrayList<MineCart>();
 	
 	private AnimationManager animManager;
-    private ScoreCounter scoreCounter;
 	private ParticleManager particleManager;
 
 	private ArrayList<RockData> rocks = new ArrayList<RockData>();
@@ -83,8 +83,7 @@ public class Level extends Scene {
         hud = new HUD();
 
 		animManager = new AnimationManager();
-        scoreCounter = new ScoreCounter();
-		match3 = new Match3(6, animManager, scoreCounter);
+		match3 = new Match3(8, animManager, ClassicSingleton.getInstance().scoreCounter);
 
 		initBoardGeometry();		
 				
@@ -106,8 +105,7 @@ public class Level extends Scene {
 		
 		// sin
 		physics.addBoxStatic(0.0f, -19.7f, 0f, 120.0f, 0.5f);
-		
-		
+
 		float x = -20f;
 		float y = -15.7f;
 		MineCart mineCart;
@@ -115,21 +113,21 @@ public class Level extends Scene {
 		mineCart = new MineCart(x, y);
 		mineCarts.add(mineCart);
 		ClassicSingleton.getInstance().cart1 = mineCart;
-		
-		
+
 		x = -30f;
 		mineCart = new MineCart(x, y);
 		mineCarts.add(mineCart);
 		ClassicSingleton.getInstance().cart2 = mineCart;
 
-
         PopAnimation.physics = physics;
-
 	}
 	
 	@Override
-	public void surfaceChanged(int width, int height) {
+	public void surfaceChanged(int width, int height)
+    {
 		visuals.setProjectionMatrix3D(width, height);
+        hud.init();
+        hud.updateScore(ClassicSingleton.getInstance().getScore());
 	}
 	
 	@Override
@@ -140,15 +138,19 @@ public class Level extends Scene {
 		physics.update();
 		match3.update();
         hud.update();
+        hud.updateScore(ClassicSingleton.getInstance().scoreCounter.getScore());
 	}
 	
 	@Override
 	public void draw() {
+        visuals.setProjectionMatrix3D((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+        visuals.updateViewProjMatrix();
+        glEnable(GL_DEPTH_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		animManager.draw();
 
 		drawFloorWallSoil();
-		
+
 		drawSelectionMarker();
 		MyColor color; 
 		color = new MyColor(0f, 0f, 0f, 1f);
@@ -176,13 +178,22 @@ public class Level extends Scene {
 		
 		particleManager.draw();
 
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        visuals.setProjectionMatrix2D((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+        visuals.updateViewProjMatrix();
         hud.draw();
+
+
+        visuals.setProjectionMatrix3D((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+        visuals.updateViewProjMatrix();
 	}
 	
 	@Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
 
-        scoreCounter.dump();
+        ClassicSingleton.getInstance().scoreCounter.dump();
 
 		swipeDir = SwipeDir.SwipeNone;
 		touchDownX = normalizedX;
@@ -803,7 +814,7 @@ public class Level extends Scene {
 		if (Constants.DRAW_BUFFER_BOARD) {
 			yMax = match3.boardSize * 2;
 		}
-		
+		glEnable(GL_BLEND);
 		visuals.pointLightShader.setTexture(visuals.textureGems);
 		
 		float scale;
@@ -815,7 +826,7 @@ public class Level extends Scene {
 					Model gem = visuals.gems[gp.type];
 														
 					if (color.r == 0.0f) {
-						scale = 0.1f;
+						scale = 0.11f;
 					} else {
 						scale = 0.0f;
 					}
@@ -835,6 +846,7 @@ public class Level extends Scene {
 				}
 			}
 		}
+        glDisable(GL_BLEND);
 	}
 	
 	void drawRailRoad() {		

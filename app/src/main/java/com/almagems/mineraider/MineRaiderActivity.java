@@ -3,6 +3,7 @@ package com.almagems.mineraider;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -17,12 +18,12 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-//import com.google.android.gms.ads.AdRequest;
-//import com.google.android.gms.ads.AdSize;
-//import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 
 public class MineRaiderActivity extends Activity {
-	//private AdView adView;
+	private AdView adView;
 	private GLSurfaceView glSurfaceView;
 	private boolean rendererSet = false;
 	
@@ -98,13 +99,18 @@ public class MineRaiderActivity extends Activity {
 					return false;				
 				}
 			}
-		});		
-		        
+		});
+
+        // read preferences
+        SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+        int score = sharedPrefs.getInt("SCORE", 0);
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+        singleton.setScore(score);
+        System.out.println("Score is:: " + score);
         initAds();
 	}
 	
 	private void initAds() {
-/*
 		// get deviceId
 		String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         String deviceId = md5.md5(android_id).toUpperCase();
@@ -141,7 +147,6 @@ public class MineRaiderActivity extends Activity {
 		rl.bringToFront();		
 						
 		adView.loadAd(adRequest);
-*/
 	}
 	
 	@Override
@@ -153,6 +158,16 @@ public class MineRaiderActivity extends Activity {
 		if (rendererSet) {
 			glSurfaceView.onPause();
 		}
+
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+
+        // save preferences here
+//        Context context = getActivity();
+        //SharedPreferences sharedPref = this.getSharedPreferences("com.almagems.mineraider.prefs", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("SCORE", singleton.getScore());
+        editor.commit();
 	}
 	
 	@Override

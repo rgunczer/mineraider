@@ -19,11 +19,7 @@ import static android.opengl.GLES20.glLinkProgram;
 import static android.opengl.GLES20.glShaderSource;
 import static android.opengl.GLES20.glValidateProgram;
 
-import com.almagems.mineraider.Visuals;
-
 import android.util.Log;
-import android.widget.Toast;
-
 
 public class ShaderHelper {
 

@@ -7,11 +7,10 @@ import static android.opengl.Matrix.multiplyMV;
 
 import android.graphics.Color;
 
-import com.almagems.mineraider.util.Geometry.Point;
 import com.almagems.mineraider.util.Vector;
 
 public class ParticleEmitter {
-	public Point position;
+	public Vector position;
 	public int color;
 	private final float angleVariance;
 	private final float speedVariance;
@@ -24,7 +23,7 @@ public class ParticleEmitter {
 	
 	public int numberOfParticlesToEmit;
 	
-	public ParticleEmitter( Point position, 
+	public ParticleEmitter( Vector position,
 							Vector direction, 
 							int color,
 							float angleVarianceInDegrees, 

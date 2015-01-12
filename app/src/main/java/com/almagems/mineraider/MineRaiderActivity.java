@@ -101,13 +101,8 @@ public class MineRaiderActivity extends Activity {
 			}
 		});
 
-        // read preferences
-        SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
-        int score = sharedPrefs.getInt("SCORE", 0);
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-        singleton.setScore(score);
-        System.out.println("Score is:: " + score);
-        initAds();
+        loadPreferences();
+        //initAds();
 	}
 	
 	private void initAds() {
@@ -151,33 +146,46 @@ public class MineRaiderActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-//		if (adView != null) {
-//			adView.pause();
-//		}
+		if (adView != null) {
+			adView.pause();
+		}
 		super.onPause();		
 		if (rendererSet) {
 			glSurfaceView.onPause();
 		}
 
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-
-        // save preferences here
-//        Context context = getActivity();
-        //SharedPreferences sharedPref = this.getSharedPreferences("com.almagems.mineraider.prefs", Context.MODE_PRIVATE);
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("SCORE", singleton.getScore());
-        editor.commit();
+        savePreferences();
 	}
 	
 	@Override
 	protected void onResume() {
-//		if (adView != null) {
-//			adView.resume();
-//		}
+		if (adView != null) {
+			adView.resume();
+		}
 		super.onResume();		
 		if (rendererSet) {
 			glSurfaceView.onResume();
 		}
-	}	
+	}
+
+    private void savePreferences() {
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+
+        // Context context = getActivity();
+        // SharedPreferences sharedPref = this.getSharedPreferences("com.almagems.mineraider.prefs", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("SCORE", singleton.getScore());
+        editor.commit();
+    }
+
+    private void loadPreferences() {
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+
+        SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+        int score = sharedPrefs.getInt("SCORE", 0);
+        singleton.setScore(score);
+        System.out.println("Score is:: " + score);
+    }
+
 }

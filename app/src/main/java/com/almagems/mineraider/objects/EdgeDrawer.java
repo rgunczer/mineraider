@@ -6,7 +6,7 @@ import static com.almagems.mineraider.Constants.BYTES_PER_FLOAT;
 
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.shaders.ColorShader;
-import com.almagems.mineraider.util.Geometry.Point;
+import com.almagems.mineraider.util.Vector;
 
 
 public class EdgeDrawer {
@@ -31,16 +31,17 @@ public class EdgeDrawer {
 		lineCount = 0;
 	}
 	
-	public void addLine(Point from, Point to) {		
+	public void addLine(float fromX, float fromY, float fromZ,
+                        float toX, float toY, float toZ) {
 		int start = index;
 		
-		particles[index++] = from.x;
-		particles[index++] = from.y;
-		particles[index++] = from.z;
+		particles[index++] = fromX;
+		particles[index++] = fromY;
+		particles[index++] = fromZ;
 
-		particles[index++] = to.x;
-		particles[index++] = to.y;
-		particles[index++] = to.z;		
+		particles[index++] = toX;
+		particles[index++] = toY;
+		particles[index++] = toZ;
 		
 		++lineCount;
 		vertexArray.updateBuffer(particles, start, 2 * TOTAL_COMPONENT_COUNT);

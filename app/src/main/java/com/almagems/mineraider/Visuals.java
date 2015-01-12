@@ -30,6 +30,7 @@ import com.almagems.mineraider.util.FontData;
 import com.almagems.mineraider.util.MatrixHelper;
 import com.almagems.mineraider.util.ModelLoader;
 import com.almagems.mineraider.util.Rectangle;
+import com.almagems.mineraider.util.Texture;
 import com.almagems.mineraider.util.TextureHelper;
 import com.almagems.mineraider.util.TexturedQuad;
 import com.almagems.mineraider.util.Vector;
@@ -45,13 +46,15 @@ public class Visuals {
     public static float screenWidth;
     public static float screenHeight;
     public static float aspectRatio;
+    public static final float referenceScreenWidth = 1080f;
+    public static float scaleFactor;
 
 	public Context context;
 
     // custom
 	public MyColor color = new  MyColor(1f, 1f, 1f);
     public Map<String, TexturedQuad> fonts = new HashMap<String, TexturedQuad>();
-
+    private ArrayList<Texture> textures = new ArrayList<Texture>(20);
 	
 	// matrices
 	public final float[] invertedViewProjectionMatrix = new float[16];
@@ -301,37 +304,60 @@ public class Visuals {
 		ml.init(context, R.drawable.helmet, "Helmet");
 		helmet = new Model(ml);		
 	}	
-	
+
+    private int loadTexture(int resourceId) {
+        Texture texture = TextureHelper.loadTexture(context, resourceId);
+        textures.add(texture);
+        return texture.id;
+    }
+
+    public Texture getTextureObj(int textureId) {
+        Texture texture;
+        int size = textures.size();
+        for(int i = 0; i < size; ++i) {
+            texture = textures.get(i);
+            if (texture.id == textureId) {
+                return texture;
+            }
+        }
+        return null;
+    }
+
 	public void loadTextures() {
-		textureGems = TextureHelper.loadTexture(context, R.drawable.gems_textures);		
-		textureHintArrow = TextureHelper.loadTexture(context, R.drawable.hint_arrow_texture);		
-		textureCart = TextureHelper.loadTexture(context, R.drawable.cart_texture);
-		textureRailRoad = TextureHelper.loadTexture(context, R.drawable.railroad_texture);		
-		textureParticle = TextureHelper.loadTexture(context, R.drawable.smokeparticle);
-		textureFloor = TextureHelper.loadTexture(context, R.drawable.floor_texture);
-		textureWall = TextureHelper.loadTexture(context, R.drawable.wall_texture);
-		texturePillar = TextureHelper.loadTexture(context, R.drawable.pillar_texture);
-		textureCrate = TextureHelper.loadTexture(context, R.drawable.crate_texture);
-		textureSoil = TextureHelper.loadTexture(context, R.drawable.soil_texture);
-		textureWheel = TextureHelper.loadTexture(context, R.drawable.wheel_texture);
-		textureBeam = TextureHelper.loadTexture(context, R.drawable.beam_texture);
-		textureCliff142 = TextureHelper.loadTexture(context, R.drawable.cliffs0142);
-		textureMenu = TextureHelper.loadTexture(context, R.drawable.main_menu_bg);
-		textureMenuItems = TextureHelper.loadTexture(context, R.drawable.menu_items);
-		texturePickAxe = TextureHelper.loadTexture(context, R.drawable.pickaxe_texture);
-		textureHelmet = TextureHelper.loadTexture(context, R.drawable.helmet_texture);
-        textureFonts = TextureHelper.loadTexture(context, R.drawable.fontsandroid);
-        textureIkon = TextureHelper.loadTexture(context, R.drawable.ikon_texture);
+		textureGems = loadTexture(R.drawable.gems_textures);
+		textureHintArrow = loadTexture(R.drawable.hint_arrow_texture);
+		textureCart = loadTexture(R.drawable.cart_texture);
+		textureRailRoad = loadTexture(R.drawable.railroad_texture);
+		textureParticle = loadTexture(R.drawable.smokeparticle);
+		textureFloor = loadTexture(R.drawable.floor_texture);
+		textureWall = loadTexture(R.drawable.wall_texture);
+		texturePillar = loadTexture(R.drawable.pillar_texture);
+		textureCrate = loadTexture(R.drawable.crate_texture);
+		textureSoil = loadTexture(R.drawable.soil_texture);
+		textureWheel = loadTexture(R.drawable.wheel_texture);
+		textureBeam = loadTexture(R.drawable.beam_texture);
+		textureCliff142 = loadTexture(R.drawable.cliffs0142);
+		textureMenu = loadTexture(R.drawable.main_menu_bg);
+		textureMenuItems = loadTexture(R.drawable.menu_items);
+		texturePickAxe = loadTexture(R.drawable.pickaxe_texture);
+		textureHelmet = loadTexture(R.drawable.helmet_texture);
+        textureFonts = loadTexture(R.drawable.fontsandroid);
+        textureIkon = loadTexture(R.drawable.ikon_texture);
 	}
 
 	public void bindNoTexture() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	
-	public void setProjectionMatrix2D(int width, int height) {
-		
-		final float aspectRatio = width > height ? (float)width / (float)height : (float)height / (float)width;
-		
+
+
+    public void setProjectionMatrix2D() {
+        setProjectionMatrix2D((int)screenWidth, (int)screenHeight);
+    }
+
+	private void setProjectionMatrix2D(int width, int height) {
+
+//		final float aspectRatio = width > height ? (float)width / (float)height : (float)height / (float)width;
+
 		if (width > height) {
 			orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f); // landscape
 		} else {
@@ -344,7 +370,7 @@ public class Visuals {
 		//setLookAtM(viewMatrix, 0, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f);
 	}
 	
-	public void setProjectionMatrix3D(int width, int height) {
+	public void setProjectionMatrix3D() {
 				
 		float eyeZ = 49.0f;
 		//float eyeZ = 190.0f;
@@ -354,7 +380,7 @@ public class Visuals {
 			eyeZ = 70.0f;
 		}
 		
-		MatrixHelper.perspectiveM(projectionMatrix, 45, (float)width / (float)height, 1f, 1000f);
+		MatrixHelper.perspectiveM(projectionMatrix, 45, screenWidth / screenHeight, 1f, 100f);
 		
 		setLookAtM(viewMatrix, 0,		
 				// real
@@ -369,7 +395,7 @@ public class Visuals {
 
 				// debug 
 //				-60f, -10f, 13f, 	// eye				
-//				0f, -6f, -10f, 	// at
+//				0f, -6f, -10f, 	    // at
 //				0f, 1f, 0f);		// up
 				
 				
@@ -390,31 +416,35 @@ public class Visuals {
 		multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 		invertM(invertedViewProjectionMatrix, 0, viewProjectionMatrix, 0);		
 	}
-	
-	public void calcMatricesForObject(float tx, float ty, float tz,
-									  float rx, float ry, float rz,
-									  float sx, float sy, float sz) {
 
+
+    public void calcMatricesForObject(ObjectPosition op) {
 		setIdentityM(modelMatrix, 0);
 		
-		translateM(modelMatrix, 0, tx, ty, tz);
+		translateM(modelMatrix, 0, op.tx, op.ty, op.tz);
 		
-		if (Math.abs(rx) > Constants.EPSILON) {
-			rotateM(modelMatrix, 0, rx, 1f, 0f, 0f);
-		}
-		
-		if (Math.abs(ry) > Constants.EPSILON) {
-			rotateM(modelMatrix, 0, ry, 0f, 1f, 0f);
-		}
-		
-		if (Math.abs(rz) > Constants.EPSILON) {
-			rotateM(modelMatrix, 0, rz, 0f, 0, 1f);
-		}
-		
-		if ( (Math.abs(sx) > Constants.EPSILON) || (Math.abs(sy) > Constants.EPSILON) || (Math.abs(sz) > Constants.EPSILON) ) { 
-			scaleM(modelMatrix, 0, sx, sy, sz);			
-		}
-	
+//		if (Math.abs(op.rx) > Constants.EPSILON) {
+//			rotateM(modelMatrix, 0, op.rx, 1f, 0f, 0f);
+//		}
+//
+//		if (Math.abs(op.ry) > Constants.EPSILON) {
+//			rotateM(modelMatrix, 0, op.ry, 0f, 1f, 0f);
+//		}
+//
+//		if (Math.abs(op.rz) > Constants.EPSILON) {
+//			rotateM(modelMatrix, 0, op.rz, 0f, 0, 1f);
+//		}
+//
+//		if ( (Math.abs(op.sx) > Constants.EPSILON) || (Math.abs(op.sy) > Constants.EPSILON) || (Math.abs(op.sz) > Constants.EPSILON) ) {
+//			scaleM(modelMatrix, 0, op.sx, op.sy, op.sz);
+//		}
+
+        rotateM(modelMatrix, 0, op.rx, 1f, 0f, 0f);
+        rotateM(modelMatrix, 0, op.ry, 0f, 1f, 0f);
+        rotateM(modelMatrix, 0, op.rz, 0f, 0f, 1f);
+
+        scaleM(modelMatrix, 0, op.sx, op.sy, op.sz);
+
 		setIdentityM(mLightModelMatrix, 0);
 		translateM(mLightModelMatrix, 0, lightDir.x, lightDir.y, lightDir.z);
 		
@@ -432,13 +462,7 @@ public class Visuals {
 		
 		// calc matrix to transform normal based on the model matrix
 		invertM(normalMatrix, 0, modelMatrix, 0);
-		transposeM(normalMatrix, 0, normalMatrix, 0);				
-	}
-	
-	public void calcMatricesForObject(ObjectPosition op) {
-		calcMatricesForObject( op.tx, op.ty, op.tz, 
-							   op.rx, op.ry, op.rz, 
-							   op.sx, op.sy, op.sz );
+		transposeM(normalMatrix, 0, normalMatrix, 0);
 	}
 	
 	public int colorFromGemType(int type) {		
@@ -556,8 +580,14 @@ public class Visuals {
         rawFonts.add( new FontData('~', new Rectangle(768f, 504f, 75f, 100f) ) );
         rawFonts.add( new FontData('', new Rectangle(843f, 506f, 25f, 102f) ) );
 
-        final float tw = 1024f;
-        final float th = 512f;
+        float tw = 1024f;
+        float th = 512f;
+
+        Texture texture = getTextureObj(textureFonts);
+        if (texture != null) {
+            tw = texture.width;
+            th = texture.height;
+        }
 
         FontData fontData;
         TexturedQuad pFont;
@@ -581,7 +611,7 @@ public class Visuals {
             pFont.tx_lo_left.x = x / tw;        pFont.tx_lo_left.y = (th - (y - h)) / th;  // 0
             pFont.tx_lo_right.x = (x + w) / tw; pFont.tx_lo_right.y = (th - (y - h)) / th; // 1
             pFont.tx_up_right.x = (x + w) / tw; pFont.tx_up_right.y = (th - y) / th;       // 2
-            pFont.tx_up_left.x = x / tw;        pFont.tx_up_left.y =  (th - y) / th;        // 3
+            pFont.tx_up_left.x = x / tw;        pFont.tx_up_left.y =  (th - y) / th;       // 3
 
             fonts.put(String.valueOf(pFont.ch), pFont);
         }

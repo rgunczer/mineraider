@@ -14,7 +14,6 @@ import android.graphics.Color;
 
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.util.Vector;
-import com.almagems.mineraider.util.Geometry.Point;
 
 
 public class ParticleManager {
@@ -48,14 +47,14 @@ public class ParticleManager {
 		particleSystem = new ParticleSystem(10000);
 		globalStartTime = System.nanoTime();		
 		
-		ParticleEmitter particleEmitter0 = new ParticleEmitter( new Point(-10.0f, 18.0f, 0.0f), 
+		ParticleEmitter particleEmitter0 = new ParticleEmitter( new Vector(-10.0f, 18.0f, 0.0f),
 				particleDirection, 
 				color,
 				angleVarianceInDegrees,
 				speedVariance );
 		particleEmitter0.numberOfParticlesToEmit = 100;
 
-		ParticleEmitter particleEmitter1 = new ParticleEmitter( new Point(0.0f, 18.0f, 0.0f), 
+		ParticleEmitter particleEmitter1 = new ParticleEmitter( new Vector(0.0f, 18.0f, 0.0f),
 				particleDirection, 
 				color,
 				angleVarianceInDegrees,
@@ -63,7 +62,7 @@ public class ParticleManager {
 		
 		particleEmitter1.numberOfParticlesToEmit = 50;
 
-		ParticleEmitter particleEmitter2 = new ParticleEmitter( new Point(10.0f, 18.0f, 0.0f), 
+		ParticleEmitter particleEmitter2 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
 				particleDirection, 
 				color,
 				angleVarianceInDegrees,
@@ -76,31 +75,31 @@ public class ParticleManager {
 		liveParticleEmitters.add(particleEmitter2);
 
 		
-		ParticleEmitter particleEmitter3 = new ParticleEmitter( new Point(10.0f, 18.0f, 0.0f), 
+		ParticleEmitter particleEmitter3 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
 				particleDirection, 
 				Color.rgb(255, 255, 0),
 				angleVarianceInDegrees,
 				speedVariance );
 
-		ParticleEmitter particleEmitter4 = new ParticleEmitter( new Point(10.0f, 18.0f, 0.0f), 
+		ParticleEmitter particleEmitter4 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
 				particleDirection, 
 				Color.rgb(255, 255, 0),
 				angleVarianceInDegrees,
 				speedVariance );
 		
-		ParticleEmitter particleEmitter5 = new ParticleEmitter( new Point(10.0f, 18.0f, 0.0f), 
+		ParticleEmitter particleEmitter5 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
 				particleDirection, 
 				Color.rgb(255, 255, 0),
 				angleVarianceInDegrees,
 				speedVariance );
 		
-		ParticleEmitter particleEmitter6 = new ParticleEmitter( new Point(10.0f, 18.0f, 0.0f), 
+		ParticleEmitter particleEmitter6 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
 				particleDirection, 
 				Color.rgb(255, 255, 0),
 				angleVarianceInDegrees,
 				speedVariance );
 
-		ParticleEmitter particleEmitter7 = new ParticleEmitter( new Point(10.0f, 18.0f, 0.0f), 
+		ParticleEmitter particleEmitter7 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
 				particleDirection, 
 				Color.rgb(255, 255, 0),
 				angleVarianceInDegrees,
@@ -118,7 +117,7 @@ public class ParticleManager {
 		//System.out.println("in MineRaiderRenderer add Particle Emitter at: " + x + ", " + y);		
 		if (deadParticleEmitters.size() > 0) {
 			ParticleEmitter pe = deadParticleEmitters.remove(0);
-			pe.position = new Point(x, y, -2f);
+			pe.position = new Vector(x, y, -2f);
 			pe.numberOfParticlesToEmit = 10;
 			pe.color = visuals.colorFromGemType(gemType);
 			liveParticleEmitters.add(pe);

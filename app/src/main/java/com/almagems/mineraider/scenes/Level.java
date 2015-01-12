@@ -42,9 +42,7 @@ import com.almagems.mineraider.particlesystem.ParticleManager;
 import com.almagems.mineraider.util.Geometry;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Vector;
-import com.almagems.mineraider.util.Geometry.Point;
-import com.almagems.mineraider.util.Geometry.Ray;
-import com.almagems.mineraider.ScoreCounter;
+import com.almagems.mineraider.util.Ray;
 
 public class Level extends Scene {
 
@@ -98,7 +96,7 @@ public class Level extends Scene {
 		physics.addEdge(-13.5f, -7.0f, -13.5f,  20.0f); // left
 		physics.addEdge( 13.5f, -7.0f,  13.5f,  20.0f); // right
 		
-		physics.addBoxStatic( 7.8f, -5.9f,  24.8f, 12.0f, 0.8f);
+		physics.addBoxStatic(7.8f, -5.9f, 24.8f, 12.0f, 0.8f);
 		physics.addBoxStatic(-7.8f, -5.9f, -25.0f, 12.0f, 0.8f);
 		physics.addBoxStatic( 3.0f, -8.8f, 0f, 1.4f, 1.4f);
 		physics.addBoxStatic(-3.0f, -8.8f, 0f, 1.4f, 1.4f);
@@ -123,9 +121,8 @@ public class Level extends Scene {
 	}
 	
 	@Override
-	public void surfaceChanged(int width, int height)
-    {
-		visuals.setProjectionMatrix3D(width, height);
+	public void surfaceChanged(int width, int height) {
+		visuals.setProjectionMatrix3D();
         hud.init();
         hud.updateScore(ClassicSingleton.getInstance().getScore());
 	}
@@ -143,7 +140,7 @@ public class Level extends Scene {
 	
 	@Override
 	public void draw() {
-        visuals.setProjectionMatrix3D((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+        visuals.setProjectionMatrix3D();
         visuals.updateViewProjMatrix();
         glEnable(GL_DEPTH_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -177,16 +174,9 @@ public class Level extends Scene {
 		//drawPhysicsEdges();
 		
 		particleManager.draw();
-
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        visuals.setProjectionMatrix2D((int)Visuals.screenWidth, (int)Visuals.screenHeight);
-        visuals.updateViewProjMatrix();
         hud.draw();
 
-
-        visuals.setProjectionMatrix3D((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+        visuals.setProjectionMatrix3D();
         visuals.updateViewProjMatrix();
 	}
 	
@@ -403,8 +393,8 @@ public class Level extends Scene {
 		divideByW(nearPointWorld);
 		divideByW(farPointWorld);
 		
-		Point nearPointRay = new Point(nearPointWorld[0], nearPointWorld[1], nearPointWorld[2]);
-		Point farPointRay = new Point(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
+		Vector nearPointRay = new Vector(nearPointWorld[0], nearPointWorld[1], nearPointWorld[2]);
+		Vector farPointRay = new Vector(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
 		
 		return new Ray(nearPointRay, Geometry.vectorBetween(nearPointRay, farPointRay));
 	}	
@@ -453,8 +443,8 @@ public class Level extends Scene {
 			while(fixture != null) {
 				EdgeShape edge = (EdgeShape)fixture.getShape();
 				//System.out.println("box2d " + edge.m_vertex1.x + ", " + edge.m_vertex1.y + ", " + edge.m_vertex2.x + ", " + edge.m_vertex2.y);										
-				edgeDrawer.addLine(	new Point(edge.m_vertex1.x, edge.m_vertex1.y, 0.0f), 
-									new Point(edge.m_vertex2.x, edge.m_vertex2.y, 0.0f));
+				edgeDrawer.addLine(	edge.m_vertex1.x, edge.m_vertex1.y, 0.0f,
+									edge.m_vertex2.x, edge.m_vertex2.y, 0.0f);
 				
 				fixture = fixture.getNext();
 			}
@@ -549,17 +539,17 @@ public class Level extends Scene {
 						Vec2 v2 = polygon.m_vertices[2];
 						Vec2 v3 = polygon.m_vertices[3];
 						
-						edgeDrawer.addLine(	new Point(v0.x, v0.y, 0.0f), 
-											new Point(v1.x, v1.y, 0.0f));
+						edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
+											v1.x, v1.y, 0.0f);
 		
-						edgeDrawer.addLine(	new Point(v1.x, v1.y, 0.0f), 
-											new Point(v2.x, v2.y, 0.0f));
+						edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
+											v2.x, v2.y, 0.0f);
 		
-						edgeDrawer.addLine(	new Point(v2.x, v2.y, 0.0f), 
-											new Point(v3.x, v3.y, 0.0f));
+						edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
+											v3.x, v3.y, 0.0f);
 						
-						edgeDrawer.addLine(	new Point(v3.x, v3.y, 0.0f), 
-											new Point(v0.x, v0.y, 0.0f));
+						edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
+											v0.x, v0.y, 0.0f);
 																											
 						Vector position = new Vector(pos.x,	pos.y, 1.0f);
 						
@@ -590,14 +580,14 @@ public class Level extends Scene {
 							Vec2 v1 = polygon.m_vertices[1];
 							Vec2 v2 = polygon.m_vertices[2];
 
-							edgeDrawer.addLine(	new Point(v0.x, v0.y, 0.0f), 
-												new Point(v1.x, v1.y, 0.0f));
+							edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
+												v1.x, v1.y, 0.0f);
 
-							edgeDrawer.addLine(	new Point(v1.x, v1.y, 0.0f), 
-												new Point(v2.x, v2.y, 0.0f));
+							edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
+												v2.x, v2.y, 0.0f);
 							
-							edgeDrawer.addLine(	new Point(v2.x, v2.y, 0.0f), 
-												new Point(v0.x, v0.y, 0.0f));
+							edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
+												v0.x, v0.y, 0.0f);
 
 							Vector position = new Vector(pos.x,	pos.y, 1.0f);
 							
@@ -621,20 +611,20 @@ public class Level extends Scene {
 							Vec2 v3 = polygon.m_vertices[3];
 							Vec2 v4 = polygon.m_vertices[4];							
 							
-							edgeDrawer.addLine(	new Point(v0.x, v0.y, 0.0f), 
-												new Point(v1.x, v1.y, 0.0f));
+							edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
+												v1.x, v1.y, 0.0f);
 			
-							edgeDrawer.addLine(	new Point(v1.x, v1.y, 0.0f), 
-												new Point(v2.x, v2.y, 0.0f));
+							edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
+												v2.x, v2.y, 0.0f);
 			
-							edgeDrawer.addLine(	new Point(v2.x, v2.y, 0.0f), 
-												new Point(v3.x, v3.y, 0.0f));
+							edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
+												v3.x, v3.y, 0.0f);
 							
-							edgeDrawer.addLine(	new Point(v3.x, v3.y, 0.0f), 
-												new Point(v4.x, v4.y, 0.0f));
+							edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
+												v4.x, v4.y, 0.0f);
 									
-							edgeDrawer.addLine(	new Point(v4.x, v4.y, 0.0f), 
-												new Point(v0.x, v0.y, 0.0f));
+							edgeDrawer.addLine(	v4.x, v4.y, 0.0f,
+												v0.x, v0.y, 0.0f);
 							
 							Vector position = new Vector(pos.x,	pos.y, 1.0f);
 							
@@ -659,23 +649,23 @@ public class Level extends Scene {
 							Vec2 v4 = polygon.m_vertices[4];
 							Vec2 v5 = polygon.m_vertices[5];
 							
-							edgeDrawer.addLine(	new Point(v0.x, v0.y, 0.0f), 
-												new Point(v1.x, v1.y, 0.0f));
+							edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
+												v1.x, v1.y, 0.0f);
 			
-							edgeDrawer.addLine(	new Point(v1.x, v1.y, 0.0f), 
-												new Point(v2.x, v2.y, 0.0f));
+							edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
+												v2.x, v2.y, 0.0f);
 			
-							edgeDrawer.addLine(	new Point(v2.x, v2.y, 0.0f), 
-												new Point(v3.x, v3.y, 0.0f));
+							edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
+												v3.x, v3.y, 0.0f);
 							
-							edgeDrawer.addLine(	new Point(v3.x, v3.y, 0.0f), 
-												new Point(v4.x, v4.y, 0.0f));
+							edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
+												v4.x, v4.y, 0.0f);
 									
-							edgeDrawer.addLine(	new Point(v4.x, v4.y, 0.0f), 
-												new Point(v5.x, v5.y, 0.0f));
+							edgeDrawer.addLine(	v4.x, v4.y, 0.0f,
+												v5.x, v5.y, 0.0f);
 
-							edgeDrawer.addLine(	new Point(v5.x, v5.y, 0.0f), 
-												new Point(v0.x, v0.y, 0.0f));							
+							edgeDrawer.addLine(	v5.x, v5.y, 0.0f,
+												v0.x, v0.y, 0.0f);
 							
 							Vector position = new Vector(pos.x,	pos.y, 1.0f);
 							
@@ -702,29 +692,29 @@ public class Level extends Scene {
 							Vec2 v6 = polygon.m_vertices[6];
 							Vec2 v7 = polygon.m_vertices[7];
 							
-							edgeDrawer.addLine(	new Point(v0.x, v0.y, 0.0f), 
-												new Point(v1.x, v1.y, 0.0f));
+							edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
+												v1.x, v1.y, 0.0f);
 			
-							edgeDrawer.addLine(	new Point(v1.x, v1.y, 0.0f), 
-												new Point(v2.x, v2.y, 0.0f));
+							edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
+												v2.x, v2.y, 0.0f);
 			
-							edgeDrawer.addLine(	new Point(v2.x, v2.y, 0.0f), 
-												new Point(v3.x, v3.y, 0.0f));
+							edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
+												v3.x, v3.y, 0.0f);
 							
-							edgeDrawer.addLine(	new Point(v3.x, v3.y, 0.0f), 
-												new Point(v4.x, v4.y, 0.0f));
+							edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
+												v4.x, v4.y, 0.0f);
 									
-							edgeDrawer.addLine(	new Point(v4.x, v4.y, 0.0f), 
-												new Point(v5.x, v5.y, 0.0f));
+							edgeDrawer.addLine(	v4.x, v4.y, 0.0f,
+												v5.x, v5.y, 0.0f);
 
-							edgeDrawer.addLine(	new Point(v5.x, v5.y, 0.0f), 
-												new Point(v6.x, v6.y, 0.0f));
+							edgeDrawer.addLine(	v5.x, v5.y, 0.0f,
+												v6.x, v6.y, 0.0f);
 							
-							edgeDrawer.addLine(	new Point(v6.x, v6.y, 0.0f), 
-												new Point(v7.x, v7.y, 0.0f));
+							edgeDrawer.addLine(	v6.x, v6.y, 0.0f,
+												v7.x, v7.y, 0.0f);
 
-							edgeDrawer.addLine(	new Point(v7.x, v7.y, 0.0f), 
-												new Point(v0.x, v0.y, 0.0f));														
+							edgeDrawer.addLine(	v7.x, v7.y, 0.0f,
+												v0.x, v0.y, 0.0f);
 							
 							Vector position = new Vector(pos.x,	pos.y, 1.0f);
 							
@@ -747,17 +737,17 @@ public class Level extends Scene {
 							Vec2 v2 = polygon.m_vertices[2];
 							Vec2 v3 = polygon.m_vertices[3];
 							
-							edgeDrawer.addLine(	new Point(v0.x, v0.y, 0.0f), 
-												new Point(v1.x, v1.y, 0.0f));
+							edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
+												v1.x, v1.y, 0.0f);
 			
-							edgeDrawer.addLine(	new Point(v1.x, v1.y, 0.0f), 
-												new Point(v2.x, v2.y, 0.0f));
+							edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
+												v2.x, v2.y, 0.0f);
 			
-							edgeDrawer.addLine(	new Point(v2.x, v2.y, 0.0f), 
-												new Point(v3.x, v3.y, 0.0f));
+							edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
+												v3.x, v3.y, 0.0f);
 							
-							edgeDrawer.addLine(	new Point(v3.x, v3.y, 0.0f), 
-												new Point(v0.x, v0.y, 0.0f));
+							edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
+												v0.x, v0.y, 0.0f);
 																												
 							Vector position = new Vector(pos.x,	pos.y, 1.0f);
 							
@@ -814,10 +804,11 @@ public class Level extends Scene {
 		if (Constants.DRAW_BUFFER_BOARD) {
 			yMax = match3.boardSize * 2;
 		}
-		glEnable(GL_BLEND);
-		visuals.pointLightShader.setTexture(visuals.textureGems);
-		
-		float scale;
+
+        visuals.pointLightShader.useProgram();
+        visuals.pointLightShader.setTexture(visuals.textureGems);
+		ObjectPosition op = new ObjectPosition();
+
 		for(int y = 0; y < yMax; ++y) {
 			for (int x = 0; x < match3.boardSize; ++x) {
 				GemPosition gp = match3.board[x][y];
@@ -826,18 +817,22 @@ public class Level extends Scene {
 					Model gem = visuals.gems[gp.type];
 														
 					if (color.r == 0.0f) {
-						scale = 0.11f;
+                        op.init(gp.op);
+                        op.setScale(1.11f, 1.11f, 1f);
+                        visuals.calcMatricesForObject(op);
 					} else {
-						scale = 0.0f;
+                        visuals.calcMatricesForObject(gp.op);
 					}
+
 					//op.rotAxis = new Vector(0.0f, 0.0f, 1.0f);
 					//op.rotDegree = r;		
+
+
+//					visuals.calcMatricesForObject(gp.op.tx, gp.op.ty, gp.op.tz,
+//												  gp.op.rx, gp.op.ry, gp.op.rz,
+//												  gp.op.sx + scale, gp.op.sy + scale, gp.op.sz);
 					
-					visuals.calcMatricesForObject(gp.op.tx, gp.op.ty, gp.op.tz,
-												  gp.op.rx, gp.op.ry, gp.op.rz,
-												  gp.op.sx + scale, gp.op.sy + scale, gp.op.sz);
-					
-					visuals.pointLightShader.useProgram();										
+
 					visuals.pointLightShader.setUniforms(color, visuals.lightColor, visuals.lightDir);							 			
 					gem.bindData(visuals.pointLightShader);
 					gem.bind();

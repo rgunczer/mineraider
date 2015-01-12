@@ -59,5 +59,12 @@ public class Vector {
 	public Vector normalize(Vector other) {
 		float mag = other.getMagnitude();
 		return new Vector(x / mag, y / mag, z / mag);
-	}	
+	}
+
+    public Vector translate(Vector vector) {
+        return new Vector( x + vector.x,
+                           y + vector.y,
+                           z + vector.z);
+    }
+
 }

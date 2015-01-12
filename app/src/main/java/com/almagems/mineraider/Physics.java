@@ -17,8 +17,8 @@ import java.util.ArrayList;
 public class Physics {
 	private static Physics instance = null;
 	
-	public static int velIterations = 4; //10;
-	public static int posIterations = 8; //10;
+	public static int velIterations = 10; //4;
+	public static int posIterations = 10; //8;
 	
 	public ArrayList<Body> balls = new ArrayList<Body>();
 	public ArrayList<Body> polygons = new ArrayList<Body>();
@@ -36,8 +36,8 @@ public class Physics {
 		return instance;
 	}
 
-	private Physics(){
-		Vec2 gravity = new Vec2(0.0f, -100.0f);
+	private Physics() {
+		Vec2 gravity = new Vec2(0.0f, -32.0f);
 		world = new World(gravity);
 		world.setSleepingAllowed(true);
 		world.setContactListener(collisionHandler);
@@ -367,7 +367,7 @@ public class Physics {
 	}
 	
 	public void update() {
-		world.step(1.0f/60.0f, velIterations, posIterations);
+		world.step(1.0f/30.0f, velIterations, posIterations);
 		Body body = null;
 		int size = boxes.size();
 		for(int i = 0; i < size; ++i) {

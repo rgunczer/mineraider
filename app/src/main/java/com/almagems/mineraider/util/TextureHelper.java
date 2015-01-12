@@ -21,7 +21,7 @@ public class TextureHelper {
 
 	private static final String TAG = "TextureHelper";
 	
-	public static int loadTexture(Context context, int resourceId) {
+	public static Texture loadTexture(Context context, int resourceId) {
 		
 		final int[] textureObjectIds = new int[1];
 		glGenTextures(1, textureObjectIds, 0);
@@ -30,13 +30,24 @@ public class TextureHelper {
 			if (LoggerConfig.ON) {
 				Log.w(TAG, "Could not generate new OpenGL texture object.");
 			}
-			return 0;
+			return null;
 		}
 	
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inScaled = false;
-		
+
+        Texture texture = new Texture();
+
 		final Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+        final int w = bmp.getWidth();
+        final int h = bmp.getHeight();
+        final String resourceName = context.getResources().getResourceEntryName(resourceId);
+        System.out.println("Texture info[" + resourceName + "], w:" + w + " h:" + h);
+
+        texture.name = resourceName;
+        texture.width = w;
+        texture.height = h;
+
 		Matrix flip = new Matrix();
 		flip.postScale(1f, -1f);
 		
@@ -47,7 +58,7 @@ public class TextureHelper {
 				Log.w(TAG, "Resource ID " + resourceId + " could not be decoded.");
 			}
 			glDeleteTextures(1, textureObjectIds, 0);
-			return 0;
+			return null;
 		}
 		
 		glBindTexture(GL_TEXTURE_2D, textureObjectIds[0]);
@@ -61,8 +72,11 @@ public class TextureHelper {
 		glGenerateMipmap(GL_TEXTURE_2D);
 		
 		glBindTexture(GL_TEXTURE_2D, 0);
+
+        texture.id = textureObjectIds[0];
 		
-		return textureObjectIds[0];
+		//return textureObjectIds[0];
+        return texture;
 	}
 	
 	

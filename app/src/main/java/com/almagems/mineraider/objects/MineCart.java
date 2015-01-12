@@ -1,9 +1,5 @@
 package com.almagems.mineraider.objects;
 
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
-
 import java.util.Random;
 
 import org.jbox2d.collision.shapes.CircleShape;
@@ -17,14 +13,12 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.joints.WheelJoint;
 import org.jbox2d.dynamics.joints.WheelJointDef;
 
-import android.sax.StartElementListener;
-
 import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.Visuals;
-import com.almagems.mineraider.util.Geometry.Point;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Vector;
+
 
 public class MineCart {
 	public Body cart;
@@ -68,8 +62,8 @@ public class MineCart {
 		wd.bodyA = cart;
 		wd.bodyB = wheel1;
 		wd.localAnchorA.set(-1.6f, -2.2f);
-		wd.frequencyHz = 9;
-		wd.dampingRatio = 0.5f;
+		wd.frequencyHz = 6;
+		wd.dampingRatio = 0.3f;
 		wd.maxMotorTorque = 1000;
 		wd.motorSpeed = -6.0f;
 		wd.enableMotor = true;
@@ -249,6 +243,7 @@ public class MineCart {
 		
 		EdgeDrawer edgeDrawer = new EdgeDrawer(100);
 		Fixture fixture = cart.getFixtureList();
+        ObjectPosition op = new ObjectPosition();
 		while(fixture != null) {
 			PolygonShape shape = (PolygonShape)fixture.getShape();
 			edgeDrawer.begin();
@@ -257,23 +252,21 @@ public class MineCart {
 			Vec2 v2 = shape.m_vertices[2];
 			Vec2 v3 = shape.m_vertices[3];
 			
-			edgeDrawer.addLine(	new Point(v0.x, v0.y, 0.0f), 
-								new Point(v1.x, v1.y, 0.0f) );
+			edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
+								v1.x, v1.y, 0.0f );
 
-			edgeDrawer.addLine(	new Point(v1.x, v1.y, 0.0f), 
-								new Point(v2.x, v2.y, 0.0f) );
+			edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
+								v2.x, v2.y, 0.0f );
 
-			edgeDrawer.addLine(	new Point(v2.x, v2.y, 0.0f), 
-								new Point(v3.x, v3.y, 0.0f) );
+			edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
+								v3.x, v3.y, 0.0f );
 			
-			edgeDrawer.addLine(	new Point(v3.x, v3.y, 0.0f), 
-								new Point(v0.x, v0.y, 0.0f) );
-						
-			ObjectPosition op = new ObjectPosition();
+			edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
+								v0.x, v0.y, 0.0f );
+
 			op.setPosition(pos.x, pos.y, 1.0f);
 			op.setRot(0f, 0f, degree);
 			op.setScale(1f, 1f, 1f);
-								
 			visuals.calcMatricesForObject(op);
 			
 //			setIdentityM(visuals.modelMatrix, 0);							

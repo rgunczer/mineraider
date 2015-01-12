@@ -9,8 +9,8 @@ import android.graphics.Color;
 
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.shaders.ParticleShader;
-import com.almagems.mineraider.util.Geometry.Point;
 import com.almagems.mineraider.util.Vector;
+
 
 public class ParticleSystem {
 	private static final int POSITION_COMPONENT_COUNT = 3;
@@ -42,7 +42,7 @@ public class ParticleSystem {
 		this.maxParticleCount = maxParticleCount;		
 	}
 	
-	public void addParticle(Point position, int color, Vector direction, float particleStartTime) {
+	public void addParticle(Vector position, int color, Vector direction, float particleStartTime) {
 		final int particleOffset = nextParticle * TOTAL_COMPONENT_COUNT;
 		
 		int currentOffset = particleOffset;

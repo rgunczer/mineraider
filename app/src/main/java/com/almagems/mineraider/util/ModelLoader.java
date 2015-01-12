@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.almagems.mineraider.util.Vertex;
-import com.almagems.mineraider.util.Geometry.Point;
 import com.almagems.mineraider.util.TextResourceReader;
 
 public class ModelLoader {
 	
 	public ArrayList<Vertex> vertices = new ArrayList<Vertex>();
-	private ArrayList<Point> verts = new ArrayList<Point>();
-	private ArrayList<Point> norms = new ArrayList<Point>();
-	private ArrayList<Point> coords = new ArrayList<Point>();
+	private ArrayList<Vector> verts = new ArrayList<Vector>();
+	private ArrayList<Vector> norms = new ArrayList<Vector>();
+	private ArrayList<Vector> coords = new ArrayList<Vector>();
 	
 	public String name;	
 	
@@ -30,9 +29,9 @@ public class ModelLoader {
 		String[] lines = buffer.split("\n");
 		
 		// dummy element obj index starts from 1
-		verts.add(new Point(0f, 0f, 0f)); 
-		norms.add(new Point(0f, 0f, 0f));
-		coords.add(new Point(0f, 0f, 0f));
+		verts.add(new Vector(0f, 0f, 0f));
+		norms.add(new Vector(0f, 0f, 0f));
+		coords.add(new Vector(0f, 0f, 0f));
 				
 		for(int i = 0; i < lines.length; ++i) {
 			String line = lines[i];
@@ -50,7 +49,7 @@ public class ModelLoader {
 					Float number = Float.valueOf(numberString);
 					numbers.add(number);					
 				}
-				verts.add(new Point(numbers.get(0), numbers.get(1), numbers.get(2)));				
+				verts.add(new Vector(numbers.get(0), numbers.get(1), numbers.get(2)));
 				continue;
 			} else	if (line.charAt(0) == 'v' && line.charAt(1) == 'n') {
 				//System.out.println("reading vertex normal");
@@ -62,7 +61,7 @@ public class ModelLoader {
 					Float number = Float.valueOf(numberString);
 					numbers.add(number);					
 				}
-				norms.add(new Point(numbers.get(0), numbers.get(1), numbers.get(2)));								
+				norms.add(new Vector(numbers.get(0), numbers.get(1), numbers.get(2)));
 				continue;
 			} else if (line.charAt(0) == 'v' && line.charAt(1) == 't') {
 				//System.out.println("reading vertex texture coordinates");
@@ -74,7 +73,7 @@ public class ModelLoader {
 					Float number = Float.valueOf(numberString);
 					numbers.add(number);
 				}
-				coords.add(new Point(numbers.get(0), numbers.get(1), -1f));
+				coords.add(new Vector(numbers.get(0), numbers.get(1), -1f));
 				continue;				
 			} else if (line.charAt(0) == 'f' && line.charAt(1) == ' ') {
 				//System.out.println("reading face");
@@ -107,17 +106,17 @@ public class ModelLoader {
 					//System.out.println("normal Index is: " + n[index]);
 				}
 				
-				Point v0 = verts.get(v[0]);
-				Point v1 = verts.get(v[1]);
-				Point v2 = verts.get(v[2]);
+				Vector v0 = verts.get(v[0]);
+				Vector v1 = verts.get(v[1]);
+				Vector v2 = verts.get(v[2]);
 				
-				Point t0 = coords.get(t[0]);
-				Point t1 = coords.get(t[1]);
-				Point t2 = coords.get(t[2]);
+				Vector t0 = coords.get(t[0]);
+				Vector t1 = coords.get(t[1]);
+				Vector t2 = coords.get(t[2]);
 				
-				Point n0 = norms.get(n[0]);
-				Point n1 = norms.get(n[1]);
-				Point n2 = norms.get(n[2]);
+				Vector n0 = norms.get(n[0]);
+				Vector n1 = norms.get(n[1]);
+				Vector n2 = norms.get(n[2]);
 				
 				Vertex vert0 = new Vertex(v0.x, v0.y, v0.z, 	t0.x, t0.y, 	n0.x, n0.y, n0.z);
 				Vertex vert1 = new Vertex(v1.x, v1.y, v1.z, 	t1.x, t1.y, 	n1.x, n1.y, n1.z);

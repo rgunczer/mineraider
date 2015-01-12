@@ -31,9 +31,7 @@ import com.almagems.mineraider.shaders.ParticleShader;
 
 
 public class MineRaiderRenderer implements Renderer { 
-	private int w;
-	private int h;
-	
+
 	private long frameStartTimeMS;
 
     private Scene playerSelect;
@@ -52,7 +50,7 @@ public class MineRaiderRenderer implements Renderer {
 	}
 	
 	public void showSceneLevel() {
-		visuals.setProjectionMatrix3D(w, h);
+		visuals.setProjectionMatrix3D();
 		level.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
 		current = level;
 	}
@@ -122,18 +120,14 @@ public class MineRaiderRenderer implements Renderer {
 
 	@Override
 	public void onSurfaceChanged(GL10 glUnused, int width, int height) {
-		w = width;
-		h = height;
 		glViewport(0, 0, width, height);
 
         Visuals.screenWidth = width;
         Visuals.screenHeight = height;
         Visuals.aspectRatio = width > height ? (float)width / (float)height : (float)height / (float)width;
+        Visuals.scaleFactor = Visuals.screenWidth / Visuals.referenceScreenWidth;
 
-        ParticleShader.pointSize = w * 0.1f;
-
-
-
+        ParticleShader.pointSize = width * 0.1f;
 
         current.surfaceChanged(width, height);
 	}

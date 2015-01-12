@@ -11,11 +11,9 @@ import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glBlendFunc;
 
 import com.almagems.mineraider.ClassicSingleton;
-import com.almagems.mineraider.Constants;
 import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
-import com.almagems.mineraider.shaders.TextureShader;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Text;
 
@@ -29,8 +27,6 @@ public class Menu extends Scene {
 
     private Text text;
     private Text credits;
-	
-	private float aspect;
 
     // ctor
 	public Menu() {
@@ -39,7 +35,6 @@ public class Menu extends Scene {
 
 	@Override
 	public void surfaceChanged(int width, int height) {
-		// TODO Auto-generated method stub
 		final float tw = 512f;
 		final float th = 1024f;
 
@@ -47,10 +42,8 @@ public class Menu extends Scene {
         float g = 1f;
         float b = 1f;
         float a = 1f;
-		
-		visuals.setProjectionMatrix2D(width, height);
-		
-		aspect = width > height ? (float)width / (float)height : (float)height / (float)width;
+
+        float aspect = Visuals.aspectRatio;
 				
 		float[] vertexDataBg = { 
 				// x, y, z, 			                s, t,
@@ -163,53 +156,52 @@ public class Menu extends Scene {
 		vertexArrayPlay = new VertexArray(vertexDataPlay);
 
         text = new Text();
+        text.setSpacingScale(0.09f);
         text.init(-0.95f, -Visuals.aspectRatio, "ANDREA", new MyColor(1f, 1f, 0f, 1f), 0.5f);
 
         credits = new Text();
-        credits.init(-0.85f, 1.0f, "CREDITS", new MyColor(0f, 0f, 1f, 1f), 1.5f);
+        credits.init(-0.85f, 1.0f, "CREDITS", new MyColor(1f, 0f, 1f, 1f), 1.5f);
 	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		super.update();
         visuals.updateViewProjMatrix();
 	}
 
 	@Override
 	public void draw() {
-		// TODO Auto-generated method stub
+        visuals.setProjectionMatrix2D();
+        visuals.textureShader.useProgram();
+
 		glDisable(GL_DEPTH_TEST);
-		
+
+        visuals.textureShader.setTexture(visuals.textureMenu);
 		drawBg();
 		
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
-		
+
+        visuals.textureShader.setTexture(visuals.textureMenuItems);
 		drawTitle();
 		drawPlay();
 		drawOptions();
 		drawAbout();
-        drawText();
-	}
 
-    private void drawText() {
+        visuals.textureShader.setTexture(visuals.textureFonts);
         text.draw();
         credits.draw();
-    }
+	}
 	
 	private void drawAbout() {
 		ObjectPosition op = new ObjectPosition();
 		op.setPosition(-0.5f, -1.2f, 0f);
 		op.setRot(0f, 0f, 0f);
-		op.setScale(aspect, aspect, 1.0f);				
+		op.setScale(Visuals.aspectRatio, Visuals.aspectRatio, 1.0f);
 		
-		visuals.calcMatricesForObject(op);		
-		visuals.textureShader.useProgram();
-		visuals.textureShader.setTexture(visuals.textureMenuItems);
+		visuals.calcMatricesForObject(op);
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
-		
-		bindData(visuals.textureShader, vertexArrayAbout);
+        visuals.textureShader.bindData(vertexArrayAbout);
 		glDrawArrays(GL_TRIANGLES, 0, 6);				
 	}
 	
@@ -217,14 +209,11 @@ public class Menu extends Scene {
 		ObjectPosition op = new ObjectPosition();		
 		op.setPosition(-0.4f, -0.7f, 0f);
 		op.setRot(0f, 0f, 0f);
-		op.setScale(aspect, aspect, 1.0f);
+		op.setScale(Visuals.aspectRatio, Visuals.aspectRatio, 1.0f);
 					
-		visuals.calcMatricesForObject(op);		
-		visuals.textureShader.useProgram();
-		visuals.textureShader.setTexture(visuals.textureMenuItems);
+		visuals.calcMatricesForObject(op);
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
-		
-		bindData(visuals.textureShader, vertexArrayOptions);
+        visuals.textureShader.bindData(vertexArrayOptions);
 		glDrawArrays(GL_TRIANGLES, 0, 6);				
 	}
 	
@@ -232,14 +221,11 @@ public class Menu extends Scene {
 		ObjectPosition op = new ObjectPosition();	
 		op.setPosition(-0.55f, -0.2f, 0f);
 		op.setRot(0f, 0f, 0f);
-		op.setScale(aspect, aspect, 1.0f);
+		op.setScale(Visuals.aspectRatio, Visuals.aspectRatio, 1.0f);
 
-		visuals.calcMatricesForObject(op);		
-		visuals.textureShader.useProgram();
-		visuals.textureShader.setTexture(visuals.textureMenuItems);
+		visuals.calcMatricesForObject(op);
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
-		
-		bindData(visuals.textureShader, vertexArrayPlay);
+        visuals.textureShader.bindData(vertexArrayPlay);
 		glDrawArrays(GL_TRIANGLES, 0, 6);		
 	}
 	
@@ -247,14 +233,11 @@ public class Menu extends Scene {
 		ObjectPosition op = new ObjectPosition();
 		op.setPosition(0f, 0.8f, 0f);
 		op.setRot(0f, 0f, 0f);
-		op.setScale(aspect, aspect, 1.0f);
+		op.setScale(Visuals.aspectRatio, Visuals.aspectRatio, 1.0f);
 		
-		visuals.calcMatricesForObject(op);		
-		visuals.textureShader.useProgram();
-		visuals.textureShader.setTexture(visuals.textureMenuItems);
+		visuals.calcMatricesForObject(op);
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
-		
-		bindData(visuals.textureShader, vertexArrayTitle);
+        visuals.textureShader.bindData(vertexArrayTitle);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 	
@@ -264,18 +247,14 @@ public class Menu extends Scene {
 		op.setScale(1.0f, 1.0f, 1.0f);		
 		op.setRot(0f, 0f, 0f);
 		
-		visuals.calcMatricesForObject(op);		
-		visuals.textureShader.useProgram();
-		visuals.textureShader.setTexture(visuals.textureMenu);
+		visuals.calcMatricesForObject(op);
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
-		
-		bindData(visuals.textureShader, vertexArrayBg);
+        visuals.textureShader.bindData(vertexArrayBg);
 		glDrawArrays(GL_TRIANGLES, 0, 6);			
 	}
 
 	@Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
-		// TODO Auto-generated method stub
 		super.handleTouchPress(normalizedX, normalizedY);
 		
 		ClassicSingleton singleton = ClassicSingleton.getInstance();
@@ -284,43 +263,11 @@ public class Menu extends Scene {
 
 	@Override
 	public void handleTouchDrag(float normalizedX, float normalizedY) {
-		// TODO Auto-generated method stub
 		super.handleTouchDrag(normalizedX, normalizedY);
 	}
 
 	@Override
 	public void handleTouchRelease(float normalizedX, float normalizedY) {
-		// TODO Auto-generated method stub
 		super.handleTouchRelease(normalizedX, normalizedY);
 	}
-		
-	public void bindData(TextureShader textureProgram, VertexArray vertexArray) {		
-		final int POSITION_COMPONENT_COUNT = 3;
-        final int COLOR_COMPONENT_COUNT = 4;
-		final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;				
-		final int STRIDE = (POSITION_COMPONENT_COUNT +
-                            COLOR_COMPONENT_COUNT +
-							TEXTURE_COORDINATES_COMPONENT_COUNT ) * Constants.BYTES_PER_FLOAT;		
-		
-		vertexArray.setVertexAttribPointer(
-				0, 
-				textureProgram.getPositionAttributeLocation(), 
-				POSITION_COMPONENT_COUNT, 
-				STRIDE);
-
-        vertexArray.setVertexAttribPointer(
-                POSITION_COMPONENT_COUNT,
-                textureProgram.getColorAttributeLocation(),
-                COLOR_COMPONENT_COUNT,
-                STRIDE);
-
-		vertexArray.setVertexAttribPointer(
-				POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT,
-				textureProgram.getTextureAttributeLocation(), 
-				TEXTURE_COORDINATES_COMPONENT_COUNT, 
-				STRIDE);
-
-	}
-	
-	
 }

@@ -3,10 +3,13 @@ package com.almagems.mineraider.shaders;
 import static android.opengl.GLES20.glGetAttribLocation;
 import static android.opengl.GLES20.glGetUniformLocation;
 import static android.opengl.GLES20.glUniformMatrix4fv;
+import static com.almagems.mineraider.Constants.BYTES_PER_FLOAT;
+
 import android.content.Context;
 
 
 import com.almagems.mineraider.R;
+import com.almagems.mineraider.data.VertexArray;
 
 public class TextureShader extends BaseShader {
 	// uniform locations
@@ -42,4 +45,32 @@ public class TextureShader extends BaseShader {
 	public int getTextureAttributeLocation() {
 		return aTextureCoordinatesLocation;
 	}
+
+    public void bindData(VertexArray vertexArray) {
+        final int POSITION_COMPONENT_COUNT = 3;
+        final int COLOR_COMPONENT_COUNT = 4;
+        final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
+        final int STRIDE = (POSITION_COMPONENT_COUNT +
+                            COLOR_COMPONENT_COUNT +
+                            TEXTURE_COORDINATES_COMPONENT_COUNT ) * BYTES_PER_FLOAT;
+
+        vertexArray.setVertexAttribPointer(
+                0,
+                getPositionAttributeLocation(),
+                POSITION_COMPONENT_COUNT,
+                STRIDE);
+
+        vertexArray.setVertexAttribPointer(
+                POSITION_COMPONENT_COUNT,
+                getColorAttributeLocation(),
+                COLOR_COMPONENT_COUNT,
+                STRIDE);
+
+        vertexArray.setVertexAttribPointer(
+                POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT,
+                getTextureAttributeLocation(),
+                TEXTURE_COORDINATES_COMPONENT_COUNT,
+                STRIDE);
+    }
+
 }

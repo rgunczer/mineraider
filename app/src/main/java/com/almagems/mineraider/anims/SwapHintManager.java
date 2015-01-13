@@ -52,17 +52,18 @@ public class SwapHintManager {
 
     public void draw() {
         SwapHint hint;
-        visuals.dirLightShader.useProgram();
-        visuals.dirLightShader.setTexture(visuals.textureHintArrow);
+        //visuals.pointLightShader.useProgram();
+        visuals.hint.bindData(visuals.dirLightShader);
+        //visuals.dirLightShader.setTexture(visuals.textureGems);
 
         int size = live.size();
         for(int i = 0; i < size; ++i) {
             hint = live.get(i);
             hint.update();
             visuals.calcMatricesForObject( hint.op );
-            visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
-            visuals.hintMarker.bindData(visuals.dirLightShader);
-            visuals.hintMarker.draw();
+            visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
+
+            visuals.hint.draw();
         }
     }
 }

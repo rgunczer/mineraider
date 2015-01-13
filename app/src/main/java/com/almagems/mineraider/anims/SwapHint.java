@@ -20,7 +20,7 @@ public class SwapHint {
     public void init(GemPosition first, GemPosition second) {
 		float x;
 		float y;
-		float z = first.op.tz + 0.6f;
+		float z = first.op.tz + 0.7f;
 		float r = 0.0f;
 		float diff;
 		animStep = 0.025f;

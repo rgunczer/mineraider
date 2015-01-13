@@ -17,6 +17,8 @@ public class Text {
     private float fontScale;
     private float fontSpacingScale = 0.06f;
     private final ObjectPosition op = new ObjectPosition();
+    private float elapsed;
+    private float d;
 
     // ctor
     public Text() {
@@ -87,13 +89,14 @@ public class Text {
     }
 
     public void update() {
-
+        elapsed += 0.9f;
+        d = (((float)Math.sin(elapsed) + 1f) / 2f) * 0.095f;
     }
 
     public void draw() { // suppose we are in 2D projection mode
         op.setPosition(pos.x, pos.y, 0f);
         op.setRot(0f, 0f, 0f);
-        op.setScale(1f, 1f, 1f);
+        op.setScale(1f, 1f+d, 1f);
 
         visuals.calcMatricesForObject(op);
         visuals.textureShader.setUniforms(visuals.mvpMatrix);

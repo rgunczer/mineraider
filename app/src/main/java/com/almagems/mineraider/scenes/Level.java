@@ -56,13 +56,18 @@ public class Level extends Scene {
 	
 	private SwipeDir swipeDir = SwipeDir.SwipeNone;
 
-    private final HUD hud;
+
 
 	private Physics physics;
 	private Match3 match3;
 
 	private float elapsed = 0f;
-	
+
+    private final MyColor colorBlack;
+    private final MyColor colorWhite;
+
+    private ObjectPosition markerPos = new ObjectPosition();
+
 	private boolean editorEnabled = false;
 	
 	public ArrayList<MineCart> mineCarts = new ArrayList<MineCart>();
@@ -75,10 +80,11 @@ public class Level extends Scene {
 	private ObjectPosition _op = new ObjectPosition();
 	
 	public Level() {
+        colorWhite = new MyColor(1f, 1f, 1f, 1f);
+        colorBlack = new MyColor(0f, 0f, 0f, 1f);
+
 		visuals = Visuals.getInstance();
 		physics = Physics.getInstance();
-
-        hud = new HUD();
 
 		animManager = new AnimationManager();
 		match3 = new Match3(8, animManager, ClassicSingleton.getInstance().scoreCounter);
@@ -123,8 +129,8 @@ public class Level extends Scene {
 	@Override
 	public void surfaceChanged(int width, int height) {
 		visuals.setProjectionMatrix3D();
-        hud.init();
-        hud.updateScore(ClassicSingleton.getInstance().getScore());
+        ClassicSingleton.getInstance().hud.init();
+        ClassicSingleton.getInstance().hud.updateScore(ClassicSingleton.getInstance().getScore());
 	}
 	
 	@Override
@@ -134,29 +140,30 @@ public class Level extends Scene {
 		
 		physics.update();
 		match3.update();
-        hud.update();
-        hud.updateScore(ClassicSingleton.getInstance().scoreCounter.getScore());
+        ClassicSingleton.getInstance().hud.update();
+        ClassicSingleton.getInstance().hud.updateScore(ClassicSingleton.getInstance().scoreCounter.getScore());
 	}
 	
 	@Override
 	public void draw() {
         visuals.setProjectionMatrix3D();
         visuals.updateViewProjMatrix();
+
+        drawFloorWallSoil();
+
         glEnable(GL_DEPTH_TEST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		animManager.draw();
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		drawFloorWallSoil();
+        visuals.pointLightShader.useProgram();
+        visuals.pointLightShader.setTexture(visuals.textureGems);
 
-		drawSelectionMarker();
-		MyColor color; 
-		color = new MyColor(0f, 0f, 0f, 1f);
-		drawBoardGems(color);
+        animManager.draw();
+        drawSelectionMarker();
+		drawBoardGems(colorBlack);
 		glDisable(GL_DEPTH_TEST);
-		color = new MyColor(1f, 1f, 1f, 1f);
-		drawBoardGems(color);
+		drawBoardGems(colorWhite);
 		glEnable(GL_DEPTH_TEST);
-		drawHints();
+        match3.swapHintManager.draw();
 		drawFallingGems();
 					
 		drawRocks();			
@@ -175,8 +182,9 @@ public class Level extends Scene {
 		
 		particleManager.draw();
 
-        hud.draw();
+        ClassicSingleton.getInstance().hud.draw();
 
+        // needs to be set for picking to work correctly
         visuals.setProjectionMatrix3D();
         visuals.updateViewProjMatrix();
 	}
@@ -491,32 +499,37 @@ public class Level extends Scene {
 
 		glDisable(GL_DEPTH_TEST);
 		*/
-		visuals.pointLightShader.setTexture(visuals.textureGems);
 		Body body;
+        Model gem;
+        Vec2 pos;
+        Integer integer;
+        int gemType;
+        float angle;
+        float degree;
+        float d;
 		int size = physics.boxes.size();
 		for(int i = 0; i < size; ++i) {
 			body = physics.boxes.get(i);
 			if ( body.m_type == BodyType.DYNAMIC && body.m_userData != null ) {
-				Vec2 pos = body.getPosition();
-				float angle = body.getAngle();
-				float degree = (float) Math.toDegrees(angle);			
-				float d = Constants.GEM_FRAGMENT_SIZE;
+				pos = body.getPosition();
+				angle = body.getAngle();
+				degree = (float) Math.toDegrees(angle);
+				d = Constants.GEM_FRAGMENT_SIZE;
 				
-				Integer integer = (Integer)body.m_userData;
-				int gemType = integer;
-				Model gem = visuals.gems[gemType];				
+				integer = (Integer)body.m_userData;
+				gemType = integer;
+				gem = visuals.gems[gemType];
 				_op.setPosition(pos.x, pos.y, 1.0f);							
 				_op.setRot(0f, 0f, degree);
 				_op.setScale(d, d, 1f);
 
-				visuals.calcMatricesForObject(_op);				
-				visuals.pointLightShader.useProgram();				
-				visuals.pointLightShader.setUniforms(gem.color, visuals.lightColor, visuals.lightNorm);						
+				visuals.calcMatricesForObject(_op);
+				visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightNorm);
 				gem.bindData(visuals.pointLightShader);					
 				gem.draw();
 			}
 		}		
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_DEPTH_TEST);
 	}
 		
 	private void drawPhysicsGemsFixtures() {		
@@ -768,71 +781,46 @@ public class Level extends Scene {
 			}
 		}
 	}
-	
-	void drawHints() {
-//		int size = match3.hintList.size();
-//		SwapHint hint = null;
-//		for (int i = 0; i < size; ++i) {
-//			hint = match3.hintList.get(i);
-//			hint.update();
-//			hint.draw();
-//		}
-        match3.swapHintManager.draw();
-	}	
-	
+
 	void drawSelectionMarker() {				
 		if (match3.firstSelected != null) {
 			elapsed += 0.3f;
 			float d = (((float)Math.sin(elapsed) + 1f) / 2f) * 0.075f;
 			//System.out.println("d is: " + d);
-					
-			visuals.dirLightShader.setTexture(visuals.textureGems);
-			ObjectPosition op = new ObjectPosition(match3.firstSelected.op);
-			op.tz -= 0.1f;
-			op.setScale(1.0f+d, 1.0f+d, 1.0f);
 
-			visuals.calcMatricesForObject(op);														
-			visuals.dirLightShader.useProgram();
-			visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);			
-			visuals.marker.bindData(visuals.dirLightShader);
+			markerPos.init(match3.firstSelected.op);
+			markerPos.tz -= 0.1f;
+			markerPos.setScale(1.0f + d, 1.0f + d, 1.0f);
+
+			visuals.calcMatricesForObject(markerPos);
+			visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
+			visuals.marker.bindData(visuals.pointLightShader);
 			visuals.marker.draw();
 		}
 	}
 	
-	void drawBoardGems(MyColor color) {	
-		//r+=0.25f;
+	void drawBoardGems(MyColor color) {
 		int yMax = match3.boardSize;
 		if (Constants.DRAW_BUFFER_BOARD) {
 			yMax = match3.boardSize * 2;
 		}
 
-        visuals.pointLightShader.useProgram();
-        visuals.pointLightShader.setTexture(visuals.textureGems);
-		ObjectPosition op = new ObjectPosition();
-
+        Model gem;
+        GemPosition gp;
 		for(int y = 0; y < yMax; ++y) {
 			for (int x = 0; x < match3.boardSize; ++x) {
-				GemPosition gp = match3.board[x][y];
+				gp = match3.board[x][y];
 				
 				if (gp.type != GEM_TYPE_NONE && gp.visible) {
-					Model gem = visuals.gems[gp.type];
+					gem = visuals.gems[gp.type];
 														
 					if (color.r == 0.0f) {
-                        op.init(gp.op);
-                        op.setScale(1.11f, 1.11f, 1f);
-                        visuals.calcMatricesForObject(op);
+                        markerPos.init(gp.op);
+                        markerPos.setScale(1.11f, 1.11f, 1f);
+                        visuals.calcMatricesForObject(markerPos);
 					} else {
                         visuals.calcMatricesForObject(gp.op);
 					}
-
-					//op.rotAxis = new Vector(0.0f, 0.0f, 1.0f);
-					//op.rotDegree = r;		
-
-
-//					visuals.calcMatricesForObject(gp.op.tx, gp.op.ty, gp.op.tz,
-//												  gp.op.rx, gp.op.ry, gp.op.rz,
-//												  gp.op.sx + scale, gp.op.sy + scale, gp.op.sz);
-					
 
 					visuals.pointLightShader.setUniforms(color, visuals.lightColor, visuals.lightDir);							 			
 					gem.bindData(visuals.pointLightShader);

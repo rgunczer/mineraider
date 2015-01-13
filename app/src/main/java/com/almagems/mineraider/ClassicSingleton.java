@@ -8,9 +8,11 @@ public class ClassicSingleton {
 	public MineCart cart1 = null;
 	public MineCart cart2 = null;
     public ScoreCounter scoreCounter = null;
+    public HUD hud;
 
 	protected ClassicSingleton() {
         scoreCounter = new ScoreCounter();
+        hud = new HUD();
 	}
 	
 	public static ClassicSingleton getInstance() {
@@ -19,7 +21,11 @@ public class ClassicSingleton {
 		}
 		return instance;
 	}
-	
+
+    public void sendComboNotification() {
+        hud.showCombo();
+    }
+
 	public void showSceneLevel() {
 		renderer.showSceneLevel();
 	}

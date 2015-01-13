@@ -29,6 +29,9 @@ public class HUD {
     private float scoreX;
     private float scoreY;
     private float fontScale;
+    private int comboCooling;
+    private int comboCounter;
+    private float comboScale;
 
     // ctor
     public HUD() {
@@ -37,7 +40,9 @@ public class HUD {
         ikon = new GemIkon();
         quad = new Quad();
         edgeDrawer = new EdgeDrawer(32);
-
+        comboCooling = 0;
+        comboCounter = 0;
+        comboScale = 2.0f;
     }
 
     public void init() {
@@ -67,6 +72,20 @@ public class HUD {
         quad.op.setPosition(0f, Visuals.aspectRatio - scale, 0f);
         quad.op.setRot(0f, 0f, 0f);
         quad.op.setScale(scale, scale, 1f);
+
+        comboCooling = 0;
+        comboCounter = 0;
+        comboScale = 2.0f;
+    }
+
+    public void showCombo() {
+        ++comboCounter;
+
+        extraText.init("COMBOx" + comboCounter, new MyColor(1f, 0f, 0f, 1f), comboScale);
+        float textWidth = extraText.getTextWidth();
+        extraText.pos.x = -textWidth / 2f;
+        comboCooling = 100;
+        comboScale += 0.2f;
     }
 
     public void updateScore(int score) {
@@ -79,8 +98,19 @@ public class HUD {
 
     public void update() {
         ikon.update();
-        scoreText.update();
+        //scoreText.update();
+        extraText.update();
         quad.update();
+
+        if (comboCooling > 0) {
+            --comboCooling;
+
+            if (comboCooling == 0) {
+                comboCounter = 0;
+                comboScale = 2.0f;
+            }
+        }
+
     }
 
     public void draw() {
@@ -97,7 +127,9 @@ public class HUD {
         ikon.draw();
         visuals.textureShader.setTexture(visuals.textureFonts);
         scoreText.draw();
-        extraText.draw();
+        if (comboCooling > 0) {
+            extraText.draw();
+        }
 
         quad.draw();
 /*

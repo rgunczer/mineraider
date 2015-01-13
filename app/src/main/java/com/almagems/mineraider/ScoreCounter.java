@@ -23,15 +23,12 @@ public class ScoreCounter {
     }
 
     public void addScore(int count, boolean combo) { // gems popped
-        System.out.println("Add Score is:" + count + (combo ? "combo" : ""));
-        //int multiplier = combo ? 1 : 2;
-        score += count; // * multiplier;
-        if (combo)
+        //System.out.println("Add Score is:" + count + (combo ? "combo" : ""));
+        score += count;
+        if (combo) {
             score += bonusForCombo;
-
-//        if (!combo) {
-//            calcBonusForScore(count);
-//        }
+            ClassicSingleton.getInstance().sendComboNotification();
+        }
     }
 
     public void addBonusForPerfectSwap() {

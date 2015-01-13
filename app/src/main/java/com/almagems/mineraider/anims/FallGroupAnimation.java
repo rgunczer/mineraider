@@ -81,9 +81,6 @@ public class FallGroupAnimation extends BaseAnimation {
 
 	@Override
 	public void draw() {
-        visuals.pointLightShader.useProgram();
-        visuals.pointLightShader.setTexture(visuals.textureGems);
-
         FallAnimation fall;
         int size = list.size();
 		for (int i = 0; i < size; ++i) {

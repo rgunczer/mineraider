@@ -72,8 +72,7 @@ public class Visuals {
 	
 		
 	// textures	
-	public int textureGems;	
-	public int textureHintArrow;
+	public int textureGems;
 	public int textureCart;
 	public int textureRailRoad;
 	public int textureParticle;
@@ -95,7 +94,7 @@ public class Visuals {
 	// models
 	public Model[] gems = new Model[MAX_GEM_TYPES];
 	public Model marker;
-	public Model hintMarker;
+	public Model hint;
 	public Model mineCart;
 	public Model mineCartWheel;
 	public Model railroad;	
@@ -212,9 +211,8 @@ public class Visuals {
 		marker = new Model(ml);
 
 		ml = new ModelLoader();
-		ml.init(context, R.drawable.hint_arrow, "HintArrow");
-		hintMarker = new Model(ml);
-		
+		ml.init(context, R.drawable.hint, "Hint");
+		hint = new Model(ml);
 		
 		ml = new ModelLoader();
 		ml.init(context, R.drawable.cart, "MineCart");
@@ -325,7 +323,6 @@ public class Visuals {
 
 	public void loadTextures() {
 		textureGems = loadTexture(R.drawable.gems_textures);
-		textureHintArrow = loadTexture(R.drawable.hint_arrow_texture);
 		textureCart = loadTexture(R.drawable.cart_texture);
 		textureRailRoad = loadTexture(R.drawable.railroad_texture);
 		textureParticle = loadTexture(R.drawable.smokeparticle);

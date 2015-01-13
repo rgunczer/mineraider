@@ -1,3 +1,0 @@
-C:\Users\rginc_000\_projects\mineraider_android_studio\app\build\intermediates\classes\debug
-C:\Users\rginc_000\_projects\mineraider_android_studio\app\build\intermediates\pre-dexed\debug\jbox2d-library-2.2.1.1-ee7c58823df0f23023d5ad2eaf80d1f97c2eda23.jar
-C:\Users\rginc_000\_projects\mineraider_android_studio\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-49640efd01835216e004b61f1bd17d4cb6b2dc1c.jar

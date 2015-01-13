@@ -420,30 +420,35 @@ public class Visuals {
 
     public void calcMatricesForObject(ObjectPosition op) {
 		setIdentityM(modelMatrix, 0);
-		
+
+        // translation
 		translateM(modelMatrix, 0, op.tx, op.ty, op.tz);
-		
-//		if (Math.abs(op.rx) > Constants.EPSILON) {
-//			rotateM(modelMatrix, 0, op.rx, 1f, 0f, 0f);
-//		}
-//
-//		if (Math.abs(op.ry) > Constants.EPSILON) {
-//			rotateM(modelMatrix, 0, op.ry, 0f, 1f, 0f);
-//		}
-//
-//		if (Math.abs(op.rz) > Constants.EPSILON) {
-//			rotateM(modelMatrix, 0, op.rz, 0f, 0, 1f);
-//		}
-//
-//		if ( (Math.abs(op.sx) > Constants.EPSILON) || (Math.abs(op.sy) > Constants.EPSILON) || (Math.abs(op.sz) > Constants.EPSILON) ) {
-//			scaleM(modelMatrix, 0, op.sx, op.sy, op.sz);
-//		}
 
-        rotateM(modelMatrix, 0, op.rx, 1f, 0f, 0f);
-        rotateM(modelMatrix, 0, op.ry, 0f, 1f, 0f);
-        rotateM(modelMatrix, 0, op.rz, 0f, 0f, 1f);
+        // rotation
+		if (Math.abs(op.rx) > Constants.EPSILON) {
+			rotateM(modelMatrix, 0, op.rx, 1f, 0f, 0f);
+		}
 
-        scaleM(modelMatrix, 0, op.sx, op.sy, op.sz);
+		if (Math.abs(op.ry) > Constants.EPSILON) {
+			rotateM(modelMatrix, 0, op.ry, 0f, 1f, 0f);
+		}
+
+		if (Math.abs(op.rz) > Constants.EPSILON) {
+			rotateM(modelMatrix, 0, op.rz, 0f, 0, 1f);
+		}
+
+//        rotateM(modelMatrix, 0, op.rx, 1f, 0f, 0f);
+//        rotateM(modelMatrix, 0, op.ry, 0f, 1f, 0f);
+//        rotateM(modelMatrix, 0, op.rz, 0f, 0f, 1f);
+
+        // scale
+		if ( (Math.abs(1f - op.sx) > Constants.EPSILON) ||
+             (Math.abs(1f - op.sy) > Constants.EPSILON) ||
+             (Math.abs(1f - op.sz) > Constants.EPSILON) ) {
+			scaleM(modelMatrix, 0, op.sx, op.sy, op.sz);
+		}
+
+        //scaleM(modelMatrix, 0, op.sx, op.sy, op.sz);
 
 		setIdentityM(mLightModelMatrix, 0);
 		translateM(mLightModelMatrix, 0, lightDir.x, lightDir.y, lightDir.z);

@@ -1,5 +1,6 @@
 package com.almagems.mineraider;
 
+import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.GemIkon;
 import com.almagems.mineraider.objects.Quad;
 import com.almagems.mineraider.util.MyColor;
@@ -12,6 +13,8 @@ import static android.opengl.GLES20.GL_SRC_ALPHA;
 import static android.opengl.GLES20.glBlendFunc;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
+import static android.opengl.Matrix.multiplyMM;
+import static android.opengl.Matrix.setIdentityM;
 
 
 public class HUD {
@@ -21,6 +24,11 @@ public class HUD {
     private final Text extraText;
     private final GemIkon ikon;
     private final Quad quad;
+    private final EdgeDrawer edgeDrawer;
+
+    private float scoreX;
+    private float scoreY;
+    private float fontScale;
 
     // ctor
     public HUD() {
@@ -28,15 +36,27 @@ public class HUD {
         extraText = new Text();
         ikon = new GemIkon();
         quad = new Quad();
+        edgeDrawer = new EdgeDrawer(32);
+
     }
 
     public void init() {
-        scoreText.init(-0.8f, -Visuals.aspectRatio, "SCORE:" + cachedScore, new MyColor(1f, 1f, 0f, 1f), 0.5f);
-        extraText.init(-0.5f, -0.5f, "WATCH FOR MINECARTS", new MyColor(0.6f, 0.6f, 0.6f, 1f), 0.75f);
+        fontScale = 0.9f;
+        scoreText.setSpacingScale(0.06f);
+        scoreText.init("SCORE:" + cachedScore, new MyColor(1f, 1f, 0f, 1f), fontScale);
+
+        scoreX = -0.8f;
+        scoreY = -Visuals.aspectRatio + (scoreText.getTextHeight() / 3f);
+        scoreText.pos.x = scoreX;
+        scoreText.pos.y = scoreY;
+
+        extraText.setSpacingScale(0.065f);
+        extraText.init("WATCH FOR MINECARTS", new MyColor(0.6f, 0.6f, 0.6f, 1f), 1.4f);
+        extraText.pos.x = 0.0f;
+        extraText.pos.y = -0.5f;
 
         float textWidth = extraText.getTextWidth();
-        System.out.println("text width is: " + textWidth);
-
+        //System.out.println("text width is: " + textWidth);
         extraText.pos.x = -textWidth / 2f;
 
         ikon.init();
@@ -52,8 +72,7 @@ public class HUD {
     public void updateScore(int score) {
         if (score != cachedScore) {
             String str = "SCORE:" + score;
-            scoreText.setSpacingScale(0.05f);
-            scoreText.init(-0.8f, -Visuals.aspectRatio - 0.02f, str, new MyColor(1f, 1f, 0f, 1f), 0.5f);
+            scoreText.init(str, new MyColor(1f, 1f, 0f, 1f), fontScale);
             cachedScore = score;
         }
     }
@@ -81,5 +100,23 @@ public class HUD {
         extraText.draw();
 
         quad.draw();
+/*
+        MyColor color = new MyColor(1f, 1f, 0f, 1f);
+
+        edgeDrawer.begin();
+        edgeDrawer.addLine(	-1f, 0f, 0f,
+                             1f, 0f, 0f);
+
+        edgeDrawer.addLine( 0f, -1f, 0f,
+                            0f,  1f, 0f);
+
+        setIdentityM(visuals.modelMatrix, 0);
+        multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
+
+        visuals.colorShader.useProgram();
+        visuals.colorShader.setUniforms(visuals.mvpMatrix, color);
+        edgeDrawer.bindData(visuals.colorShader);
+        edgeDrawer.draw();
+*/
     }
 }

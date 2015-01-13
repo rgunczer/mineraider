@@ -74,51 +74,51 @@ public class PopAnimation extends BaseAnimation {
             }
 		}
 		item.visible = false;
-		gp = getFromPool(); //new GemPosition(item);
+		gp = getFromPool();
         gp.init(item);
 		list.add(gp);
 	}
 
 	private void addPhysicsEntity(float x, float y, int gemType) {
-        System.out.println("addPhysicsEntity for gemType: " + gemType);
+        //System.out.println("addPhysicsEntity for gemType: " + gemType);
 		Random rand = new Random();
 		float d = Constants.GEM_FRAGMENT_SIZE;
-		float x1 = x + (rand.nextFloat() - d);
-		float x2 = x + (rand.nextFloat() - d);
-		float x3 = x + (rand.nextFloat() - d);
-		float y1 = y + (rand.nextFloat() - d);
-		float y2 = y + (rand.nextFloat() - d);
-		float y3 = y + (rand.nextFloat() - d);
+		float x1 = x + (((float)rand.nextInt(100) / 100f) - d);
+		float x2 = x + (((float)rand.nextInt(100) / 100f) - d);
+		float x3 = x + (((float)rand.nextInt(100) / 100f) - d);
+		float y1 = y + (((float)rand.nextInt(100) / 100f) - d);
+		float y2 = y + (((float)rand.nextInt(100) / 100f) - d);
+		float y3 = y + (((float)rand.nextInt(100) / 100f) - d);
 		
 		switch(gemType) {
 		case GEM_TYPE_0:
-			physics.addFragmentGem0(x1, y1);
-			physics.addFragmentGem0(x2, y2);
-			physics.addFragmentGem0(x3, y3);			
+			physics.addFragmentGem0(x, y);
+			physics.addFragmentGem0(x, y);
+			physics.addFragmentGem0(x, y);
 			break;
 		
 		case GEM_TYPE_1:
-			physics.addFragmentGem1(x1, y1);
-			physics.addFragmentGem1(x2, y2);
-			physics.addFragmentGem1(x3, y3);
+			physics.addFragmentGem1(x, y);
+			physics.addFragmentGem1(x, y);
+			physics.addFragmentGem1(x, y);
 			break;
 		
 		case GEM_TYPE_2:
-			physics.addFragmentGem2(x1, y1);
-			physics.addFragmentGem2(x2, y2);			
-			physics.addFragmentGem2(x3, y3);
+			physics.addFragmentGem2(x, y);
+			physics.addFragmentGem2(x, y);
+			physics.addFragmentGem2(x, y);
 			break;
 		
 		case GEM_TYPE_3:
-			physics.addFragmentGem3(x1, y1);
-			physics.addFragmentGem3(x2, y2);
-			physics.addFragmentGem3(x3, y3);						
+			physics.addFragmentGem3(x, y);
+			physics.addFragmentGem3(x, y);
+			physics.addFragmentGem3(x, y);
 			break;
 			
 		case GEM_TYPE_4:
-			physics.addFragmentGem4(x1, y1);
-			physics.addFragmentGem4(x2, y2);
-			physics.addFragmentGem4(x3, y3);						
+			physics.addFragmentGem4(x, y);
+			physics.addFragmentGem4(x, y);
+			physics.addFragmentGem4(x, y);
 			break;
 		
 		case GEM_TYPE_5:

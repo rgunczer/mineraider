@@ -157,10 +157,14 @@ public class Menu extends Scene {
 
         text = new Text();
         text.setSpacingScale(0.09f);
-        text.init(-0.95f, -Visuals.aspectRatio, "ANDREA", new MyColor(1f, 1f, 0f, 1f), 0.5f);
+        text.init("ANDREA", new MyColor(1f, 1f, 0f, 1f), 0.5f);
+        text.pos.x = -0.95f;
+        text.pos.y = -Visuals.aspectRatio;
 
         credits = new Text();
-        credits.init(-0.85f, 1.0f, "CREDITS", new MyColor(1f, 0f, 1f, 1f), 1.5f);
+        credits.init("CREDITS", new MyColor(1f, 0f, 1f, 1f), 1.5f);
+        credits.pos.x = -0.85f;
+        credits.pos.y = 1.0f;
 	}
 
 	@Override
@@ -219,7 +223,7 @@ public class Menu extends Scene {
 	
 	private void drawPlay() {
 		ObjectPosition op = new ObjectPosition();	
-		op.setPosition(-0.55f, -0.2f, 0f);
+		op.setPosition(-0.55f, -0.21f, 0f);
 		op.setRot(0f, 0f, 0f);
 		op.setScale(Visuals.aspectRatio, Visuals.aspectRatio, 1.0f);
 

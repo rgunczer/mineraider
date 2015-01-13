@@ -174,6 +174,7 @@ public class Level extends Scene {
 		//drawPhysicsEdges();
 		
 		particleManager.draw();
+
         hud.draw();
 
         visuals.setProjectionMatrix3D();
@@ -992,15 +993,14 @@ public class Level extends Scene {
 	}
 	
 	void drawFloorWallSoil() {
+        visuals.dirLightShader.useProgram();
+
 		// floor
 		_op.setPosition(0f, -20.5f, 0f);
 		_op.setRot(0f, 0f, 0f);
 		_op.setScale(1.0f, 1.0f, 1.0f);
-				
 		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.useProgram();
 		visuals.dirLightShader.setTexture(visuals.textureFloor);
-		visuals.dirLightShader.useProgram();
 		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
 		visuals.floor.bindData(visuals.dirLightShader);
 		visuals.floor.bind();
@@ -1012,9 +1012,7 @@ public class Level extends Scene {
 		_op.setRot(0f, 0f, 0f);
 		_op.setScale(1f, 1f, 1f);		
 		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.useProgram();
 		visuals.dirLightShader.setTexture(visuals.textureWall);
-		visuals.dirLightShader.useProgram();
 		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
 		visuals.wall.bindData(visuals.dirLightShader);
 		visuals.wall.bind();
@@ -1026,7 +1024,6 @@ public class Level extends Scene {
 		_op.setRot(0f, 0f, 0f);
 		_op.setScale(1.9f, 1.5f, 1.0f);					
 		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.useProgram();
 		visuals.dirLightShader.setTexture(visuals.textureSoil);		
 		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
 		visuals.soil.bindData(visuals.dirLightShader);

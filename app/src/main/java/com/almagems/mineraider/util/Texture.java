@@ -7,9 +7,6 @@ public class Texture {
     public float height;
     public String name;
 
-
-
-
     public String toString() {
         return "Texture name:" + this.name + ", w:" + width + ", h:" + height + ", id:" + id;
     }

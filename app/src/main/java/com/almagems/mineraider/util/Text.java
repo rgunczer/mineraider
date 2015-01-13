@@ -12,7 +12,7 @@ public class Text {
 
     private final Visuals visuals;
     private VertexArray vertexArray;
-    public Vector pos;
+    public Vector pos = new Vector(0f, 0f, 0f);
     private String text;
     private float fontScale;
     private float fontSpacingScale = 0.06f;
@@ -27,14 +27,15 @@ public class Text {
         fontSpacingScale = scale;
     }
 
-    public void init(float x, float y, String text, MyColor color, float fontScale) {
-
+    public void init(String text, MyColor color, float fontScale) {
         this.fontScale = fontScale;
         this.text = text;
-        pos = new Vector(x, y, 0f);
 
+        final int numOfTriangles = 2;
+        final int verticesPerTriangle = 3;
+        final int numOfComponentsPerVertex = 9; // x, y, z, r, g, b, a, s, t
         int index = 0;
-        float[] vertexData = new float[text.length() * 6 * 9];
+        float[] vertexData = new float[text.length() * numOfTriangles * verticesPerTriangle * numOfComponentsPerVertex];
 
         final int len = text.length();
         for (int i = 0; i < len; i++) {
@@ -48,41 +49,38 @@ public class Text {
     }
 
     public float getTextWidth() {
-        float width = 0f;
-        final int len = text.length();
-        for (int i = 0; i < len; i++) {
-            width += getCharWidth( Character.toString( text.charAt(i) ) );
-        }
-        return width;
+        return (text.length() - 1) * fontScale * fontSpacingScale;
     }
 
-    private float getCharWidth(String ch) {
-        TexturedQuad fontQuad = visuals.fonts.get(ch);
-        float width = ((fontQuad.w / Visuals.screenWidth) * Visuals.scaleFactor) * fontScale;
-        return width * 2f;
+    public float getTextHeight() {
+        TexturedQuad fontQuad = visuals.fonts.get("W");
+        float y = ((fontQuad.h / Visuals.screenWidth) * Visuals.scaleFactor) * fontScale;
+        return y * 2f;
     }
 
     private float[] getCharArray(String ch, int charIndex, MyColor color) {
         TexturedQuad fontQuad = visuals.fonts.get(ch);
-
+        float x, y;
         float tx0 = fontQuad.tx_lo_left.x;
         float tx1 = fontQuad.tx_up_right.x;
         float ty0 = fontQuad.tx_lo_left.y;
         float ty1 = fontQuad.tx_up_right.y;
 
-        float x = ((fontQuad.w / Visuals.screenWidth) * Visuals.scaleFactor) * fontScale;
-        float y = ((fontQuad.h / Visuals.screenWidth) * Visuals.scaleFactor) * fontScale;
+//        x = 0.025f;
+//        y = 0.025f;
+        x = ((fontQuad.w / Visuals.screenWidth) * Visuals.scaleFactor) * fontScale;
+        y = ((fontQuad.h / Visuals.screenWidth) * Visuals.scaleFactor) * fontScale;
         float space = charIndex * fontScale * fontSpacingScale;
 
         float[] vertexData = {
                 // x, y, z, 	                                                    s, t,
-                -x + space,  -0f, 0.0f, 	color.r, color.g, color.b, color.a,     tx0, ty1,
-                 x + space,  -0f, 0.0f,	    color.r, color.g, color.b, color.a,     tx1, ty1,
-                 x + space,  2*y, 0.0f,	    color.r, color.g, color.b, color.a,     tx1, ty0,
+                -x + space,  -y, 0.0f, 	color.r, color.g, color.b, color.a,     tx0, ty1,
+                 x + space,  -y, 0.0f,	color.r, color.g, color.b, color.a,     tx1, ty1,
+                 x + space,   y, 0.0f,	color.r, color.g, color.b, color.a,     tx1, ty0,
 
-                -x + space,  -0f, 0.0f, 	color.r, color.g, color.b, color.a,     tx0, ty1,
-                 x + space,  2*y, 0.0f, 	color.r, color.g, color.b, color.a,     tx1, ty0,
-                -x + space,  2*y, 0.0f, 	color.r, color.g, color.b, color.a,     tx0, ty0
+                -x + space,  -y, 0.0f, 	color.r, color.g, color.b, color.a,     tx0, ty1,
+                 x + space,   y, 0.0f, 	color.r, color.g, color.b, color.a,     tx1, ty0,
+                -x + space,   y, 0.0f, 	color.r, color.g, color.b, color.a,     tx0, ty0
         };
 
         return vertexData;
@@ -95,12 +93,14 @@ public class Text {
     public void draw() { // suppose we are in 2D projection mode
         op.setPosition(pos.x, pos.y, 0f);
         op.setRot(0f, 0f, 0f);
-        op.setScale(Visuals.aspectRatio, Visuals.aspectRatio, 1.0f);
+        op.setScale(1f, 1f, 1f);
 
         visuals.calcMatricesForObject(op);
         visuals.textureShader.setUniforms(visuals.mvpMatrix);
 
         visuals.textureShader.bindData(vertexArray);
-        glDrawArrays(GL_TRIANGLES, 0, text.length() * 2 * 3);
+        final int numOfTriangles = 2;
+        final int numOfVerticesPerTriangle = 3;
+        glDrawArrays(GL_TRIANGLES, 0, text.length() * numOfTriangles * numOfVerticesPerTriangle);
     }
 }

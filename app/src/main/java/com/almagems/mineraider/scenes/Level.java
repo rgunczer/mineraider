@@ -25,9 +25,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 
 import com.almagems.mineraider.ClassicSingleton;
-import com.almagems.mineraider.Constants;
 import com.almagems.mineraider.GemPosition;
-import com.almagems.mineraider.HUD;
 import com.almagems.mineraider.Match3;
 import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Physics;
@@ -55,8 +53,6 @@ public class Level extends Scene {
 	}
 	
 	private SwipeDir swipeDir = SwipeDir.SwipeNone;
-
-
 
 	private Physics physics;
 	private Match3 match3;
@@ -175,11 +171,8 @@ public class Level extends Scene {
 		drawCrates();
 		drawPickAxes();
 		drawHelmets();
-		
-		//glDisable(GL_DEPTH_TEST);
-		//drawPhysicsGemsFixtures();
-		//drawPhysicsEdges();
-		
+
+        //drawPhysics();
 		particleManager.draw();
 
         ClassicSingleton.getInstance().hud.draw();
@@ -191,9 +184,6 @@ public class Level extends Scene {
 	
 	@Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
-
-        ClassicSingleton.getInstance().scoreCounter.dump();
-
 		swipeDir = SwipeDir.SwipeNone;
 		touchDownX = normalizedX;
 		touchDownY = normalizedY;
@@ -424,7 +414,7 @@ public class Level extends Scene {
 		float posX;
 		float posY = -2f;
 		
-		if (Constants.DRAW_BUFFER_BOARD) {
+		if (DRAW_BUFFER_BOARD) {
 			posY = -20.0f;
 		}
 		
@@ -441,7 +431,15 @@ public class Level extends Scene {
 				posY += 1.0f;
 		}			
 	}
-	
+
+    void drawPhysics() {
+        glDisable(GL_DEPTH_TEST);
+        drawPhysicsStatics();
+        drawPhysicsGemsFixtures();
+        drawPhysicsEdges();
+        glEnable(GL_DEPTH_TEST);
+    }
+
 	private void drawPhysicsEdges() {
 		MyColor color = new MyColor(1.0f, 1.0f, 1.0f);
 		EdgeDrawer edgeDrawer = new EdgeDrawer(10);		
@@ -479,7 +477,7 @@ public class Level extends Scene {
 				Vec2 pos = body.getPosition();
 				float angle = body.getAngle();
 				float degree = (float) Math.toDegrees(angle);			
-				float d = Constants.GEM_FRAGMENT_SIZE + (0.15f * Constants.GEM_FRAGMENT_SIZE); 
+				float d = GEM_FRAGMENT_SIZE + (0.15f * GEM_FRAGMENT_SIZE);
 				
 				Integer integer = (Integer)body.m_userData;
 				int gemType = integer.intValue();
@@ -507,37 +505,81 @@ public class Level extends Scene {
         float angle;
         float degree;
         float d;
-		int size = physics.boxes.size();
+		int size = physics.fragments.size();
 		for(int i = 0; i < size; ++i) {
-			body = physics.boxes.get(i);
-			if ( body.m_type == BodyType.DYNAMIC && body.m_userData != null ) {
-				pos = body.getPosition();
-				angle = body.getAngle();
-				degree = (float) Math.toDegrees(angle);
-				d = Constants.GEM_FRAGMENT_SIZE;
-				
-				integer = (Integer)body.m_userData;
-				gemType = integer;
-				gem = visuals.gems[gemType];
-				_op.setPosition(pos.x, pos.y, 1.0f);							
-				_op.setRot(0f, 0f, degree);
-				_op.setScale(d, d, 1f);
+			body = physics.fragments.get(i);
+            pos = body.getPosition();
+            angle = body.getAngle();
+            degree = (float) Math.toDegrees(angle);
+            d = GEM_FRAGMENT_SIZE;
 
-				visuals.calcMatricesForObject(_op);
-				visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightNorm);
-				gem.bindData(visuals.pointLightShader);					
-				gem.draw();
-			}
+            integer = (Integer)body.m_userData;
+            gemType = integer;
+            gem = visuals.gems[gemType];
+            _op.setPosition(pos.x, pos.y, 1.0f);
+            _op.setRot(0f, 0f, degree);
+            _op.setScale(d, d, 1f);
+
+            visuals.calcMatricesForObject(_op);
+            visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightNorm);
+            gem.bindData(visuals.pointLightShader);
+            gem.draw();
 		}		
 		//glEnable(GL_DEPTH_TEST);
 	}
-		
+
+    private void drawPhysicsStatics() {
+        visuals.colorShader.useProgram();
+
+        Body body;
+        Vec2 pos;
+        float angle;
+        float degree;
+        Fixture fixture;
+        PolygonShape polygon;
+        EdgeDrawer edgeDrawer = new EdgeDrawer(100);
+        int size = physics.statics.size();
+        for(int i = 0; i < size; ++i) {
+            body = physics.statics.get(i);
+            pos = body.getPosition();
+            angle = body.getAngle();
+            degree = (float) Math.toDegrees(angle);
+
+            fixture = body.getFixtureList();
+            while(fixture != null) {
+                polygon = (PolygonShape)fixture.getShape();
+                if (polygon.m_count == 4) { // box
+                    edgeDrawer.begin();
+                    Vec2 v0 = polygon.m_vertices[0];
+                    Vec2 v1 = polygon.m_vertices[1];
+                    Vec2 v2 = polygon.m_vertices[2];
+                    Vec2 v3 = polygon.m_vertices[3];
+
+                    edgeDrawer.addLine(	v0.x, v0.y, 0.0f,   v1.x, v1.y, 0.0f);
+                    edgeDrawer.addLine(	v1.x, v1.y, 0.0f,   v2.x, v2.y, 0.0f);
+                    edgeDrawer.addLine(	v2.x, v2.y, 0.0f,   v3.x, v3.y, 0.0f);
+                    edgeDrawer.addLine(	v3.x, v3.y, 0.0f,   v0.x, v0.y, 0.0f);
+
+                    setIdentityM(visuals.modelMatrix, 0);
+                    translateM(visuals.modelMatrix, 0, pos.x, pos.y, 1.0f);
+                    rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);
+                    multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
+
+                    visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.color);
+                    edgeDrawer.bindData(visuals.colorShader);
+                    edgeDrawer.draw();
+                }
+                fixture = fixture.getNext();
+            }
+        }
+    }
+
 	private void drawPhysicsGemsFixtures() {		
 		EdgeDrawer edgeDrawer = new EdgeDrawer(100);
-		int size = physics.boxes.size();
+		int size = physics.fragments.size();
 		Body body;
 		for(int i = 0; i < size; ++i) {
-			body = physics.boxes.get(i);
+			body = physics.fragments.get(i);
 			Vec2 pos = body.getPosition();
 			float angle = body.getAngle();
 			float degree = (float) Math.toDegrees(angle);
@@ -801,7 +843,7 @@ public class Level extends Scene {
 	
 	void drawBoardGems(MyColor color) {
 		int yMax = match3.boardSize;
-		if (Constants.DRAW_BUFFER_BOARD) {
+		if (DRAW_BUFFER_BOARD) {
 			yMax = match3.boardSize * 2;
 		}
 

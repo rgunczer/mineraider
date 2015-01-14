@@ -53,7 +53,7 @@ public class SwapHintManager {
     public void draw() {
         SwapHint hint;
         //visuals.pointLightShader.useProgram();
-        visuals.hint.bindData(visuals.dirLightShader);
+        visuals.hint.bindData(visuals.pointLightShader);
         //visuals.dirLightShader.setTexture(visuals.textureGems);
 
         int size = live.size();

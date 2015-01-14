@@ -10,19 +10,26 @@ import org.jbox2d.collision.shapes.EdgeShape;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.dynamics.FixtureDef;
 
-import com.almagems.mineraider.Constants;
+import static com.almagems.mineraider.Constants.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Physics {
 	private static Physics instance = null;
-	
+
+    private final Random random = new Random();
+
+    private final BodyDef gemBodyDef = new BodyDef();
+    private final FixtureDef gemFixtureDef = new FixtureDef();
+
 	public static int velIterations = 10; //4;
 	public static int posIterations = 10; //8;
 	
 	public ArrayList<Body> balls = new ArrayList<Body>();
 	public ArrayList<Body> polygons = new ArrayList<Body>();
-	public ArrayList<Body> boxes = new ArrayList<Body>();
+	public ArrayList<Body> fragments = new ArrayList<Body>();
+    public ArrayList<Body> statics = new ArrayList<Body>();
 	public ArrayList<Body> edges = new ArrayList<Body>();
 	
 	public CollisionHandler collisionHandler = new CollisionHandler();
@@ -41,40 +48,41 @@ public class Physics {
 		world = new World(gravity);
 		world.setSleepingAllowed(true);
 		world.setContactListener(collisionHandler);
+
+        gemBodyDef.type = BodyType.DYNAMIC;
+        gemBodyDef.allowSleep = true;
+
+        gemFixtureDef.density = GEM_DENSITY;
 	}
 
 	
 	// Fragments	
 	
 	public void addFragmentGem0(float x, float y) {
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(x, y);
+		gemBodyDef.position.set(x, y);
+        gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 		
-		float d = Constants.GEM_FRAGMENT_SIZE;
+		float d = GEM_FRAGMENT_SIZE;
 		
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(d, d);
-		
-		FixtureDef fixture = new FixtureDef();
-		fixture.shape = shape;
-		fixture.density = Constants.GEM_DENSITY;
-		fixture.restitution = 0.1f;
+
+		gemFixtureDef.shape = shape;
+        gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
-		Body body = world.createBody(bodyDef);
-		body.createFixture(fixture);
-		body.m_userData = new Integer(Constants.GEM_TYPE_0);
+		Body body = world.createBody(gemBodyDef);
+		body.createFixture(gemFixtureDef);
+		body.m_userData = new Integer(GEM_TYPE_0);
 		
-		boxes.add(body);		
+		fragments.add(body);
 	}
 	
 	public void addFragmentGem1(float x, float y) {
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(x, y);
+		gemBodyDef.position.set(x, y);
+        gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 		
-		float d = Constants.GEM_FRAGMENT_SIZE;
+		float d = GEM_FRAGMENT_SIZE;
 		Vec2[] vertices = new Vec2[4];
 		vertices[0] = new Vec2( 0, d);
 		vertices[1] = new Vec2( d, 0);
@@ -83,27 +91,24 @@ public class Physics {
 		int count = 4;		
 
 		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);		
-		
-		FixtureDef fixture = new FixtureDef();
-		fixture.shape = shape;
-		fixture.density = Constants.GEM_DENSITY;
-		fixture.restitution = 0.1f;
+		shape.set(vertices, count);
+
+        gemFixtureDef.shape = shape;
+        gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
-		Body body = world.createBody(bodyDef);
-		body.createFixture(fixture);
-		body.m_userData = new Integer(Constants.GEM_TYPE_1);
+		Body body = world.createBody(gemBodyDef);
+		body.createFixture(gemFixtureDef);
+		body.m_userData = new Integer(GEM_TYPE_1);
 		
-		boxes.add(body);				
+		fragments.add(body);
 	}
 
 	public void addFragmentGem2(float x, float y) {
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(x, y);
+		gemBodyDef.position.set(x, y);
+        gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 
-		float d = Constants.GEM_FRAGMENT_SIZE;
+		float d = GEM_FRAGMENT_SIZE;
 		float d3 = (d / 3.0f) * 2.0f;
 		int count = 5;
 		Vec2[] vertices = new Vec2[count];
@@ -114,27 +119,24 @@ public class Physics {
 		vertices[4] = new Vec2(  d3, -d);		
 		
 		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);		
-		
-		FixtureDef fixture = new FixtureDef();
-		fixture.shape = shape;
-		fixture.density = Constants.GEM_DENSITY;
-		fixture.restitution = 0.1f;
+		shape.set(vertices, count);
+
+        gemFixtureDef.shape = shape;
+        gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
-		Body body = world.createBody(bodyDef);
-		body.createFixture(fixture);
-		body.m_userData = new Integer(Constants.GEM_TYPE_2);
+		Body body = world.createBody(gemBodyDef);
+		body.createFixture(gemFixtureDef);
+		body.m_userData = new Integer(GEM_TYPE_2);
 		
-		boxes.add(body);		
+		fragments.add(body);
 	}
 	
 	public void addFragmentGem3(float x, float y) {
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(x, y);
+		gemBodyDef.position.set(x, y);
+        gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 
-		float d = Constants.GEM_FRAGMENT_SIZE;
+		float d = GEM_FRAGMENT_SIZE;
 		int count = 6;
 		Vec2[] vertices = new Vec2[count];
 		vertices[0] = new Vec2(-d, -d/2);
@@ -145,27 +147,24 @@ public class Physics {
 		vertices[5] = new Vec2( 0, -d);
 		
 		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);		
-		
-		FixtureDef fixture = new FixtureDef();
-		fixture.shape = shape;
-		fixture.density = Constants.GEM_DENSITY;
-		fixture.restitution = 0.1f;
+		shape.set(vertices, count);
+
+        gemFixtureDef.shape = shape;
+        gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
-		Body body = world.createBody(bodyDef);
-		body.createFixture(fixture);
-		body.m_userData = new Integer(Constants.GEM_TYPE_3);
+		Body body = world.createBody(gemBodyDef);
+		body.createFixture(gemFixtureDef);
+		body.m_userData = new Integer(GEM_TYPE_3);
 		
-		boxes.add(body);		
+		fragments.add(body);
 	}
 
 	public void addFragmentGem4(float x, float y) {
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(x, y);
+		gemBodyDef.position.set(x, y);
+        gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 		
-		float d = Constants.GEM_FRAGMENT_SIZE;
+		float d = GEM_FRAGMENT_SIZE;
 		
 		Vec2[] vertices = new Vec2[3];
 		vertices[0] = new Vec2(-d, -d);
@@ -175,26 +174,23 @@ public class Physics {
 		
 		PolygonShape shape = new PolygonShape();
 		shape.set(vertices, count);
-		
-		FixtureDef fixture = new FixtureDef();
-		fixture.shape = shape;
-		fixture.density = Constants.GEM_DENSITY;
-		fixture.restitution = 0.1f;
+
+        gemFixtureDef.shape = shape;
+        gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
-		Body body = world.createBody(bodyDef);
-		body.createFixture(fixture);
-		body.m_userData = new Integer(Constants.GEM_TYPE_4);
+		Body body = world.createBody(gemBodyDef);
+		body.createFixture(gemFixtureDef);
+		body.m_userData = new Integer(GEM_TYPE_4);
 		
-		boxes.add(body);
+		fragments.add(body);
 	}
 	
 	public void addFragmentGem5(float x, float y) {
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(x, y);
+		gemBodyDef.position.set(x, y);
+        gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 
-		float d = Constants.GEM_FRAGMENT_SIZE;
+		float d = GEM_FRAGMENT_SIZE;
 		int count = 8;
 		Vec2[] vertices = new Vec2[count];
 		vertices[0] = new Vec2(-d, -d/2);
@@ -207,27 +203,24 @@ public class Physics {
 		vertices[7] = new Vec2(-d/2, -d);
 		
 		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);		
-		
-		FixtureDef fixture = new FixtureDef();
-		fixture.shape = shape;
-		fixture.density = Constants.GEM_DENSITY;
-		fixture.restitution = 0.1f;
+		shape.set(vertices, count);
+
+        gemFixtureDef.shape = shape;
+        gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
-		Body body = world.createBody(bodyDef);
-		body.createFixture(fixture);
-		body.m_userData = new Integer(Constants.GEM_TYPE_5);
+		Body body = world.createBody(gemBodyDef);
+		body.createFixture(gemFixtureDef);
+		body.m_userData = new Integer(GEM_TYPE_5);
 		
-		boxes.add(body);
+		fragments.add(body);
 	}
 	
-	public void addFragmentGem6(float x, float y) {		
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(x, y);
+	public void addFragmentGem6(float x, float y) {
+		gemBodyDef.position.set(x, y);
+        gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 
-		float d = Constants.GEM_FRAGMENT_SIZE;	
+		float d = GEM_FRAGMENT_SIZE;
 		float d2 = (d / 3.0f) * 2.0f;
 		int count = 8;
 		Vec2[] vertices = new Vec2[count];
@@ -241,23 +234,20 @@ public class Physics {
 		vertices[7] = new Vec2(-d2, -d2);
 		
 		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);		
-		
-		FixtureDef fixture = new FixtureDef();
-		fixture.shape = shape;
-		fixture.density = Constants.GEM_DENSITY;
-		fixture.restitution = 0.1f;
+		shape.set(vertices, count);
+
+        gemFixtureDef.shape = shape;
+        gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
-		Body body = world.createBody(bodyDef);
-		body.createFixture(fixture);
-		body.m_userData = new Integer(Constants.GEM_TYPE_6);
+		Body body = world.createBody(gemBodyDef);
+		body.createFixture(gemFixtureDef);
+		body.m_userData = new Integer(GEM_TYPE_6);
 		
-		boxes.add(body);				
+		fragments.add(body);
 	}
-		
-	// end of fragments
-	
+
+	/////////////// end of fragments ////////////////
 	
 	public void addBall(float x, float y, float radius) {
 		BodyDef bodyDef = new BodyDef();
@@ -317,33 +307,26 @@ public class Physics {
 		
 		edges.add(body);
 	}
-	
-	
-	
-	
-		
-	
-	
-	
-	public void addBox1(float x, float y) {
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(x, y);
-		
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(1.0f, 1.0f);
-		
-		FixtureDef fixture = new FixtureDef();
-		fixture.shape = shape;
-		fixture.density = 1.0f;
-		fixture.restitution = 0.1f;
-		//fixture.friction = 0.75f;
-		
-		Body body = world.createBody(bodyDef);
-		body.createFixture(fixture);
-		
-		boxes.add(body);
-	}
+
+//	public void addBox1(float x, float y) {
+//		BodyDef bodyDef = new BodyDef();
+//		bodyDef.type = BodyType.DYNAMIC;
+//		bodyDef.position.set(x, y);
+//
+//		PolygonShape shape = new PolygonShape();
+//		shape.setAsBox(1.0f, 1.0f);
+//
+//		FixtureDef fixture = new FixtureDef();
+//		fixture.shape = shape;
+//		fixture.density = 1.0f;
+//		fixture.restitution = 0.1f;
+//		//fixture.friction = 0.75f;
+//
+//		Body body = world.createBody(bodyDef);
+//		body.createFixture(fixture);
+//
+//		boxes.add(body);
+//	}
 		
 	public void addBoxStatic(float x, float y, float angle, float w, float h) {
 		BodyDef bodyDef = new BodyDef();
@@ -363,31 +346,30 @@ public class Physics {
 		Body body = world.createBody(bodyDef);
 		body.createFixture(fixture);
 		
-		boxes.add(body);
+		statics.add(body);
 	}
 	
 	public void update() {
 		world.step(1.0f/30.0f, velIterations, posIterations);
-		Body body = null;
-		int size = boxes.size();
+		Body body;
+        Vec2 pos;
+		int size = fragments.size();
 		for(int i = 0; i < size; ++i) {
-			body = boxes.get(i);
-			if (body.m_type == BodyType.DYNAMIC && body.m_userData != null) {			
-				Vec2 pos = body.getPosition();
+			body = fragments.get(i);
+			pos = body.getPosition();
 				
-				if (pos.y < -18.7f) {
-					world.destroyBody(body);
-					boxes.remove(body);
-					break;
-				}
-				
-				if (pos.x > 20.0f) {
-					world.destroyBody(body);
-					boxes.remove(body);
-					break;
-				}				
-			}
-			
+            if (pos.y < -18.7f) {
+                world.destroyBody(body);
+                fragments.remove(body);
+                break;
+            }
+
+            if (pos.x > 20.0f) {
+                world.destroyBody(body);
+                fragments.remove(body);
+                break;
+            }
+
 			//float angle = body.getAngle();
 			//System.out.println("box2d x: " + pos.x + ", y: " + pos.y + ", angle: " + angle);
 		}

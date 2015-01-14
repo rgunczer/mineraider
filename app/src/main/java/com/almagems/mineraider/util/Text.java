@@ -1,5 +1,6 @@
 package com.almagems.mineraider.util;
 
+import com.almagems.mineraider.EffectAnims.EffectAnim;
 import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
@@ -12,13 +13,11 @@ public class Text {
 
     private final Visuals visuals;
     private VertexArray vertexArray;
-    public Vector pos = new Vector(0f, 0f, 0f);
     private String text;
     private float fontScale;
     private float fontSpacingScale = 0.06f;
-    private final ObjectPosition op = new ObjectPosition();
-    private float elapsed;
-    private float d;
+    public ObjectPosition pos = new ObjectPosition();
+    private EffectAnim anim;
 
     // ctor
     public Text() {
@@ -29,7 +28,7 @@ public class Text {
         fontSpacingScale = scale;
     }
 
-    public void init(String text, MyColor color, float fontScale) {
+    public void init(String text, MyColor colorUp, MyColor colorDown, float fontScale) {
         this.fontScale = fontScale;
         this.text = text;
 
@@ -41,7 +40,7 @@ public class Text {
 
         final int len = text.length();
         for (int i = 0; i < len; i++) {
-            float[] array = getCharArray( Character.toString(text.charAt(i)), i, color);
+            float[] array = getCharArray( Character.toString(text.charAt(i)), i, colorUp, colorDown);
             for (int j = 0; j < array.length; ++j, ++index) {
                 vertexData[index] = array[j];
             }
@@ -60,7 +59,7 @@ public class Text {
         return y * 2f;
     }
 
-    private float[] getCharArray(String ch, int charIndex, MyColor color) {
+    private float[] getCharArray(String ch, int charIndex, MyColor colorUp, MyColor colorDown) {
         TexturedQuad fontQuad = visuals.fonts.get(ch);
         float x, y;
         float tx0 = fontQuad.tx_lo_left.x;
@@ -68,40 +67,47 @@ public class Text {
         float ty0 = fontQuad.tx_lo_left.y;
         float ty1 = fontQuad.tx_up_right.y;
 
-//        x = 0.025f;
-//        y = 0.025f;
         x = ((fontQuad.w / Visuals.screenWidth) * Visuals.scaleFactor) * fontScale;
         y = ((fontQuad.h / Visuals.screenWidth) * Visuals.scaleFactor) * fontScale;
         float space = charIndex * fontScale * fontSpacingScale;
 
         float[] vertexData = {
                 // x, y, z, 	                                                    s, t,
-                -x + space,  -y, 0.0f, 	color.r, color.g, color.b, color.a,     tx0, ty1,
-                 x + space,  -y, 0.0f,	color.r, color.g, color.b, color.a,     tx1, ty1,
-                 x + space,   y, 0.0f,	color.r, color.g, color.b, color.a,     tx1, ty0,
+                -x + space,  -y, 0.0f, 	colorDown.r, colorDown.g, colorDown.b, colorDown.a,     tx0, ty1,
+                 x + space,  -y, 0.0f,	colorDown.r, colorDown.g, colorDown.b, colorDown.a,     tx1, ty1,
+                 x + space,   y, 0.0f,	colorUp.r,   colorUp.g,   colorUp.b,   colorUp.a,       tx1, ty0,
 
-                -x + space,  -y, 0.0f, 	color.r, color.g, color.b, color.a,     tx0, ty1,
-                 x + space,   y, 0.0f, 	color.r, color.g, color.b, color.a,     tx1, ty0,
-                -x + space,   y, 0.0f, 	color.r, color.g, color.b, color.a,     tx0, ty0
+                -x + space,  -y, 0.0f, 	colorDown.r, colorDown.g, colorDown.b, colorDown.a,     tx0, ty1,
+                 x + space,   y, 0.0f, 	colorUp.r,   colorUp.g,   colorUp.b,   colorUp.a,       tx1, ty0,
+                -x + space,   y, 0.0f, 	colorUp.r,   colorUp.g,   colorUp.b,   colorUp.a,       tx0, ty0
         };
 
         return vertexData;
     }
 
-    public void update() {
-        elapsed += 0.9f;
-        d = (((float)Math.sin(elapsed) + 1f) / 2f) * 0.095f;
+    public void addAnimEffect(EffectAnim anim) {
+        this.anim = anim;
+        this.anim.init(this.pos);
     }
 
-    public void draw() { // suppose we are in 2D projection mode
-        op.setPosition(pos.x, pos.y, 0f);
-        op.setRot(0f, 0f, 0f);
-        op.setScale(1f, 1f+d, 1f);
+    public void removeAnimEffect() {
+        if (this.anim != null) {
+            this.pos.init(this.anim.posOrigin);
+            this.anim = null;
+        }
+    }
 
-        visuals.calcMatricesForObject(op);
+    public void update() {
+        if (anim != null) {
+            anim.update();
+        }
+    }
+
+    public void draw() {
+        visuals.calcMatricesForObject(pos);
         visuals.textureShader.setUniforms(visuals.mvpMatrix);
-
         visuals.textureShader.bindData(vertexArray);
+
         final int numOfTriangles = 2;
         final int numOfVerticesPerTriangle = 3;
         glDrawArrays(GL_TRIANGLES, 0, text.length() * numOfTriangles * numOfVerticesPerTriangle);

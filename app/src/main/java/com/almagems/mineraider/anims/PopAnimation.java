@@ -9,6 +9,7 @@ import com.almagems.mineraider.Constants;
 import com.almagems.mineraider.GemPosition;
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.particlesystem.ParticleManager;
+import com.almagems.mineraider.util.Vector;
 
 
 public class PopAnimation extends BaseAnimation {
@@ -82,55 +83,79 @@ public class PopAnimation extends BaseAnimation {
 	private void addPhysicsEntity(float x, float y, int gemType) {
         //System.out.println("addPhysicsEntity for gemType: " + gemType);
 		Random rand = new Random();
-		float d = Constants.GEM_FRAGMENT_SIZE;
-		float x1 = x + (((float)rand.nextInt(100) / 100f) - d);
-		float x2 = x + (((float)rand.nextInt(100) / 100f) - d);
-		float x3 = x + (((float)rand.nextInt(100) / 100f) - d);
-		float y1 = y + (((float)rand.nextInt(100) / 100f) - d);
-		float y2 = y + (((float)rand.nextInt(100) / 100f) - d);
-		float y3 = y + (((float)rand.nextInt(100) / 100f) - d);
+        float d = Constants.GEM_FRAGMENT_SIZE;
+        float tx = d / 2f;
+        float ty = d / 2f;
+
+
+        float degree = (float)rand.nextInt(360);
+        float theta = (float)Math.toRadians(degree);
+        float s = (float)Math.sin(theta);
+        float c = (float)Math.cos(theta);
+        float xnew = tx * c - ty * s;
+        float ynew = tx * s + ty * c;
+		float x1 = x + xnew;
+		float y1 = y + ynew;
+
+        degree = (float)rand.nextInt(360);
+        theta = (float)Math.toRadians(degree);
+        s = (float)Math.sin(theta);
+        c = (float)Math.cos(theta);
+        xnew = tx * c - ty * s;
+        ynew = tx * s + ty * c;
+		float x2 = x + xnew;
+		float y2 = y + ynew;
+
+        degree = (float)rand.nextInt(360);
+        theta = (float)Math.toRadians(degree);
+        s = (float)Math.sin(theta);
+        c = (float)Math.cos(theta);
+        xnew = tx * c - ty * s;
+        ynew = tx * s + ty * c;
+		float x3 = x + xnew;
+		float y3 = y + ynew;
 		
 		switch(gemType) {
 		case GEM_TYPE_0:
-			physics.addFragmentGem0(x, y);
-			physics.addFragmentGem0(x, y);
-			physics.addFragmentGem0(x, y);
+			physics.addFragmentGem0(x1, y1);
+			physics.addFragmentGem0(x2, y2);
+			physics.addFragmentGem0(x3, y3);
 			break;
 		
 		case GEM_TYPE_1:
-			physics.addFragmentGem1(x, y);
-			physics.addFragmentGem1(x, y);
-			physics.addFragmentGem1(x, y);
+			physics.addFragmentGem1(x1, y1);
+			physics.addFragmentGem1(x2, y2);
+			physics.addFragmentGem1(x3, y3);
 			break;
 		
 		case GEM_TYPE_2:
-			physics.addFragmentGem2(x, y);
-			physics.addFragmentGem2(x, y);
-			physics.addFragmentGem2(x, y);
+			physics.addFragmentGem2(x1, y1);
+			physics.addFragmentGem2(x2, y2);
+			physics.addFragmentGem2(x3, y3);
 			break;
 		
 		case GEM_TYPE_3:
-			physics.addFragmentGem3(x, y);
-			physics.addFragmentGem3(x, y);
-			physics.addFragmentGem3(x, y);
+			physics.addFragmentGem3(x1, y1);
+			physics.addFragmentGem3(x2, y2);
+			physics.addFragmentGem3(x3, y3);
 			break;
 			
 		case GEM_TYPE_4:
-			physics.addFragmentGem4(x, y);
-			physics.addFragmentGem4(x, y);
-			physics.addFragmentGem4(x, y);
+			physics.addFragmentGem4(x1, y1);
+			physics.addFragmentGem4(x2, y2);
+			physics.addFragmentGem4(x3, y3);
 			break;
 		
 		case GEM_TYPE_5:
-			physics.addFragmentGem5(x, y);
-			physics.addFragmentGem5(x, y);
-			physics.addFragmentGem5(x, y);							
+			physics.addFragmentGem5(x1, y1);
+			physics.addFragmentGem5(x2, y2);
+			physics.addFragmentGem5(x3, y3);
 			break;
 		
 		case GEM_TYPE_6:
-			physics.addFragmentGem6(x, y);
-			physics.addFragmentGem6(x, y);
-			physics.addFragmentGem6(x, y);
+			physics.addFragmentGem6(x1, y1);
+			physics.addFragmentGem6(x2, y2);
+			physics.addFragmentGem6(x3, y3);
 			break;
 		}
 	}	

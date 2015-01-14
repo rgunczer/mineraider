@@ -1,5 +1,8 @@
 package com.almagems.mineraider;
 
+import com.almagems.mineraider.EffectAnims.EffectAnim;
+import com.almagems.mineraider.EffectAnims.WahWah;
+import com.almagems.mineraider.EffectAnims.ZigZag;
 import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.GemIkon;
 import com.almagems.mineraider.objects.Quad;
@@ -33,6 +36,11 @@ public class HUD {
     private int comboCounter;
     private float comboScale;
 
+    private int scoreCooling;
+
+    private EffectAnim effectWahWah;
+    private ZigZag effectZigZag;
+
     // ctor
     public HUD() {
         scoreText = new Text();
@@ -43,26 +51,26 @@ public class HUD {
         comboCooling = 0;
         comboCounter = 0;
         comboScale = 2.0f;
+        effectWahWah = new WahWah();
+        effectZigZag = new ZigZag();
+
+        scoreCooling = 0;
     }
 
     public void init() {
         fontScale = 0.9f;
         scoreText.setSpacingScale(0.06f);
-        scoreText.init("SCORE:" + cachedScore, new MyColor(1f, 1f, 0f, 1f), fontScale);
+        scoreText.init("SCORE:" + cachedScore, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), fontScale);
 
         scoreX = -0.8f;
         scoreY = -Visuals.aspectRatio + (scoreText.getTextHeight() / 3f);
-        scoreText.pos.x = scoreX;
-        scoreText.pos.y = scoreY;
+        scoreText.pos.setPosition(scoreX, scoreY, 0f);
+        scoreText.pos.setRot(0f, 0f, 0f);
+        scoreText.pos.setScale(1f, 1f, 1f);
 
         extraText.setSpacingScale(0.065f);
-        extraText.init("WATCH FOR MINECARTS", new MyColor(0.6f, 0.6f, 0.6f, 1f), 1.4f);
-        extraText.pos.x = 0.0f;
-        extraText.pos.y = -0.5f;
-
-        float textWidth = extraText.getTextWidth();
-        //System.out.println("text width is: " + textWidth);
-        extraText.pos.x = -textWidth / 2f;
+        extraText.init("WATCH FOR MINECARTS", new MyColor(0.6f, 0.6f, 0.6f, 1f), new MyColor(0f, 0f, 0f, 1f), 1.4f);
+        extraText.pos.setPosition(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
 
         ikon.init();
 
@@ -81,24 +89,32 @@ public class HUD {
     public void showCombo() {
         ++comboCounter;
 
-        extraText.init("COMBOx" + comboCounter, new MyColor(1f, 0f, 0f, 1f), comboScale);
+        extraText.init("COMBOx" + comboCounter, new MyColor(1f, 0f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), comboScale);
         float textWidth = extraText.getTextWidth();
-        extraText.pos.x = -textWidth / 2f;
+        extraText.pos.setPosition(-textWidth / 2f, -0.5f, 0f);
+        extraText.pos.setRot(0f, 0f, 0f);
+        extraText.pos.setScale(1f, 1f, 1f);
+
         comboCooling = 100;
         comboScale += 0.2f;
+        effectWahWah.init(extraText.pos);
+        //extraText.addAnimEffect(effectWahWah);
+        extraText.addAnimEffect(effectZigZag);
     }
 
     public void updateScore(int score) {
         if (score != cachedScore) {
+            scoreCooling = 30;
             String str = "SCORE:" + score;
-            scoreText.init(str, new MyColor(1f, 1f, 0f, 1f), fontScale);
+            scoreText.init(str, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), fontScale);
             cachedScore = score;
+            scoreText.addAnimEffect(effectWahWah);
         }
     }
 
     public void update() {
         ikon.update();
-        //scoreText.update();
+        scoreText.update();
         extraText.update();
         quad.update();
 
@@ -108,6 +124,15 @@ public class HUD {
             if (comboCooling == 0) {
                 comboCounter = 0;
                 comboScale = 2.0f;
+                extraText.removeAnimEffect();
+            }
+        }
+
+        if (scoreCooling > 0) {
+            --scoreCooling;
+
+            if (scoreCooling == 0) {
+                scoreText.removeAnimEffect();
             }
         }
 

@@ -157,14 +157,12 @@ public class Menu extends Scene {
 
         text = new Text();
         text.setSpacingScale(0.09f);
-        text.init("ANDREA", new MyColor(1f, 1f, 0f, 1f), 0.5f);
-        text.pos.x = -0.95f;
-        text.pos.y = -Visuals.aspectRatio;
+        text.init("ANDREA", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.5f);
+        text.pos.setPosition(-0.95f, -Visuals.aspectRatio, 0f);
 
         credits = new Text();
-        credits.init("CREDITS", new MyColor(1f, 0f, 1f, 1f), 1.5f);
-        credits.pos.x = -0.85f;
-        credits.pos.y = 1.0f;
+        credits.init("CREDITS", new MyColor(1f, 0f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.5f);
+        credits.pos.setPosition(-0.85f, 1.0f, 0f);
 	}
 
 	@Override

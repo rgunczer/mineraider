@@ -9,8 +9,6 @@ import com.almagems.mineraider.Constants;
 import com.almagems.mineraider.GemPosition;
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.particlesystem.ParticleManager;
-import com.almagems.mineraider.util.Vector;
-
 
 public class PopAnimation extends BaseAnimation {
 	

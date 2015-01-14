@@ -2,6 +2,10 @@ package com.almagems.mineraider.objects;
 
 import java.util.Random;
 
+import static android.opengl.GLES20.glDisable;
+import static android.opengl.GLES20.glEnable;
+import static android.opengl.GLES20.GL_DEPTH_TEST;
+
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -17,7 +21,7 @@ import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.util.MyColor;
-import com.almagems.mineraider.util.Vector;
+
 
 
 public class MineCart {
@@ -131,7 +135,7 @@ public class MineCart {
 		vertices1[0] = new Vec2(-3.4f, -1.0f);
 		vertices1[1] = new Vec2(-3.0f, -1.0f);
 		vertices1[2] = new Vec2(-4.0f,  2.2f);
-		vertices1[3] = new Vec2(-3.6f,  2.2f);
+		vertices1[3] = new Vec2(-3.6f,  2.0f);
 		shape1.set(vertices1, vertices1.length);
 		
 		FixtureDef fixture1 = new FixtureDef();
@@ -146,7 +150,7 @@ public class MineCart {
 		vertices2[0] = new Vec2( 3.4f, -1.0f);
 		vertices2[1] = new Vec2( 3.0f, -1.0f);
 		vertices2[2] = new Vec2( 4.0f,  2.2f);
-		vertices2[3] = new Vec2( 3.6f,  2.2f);
+		vertices2[3] = new Vec2( 3.6f,  2.0f);
 		shape2.set(vertices2, vertices2.length);
 		
 		FixtureDef fixture2 = new FixtureDef();

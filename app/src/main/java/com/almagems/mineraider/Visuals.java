@@ -73,6 +73,7 @@ public class Visuals {
 		
 	// textures	
 	public int textureGems;
+    public int textureGemsPlates;
 	public int textureCart;
 	public int textureRailRoad;
 	public int textureParticle;
@@ -93,6 +94,7 @@ public class Visuals {
 	
 	// models
 	public Model[] gems = new Model[MAX_GEM_TYPES];
+    public Model[] gemsPlates = new Model[MAX_GEM_TYPES];
 	public Model marker;
 	public Model hint;
 	public Model mineCart;
@@ -181,11 +183,19 @@ public class Visuals {
 		ml = new ModelLoader();			
 		ml.init(context, R.drawable.gem0, "Gem0");
 		gems[GEM_TYPE_0] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem0_plate, "Gem0Plate");
+        gemsPlates[GEM_TYPE_0] = new Model(ml);
 		
 		ml = new ModelLoader(); 
 		ml.init(context, R.drawable.gem1, "Gem1");
 		gems[GEM_TYPE_1] = new Model(ml);
-		
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem1_plate, "Gem1Plate");
+        gemsPlates[GEM_TYPE_1] = new Model(ml);
+
 		ml = new ModelLoader(); 
 		ml.init(context, R.drawable.gem2, "Gem2");
 		gems[GEM_TYPE_2] = new Model(ml);
@@ -323,6 +333,7 @@ public class Visuals {
 
 	public void loadTextures() {
 		textureGems = loadTexture(R.drawable.gems_textures);
+        textureGemsPlates = loadTexture(R.drawable.gems_plate_textures);
 		textureCart = loadTexture(R.drawable.cart_texture);
 		textureRailRoad = loadTexture(R.drawable.railroad_texture);
 		textureParticle = loadTexture(R.drawable.smokeparticle);

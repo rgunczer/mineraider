@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.GemPosition;
 
-
 public class SwapHintManager {
 
-    private ArrayList<SwapHint> dead = new ArrayList<SwapHint>();
+    private ArrayList<SwapHint> pool = new ArrayList<SwapHint>();
     private ArrayList<SwapHint> live = new ArrayList<SwapHint>();
 
     private final Visuals visuals;
@@ -21,7 +20,7 @@ public class SwapHintManager {
     public void reset() {
         int size = live.size();
         for(int i = 0; i < size; ++i) {
-            dead.add( live.get(i) );
+            pool.add( live.get(i) );
         }
         live.clear();
     }
@@ -40,10 +39,10 @@ public class SwapHintManager {
     }
 
     private SwapHint getFromDead() {
-        int size = dead.size();
+        int size = pool.size();
         if (size > 0) {
-            SwapHint swapHint = dead.get( size - 1 );
-            dead.remove( size - 1 );
+            SwapHint swapHint = pool.get( size - 1 );
+            pool.remove( size - 1 );
             return swapHint;
         } else {
             return new SwapHint();
@@ -51,18 +50,15 @@ public class SwapHintManager {
     }
 
     public void draw() {
-        SwapHint hint;
-        //visuals.pointLightShader.useProgram();
         visuals.hint.bindData(visuals.pointLightShader);
-        //visuals.dirLightShader.setTexture(visuals.textureGems);
 
+        SwapHint hint;
         int size = live.size();
         for(int i = 0; i < size; ++i) {
             hint = live.get(i);
             hint.update();
             visuals.calcMatricesForObject( hint.op );
             visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
-
             visuals.hint.draw();
         }
     }

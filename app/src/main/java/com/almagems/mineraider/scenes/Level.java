@@ -155,8 +155,9 @@ public class Level extends Scene {
 
         animManager.draw();
         drawSelectionMarker();
-		drawBoardGems(colorBlack);
-		glDisable(GL_DEPTH_TEST);
+		//drawBoardGems(colorBlack);
+		drawGemsPlates();
+        //glDisable(GL_DEPTH_TEST);
 		drawBoardGems(colorWhite);
 		glEnable(GL_DEPTH_TEST);
         match3.swapHintManager.draw();
@@ -840,7 +841,39 @@ public class Level extends Scene {
 			visuals.marker.draw();
 		}
 	}
-	
+
+    void drawGemsPlates() {
+        visuals.pointLightShader.setTexture(visuals.textureGemsPlates);
+        glEnable(GL_BLEND);
+        Model gem;
+        GemPosition gp;
+        for(int y = 0; y < match3.boardSize; ++y) {
+            for (int x = 0; x < match3.boardSize; ++x) {
+                gp = match3.board[x][y];
+
+                if ((gp.type == GEM_TYPE_0 || gp.type == GEM_TYPE_1)  && gp.visible) {
+                    gem = visuals.gemsPlates[gp.type];
+
+//                    if (color.r == 0.0f) {
+                        markerPos.init(gp.op);
+                        markerPos.setScale(1.1f, 1.1f, 1f);
+//                        visuals.calcMatricesForObject(markerPos);
+//                    } else {
+                        visuals.calcMatricesForObject(markerPos);
+//                    }
+
+                    visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightDir);
+                    gem.bindData(visuals.pointLightShader);
+                    gem.bind();
+                    gem.draw();
+                    gem.unbind();
+                }
+            }
+        }
+        glDisable(GL_BLEND);
+        visuals.pointLightShader.setTexture(visuals.textureGems);
+    }
+
 	void drawBoardGems(MyColor color) {
 		int yMax = match3.boardSize;
 		if (DRAW_BUFFER_BOARD) {

@@ -16,9 +16,6 @@ import static android.opengl.GLES20.GL_SRC_ALPHA;
 import static android.opengl.GLES20.glBlendFunc;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
-import static android.opengl.Matrix.multiplyMM;
-import static android.opengl.Matrix.setIdentityM;
-
 
 public class HUD {
     private int cachedScore;
@@ -50,7 +47,7 @@ public class HUD {
         edgeDrawer = new EdgeDrawer(32);
         comboCooling = 0;
         comboCounter = 0;
-        comboScale = 2.0f;
+        comboScale = 1.0f;
         effectWahWah = new WahWah();
         effectZigZag = new ZigZag();
 
@@ -69,7 +66,7 @@ public class HUD {
         scoreText.pos.setScale(1f, 1f, 1f);
 
         extraText.setSpacingScale(0.065f);
-        extraText.init("WATCH FOR MINECARTS", new MyColor(0.6f, 0.6f, 0.6f, 1f), new MyColor(0f, 0f, 0f, 1f), 1.4f);
+        extraText.init("WATCH FOR MINECARTS", new MyColor(0.6f, 0.6f, 0.6f, 1f), new MyColor(0f, 0f, 0f, 1f), comboScale);
         extraText.pos.setPosition(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
 
         ikon.init();
@@ -83,7 +80,7 @@ public class HUD {
 
         comboCooling = 0;
         comboCounter = 0;
-        comboScale = 2.0f;
+        comboScale = 1.0f;
     }
 
     public void showCombo() {
@@ -91,12 +88,12 @@ public class HUD {
 
         extraText.init("COMBOx" + comboCounter, new MyColor(1f, 0f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), comboScale);
         float textWidth = extraText.getTextWidth();
-        extraText.pos.setPosition(-textWidth / 2f, -0.5f, 0f);
+        extraText.pos.setPosition(-textWidth / 2f, -0.35f, 0f);
         extraText.pos.setRot(0f, 0f, 0f);
         extraText.pos.setScale(1f, 1f, 1f);
 
         comboCooling = 100;
-        comboScale += 0.2f;
+        comboScale += 0.05f;
         effectWahWah.init(extraText.pos);
         //extraText.addAnimEffect(effectWahWah);
         extraText.addAnimEffect(effectZigZag);
@@ -123,7 +120,7 @@ public class HUD {
 
             if (comboCooling == 0) {
                 comboCounter = 0;
-                comboScale = 2.0f;
+                comboScale = 1.0f;
                 extraText.removeAnimEffect();
             }
         }
@@ -135,7 +132,6 @@ public class HUD {
                 scoreText.removeAnimEffect();
             }
         }
-
     }
 
     public void draw() {

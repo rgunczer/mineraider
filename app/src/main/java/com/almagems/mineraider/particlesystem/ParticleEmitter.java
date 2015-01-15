@@ -44,9 +44,9 @@ public class ParticleEmitter {
 	}
 	
 	public void addParticles(ParticleSystem particleSystem, float currentTime, int count) {		
-		int r = Color.red(color);
-		int g = Color.green(color);
-		int b = Color.blue(color);
+//		int r = Color.red(color);
+//		int g = Color.green(color);
+//		int b = Color.blue(color);
 		
 		//System.out.println("Particle: " + r + "," + g + "," + b);
 				

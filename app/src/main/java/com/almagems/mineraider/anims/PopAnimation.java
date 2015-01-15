@@ -72,6 +72,7 @@ public class PopAnimation extends BaseAnimation {
                 return;
             }
 		}
+
 		item.visible = false;
 		gp = getFromPool();
         gp.init(item);

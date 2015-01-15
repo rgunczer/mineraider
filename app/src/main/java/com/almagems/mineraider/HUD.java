@@ -29,13 +29,17 @@ public class HUD {
     private float scoreX;
     private float scoreY;
     private float fontScale;
-    private int comboCooling;
+    private int extraTextCooling;
     private int comboCounter;
     private float comboScale;
 
+    private float perfectSwapScale;
+
     private int scoreCooling;
 
-    private EffectAnim effectWahWah;
+
+    private WahWah effectWahWahScore;
+    private WahWah effectWahWah;
     private ZigZag effectZigZag;
 
     // ctor
@@ -45,13 +49,15 @@ public class HUD {
         ikon = new GemIkon();
         quad = new Quad();
         edgeDrawer = new EdgeDrawer(32);
-        comboCooling = 0;
+        extraTextCooling = 0;
         comboCounter = 0;
         comboScale = 1.0f;
         effectWahWah = new WahWah();
         effectZigZag = new ZigZag();
+        effectWahWahScore = new WahWah();
 
         scoreCooling = 0;
+        perfectSwapScale = 0.75f;
     }
 
     public void init() {
@@ -78,7 +84,7 @@ public class HUD {
         quad.op.setRot(0f, 0f, 0f);
         quad.op.setScale(scale, scale, 1f);
 
-        comboCooling = 0;
+        extraTextCooling = 0;
         comboCounter = 0;
         comboScale = 1.0f;
     }
@@ -92,11 +98,27 @@ public class HUD {
         extraText.pos.setRot(0f, 0f, 0f);
         extraText.pos.setScale(1f, 1f, 1f);
 
-        comboCooling = 100;
+        extraTextCooling = 100;
         comboScale += 0.05f;
-        effectWahWah.init(extraText.pos);
+
         //extraText.addAnimEffect(effectWahWah);
         extraText.addAnimEffect(effectZigZag);
+    }
+
+    public void showPerfectSwap() {
+        extraText.init("PERFECT SWAP", new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 1f, 1f, 1f), perfectSwapScale);
+        float textWidth = extraText.getTextWidth();
+        extraText.pos.setPosition(-textWidth / 2f, -0.35f, 0f);
+        extraText.pos.setRot(0f, 0f, 0f);
+        extraText.pos.setScale(1f, 1f, 1f);
+
+        extraTextCooling = 25;
+        effectWahWah.wahScale = 0.6f;
+        extraText.addAnimEffect(effectWahWah);
+    }
+
+    public void showMatch4() {
+
     }
 
     public void updateScore(int score) {
@@ -105,7 +127,8 @@ public class HUD {
             String str = "SCORE:" + score;
             scoreText.init(str, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), fontScale);
             cachedScore = score;
-            scoreText.addAnimEffect(effectWahWah);
+            effectWahWahScore.wahScale = 0.06f;
+            scoreText.addAnimEffect(effectWahWahScore);
         }
     }
 
@@ -115,10 +138,10 @@ public class HUD {
         extraText.update();
         quad.update();
 
-        if (comboCooling > 0) {
-            --comboCooling;
+        if (extraTextCooling > 0) {
+            --extraTextCooling;
 
-            if (comboCooling == 0) {
+            if (extraTextCooling == 0) {
                 comboCounter = 0;
                 comboScale = 1.0f;
                 extraText.removeAnimEffect();
@@ -148,7 +171,7 @@ public class HUD {
         ikon.draw();
         visuals.textureShader.setTexture(visuals.textureFonts);
         scoreText.draw();
-        if (comboCooling > 0) {
+        if (extraTextCooling > 0) {
             extraText.draw();
         }
 

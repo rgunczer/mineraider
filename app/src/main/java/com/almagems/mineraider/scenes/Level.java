@@ -897,7 +897,19 @@ public class Level extends Scene {
                         visuals.calcMatricesForObject(gp.op);
 					}
 
-					visuals.pointLightShader.setUniforms(color, visuals.lightColor, visuals.lightDir);							 			
+                    if (gp.extra == GemPosition.GemExtras.HorizontalExplosive) {
+                        MyColor redColor = new MyColor(1f, 0f, 0f, 1f);
+                        visuals.pointLightShader.setUniforms(redColor, visuals.lightColor, visuals.lightDir);
+                    } else if (gp.extra == GemPosition.GemExtras.VerticalExplosive) {
+                        MyColor greenColor = new MyColor(0f, 1f, 0f, 1f);
+                        visuals.pointLightShader.setUniforms(greenColor, visuals.lightColor, visuals.lightDir);
+                    } else if (gp.extra == GemPosition.GemExtras.RadialExplosive) {
+                        MyColor blueColor = new MyColor(1f, 0f, 0f, 1f);
+                        visuals.pointLightShader.setUniforms(blueColor, visuals.lightColor, visuals.lightDir);
+                    } else {
+                        visuals.pointLightShader.setUniforms(color, visuals.lightColor, visuals.lightDir);
+                    }
+
 					gem.bindData(visuals.pointLightShader);
 					gem.bind();
 					gem.draw();

@@ -18,19 +18,22 @@ import com.almagems.mineraider.util.Vector;
 
 public class ParticleManager {
 	private static ParticleManager instance = null;
-	
+
+    private final Visuals visuals;
 	private long globalStartTime;
 	final Vector particleDirection = new Vector(2.0f, 0.0f, 0.0f);
 	final float angleVarianceInDegrees = 5f;
 	final float speedVariance = 1.6f;
 
-	public ArrayList<ParticleEmitter> deadParticleEmitters = new ArrayList<ParticleEmitter>();
-	public ArrayList<ParticleEmitter> liveParticleEmitters = new ArrayList<ParticleEmitter>();
+    public ArrayList<ParticleEmitter> remove = new ArrayList<ParticleEmitter>(8);
+	public ArrayList<ParticleEmitter> pool = new ArrayList<ParticleEmitter>(32);
+	public ArrayList<ParticleEmitter> live = new ArrayList<ParticleEmitter>(16);
 	
 	private ParticleSystem particleSystem;
 	
 	// ctor
-	private ParticleManager() {		
+	private ParticleManager() {
+        visuals = Visuals.getInstance();
 	}
 		
 	public static ParticleManager getInstance() {
@@ -40,113 +43,89 @@ public class ParticleManager {
 		return instance;
 	}	
 	
-	public void init() {		
-		Visuals visuals = Visuals.getInstance();		
-		int color = visuals.colorFromGemType(GEM_TYPE_0);
+	public void init() {
+		int color = Color.rgb(255, 255, 255);
 		
 		particleSystem = new ParticleSystem(10000);
-		globalStartTime = System.nanoTime();		
-		
-		ParticleEmitter particleEmitter0 = new ParticleEmitter( new Vector(-10.0f, 18.0f, 0.0f),
+		globalStartTime = System.nanoTime();
+
+        ParticleEmitter emitter;
+
+		emitter = new ParticleEmitter( new Vector(-10.0f, 18.0f, 0.0f),
 				particleDirection, 
 				color,
 				angleVarianceInDegrees,
 				speedVariance );
-		particleEmitter0.numberOfParticlesToEmit = 100;
+		emitter.numberOfParticlesToEmit = 100;
 
-		ParticleEmitter particleEmitter1 = new ParticleEmitter( new Vector(0.0f, 18.0f, 0.0f),
+        live.add(emitter);
+
+		emitter = new ParticleEmitter( new Vector(0.0f, 18.0f, 0.0f),
 				particleDirection, 
 				color,
 				angleVarianceInDegrees,
 				speedVariance );
-		
-		particleEmitter1.numberOfParticlesToEmit = 50;
+		emitter.numberOfParticlesToEmit = 50;
 
-		ParticleEmitter particleEmitter2 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
+        live.add(emitter);
+
+		emitter = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
 				particleDirection, 
 				color,
 				angleVarianceInDegrees,
 				speedVariance );
-		
-		particleEmitter2.numberOfParticlesToEmit = 25;
+		emitter.numberOfParticlesToEmit = 25;
 
-		liveParticleEmitters.add(particleEmitter0);
-		liveParticleEmitters.add(particleEmitter1);
-		liveParticleEmitters.add(particleEmitter2);
+		live.add(emitter);
 
-		
-		ParticleEmitter particleEmitter3 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
-				particleDirection, 
-				Color.rgb(255, 255, 0),
-				angleVarianceInDegrees,
-				speedVariance );
 
-		ParticleEmitter particleEmitter4 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
-				particleDirection, 
-				Color.rgb(255, 255, 0),
-				angleVarianceInDegrees,
-				speedVariance );
-		
-		ParticleEmitter particleEmitter5 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
-				particleDirection, 
-				Color.rgb(255, 255, 0),
-				angleVarianceInDegrees,
-				speedVariance );
-		
-		ParticleEmitter particleEmitter6 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
-				particleDirection, 
-				Color.rgb(255, 255, 0),
-				angleVarianceInDegrees,
-				speedVariance );
+        for(int i = 0; i < 24; ++i) {
+            emitter = new ParticleEmitter(new Vector(10.0f, 18.0f, 0.0f),
+                    particleDirection,
+                    Color.rgb(100, 100, 100),
+                    angleVarianceInDegrees,
+                    speedVariance);
 
-		ParticleEmitter particleEmitter7 = new ParticleEmitter( new Vector(10.0f, 18.0f, 0.0f),
-				particleDirection, 
-				Color.rgb(255, 255, 0),
-				angleVarianceInDegrees,
-				speedVariance );
-
-		deadParticleEmitters.add(particleEmitter3);
-		deadParticleEmitters.add(particleEmitter4);
-		deadParticleEmitters.add(particleEmitter5);
-		deadParticleEmitters.add(particleEmitter6);
-		deadParticleEmitters.add(particleEmitter7);
+            pool.add(emitter);
+        }
 	}
 	
-	public void addParticleEmitterAt(float x, float y, int gemType) {
-		Visuals visuals = Visuals.getInstance();
-		//System.out.println("in MineRaiderRenderer add Particle Emitter at: " + x + ", " + y);		
-		if (deadParticleEmitters.size() > 0) {
-			ParticleEmitter pe = deadParticleEmitters.remove(0);
-			pe.position = new Vector(x, y, -2f);
+	public void addParticleEmitterAt(float x, float y, int type) {
+		//System.out.println("in MineRaiderRenderer add Particle Emitter at: " + x + ", " + y);
+        int size = pool.size();
+		if (size > 0) {
+			ParticleEmitter pe = pool.remove(size - 1);
+			pe.position.x = x;
+            pe.position.y = y;
+            pe.position.z = -2f;
 			pe.numberOfParticlesToEmit = 10;
-			pe.color = visuals.colorFromGemType(gemType);
-			liveParticleEmitters.add(pe);
+			pe.color = Color.rgb(100, 100, 100); //visuals.colorFromGemType(gemType);
+			live.add(pe);
 		}
 	}
 	
 	public void draw() {
-		Visuals visuals = Visuals.getInstance();
 		float currentTime = (System.nanoTime() - globalStartTime) / 1000000000f;
 
-		while(true) {
-			boolean out = true;
-			for (ParticleEmitter particleEmitter : liveParticleEmitters) {			
-				if (particleEmitter.isDone()) {
-					deadParticleEmitters.add(particleEmitter);
-					liveParticleEmitters.remove(particleEmitter);
-					out = false;
-					break;
-				}
-			}
-			if (out) {
-				break;
-			}
+        int size = live.size();
+        ParticleEmitter emitter;
+        for (int i = 0; i < size; ++i) {
+            emitter = live.get(i);
+            if (emitter.isDone()) {
+                remove.add(emitter);
+            } else {
+                emitter.addParticles(particleSystem, currentTime, 1);
+            }
+        }
+
+        size = remove.size();
+        for(int i = 0; i < size; ++i) {
+            emitter = remove.get(i);
+            pool.add(emitter);
+            live.remove(emitter);
 		}
-		
-		for (ParticleEmitter particleEmitter : liveParticleEmitters) {
-			particleEmitter.addParticles(particleSystem, currentTime, 1);
-		}
-		
+        remove.clear();
+
 		visuals.particleShader.useProgram();
 		visuals.particleShader.setTexture(visuals.textureParticle);
 		visuals.particleShader.setUniforms(visuals.viewProjectionMatrix, currentTime);

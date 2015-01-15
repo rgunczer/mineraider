@@ -26,6 +26,8 @@ public class ClassicSingleton {
         hud.showCombo();
     }
 
+    public void sendPerfectSwapNotification() { hud.showPerfectSwap(); }
+
 	public void showSceneLevel() {
 		renderer.showSceneLevel();
 	}
@@ -33,9 +35,16 @@ public class ClassicSingleton {
     public int getScore() {
         return scoreCounter.getScore();
     }
-
     public void setScore(int score) {
         scoreCounter.setScore(score);
+    }
+
+    public int[] getScoreByGemTypes() { return scoreCounter.scoreByGemTypes; }
+
+    public void setScoreByGemTypes(int[] arr) {
+        for (int i = 0; i < arr.length; ++i) {
+            scoreCounter.scoreByGemTypes[i] = arr[i];
+        }
     }
 	
 //	public void spawnParticleEmitterAt(float x, float y, int gemType) {

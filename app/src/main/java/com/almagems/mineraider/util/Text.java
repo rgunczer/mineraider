@@ -19,6 +19,7 @@ public class Text {
     public ObjectPosition pos = new ObjectPosition();
     private EffectAnim anim;
 
+
     // ctor
     public Text() {
         visuals = Visuals.getInstance();

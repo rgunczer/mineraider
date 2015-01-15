@@ -57,7 +57,8 @@ public class Match3 {
         }
     }
 
-	private void placeTestGems() {		
+	private void placeTestGems() {
+        // test gems for combo
 		board[0][2].type = GEM_TYPE_2;
 		board[1][2].type = GEM_TYPE_1;
 		board[2][2].type = GEM_TYPE_1;
@@ -77,6 +78,30 @@ public class Match3 {
 		board[2][5].type = GEM_TYPE_1;
 		
 		board[3][4].type = GEM_TYPE_1;
+
+        // test gems for perfect swap
+        board[5][0].type = GEM_TYPE_0;
+        board[6][0].type = GEM_TYPE_0;
+        board[7][0].type = GEM_TYPE_1;
+
+        board[5][1].type = GEM_TYPE_1;
+        board[6][1].type = GEM_TYPE_1;
+        board[7][1].type = GEM_TYPE_0;
+
+        // test gems with extras for horizontal explosion
+        board[4][1].type = GEM_TYPE_0;
+        board[4][1].extra = GemPosition.GemExtras.HorizontalExplosive;
+
+
+        // test gems with extras for vertical explosion
+        board[0][0].extra = GemPosition.GemExtras.VerticalExplosive;
+
+
+        board[3][4].extra = GemPosition.GemExtras.RadialExplosive;
+        board[3][4].type = GEM_TYPE_6;
+        board[4][3].type = GEM_TYPE_6;
+        board[4][2].type = GEM_TYPE_6;
+
 	}
 		
 	private void emptyBoard() {
@@ -190,38 +215,79 @@ public class Match3 {
 	private boolean isMatch(int x, int y) {
 		return rowMatchCount(x, y) > 2 || colMatchCount(x, y) > 2;
 	}
-	
-	private void removeGems(PopAnimation anim, int x, int y, boolean combo) {
-		GemPosition current = board[x][y];
-		int step;
-		
-		if (rowMatchCount(x, y) > 2) {
-			step = 0;
-			while ( isSameGemAtPosition(current, x + step, y) ) {
-				anim.add(board[x + step][y]);
-				++step;
-			}
-			
-			step = 0;
-			while( isSameGemAtPosition(current, x - step, y) ) {
-				anim.add(board[x - step][y]);
-				++step;
-			}
-		}
-		
-		if (colMatchCount(x, y) > 2) {
-			step = 0;
-			while( isSameGemAtPosition(current, x, y + step) ) {
-				anim.add(board[x][y + step]);
-				++step;
-			}
-			
-			step = 0;
-			while( isSameGemAtPosition(current, x, y - step) ) {
-				anim.add(board[x][y - step]);
-				++step;
-			}
-		}
+
+	private void removeGems(PopAnimation anim, int x, int y) {
+        GemPosition current = board[x][y];
+        int step;
+
+        if (rowMatchCount(x, y) > 2) {
+            step = 0;
+            while (isSameGemAtPosition(current, x + step, y)) {
+                anim.add(board[x + step][y]);
+                ++step;
+            }
+
+            step = 0;
+            while (isSameGemAtPosition(current, x - step, y)) {
+                anim.add(board[x - step][y]);
+                ++step;
+            }
+        }
+
+        if (colMatchCount(x, y) > 2) {
+            step = 0;
+            while (isSameGemAtPosition(current, x, y + step)) {
+                anim.add(board[x][y + step]);
+                ++step;
+            }
+
+            step = 0;
+            while (isSameGemAtPosition(current, x, y - step)) {
+                anim.add(board[x][y - step]);
+                ++step;
+            }
+        }
+
+        removeDueExtras(anim);
+    }
+
+    private void removeDueExtras(PopAnimation anim) {
+        GemPosition gp;
+        for(int i = 0; i < anim.count(); ++i) {
+            gp = anim.getAt(i);
+            if (gp.extra == GemPosition.GemExtras.HorizontalExplosive) {
+                for(int j = 0; j < boardSize; ++j) {
+                    anim.add(board[j][gp.boardY]);
+                }
+            }
+
+            if (gp.extra == GemPosition.GemExtras.VerticalExplosive) {
+                for(int j = 0; j < boardSize; ++j) {
+                    anim.add(board[gp.boardX][j]);
+                }
+            }
+
+            if (gp.extra == GemPosition.GemExtras.RadialExplosive) {
+                int radialSize = 6;
+                for(int j = 1; j < radialSize; ++j) {
+                    if ((gp.boardX + j) < boardSize - 1) { // x +
+                        anim.add(board[gp.boardX + j][gp.boardY]);
+                    }
+
+                    if ((gp.boardX - j) > 0) { // x -
+                        anim.add(board[gp.boardX - j][gp.boardY]);
+                    }
+
+                    if ((gp.boardY + j) < boardSize - 1) { // y +
+                        anim.add(board[gp.boardX][gp.boardY + j]);
+                    }
+
+                    if ((gp.boardY - j) > 0) { // y --
+                        anim.add(board[gp.boardX][gp.boardY - j]);
+                    }
+                }
+            }
+        }
 	}
 		
 	private void fillBufferBoard() {
@@ -358,9 +424,15 @@ public class Match3 {
 	}
 	
 	private void swapGems(GemPosition first, GemPosition second) {
+        // type
 		int temp = first.type;
 		first.type = second.type;
 		second.type = temp;
+
+        // extra type
+        GemPosition.GemExtras tempExtra = first.extra;
+        first.extra = second.extra;
+        second.extra = tempExtra;
 	}
 	
 	public void showOrHideHints() {
@@ -457,14 +529,14 @@ public class Match3 {
 				PopAnimation anim = getPopAnimation();
 				
 				if (first) {
-					removeGems(anim, secondSelected.boardX, secondSelected.boardY, false);
+					removeGems(anim, secondSelected.boardX, secondSelected.boardY);
 				}
 				
 				if (second) {
-					removeGems(anim, firstSelected.boardX, firstSelected.boardY, false);
+					removeGems(anim, firstSelected.boardX, firstSelected.boardY);
 				}
 
-                scoreCounter.addScore(anim.count(), /*combo*/false);
+                scoreCounter.addScore(anim);
 
                 if (first && second) {
                     scoreCounter.addBonusForPerfectSwap();
@@ -497,12 +569,13 @@ public class Match3 {
 			board[boardX][fromY].type = GEM_TYPE_NONE;
 		}
 
+        // check for combo(s)
 		PopAnimation anim = getPopAnimation();
 
 		for(int y = 0; y < boardSize; ++y) {
 			for(int x = 0; x < boardSize; ++x) {
 				if (isMatch(x, y)) {
-					removeGems(anim, x, y, true);
+					removeGems(anim, x, y);
 				}
 			}
 		}
@@ -510,7 +583,8 @@ public class Match3 {
 		if (!anim.isEmpty()) {
 			//System.out.println("COMBO(S)!!!");
 			addAnimToManager(anim);
-            scoreCounter.addScore(anim.count(), /*combo*/true);
+            scoreCounter.addScore(anim);
+            scoreCounter.addBonusForCombo();
 		}
 	}
 	

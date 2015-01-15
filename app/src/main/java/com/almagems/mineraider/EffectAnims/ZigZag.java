@@ -15,7 +15,7 @@ public class ZigZag extends EffectAnim {
 
     // ctor
     public ZigZag() {
-        posOrigin = new ObjectPosition();
+
     }
 
     @Override

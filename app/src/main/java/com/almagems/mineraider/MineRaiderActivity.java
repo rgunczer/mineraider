@@ -22,6 +22,10 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
+
+import static com.almagems.mineraider.Constants.*;
+
+
 public class MineRaiderActivity extends Activity {
 	private AdView adView;
 	private GLSurfaceView glSurfaceView;
@@ -169,23 +173,46 @@ public class MineRaiderActivity extends Activity {
 	}
 
     private void savePreferences() {
+        System.out.println("Save Preferences...");
         ClassicSingleton singleton = ClassicSingleton.getInstance();
 
-        // Context context = getActivity();
-        // SharedPreferences sharedPref = this.getSharedPreferences("com.almagems.mineraider.prefs", Context.MODE_PRIVATE);
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
+
+        // TODO: current user!?
+
+        // save score
         editor.putInt("SCORE", singleton.getScore());
+
+        // save score by gem types
+        int[] arr = singleton.getScoreByGemTypes();
+        for(int i = 0; i < arr.length; ++i) {
+            editor.putInt("GEM" + i, arr[i]);
+        }
+
         editor.commit();
     }
 
     private void loadPreferences() {
+        System.out.println("Load Preferences...");
         ClassicSingleton singleton = ClassicSingleton.getInstance();
 
         SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+
+        // TODO: current user!?
+
+        // load score
         int score = sharedPrefs.getInt("SCORE", 0);
         singleton.setScore(score);
-        System.out.println("Score is:: " + score);
+        singleton.scoreCounter.dumpScore();
+
+        // load score by gem types
+        int[] arr = new int[MAX_GEM_TYPES];
+        for(int i = 0; i < MAX_GEM_TYPES; ++i) {
+            arr[i] = sharedPrefs.getInt("GEM" + i, 0);
+        }
+        singleton.setScoreByGemTypes(arr);
+        singleton.scoreCounter.dumpScoreByGemTypes();
     }
 
 }

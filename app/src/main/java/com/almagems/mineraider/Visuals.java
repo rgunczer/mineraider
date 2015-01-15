@@ -73,7 +73,6 @@ public class Visuals {
 		
 	// textures	
 	public int textureGems;
-    public int textureGemsPlates;
 	public int textureCart;
 	public int textureRailRoad;
 	public int textureParticle;
@@ -179,22 +178,15 @@ public class Visuals {
 	
 	private void loadModels() {	
 		ModelLoader ml;
-		
+
+        //  gems
 		ml = new ModelLoader();			
 		ml.init(context, R.drawable.gem0, "Gem0");
 		gems[GEM_TYPE_0] = new Model(ml);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem0_plate, "Gem0Plate");
-        gemsPlates[GEM_TYPE_0] = new Model(ml);
-		
 		ml = new ModelLoader(); 
 		ml.init(context, R.drawable.gem1, "Gem1");
 		gems[GEM_TYPE_1] = new Model(ml);
-
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem1_plate, "Gem1Plate");
-        gemsPlates[GEM_TYPE_1] = new Model(ml);
 
 		ml = new ModelLoader(); 
 		ml.init(context, R.drawable.gem2, "Gem2");
@@ -215,7 +207,37 @@ public class Visuals {
 		ml = new ModelLoader(); 
 		ml.init(context, R.drawable.gem6, "Gem6");
 		gems[GEM_TYPE_6] = new Model(ml);
-		
+
+        // plates
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem0_plate, "Gem0Plate");
+        gemsPlates[GEM_TYPE_0] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem1_plate, "Gem1Plate");
+        gemsPlates[GEM_TYPE_1] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem2_plate, "Gem2Plate");
+        gemsPlates[GEM_TYPE_2] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem3_plate, "Gem3Plate");
+        gemsPlates[GEM_TYPE_3] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem4_plate, "Gem4Plate");
+        gemsPlates[GEM_TYPE_4] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem5_plate, "Gem5Plate");
+        gemsPlates[GEM_TYPE_5] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem6_plate, "Gem6Plate");
+        gemsPlates[GEM_TYPE_6] = new Model(ml);
+
+
 		ml = new ModelLoader();
 		ml.init(context, R.drawable.marker, "Marker");
 		marker = new Model(ml);
@@ -333,7 +355,6 @@ public class Visuals {
 
 	public void loadTextures() {
 		textureGems = loadTexture(R.drawable.gems_textures);
-        textureGemsPlates = loadTexture(R.drawable.gems_plate_textures);
 		textureCart = loadTexture(R.drawable.cart_texture);
 		textureRailRoad = loadTexture(R.drawable.railroad_texture);
 		textureParticle = loadTexture(R.drawable.smokeparticle);

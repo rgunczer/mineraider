@@ -173,7 +173,7 @@ public class PopAnimation extends BaseAnimation {
 		case Pop:			
 			float z = 0.0f;
 			for (GemPosition item : list) {
-				item.op.tz += 0.3f;
+				item.op.tz += 0.4f;
 								
 				if (z < item.op.tz) {
 					z = item.op.tz;

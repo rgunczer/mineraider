@@ -90,11 +90,11 @@ public class Match3 {
 
         // test gems with extras for horizontal explosion
         board[4][1].type = GEM_TYPE_0;
-        board[4][1].extra = GemPosition.GemExtras.HorizontalExplosive;
+        //board[4][1].extra = GemPosition.GemExtras.HorizontalExplosive;
 
 
         // test gems with extras for vertical explosion
-        board[0][0].extra = GemPosition.GemExtras.VerticalExplosive;
+        //board[0][0].extra = GemPosition.GemExtras.VerticalExplosive;
 
 
         board[3][4].extra = GemPosition.GemExtras.RadialExplosive;
@@ -268,8 +268,8 @@ public class Match3 {
             }
 
             if (gp.extra == GemPosition.GemExtras.RadialExplosive) {
-                int radialSize = 6;
-                for(int j = 1; j < radialSize; ++j) {
+                int radialSize = 2;
+                for(int j = 1; j <= radialSize; ++j) {
                     if ((gp.boardX + j) < boardSize - 1) { // x +
                         anim.add(board[gp.boardX + j][gp.boardY]);
                     }

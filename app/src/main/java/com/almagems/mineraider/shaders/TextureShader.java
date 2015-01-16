@@ -3,7 +3,7 @@ package com.almagems.mineraider.shaders;
 import static android.opengl.GLES20.glGetAttribLocation;
 import static android.opengl.GLES20.glGetUniformLocation;
 import static android.opengl.GLES20.glUniformMatrix4fv;
-import static com.almagems.mineraider.Constants.BYTES_PER_FLOAT;
+import static com.almagems.mineraider.Constants.*;
 
 import android.content.Context;
 
@@ -52,7 +52,7 @@ public class TextureShader extends BaseShader {
         final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
         final int STRIDE = (POSITION_COMPONENT_COUNT +
                             COLOR_COMPONENT_COUNT +
-                            TEXTURE_COORDINATES_COMPONENT_COUNT ) * BYTES_PER_FLOAT;
+                            TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
 
         vertexArray.setVertexAttribPointer(
                 0,

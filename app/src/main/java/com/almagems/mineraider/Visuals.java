@@ -423,11 +423,10 @@ public class Visuals {
 //				0f, 1f, 0f);	// up
 
 				// debug 
-//				-60f, -10f, 13f, 	// eye				
-//				0f, -6f, -10f, 	    // at
-//				0f, 1f, 0f);		// up
-				
-				
+//				-20f, 5f,  1f, 	// eye
+//				  0f, 5f, -1f, 	// at
+//				  0f, 1f,   0f);	// up
+
 	/*	
         glViewport(0, 0, width, height);        
 

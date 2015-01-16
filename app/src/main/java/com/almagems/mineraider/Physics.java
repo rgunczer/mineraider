@@ -31,7 +31,8 @@ public class Physics {
 	public ArrayList<Body> fragments = new ArrayList<Body>();
     public ArrayList<Body> statics = new ArrayList<Body>();
 	public ArrayList<Body> edges = new ArrayList<Body>();
-	
+    public ArrayList<Body> fragmentToRemove = new ArrayList<Body>(100);
+
 	public CollisionHandler collisionHandler = new CollisionHandler();
 	
 	public World world;
@@ -350,6 +351,7 @@ public class Physics {
 	}
 	
 	public void update() {
+        fragmentToRemove.clear();
 		world.step(1.0f/30.0f, velIterations, posIterations);
 		Body body;
         Vec2 pos;
@@ -359,20 +361,24 @@ public class Physics {
 			pos = body.getPosition();
 				
             if (pos.y < -18.7f) {
-                world.destroyBody(body);
-                fragments.remove(body);
-                break;
+                fragmentToRemove.add(body);
+                continue;
             }
 
             if (pos.x > 20.0f) {
-                world.destroyBody(body);
-                fragments.remove(body);
-                break;
+                fragmentToRemove.add(body);
             }
 
 			//float angle = body.getAngle();
 			//System.out.println("box2d x: " + pos.x + ", y: " + pos.y + ", angle: " + angle);
 		}
 
+        size = fragmentToRemove.size();
+        for(int i = 0; i < size; ++i) {
+            body = fragmentToRemove.get(i);
+            fragments.remove(body);
+            world.destroyBody(body);
+        }
+        fragmentToRemove.clear();
 	}
 }

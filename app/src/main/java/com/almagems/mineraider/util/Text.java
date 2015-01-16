@@ -35,7 +35,7 @@ public class Text {
 
         final int numOfTriangles = 2;
         final int verticesPerTriangle = 3;
-        final int numOfComponentsPerVertex = 9; // x, y, z, r, g, b, a, s, t
+        final int numOfComponentsPerVertex = 9; // x, y, z,     r, g, b, a,     u, v
         int index = 0;
         float[] vertexData = new float[text.length() * numOfTriangles * verticesPerTriangle * numOfComponentsPerVertex];
 
@@ -43,10 +43,9 @@ public class Text {
         for (int i = 0; i < len; i++) {
             float[] array = getCharArray( Character.toString(text.charAt(i)), i, colorUp, colorDown);
             for (int j = 0; j < array.length; ++j, ++index) {
-                vertexData[index] = array[j];
+                vertexData[index] = array[j]; // fill
             }
         }
-
         vertexArray = new VertexArray(vertexData);
     }
 

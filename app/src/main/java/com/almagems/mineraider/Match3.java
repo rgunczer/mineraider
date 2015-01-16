@@ -248,7 +248,7 @@ public class Match3 {
             }
         }
 
-        removeDueExtras(anim);
+        //removeDueExtras(anim);
     }
 
     private void removeDueExtras(PopAnimation anim) {

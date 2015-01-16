@@ -16,12 +16,12 @@ void main()
 
 	vec3 vertexColour = u_Color.rgb;
  
- 	if (vertexColour.r < 0.5)
- 	{
- 		fragColour = vertexColour;
- 	}
- 	else
- 	{	 
+ 	//if (vertexColour.r < 0.5)
+ 	//{
+ 	//	fragColour = vertexColour;
+ 	//}
+ 	//else
+ 	//{
 	    vec3 transformedVertexNormal = normalize((modelView * vec4(vertexNormal, 0.0)).xyz);
 	    vec3 inverseLightDirection = normalize(vec3(-1.0, -1.0, 1.0));
 	 	fragColour = vec3(0.0);
@@ -51,7 +51,7 @@ void main()
 	    fragColour += pow(normalDotReflection, shininess) * vertexSpecularReflectionConstant * specularLightIntensity;
 	 
 		clamp(fragColour, 0.0, 1.0);
- 	}
+ 	//}
  	
 	gl_Position = projection * modelView * vertexPosition;
  }

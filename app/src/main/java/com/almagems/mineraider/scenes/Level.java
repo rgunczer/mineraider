@@ -3,6 +3,7 @@ package com.almagems.mineraider.scenes;
 import static android.opengl.GLES20.GL_BLEND;
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
+import static android.opengl.GLES20.GL_ONE;
 import static android.opengl.GLES20.GL_SRC_ALPHA;
 import static android.opengl.GLES20.glBlendFunc;
 import static android.opengl.GLES20.glDisable;
@@ -153,6 +154,7 @@ public class Level extends Scene {
         visuals.pointLightShader.useProgram();
         visuals.dirLightShader.setTexture(visuals.textureGems);
 
+        glDisable(GL_BLEND);
         animManager.draw();
 
         //glDisable(GL_BLEND);
@@ -496,9 +498,10 @@ public class Level extends Scene {
 				gem.draw();
 			}
 		}
+*/
+		//glDisable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
 
-		glDisable(GL_DEPTH_TEST);
-		*/
 		Body body;
         Model gem;
         Vec2 pos;
@@ -833,7 +836,7 @@ public class Level extends Scene {
 			//System.out.println("d is: " + d);
 
 			markerPos.init(match3.firstSelected.op);
-			markerPos.tz -= 0.1f;
+			markerPos.tz -= 0.2f;
             markerPos.setScale(1.0f + d, 1.0f + d, 1.0f);
 
 			visuals.calcMatricesForObject(markerPos);
@@ -849,56 +852,49 @@ public class Level extends Scene {
 			yMax = match3.boardSize * 2;
 		}
 
-        glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glBlendFunc(GL_ONE, GL_ONE);
 
         Model gem;
-        Model gemPlate;
         GemPosition gp;
-		for(int y = 0; y < yMax; ++y) {
-			for (int x = 0; x < match3.boardSize; ++x) {
-				gp = match3.board[x][y];
-				
-				if (gp.type != GEM_TYPE_NONE && gp.visible) {
-					gem = visuals.gems[gp.type];
-                    gemPlate = visuals.gemsPlates[gp.type];
-														
-//					if (color.r == 0.0f) {
-//                        markerPos.init(gp.op);
-//                        markerPos.setScale(1.11f, 1.11f, 1f);
-//                        visuals.calcMatricesForObject(markerPos);
-//					} else {
-                        visuals.calcMatricesForObject(gp.op);
-//					}
-/*
-                    if (gp.extra == GemPosition.GemExtras.HorizontalExplosive) {
-                        MyColor redColor = new MyColor(1f, 0f, 0f, 1f);
-                        visuals.pointLightShader.setUniforms(redColor, visuals.lightColor, visuals.lightDir);
-                    } else if (gp.extra == GemPosition.GemExtras.VerticalExplosive) {
-                        MyColor greenColor = new MyColor(0f, 1f, 0f, 1f);
-                        visuals.pointLightShader.setUniforms(greenColor, visuals.lightColor, visuals.lightDir);
-                    } else if (gp.extra == GemPosition.GemExtras.RadialExplosive) {
-                        MyColor blueColor = new MyColor(1f, 0f, 0f, 1f);
-                        visuals.pointLightShader.setUniforms(blueColor, visuals.lightColor, visuals.lightDir);
-                    } else {
-*/
-                        visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightDir);
-//                    }
 
-                        markerPos.init(gp.op);
-                        markerPos.setScale(1.1f, 1.1f, 1f);
-                        visuals.calcMatricesForObject(markerPos);
-                    visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightDir);
-                    gemPlate.bindData(visuals.pointLightShader);
-                    gemPlate.draw();
+        glDisable(GL_BLEND);
+        // draw gems
+		for(int y = 0; y < yMax; ++y) {
+            for (int x = 0; x < match3.boardSize; ++x) {
+                gp = match3.board[x][y];
+
+                if (gp.type != GEM_TYPE_NONE && gp.visible) {
+                    gem = visuals.gems[gp.type];
 
                     visuals.calcMatricesForObject(gp.op);
                     visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightDir);
-					gem.bindData(visuals.pointLightShader);
-					gem.draw();
-				}
-			}
-		}
+                    gem.bindData(visuals.pointLightShader);
+                    gem.draw();
+                }
+            }
+        }
+
+        glEnable(GL_BLEND);
+        // draw gem plates
+        for(int y = 0; y < yMax; ++y) {
+            for (int x = 0; x < match3.boardSize; ++x) {
+                gp = match3.board[x][y];
+
+                if (gp.type != GEM_TYPE_NONE && gp.visible) {
+                    gem = visuals.gemsPlates[gp.type];
+
+                    markerPos.init(gp.op);
+                    markerPos.tz -= 0.11f;
+                    markerPos.setScale(1.1f, 1.1f, 1f);
+
+                    visuals.calcMatricesForObject(markerPos);
+                    visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightDir);
+                    gem.bindData(visuals.pointLightShader);
+                    gem.draw();
+                }
+            }
+        }
         glDisable(GL_BLEND);
 	}
 	

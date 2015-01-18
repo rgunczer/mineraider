@@ -64,17 +64,15 @@ public class FallAnimation {
 
 	public void draw() {
         float temp;
-		animGemFrom.op.setScale(1f, 1f, 1f);
 		visuals.calcMatricesForObject(animGemFrom.op);
-		visuals.pointLightShader.setUniforms(gem.color, visuals.lightColor, visuals.lightNorm);
+		visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
 		gem.bindData(visuals.pointLightShader);
 		gem.draw();
 
         temp = animGemFrom.op.tz;
-        animGemFrom.op.setScale(1.1f, 1.1f, 1f);
         animGemFrom.op.tz -= 0.11f;
         visuals.calcMatricesForObject(animGemFrom.op);
-        visuals.pointLightShader.setUniforms(gem.color, visuals.lightColor, visuals.lightNorm);
+        visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
         plate.bindData(visuals.pointLightShader);
         plate.draw();
 

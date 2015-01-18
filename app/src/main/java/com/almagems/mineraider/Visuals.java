@@ -87,9 +87,9 @@ public class Visuals {
 	public int textureMenu;
 	public int textureMenuItems;
 	public int texturePickAxe;
-	public int textureHelmet;
     public int textureFonts;
     public int textureIkon;
+    public int textureHelmets;
 	
 	// models
 	public Model[] gems = new Model[MAX_GEM_TYPES];
@@ -117,7 +117,6 @@ public class Visuals {
 	public Model rock7;
 	public Model rock8;
 	public Model pickAxe;
-	public Model helmet;
 	
 	// shaders
 	public TextureShader textureShader;
@@ -328,11 +327,7 @@ public class Visuals {
 		
 		ml = new ModelLoader();
 		ml.init(context, R.drawable.pickaxe, "PickAxe");
-		pickAxe = new Model(ml);		
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.helmet, "Helmet");
-		helmet = new Model(ml);		
+		pickAxe = new Model(ml);
 	}	
 
     private int loadTexture(int resourceId) {
@@ -369,9 +364,9 @@ public class Visuals {
 		textureMenu = loadTexture(R.drawable.main_menu_bg);
 		textureMenuItems = loadTexture(R.drawable.menu_items);
 		texturePickAxe = loadTexture(R.drawable.pickaxe_texture);
-		textureHelmet = loadTexture(R.drawable.helmet_texture);
         textureFonts = loadTexture(R.drawable.fontsandroid);
         textureIkon = loadTexture(R.drawable.ikon_texture);
+        textureHelmets = loadTexture(R.drawable.helmets_texture);
 	}
 
 	public void bindNoTexture() {
@@ -647,6 +642,13 @@ public class Visuals {
             pFont.tx_up_left.x = x / tw;        pFont.tx_up_left.y =  (th - y) / th;       // 3
 
             fonts.put(String.valueOf(pFont.ch), pFont);
+
+
+//            float tx0 = pFont.tx_lo_left.x;
+//            float tx1 = pFont.tx_up_right.x;
+//            float ty0 = pFont.tx_lo_left.y;
+//            float ty1 = pFont.tx_up_right.y;
+
         }
     }
 

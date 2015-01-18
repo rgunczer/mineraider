@@ -46,7 +46,15 @@ public class ClassicSingleton {
             scoreCounter.scoreByGemTypes[i] = arr[i];
         }
     }
-	
+
+    public void handleGemsFromCart(int[] gemTypesArray) {
+        scoreCounter.handleGemsFromCart(gemTypesArray);
+    }
+
+    public void sendGemsFromCartNotification(int numberOfGems) {
+        hud.showBonusCartGems(numberOfGems);
+    }
+
 //	public void spawnParticleEmitterAt(float x, float y, int gemType) {
 //		//System.out.println("Spawn particle emitter at: " + x + ", " + y);
 //		particleManager.addParticleEmitterAt(x, y, gemType);

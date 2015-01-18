@@ -22,13 +22,23 @@ public class ScoreCounter {
         reset();
     }
 
+    public void handleGemsFromCart(int[] gemTypes) {
+        int numberOfGems = 0;
+        for (int i = 0; i < MAX_GEM_TYPES; ++i) {
+            numberOfGems += gemTypes[i];
+        }
+        ClassicSingleton.getInstance().sendGemsFromCartNotification(numberOfGems);
+        score += numberOfGems;
+        ClassicSingleton.getInstance().hud.updateScore(score);
+    }
+
     public void reset() {
         score = 0;
     }
 
     public void addScore(PopAnimation anim) {
         System.out.println("Add Score is:" + anim.count());
-        score += anim.count();
+        score += anim.count(); // * 3;
         calcBonusForScore(anim.count());
 
         GemPosition gp;

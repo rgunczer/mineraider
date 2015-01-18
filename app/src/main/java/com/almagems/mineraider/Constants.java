@@ -15,7 +15,7 @@ public class Constants {
 	public static final int GEM_TYPE_6 = 6;	
 	
 	
-	public static final float GEM_FRAGMENT_SIZE = 0.5f;
+	public static final float GEM_FRAGMENT_SIZE = 0.5f; //2.2f;
 	public static final float GEM_DENSITY = 0.3f;
 	
 	public static final boolean DRAW_BUFFER_BOARD = false;

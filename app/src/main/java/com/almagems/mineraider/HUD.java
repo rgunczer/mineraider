@@ -7,6 +7,7 @@ import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.GemIkon;
 import com.almagems.mineraider.objects.Quad;
 import com.almagems.mineraider.util.MyColor;
+import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Text;
 
 import static android.opengl.GLES20.GL_BLEND;
@@ -22,6 +23,7 @@ public class HUD {
 
     private final Text scoreText;
     private final Text extraText;
+    private final Text gemsFromCartText;
     private final GemIkon ikon;
     private final Quad quad;
     private final EdgeDrawer edgeDrawer;
@@ -36,7 +38,7 @@ public class HUD {
     private float perfectSwapScale;
 
     private int scoreCooling;
-
+    private int bonusFromCartCooling;
 
     private WahWah effectWahWahScore;
     private WahWah effectWahWah;
@@ -46,24 +48,29 @@ public class HUD {
     public HUD() {
         scoreText = new Text();
         extraText = new Text();
+        gemsFromCartText = new Text();
         ikon = new GemIkon();
         quad = new Quad();
         edgeDrawer = new EdgeDrawer(32);
-        extraTextCooling = 0;
+
         comboCounter = 0;
         comboScale = 1.0f;
         effectWahWah = new WahWah();
         effectZigZag = new ZigZag();
         effectWahWahScore = new WahWah();
 
+        // cooling
+        extraTextCooling = 0;
         scoreCooling = 0;
+        bonusFromCartCooling = 0;
+
         perfectSwapScale = 0.75f;
     }
 
     public void init() {
         fontScale = 0.9f;
         scoreText.setSpacingScale(0.06f);
-        scoreText.init("SCORE:" + cachedScore, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), fontScale);
+        scoreText.init("SCORE:" + cachedScore, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), fontScale);
 
         scoreX = -0.8f;
         scoreY = -Visuals.aspectRatio + (scoreText.getTextHeight() / 3f);
@@ -72,29 +79,49 @@ public class HUD {
         scoreText.pos.setScale(1f, 1f, 1f);
 
         extraText.setSpacingScale(0.065f);
-        extraText.init("WATCH FOR MINECARTS", new MyColor(0.6f, 0.6f, 0.6f, 1f), new MyColor(0f, 0f, 0f, 1f), comboScale);
+        extraText.init("WATCH FOR MINECARTS", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), comboScale);
         extraText.pos.setPosition(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
 
         ikon.init();
 
         float scale = Visuals.aspectRatio * 0.1f;
 
-        quad.init(Visuals.getInstance().textureIkon, new MyColor(1f, 1f, 1f, 1f));
-        quad.op.setPosition(0f, Visuals.aspectRatio - scale, 0f);
+        Rectangle rect;
+        Rectangle rectBlueHelmet = new Rectangle(0f, 0f, 256f, 256f);
+        Rectangle rectGreenHelmet = new Rectangle(0f, 256f, 256f, 256f);
+        Rectangle rectRedHelmet = new Rectangle(256f, 256f, 256f, 256f);
+        Rectangle rectYellowHelmet = new Rectangle(256f, 0f, 256f, 256f);
+
+        rect = rectRedHelmet;
+        final boolean flipUCoordinate = false;
+        quad.init(Visuals.getInstance().textureHelmets, new MyColor(1f, 1f, 1f, 1f), rect, flipUCoordinate);
+        quad.op.setPosition(-0.92f, -Visuals.aspectRatio + 0.06f /*+ 0.1f bonus*/, 0f);
         quad.op.setRot(0f, 0f, 0f);
-        quad.op.setScale(scale, scale, 1f);
+
+        float sc = 0.075f;
+        quad.op.setScale(sc, sc, 1f);
 
         extraTextCooling = 0;
         comboCounter = 0;
         comboScale = 1.0f;
     }
 
+    public void showBonusCartGems(int numberOfGems) {
+        gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), 0.6f);
+        float textWidth = gemsFromCartText.getTextWidth();
+        gemsFromCartText.pos.setPosition(-textWidth / 2f, -1.0f, 0f);
+        gemsFromCartText.pos.setRot(0f, 0f, 0f);
+        gemsFromCartText.pos.setScale(1f, 1f, 1f);
+
+        bonusFromCartCooling = 100;
+    }
+
     public void showCombo() {
         ++comboCounter;
 
-        extraText.init("COMBOx" + comboCounter, new MyColor(1f, 0f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), comboScale);
+        extraText.init("COMBOx" + comboCounter, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), comboScale);
         float textWidth = extraText.getTextWidth();
-        extraText.pos.setPosition(-textWidth / 2f, -0.35f, 0f);
+        extraText.pos.setPosition(-textWidth / 2f, -0.4f, 0f);
         extraText.pos.setRot(0f, 0f, 0f);
         extraText.pos.setScale(1f, 1f, 1f);
 
@@ -106,9 +133,9 @@ public class HUD {
     }
 
     public void showPerfectSwap() {
-        extraText.init("PERFECT SWAP", new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 1f, 1f, 1f), perfectSwapScale);
+        extraText.init("PERFECT SWAP", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), perfectSwapScale);
         float textWidth = extraText.getTextWidth();
-        extraText.pos.setPosition(-textWidth / 2f, -0.35f, 0f);
+        extraText.pos.setPosition(-textWidth / 2f, -0.4f, 0f);
         extraText.pos.setRot(0f, 0f, 0f);
         extraText.pos.setScale(1f, 1f, 1f);
 
@@ -136,6 +163,7 @@ public class HUD {
         ikon.update();
         scoreText.update();
         extraText.update();
+        gemsFromCartText.update();
         quad.update();
 
         if (extraTextCooling > 0) {
@@ -155,6 +183,14 @@ public class HUD {
                 scoreText.removeAnimEffect();
             }
         }
+
+        if (bonusFromCartCooling > 0) {
+            --bonusFromCartCooling;
+
+            if (bonusFromCartCooling == 0) {
+                // TODO: remove effect if any on text obj
+            }
+        }
     }
 
     public void draw() {
@@ -168,11 +204,15 @@ public class HUD {
 
         visuals.textureShader.useProgram();
 
-        ikon.draw();
+        //ikon.draw();
         visuals.textureShader.setTexture(visuals.textureFonts);
         scoreText.draw();
         if (extraTextCooling > 0) {
             extraText.draw();
+        }
+
+        if (bonusFromCartCooling > 0) {
+            gemsFromCartText.draw();
         }
 
         quad.draw();

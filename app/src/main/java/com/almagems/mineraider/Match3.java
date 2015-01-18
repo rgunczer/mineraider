@@ -98,9 +98,9 @@ public class Match3 {
 
 
         board[3][4].extra = GemPosition.GemExtras.RadialExplosive;
-        board[3][4].type = GEM_TYPE_6;
-        board[4][3].type = GEM_TYPE_6;
-        board[4][2].type = GEM_TYPE_6;
+        board[3][4].type = GEM_TYPE_5;
+        board[4][3].type = GEM_TYPE_5;
+        board[4][2].type = GEM_TYPE_5;
 
 	}
 		
@@ -584,7 +584,10 @@ public class Match3 {
 			//System.out.println("COMBO(S)!!!");
 			addAnimToManager(anim);
             scoreCounter.addScore(anim);
-            scoreCounter.addBonusForCombo();
+
+            for(int i = 0; i < anim.getNumberOfDifferentGemTypes(); ++i) {
+                scoreCounter.addBonusForCombo();
+            }
 		}
 	}
 	

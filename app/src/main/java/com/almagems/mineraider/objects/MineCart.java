@@ -5,6 +5,7 @@ import java.util.Random;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 import static android.opengl.GLES20.GL_DEPTH_TEST;
+import static com.almagems.mineraider.Constants.MAX_GEM_TYPES;
 
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
@@ -17,6 +18,7 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.joints.WheelJoint;
 import org.jbox2d.dynamics.joints.WheelJointDef;
 
+import com.almagems.mineraider.ClassicSingleton;
 import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.Visuals;
@@ -39,7 +41,9 @@ public class MineCart {
 	private boolean Stopped = false;
 	private boolean check = true;
 	private boolean collisionStop = false;
-	
+
+    private final Physics physics;
+
 	float r = 0.0f;
 	int stopTimeout = 0;
 	int collisionStopTimer = 0;
@@ -47,7 +51,9 @@ public class MineCart {
 	private ObjectPosition _op = new ObjectPosition();
 	
 	public MineCart(float x, float y) {
-		
+
+        physics = Physics.getInstance();
+
 		--collisionGroupIndexCounter;
 		collisionGroupIndex = collisionGroupIndexCounter;
 		
@@ -60,7 +66,7 @@ public class MineCart {
 	}
 	
 	private void CreateWheelJoint() {
-		Physics physics = Physics.getInstance();
+
 		
 		WheelJointDef wd =  new WheelJointDef();
 		wd.bodyA = cart;
@@ -107,8 +113,7 @@ public class MineCart {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DYNAMIC;
 		bodyDef.position.set(x, y);
-		
-		Physics physics = Physics.getInstance();
+
 		Body body = physics.world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
 		return body;
@@ -164,8 +169,7 @@ public class MineCart {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DYNAMIC;
 		bodyDef.position.set(x, y);		
-		
-		Physics physics = Physics.getInstance();
+
 		cart = physics.world.createBody(bodyDef);
 		cart.m_userData = this;
 		cart.createFixture(fixture);
@@ -211,6 +215,7 @@ public class MineCart {
 			}
 		} else {	
 			if (pos.x > 19.0f) {
+                // reposition the cart
 				Random rand = new Random();
 				pos.x = -19.0f - (rand.nextFloat() * 3f);
 				pos.y = -16.5f;
@@ -220,6 +225,32 @@ public class MineCart {
 				check = true;
 				stopTimeout = 0;
 				Stopped = false;
+
+                // now count how many gems were there (in the minecart)
+                physics.fragmentToRemove.clear();
+                Body body;
+                Vec2 fragmentPos;
+                boolean gemsFromCart = false;
+                int[] gemTypeFromCart = new int[MAX_GEM_TYPES];
+                Integer gemType;
+                int size = physics.fragments.size();
+                for(int i = 0; i < size; ++i) {
+                    body = physics.fragments.get(i);
+                    fragmentPos = body.getPosition();
+
+                    if (fragmentPos.x > 15f) {
+                        gemsFromCart = true;
+                        gemType = (Integer)body.m_userData;
+                        ++gemTypeFromCart[gemType];
+                        physics.fragmentToRemove.add(body);
+                    }
+                }
+
+                if (gemsFromCart) {
+                    ClassicSingleton.getInstance().handleGemsFromCart(gemTypeFromCart);
+                }
+
+                physics.removeFragments();
 			}
 		}
 		/*

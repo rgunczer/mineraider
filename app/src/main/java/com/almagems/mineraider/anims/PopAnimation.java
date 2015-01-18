@@ -17,6 +17,7 @@ public class PopAnimation extends BaseAnimation {
 		Fall
 	}
 
+    private int[] gemTypesCounter = new int[MAX_GEM_TYPES];
     public static Physics physics;
 
     private ArrayList<GemPosition> pool = new ArrayList<GemPosition>();
@@ -29,6 +30,9 @@ public class PopAnimation extends BaseAnimation {
 
     @Override
     public void reset() {
+        for(int i = 0; i < MAX_GEM_TYPES; ++i) {
+            gemTypesCounter[i] = 0;
+        }
         isDone = false;
         state = State.Pop;
 
@@ -37,6 +41,16 @@ public class PopAnimation extends BaseAnimation {
             pool.add( list.get(i) );
         }
         list.clear();
+    }
+
+    public int getNumberOfDifferentGemTypes() {
+        int counter = 0;
+        for(int i = 0; i < MAX_GEM_TYPES; ++i) {
+            if (gemTypesCounter[i] != 0) {
+                ++counter;
+            }
+        }
+        return counter;
     }
 
     public boolean isEmpty() {
@@ -72,6 +86,8 @@ public class PopAnimation extends BaseAnimation {
                 return;
             }
 		}
+
+        ++gemTypesCounter[ item.type ];
 
 		item.visible = false;
 		gp = getFromPool();

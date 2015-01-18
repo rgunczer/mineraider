@@ -96,16 +96,16 @@ public class Level extends Scene {
 		particleManager.init();
 				
 		//physics.addEdge(-13.5f, -21.5f,  13.5f, -21.5f); // bottom
-		physics.addEdge(-13.5f, -7.0f, -13.5f,  20.0f); // left
-		physics.addEdge( 13.5f, -7.0f,  13.5f,  20.0f); // right
+		physics.addEdge(-13.0f, -7.0f, -13.5f,  20.0f); // left
+		physics.addEdge( 13.0f, -7.0f,  13.5f,  20.0f); // right
 		
-		physics.addBoxStatic(7.8f, -5.9f, 24.8f, 12.0f, 0.8f);
+		physics.addBoxStatic(8.0f, -5.9f, 24.8f, 12.0f, 0.8f);
 		physics.addBoxStatic(-7.8f, -5.9f, -25.0f, 12.0f, 0.8f);
-		physics.addBoxStatic( 3.0f, -8.8f, 0f, 1.4f, 1.4f);
+		physics.addBoxStatic( 3.1f, -8.8f, 0f, 1.4f, 1.4f);
 		physics.addBoxStatic(-3.0f, -8.8f, 0f, 1.4f, 1.4f);
 		
 		// sin
-		physics.addBoxStatic(0.0f, -19.7f, 0f, 120.0f, 0.5f);
+		physics.addBoxStatic(0.0f, -19.7f, 0f, 70.0f, 0.5f);
 
 		float x = -20f;
 		float y = -15.7f;
@@ -174,7 +174,6 @@ public class Level extends Scene {
 		drawMineCarts();
 		drawCrates();
 		drawPickAxes();
-		drawHelmets();
 
         //drawPhysics();
 		particleManager.draw();
@@ -416,18 +415,18 @@ public class Level extends Scene {
 		
 	private void initBoardGeometry() {
 		float posX;
-		float posY = -2f;
+		float posY = -2.2f;
 		
 		if (DRAW_BUFFER_BOARD) {
 			posY = -20.0f;
 		}
 		
-		float gemDistance = 2.4f;
+		float gemDistance = 2.45f;
 		
 		for(int y = 0; y < match3.boardSize*2; ++y) {
 			posX = -(((match3.boardSize - 1) * gemDistance) / 2.0f);
 			for (int x = 0; x < match3.boardSize; ++x) {
-				match3.board[x][y].init(posX, posY, -2.0f,	1.0f, 1.0f, 1.0f);
+				match3.board[x][y].init(posX, posY, -0.5f,	1.0f, 1.0f, 1.0f);
 				posX += gemDistance;
 			}
 			posY += gemDistance;
@@ -529,7 +528,20 @@ public class Level extends Scene {
             visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightNorm);
             gem.bindData(visuals.pointLightShader);
             gem.draw();
-		}		
+
+
+            gem = visuals.gemsPlates[gemType];
+            _op.setPosition(pos.x, pos.y, 1.0f);
+            _op.setRot(0f, 0f, degree);
+            _op.setScale(d, d, 1f);
+
+            visuals.calcMatricesForObject(_op);
+            visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightNorm);
+            gem.bindData(visuals.pointLightShader);
+            gem.draw();
+
+
+        }
 		//glEnable(GL_DEPTH_TEST);
 	}
 
@@ -579,252 +591,53 @@ public class Level extends Scene {
         }
     }
 
-	private void drawPhysicsGemsFixtures() {		
-		EdgeDrawer edgeDrawer = new EdgeDrawer(100);
+	private void drawPhysicsGemsFixtures() {
+        visuals.colorShader.useProgram();
+
+		EdgeDrawer edgeDrawer = new EdgeDrawer(30);
 		int size = physics.fragments.size();
 		Body body;
+        Vec2 pos;
+        float degree;
+        float angle;
+        Fixture fixture;
+        PolygonShape polygon;
+        Vec2 v0;
+        Vec2 v1;
 		for(int i = 0; i < size; ++i) {
 			body = physics.fragments.get(i);
-			Vec2 pos = body.getPosition();
-			float angle = body.getAngle();
-			float degree = (float) Math.toDegrees(angle);
-			
-			if (body.m_type == BodyType.STATIC) {
-				Fixture fixture = body.getFixtureList();
-				while(fixture != null) {
-					PolygonShape polygon = (PolygonShape)fixture.getShape();				
-					if (polygon.m_count == 4) { // box
-						edgeDrawer.begin();
-						Vec2 v0 = polygon.m_vertices[0];
-						Vec2 v1 = polygon.m_vertices[1];
-						Vec2 v2 = polygon.m_vertices[2];
-						Vec2 v3 = polygon.m_vertices[3];
-						
-						edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
-											v1.x, v1.y, 0.0f);
-		
-						edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
-											v2.x, v2.y, 0.0f);
-		
-						edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
-											v3.x, v3.y, 0.0f);
-						
-						edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
-											v0.x, v0.y, 0.0f);
-																											
-						Vector position = new Vector(pos.x,	pos.y, 1.0f);
-						
-						setIdentityM(visuals.modelMatrix, 0);						
-						translateM(visuals.modelMatrix, 0, position.x, position.y, position.z);
-						rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);											
-						multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
-						
-						visuals.colorShader.useProgram();
-						visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.color);
-						edgeDrawer.bindData(visuals.colorShader);
-						edgeDrawer.draw();
-					}
-					fixture = fixture.getNext();
-				}
-			}
-			
-			if (body.m_type == BodyType.DYNAMIC) {
-				if (body.m_userData != null) {
-					Fixture fixture = body.getFixtureList();
-					while(fixture != null) {
-						PolygonShape polygon = (PolygonShape)fixture.getShape();
+			pos = body.getPosition();
+			angle = body.getAngle();
+			degree = (float)Math.toDegrees(angle);
+			fixture = body.getFixtureList();
 
-						if (polygon.m_count == 3) { // triangle
-							edgeDrawer.begin();
+			while(fixture != null) {
+				polygon = (PolygonShape)fixture.getShape();
+                edgeDrawer.begin();
+				for(int j = 0; j < polygon.m_count-1; ++j) {
+                    v0 = polygon.m_vertices[j];
+                    v1 = polygon.m_vertices[j + 1];
 
-							Vec2 v0 = polygon.m_vertices[0];
-							Vec2 v1 = polygon.m_vertices[1];
-							Vec2 v2 = polygon.m_vertices[2];
+                    edgeDrawer.addLine(v0.x, v0.y, 0.0f,
+                                       v1.x, v1.y, 0.0f);
+                }
 
-							edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
-												v1.x, v1.y, 0.0f);
+                v0 = polygon.m_vertices[0];
+                v1 = polygon.m_vertices[ polygon.m_count - 1];
 
-							edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
-												v2.x, v2.y, 0.0f);
-							
-							edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
-												v0.x, v0.y, 0.0f);
+                edgeDrawer.addLine(v0.x, v0.y, 0.0f,
+                        v1.x, v1.y, 0.0f);
 
-							Vector position = new Vector(pos.x,	pos.y, 1.0f);
-							
-							setIdentityM(visuals.modelMatrix, 0);							
-							translateM(visuals.modelMatrix, 0, position.x, position.y, position.z);
-							rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);													
-							multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
-							
-							visuals.colorShader.useProgram();
-							visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.color);
-							edgeDrawer.bindData(visuals.colorShader);
-							edgeDrawer.draw();
-						}
-						
-						if (polygon.m_count == 5) {
-							edgeDrawer.begin();
-							
-							Vec2 v0 = polygon.m_vertices[0];
-							Vec2 v1 = polygon.m_vertices[1];
-							Vec2 v2 = polygon.m_vertices[2];
-							Vec2 v3 = polygon.m_vertices[3];
-							Vec2 v4 = polygon.m_vertices[4];							
-							
-							edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
-												v1.x, v1.y, 0.0f);
-			
-							edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
-												v2.x, v2.y, 0.0f);
-			
-							edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
-												v3.x, v3.y, 0.0f);
-							
-							edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
-												v4.x, v4.y, 0.0f);
-									
-							edgeDrawer.addLine(	v4.x, v4.y, 0.0f,
-												v0.x, v0.y, 0.0f);
-							
-							Vector position = new Vector(pos.x,	pos.y, 1.0f);
-							
-							setIdentityM(visuals.modelMatrix, 0);							
-							translateM(visuals.modelMatrix, 0, position.x, position.y, position.z);
-							rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);												
-							multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
-							
-							visuals.colorShader.useProgram();
-							visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.color);
-							edgeDrawer.bindData(visuals.colorShader);
-							edgeDrawer.draw();
-						}
-						
-						if (polygon.m_count == 6) {
-							edgeDrawer.begin();
-							
-							Vec2 v0 = polygon.m_vertices[0];
-							Vec2 v1 = polygon.m_vertices[1];
-							Vec2 v2 = polygon.m_vertices[2];
-							Vec2 v3 = polygon.m_vertices[3];
-							Vec2 v4 = polygon.m_vertices[4];
-							Vec2 v5 = polygon.m_vertices[5];
-							
-							edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
-												v1.x, v1.y, 0.0f);
-			
-							edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
-												v2.x, v2.y, 0.0f);
-			
-							edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
-												v3.x, v3.y, 0.0f);
-							
-							edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
-												v4.x, v4.y, 0.0f);
-									
-							edgeDrawer.addLine(	v4.x, v4.y, 0.0f,
-												v5.x, v5.y, 0.0f);
+                setIdentityM(visuals.modelMatrix, 0);
+                translateM(visuals.modelMatrix, 0, pos.x, pos.y, 1f);
+                rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);
+                multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
 
-							edgeDrawer.addLine(	v5.x, v5.y, 0.0f,
-												v0.x, v0.y, 0.0f);
-							
-							Vector position = new Vector(pos.x,	pos.y, 1.0f);
-							
-							setIdentityM(visuals.modelMatrix, 0);							
-							translateM(visuals.modelMatrix, 0, position.x, position.y, position.z);
-							rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);													
-							multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
-							
-							visuals.colorShader.useProgram();
-							visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.color);
-							edgeDrawer.bindData(visuals.colorShader);
-							edgeDrawer.draw();
-						}
-						
-						if (polygon.m_count == 8) {
-							edgeDrawer.begin();
-							
-							Vec2 v0 = polygon.m_vertices[0];
-							Vec2 v1 = polygon.m_vertices[1];
-							Vec2 v2 = polygon.m_vertices[2];
-							Vec2 v3 = polygon.m_vertices[3];
-							Vec2 v4 = polygon.m_vertices[4];
-							Vec2 v5 = polygon.m_vertices[5];
-							Vec2 v6 = polygon.m_vertices[6];
-							Vec2 v7 = polygon.m_vertices[7];
-							
-							edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
-												v1.x, v1.y, 0.0f);
-			
-							edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
-												v2.x, v2.y, 0.0f);
-			
-							edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
-												v3.x, v3.y, 0.0f);
-							
-							edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
-												v4.x, v4.y, 0.0f);
-									
-							edgeDrawer.addLine(	v4.x, v4.y, 0.0f,
-												v5.x, v5.y, 0.0f);
+                visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.color);
+                edgeDrawer.bindData(visuals.colorShader);
+                edgeDrawer.draw();
 
-							edgeDrawer.addLine(	v5.x, v5.y, 0.0f,
-												v6.x, v6.y, 0.0f);
-							
-							edgeDrawer.addLine(	v6.x, v6.y, 0.0f,
-												v7.x, v7.y, 0.0f);
-
-							edgeDrawer.addLine(	v7.x, v7.y, 0.0f,
-												v0.x, v0.y, 0.0f);
-							
-							Vector position = new Vector(pos.x,	pos.y, 1.0f);
-							
-							setIdentityM(visuals.modelMatrix, 0);							
-							translateM(visuals.modelMatrix, 0, position.x, position.y, position.z);
-							rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);													
-							multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
-							
-							visuals.colorShader.useProgram();
-							visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.color);
-							edgeDrawer.bindData(visuals.colorShader);
-							edgeDrawer.draw();
-						}
-						
-						if (polygon.m_count == 4) { // box
-							edgeDrawer.begin();
-								
-							Vec2 v0 = polygon.m_vertices[0];
-							Vec2 v1 = polygon.m_vertices[1];
-							Vec2 v2 = polygon.m_vertices[2];
-							Vec2 v3 = polygon.m_vertices[3];
-							
-							edgeDrawer.addLine(	v0.x, v0.y, 0.0f,
-												v1.x, v1.y, 0.0f);
-			
-							edgeDrawer.addLine(	v1.x, v1.y, 0.0f,
-												v2.x, v2.y, 0.0f);
-			
-							edgeDrawer.addLine(	v2.x, v2.y, 0.0f,
-												v3.x, v3.y, 0.0f);
-							
-							edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
-												v0.x, v0.y, 0.0f);
-																												
-							Vector position = new Vector(pos.x,	pos.y, 1.0f);
-							
-							setIdentityM(visuals.modelMatrix, 0);							
-							translateM(visuals.modelMatrix, 0, position.x, position.y, position.z);
-							rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);													
-							multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
-							
-							visuals.colorShader.useProgram();
-							visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.color);
-							edgeDrawer.bindData(visuals.colorShader);
-							edgeDrawer.draw();
-						}
-						fixture = fixture.getNext();
-					}
-				}
+                fixture = fixture.getNext();
 			}
 		}
 	}
@@ -832,7 +645,7 @@ public class Level extends Scene {
 	void drawSelectionMarker() {				
 		if (match3.firstSelected != null) {
 			elapsed += 0.3f;
-			float d = (((float)Math.sin(elapsed) + 1f) / 2f) * 0.075f;
+			float d = (((float)Math.sin(elapsed) + 1f) / 2f) * 0.08f;
 			//System.out.println("d is: " + d);
 
 			markerPos.init(match3.firstSelected.op);
@@ -886,7 +699,6 @@ public class Level extends Scene {
 
                     markerPos.init(gp.op);
                     markerPos.tz -= 0.11f;
-                    markerPos.setScale(1.1f, 1.1f, 1f);
 
                     visuals.calcMatricesForObject(markerPos);
                     visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightDir);
@@ -934,22 +746,7 @@ public class Level extends Scene {
 		rock.bindData(visuals.dirLightShader);
 		rock.draw();		
 	}
-	
-	void drawHelmets() {		
-		Model helmet = visuals.helmet;
-				
-		_op.setPosition(-12.5f, -17f, -2f);
-		_op.setScale(1.0f, 1.0f, 1.0f);		
-		_op.setRot(0f, 30f, 0f);
-				
-		visuals.calcMatricesForObject(_op);
-		visuals.pointLightShader.useProgram();		
-		visuals.pointLightShader.setTexture(visuals.textureHelmet);
-		visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
-		helmet.bindData(visuals.pointLightShader);
-		helmet.draw();					
-	}
-	
+
 	void drawPickAxes() {
 		Model pickAxe = visuals.pickAxe;
 		
@@ -1015,8 +812,8 @@ public class Level extends Scene {
 		
 		// right
 		drawRock(visuals.rock1,  9.0f, -8.0f, rock_z, 70.0f);
-		drawRock(visuals.rock0,  6.0f, -9.0f, rock_z, -70.0f);
-		drawRock(visuals.rock6,  3.3f, -9.7f, rock_z, 0.0f);
+		drawRock(visuals.rock0,  5.8f, -9.0f, rock_z, -70.0f);
+		drawRock(visuals.rock6,  3.5f, -9.7f, rock_z, 0.0f);
 		drawRock(visuals.rock1, 13.0f, -6.5f, rock_z, -30.0f);
 		drawRock(visuals.rock0, 4.5f, -9.5f, -3.75f, 46.0f);
 		drawRock(visuals.rock2, 11.5f, -8.5f, -1.25f, 16.0f);

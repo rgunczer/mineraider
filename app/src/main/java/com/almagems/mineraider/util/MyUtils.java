@@ -20,5 +20,9 @@ public class MyUtils {
 	public static float clamp(float value, float min, float max) {
 		return Math.min(max, Math.max(min, value));
 	}
-	
+
+    public static float LERP(float a, float b, float t) {
+        //#define LERP (a, b, t)(a + t * (b - a))
+        return (a + t * (b - a));
+    }
 }

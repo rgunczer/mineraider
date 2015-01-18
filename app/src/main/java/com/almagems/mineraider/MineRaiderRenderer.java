@@ -114,8 +114,8 @@ public class MineRaiderRenderer implements Renderer {
         }
 
 
-		current = level;
-		//current = menu;
+		//current = level;
+		current = menu;
 	}
 
 	@Override

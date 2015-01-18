@@ -11,11 +11,14 @@ import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glBlendFunc;
 
 import com.almagems.mineraider.ClassicSingleton;
+import com.almagems.mineraider.EffectAnims.Fade;
 import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.util.MyColor;
+import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Text;
+import com.almagems.mineraider.util.Texture;
 
 public class Menu extends Scene {
 		
@@ -28,25 +31,59 @@ public class Menu extends Scene {
     private Text text;
     private Text credits;
 
+    private Fade fade;
+
+    private ObjectPosition _op = new ObjectPosition();
+
     // ctor
 	public Menu() {
 		
 	}
 
-	@Override
-	public void surfaceChanged(int width, int height) {
-		final float tw = 512f;
-		final float th = 1024f;
+    private VertexArray createVertexArray(Rectangle rc, Texture texture) {
+        float width = Visuals.screenWidth;
+        float scale = width / 1080f;
+
+        float tw = texture.width;
+        float th = texture.height;
 
         float r = 1f;
         float g = 1f;
         float b = 1f;
         float a = 1f;
 
-        float aspect = Visuals.aspectRatio;
-				
+        float tx0 = rc.x / tw;
+        float tx1 = (rc.x + rc.w) / tw;
+        float ty0 = ((th - rc.y) - rc.h) / th;
+        float ty1 = ((th - rc.y)) / th;
+
+        float x = (rc.w / width) * scale;
+        float y = (rc.h / width) * scale;
+        float[] vertexData = {
+                // x, y, z, 	                u, v,
+                -x, -y, 0.0f, 	r, g, b, a,     tx0, ty0,
+                x, -y, 0.0f,	r, g, b, a,     tx1, ty0,
+                x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
+
+                -x, -y, 0.0f,	r, g, b, a,     tx0, ty0,
+                x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
+                -x,  y, 0.0f,	r, g, b, a,     tx0, ty1
+        };
+
+        VertexArray vertexArray = new VertexArray(vertexData);
+        return vertexArray;
+    }
+
+	@Override
+	public void surfaceChanged(int width, int height) {
+        final float r = 1f;
+        final float g = 1f;
+        final float b = 1f;
+        final float a = 1f;
+        final float aspect = Visuals.aspectRatio;
+
 		float[] vertexDataBg = { 
-				// x, y, z, 			                s, t,
+				// x, y, z, 			                u, v,
 				-1.0f, -aspect, 0.0f,   r, g, b, a,     0.0f, 0.0f,
 				 1.0f, -aspect, 0.0f,	r, g, b, a,     1.0f, 0.0f,
 				 1.0f,  aspect, 0.0f,	r, g, b, a,     1.0f, 1.0f,
@@ -58,102 +95,12 @@ public class Menu extends Scene {
 		
 		vertexArrayBg = new VertexArray(vertexDataBg);
 
-        float scale = width / 1080f;
-		float tx0, tx1, ty0, ty1;
-		float x, y;
-		
-//		"filename": "menu_title.png",
-//		"frame": {"x":2,"y":2,"w":350,"h":286},
-		tx0 = 2.0f / tw;
-		tx1 = (2.0f + 350.0f) / tw;
-		ty0 = ((th - 2.0f) - 286f) / th;
-		ty1 = ((th - 2.0f)) / th; 
+        Texture texture = Visuals.getInstance().getTextureObj(Visuals.getInstance().textureMenuItems);
 
-		x = (350f / width) * scale;
-		y = (286f / width) * scale;
-		float[] vertexDataTitle = {
-				// x, y, z, 	                s, t,
-				-x, -y, 0.0f, 	r, g, b, a,     tx0, ty0,
-				 x, -y, 0.0f,	r, g, b, a,     tx1, ty0,
-				 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
-				 
-				-x, -y, 0.0f,	r, g, b, a,     tx0, ty0,
-			 	 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
-				-x,  y, 0.0f,	r, g, b, a,     tx0, ty1
-		};
-		
-		vertexArrayTitle = new VertexArray(vertexDataTitle);
-		
-//	"filename": "menu_about.png",
-//	"frame": {"x":2,"y":415,"w":241,"h":125},
-		tx0 = 2f / tw;
-		tx1 = (2f + 241f) / tw;
-		ty0 = ((th - 415f) - 125f)  / th;
-		ty1 = ((th - 415f)) / th; 
-				
-		x = (241f / width) * scale;
-		y = (125f / width) * scale;
-		float[] vertexDataAbout = {
-				// x, y, z, 	                s, t,
-				-x, -y, 0.0f, 	r, g, b, a,     tx0, ty0,
-				 x, -y, 0.0f,	r, g, b, a,     tx1, ty0,
-				 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
-				 
-				-x, -y, 0.0f,	r, g, b, a,     tx0, ty0,
-			 	 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
-				-x,  y, 0.0f,	r, g, b, a,     tx0, ty1
-		};
-		
-		vertexArrayAbout = new VertexArray(vertexDataAbout);
-
-		
-//	"filename": "menu_options.png",
-//	"frame": {"x":2,"y":290,"w":291,"h":123},
-		tx0 = 2f / tw;
-		tx1 = (2f + 291f) / tw;
-		ty0 = ((th - 290f) - 123f) / th;
-		ty1 = ((th - 290f)) / th; 
-				
-		x = (291f / width) * scale;
-		y = (123f / width) * scale;
-		float[] vertexDataOptions = {
-				// x, y, z, 	                s, t,
-				-x, -y, 0.0f, 	r, g, b, a,     tx0, ty0,
-				 x, -y, 0.0f,	r, g, b, a,     tx1, ty0,
-				 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
-				 
-				-x, -y, 0.0f,	r, g, b, a,     tx0, ty0,
-			 	 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
-				-x,  y, 0.0f,	r, g, b, a,     tx0, ty1
-		};
-		
-		vertexArrayOptions = new VertexArray(vertexDataOptions);
-
-		
-		g = 0f;
-        b = 0f;
-
-//	"filename": "menu_play.png",
-//	"frame": {"x":2,"y":542,"w":214,"h":121},
-		tx0 = 2f / tw;
-		tx1 = (2f + 214f) / tw;
-		ty0 = ((th - 542f) - 121f ) / th; // 0f
-		ty1 = ((th - 542f) ) / th; 	// 1f
-		
-		x = (214f / width) * scale;
-		y = (121f / width) * scale;
-		float[] vertexDataPlay = {
-				// x, y, z, 	                s, t,
-				-x, -y, 0.0f, 	r, g, b, a,     tx0, ty0,
-				 x, -y, 0.0f,	r, g, b, a,     tx1, ty0,
-				 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
-				 
-				-x, -y, 0.0f,	r, g, b, a,     tx0, ty0,
-			 	 x,  y, 0.0f,	r, g, b, a,     tx1, ty1,
-				-x,  y, 0.0f,	r, g, b, a,     tx0, ty1
-		};
-		
-		vertexArrayPlay = new VertexArray(vertexDataPlay);
+        vertexArrayAbout = createVertexArray( new Rectangle(0, 0, 460, 248), texture );
+        vertexArrayOptions = createVertexArray( new Rectangle(460, 0, 576, 260), texture) ;
+        vertexArrayPlay = createVertexArray( new Rectangle(1036, 0, 370, 248), texture);
+        vertexArrayTitle = createVertexArray( new Rectangle(0, 260, 1080, 346), texture );
 
         text = new Text();
         text.setSpacingScale(0.09f);
@@ -163,11 +110,13 @@ public class Menu extends Scene {
         credits = new Text();
         credits.init("CREDITS", new MyColor(1f, 0f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.5f);
         credits.pos.setPosition(-0.85f, 1.0f, 0f);
+
+        fade = new Fade();
+        fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
 	}
 
 	@Override
 	public void update() {
-		super.update();
         visuals.updateViewProjMatrix();
 	}
 
@@ -180,7 +129,7 @@ public class Menu extends Scene {
 
         visuals.textureShader.setTexture(visuals.textureMenu);
 		drawBg();
-		
+
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
 
@@ -193,13 +142,17 @@ public class Menu extends Scene {
         visuals.textureShader.setTexture(visuals.textureFonts);
         text.draw();
         credits.draw();
+
+        visuals.bindNoTexture();
+        fade.update();
+        fade.draw();
 	}
 	
 	private void drawAbout() {
 		ObjectPosition op = new ObjectPosition();
-		op.setPosition(-0.5f, -1.2f, 0f);
+		op.setPosition(0f, -1.32f, 0f);
 		op.setRot(0f, 0f, 0f);
-		op.setScale(Visuals.aspectRatio, Visuals.aspectRatio, 1.0f);
+		op.setScale(1f, 1f, 1.0f);
 		
 		visuals.calcMatricesForObject(op);
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
@@ -209,9 +162,9 @@ public class Menu extends Scene {
 	
 	private void drawOptions() {
 		ObjectPosition op = new ObjectPosition();		
-		op.setPosition(-0.4f, -0.7f, 0f);
+		op.setPosition(0f, -0.67f, 0f);
 		op.setRot(0f, 0f, 0f);
-		op.setScale(Visuals.aspectRatio, Visuals.aspectRatio, 1.0f);
+		op.setScale(1f, 1f, 1f);
 					
 		visuals.calcMatricesForObject(op);
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
@@ -220,56 +173,51 @@ public class Menu extends Scene {
 	}
 	
 	private void drawPlay() {
-		ObjectPosition op = new ObjectPosition();	
-		op.setPosition(-0.55f, -0.21f, 0f);
-		op.setRot(0f, 0f, 0f);
-		op.setScale(Visuals.aspectRatio, Visuals.aspectRatio, 1.0f);
+		_op.setPosition(0f, -0.03f, 0f);
+        _op.setRot(0f, 0f, 0f);
+        _op.setScale(1f, 1f, 1f);
 
-		visuals.calcMatricesForObject(op);
+		visuals.calcMatricesForObject(_op);
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
         visuals.textureShader.bindData(vertexArrayPlay);
 		glDrawArrays(GL_TRIANGLES, 0, 6);		
 	}
-	
-	private void drawTitle() {
-		ObjectPosition op = new ObjectPosition();
-		op.setPosition(0f, 0.8f, 0f);
-		op.setRot(0f, 0f, 0f);
-		op.setScale(Visuals.aspectRatio, Visuals.aspectRatio, 1.0f);
-		
-		visuals.calcMatricesForObject(op);
-		visuals.textureShader.setUniforms(visuals.mvpMatrix);
-        visuals.textureShader.bindData(vertexArrayTitle);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-	}
-	
+
 	private void drawBg() {
-		ObjectPosition op = new ObjectPosition();			
-		op.setPosition(0f, 0f, 0f);
-		op.setScale(1.0f, 1.0f, 1.0f);		
-		op.setRot(0f, 0f, 0f);
+		_op.setPosition(0f, 0f, 0f);
+        _op.setRot(0f, 0f, 0f);
+        _op.setScale(1.0f, 1.0f, 1.0f);
 		
-		visuals.calcMatricesForObject(op);
+		visuals.calcMatricesForObject(_op);
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
         visuals.textureShader.bindData(vertexArrayBg);
 		glDrawArrays(GL_TRIANGLES, 0, 6);			
 	}
 
-	@Override
+    private void drawTitle() {
+        _op.setPosition(0f, 1.03f, 0f);
+        _op.setRot(0f, 0f, 0f);
+        _op.setScale(1f, 1f, 1f);
+
+        visuals.calcMatricesForObject(_op);
+        visuals.textureShader.setUniforms(visuals.mvpMatrix);
+        visuals.textureShader.bindData(vertexArrayTitle);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
+    @Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
-		super.handleTouchPress(normalizedX, normalizedY);
-		
 		ClassicSingleton singleton = ClassicSingleton.getInstance();
 		singleton.showSceneLevel();		
 	}
 
 	@Override
 	public void handleTouchDrag(float normalizedX, float normalizedY) {
-		super.handleTouchDrag(normalizedX, normalizedY);
+
 	}
 
 	@Override
 	public void handleTouchRelease(float normalizedX, float normalizedY) {
-		super.handleTouchRelease(normalizedX, normalizedY);
+
 	}
 }

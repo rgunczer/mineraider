@@ -63,12 +63,20 @@ public class Physics {
 		gemBodyDef.position.set(x, y);
         gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 		
-		float d = GEM_FRAGMENT_SIZE;
+		final float d = GEM_FRAGMENT_SIZE;
 		
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(d, d);
+		//shape.setAsBox(d, d);
 
-		gemFixtureDef.shape = shape;
+        Vec2[] vertices = new Vec2[4];
+        vertices[0] = new Vec2( 0, d);
+        vertices[1] = new Vec2( d, 0);
+        vertices[2] = new Vec2( 0, -d);
+        vertices[3] = new Vec2( -d, 0);
+        int count = 4;
+        shape.set(vertices, count);
+
+        gemFixtureDef.shape = shape;
         gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
@@ -83,13 +91,18 @@ public class Physics {
 		gemBodyDef.position.set(x, y);
         gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 		
-		float d = GEM_FRAGMENT_SIZE;
-		Vec2[] vertices = new Vec2[4];
-		vertices[0] = new Vec2( 0, d);
-		vertices[1] = new Vec2( d, 0);
-		vertices[2] = new Vec2( 0, -d);
-		vertices[3] = new Vec2( -d, 0);
-		int count = 4;		
+		final float d = GEM_FRAGMENT_SIZE;
+        final int count = 8;
+        Vec2[] vertices = new Vec2[ count ];
+		 vertices[0] = new Vec2( -d*0.8f, d*0.5f);
+		vertices[1] = new Vec2( -d*0.3f, d);
+		vertices[2] = new Vec2( d*0.3f, d);
+		 vertices[3] = new Vec2( d*0.8f, d*0.5f);
+         vertices[4] = new Vec2( d*0.8f, -d*0.5f);
+        vertices[5] = new Vec2( -d*0.3f, -d);
+        vertices[6] = new Vec2( d*0.3f, -d);
+         vertices[7] = new Vec2( -d*0.8f, -d*0.5f);
+
 
 		PolygonShape shape = new PolygonShape();
 		shape.set(vertices, count);
@@ -140,11 +153,11 @@ public class Physics {
 		float d = GEM_FRAGMENT_SIZE;
 		int count = 6;
 		Vec2[] vertices = new Vec2[count];
-		vertices[0] = new Vec2(-d, -d/2);
-		vertices[1] = new Vec2(-d,  d/2);
+		vertices[0] = new Vec2(-d*0.8f, -d/2);
+		vertices[1] = new Vec2(-d*0.8f,  d/2);
 		vertices[2] = new Vec2( 0,  d);
-		vertices[3] = new Vec2( d,  d/2);
-		vertices[4] = new Vec2( d, -d/2);
+		vertices[3] = new Vec2( d*0.8f,  d/2);
+		vertices[4] = new Vec2( d*0.8f, -d/2);
 		vertices[5] = new Vec2( 0, -d);
 		
 		PolygonShape shape = new PolygonShape();
@@ -165,13 +178,18 @@ public class Physics {
 		gemBodyDef.position.set(x, y);
         gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 		
-		float d = GEM_FRAGMENT_SIZE;
-		
-		Vec2[] vertices = new Vec2[3];
-		vertices[0] = new Vec2(-d, -d);
-		vertices[1] = new Vec2( d, -d);
-		vertices[2] = new Vec2( 0f, d);
-		int count = 3;
+		final float d = GEM_FRAGMENT_SIZE;
+        final int count = 8;
+		Vec2[] vertices = new Vec2[ count ];
+		vertices[0] = new Vec2(0f, -d);
+        vertices[1] = new Vec2(-d*0.6f, -d*0.9f);
+		vertices[2] = new Vec2(-d*0.9f, -d*0.3f);
+        vertices[3] = new Vec2(-d*0.8f, 0f);
+        vertices[4] = new Vec2( 0f, d);
+        vertices[5] = new Vec2( d*0.8f, 0f);
+        vertices[6] = new Vec2( d*0.9f, -d*0.3f);
+        vertices[7] = new Vec2( d*0.6f, -d*0.9f);
+
 		
 		PolygonShape shape = new PolygonShape();
 		shape.set(vertices, count);
@@ -191,17 +209,17 @@ public class Physics {
 		gemBodyDef.position.set(x, y);
         gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 
-		float d = GEM_FRAGMENT_SIZE;
-		int count = 8;
-		Vec2[] vertices = new Vec2[count];
-		vertices[0] = new Vec2(-d, -d/2);
-		vertices[1] = new Vec2(-d,  d/2);
-		vertices[2] = new Vec2(-d/2, d);
-		vertices[3] = new Vec2( d/2, d);
-		vertices[4] = new Vec2( d, d/2);
-		vertices[5] = new Vec2( d, -d/2);
-		vertices[6] = new Vec2( d/2, -d);
-		vertices[7] = new Vec2(-d/2, -d);
+		final float d = GEM_FRAGMENT_SIZE;
+		final int count = 7;
+		Vec2[] vertices = new Vec2[ count ];
+		vertices[0] = new Vec2(0f, -d);
+		vertices[1] = new Vec2(-d*0.9f, 0f);
+		vertices[2] = new Vec2(-d, d*0.5f);
+		vertices[3] = new Vec2(-d*0.5f, d);
+		vertices[4] = new Vec2(d*0.5f, d);
+		vertices[5] = new Vec2(d, d*0.5f);
+		vertices[6] = new Vec2(d*0.9f, 0f);
+		//vertices[7] = new Vec2(d*0.9f, 0f);
 		
 		PolygonShape shape = new PolygonShape();
 		shape.set(vertices, count);
@@ -352,28 +370,24 @@ public class Physics {
 	
 	public void update() {
         fragmentToRemove.clear();
-		world.step(1.0f/30.0f, velIterations, posIterations);
-		Body body;
+        world.step(1.0f / 30.0f, velIterations, posIterations);
+        Body body;
         Vec2 pos;
-		int size = fragments.size();
-		for(int i = 0; i < size; ++i) {
-			body = fragments.get(i);
-			pos = body.getPosition();
-				
-            if (pos.y < -18.7f) {
-                fragmentToRemove.add(body);
-                continue;
-            }
+        int size = fragments.size();
+        for (int i = 0; i < size; ++i) {
+            body = fragments.get(i);
+            pos = body.getPosition();
 
-            if (pos.x > 20.0f) {
+            if (pos.y < -18.7f && pos.x < 15f) {
                 fragmentToRemove.add(body);
             }
+        }
+        removeFragments();
+    }
 
-			//float angle = body.getAngle();
-			//System.out.println("box2d x: " + pos.x + ", y: " + pos.y + ", angle: " + angle);
-		}
-
-        size = fragmentToRemove.size();
+    public void removeFragments() {
+        Body body;
+        int size = fragmentToRemove.size();
         for(int i = 0; i < size; ++i) {
             body = fragmentToRemove.get(i);
             fragments.remove(body);

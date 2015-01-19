@@ -38,6 +38,7 @@ public class MineRaiderRenderer implements Renderer {
 	private Scene menu;
 	private Scene level;
 	private Scene current;
+
 	
 	private final Context context;	
 	private Visuals visuals;			
@@ -47,6 +48,7 @@ public class MineRaiderRenderer implements Renderer {
 		this.context = context;
 		ClassicSingleton instance = ClassicSingleton.getInstance();
 		instance.renderer = this;
+        instance.activity = (MineRaiderActivity)context;
 	}
 	
 	public void showSceneLevel() {
@@ -54,7 +56,19 @@ public class MineRaiderRenderer implements Renderer {
 		level.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
 		current = level;
 	}
-	
+
+    public void showSceneHelmetSelect() {
+        visuals.setProjectionMatrix2D();
+        playerSelect.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+        current = playerSelect;
+    }
+
+    public void showSceneMenu() {
+        visuals.setProjectionMatrix2D();
+        menu.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+        current = menu;
+    }
+
 	private void limitFrameRate(int framesPerSecond) {
 		long elapsedFrameTimeMS = SystemClock.elapsedRealtime() - frameStartTimeMS;
 		long expectedFrameTimeMS = 1000 / framesPerSecond;
@@ -69,8 +83,8 @@ public class MineRaiderRenderer implements Renderer {
 	@Override
 	public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
 		limitFrameRate(30);
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		//glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
+		//glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
 		//glClearColor(0.1f, 0.1f, 0.1f, 0.0f);		
 		
 		glEnable(GL_CULL_FACE);	
@@ -99,8 +113,6 @@ public class MineRaiderRenderer implements Renderer {
 			return;
 		}
 
-
-					
 		if (level == null) {
 			level = new Level();
 		}
@@ -113,9 +125,9 @@ public class MineRaiderRenderer implements Renderer {
             playerSelect = new PlayerSelect();
         }
 
-
 		//current = level;
 		current = menu;
+        //current = playerSelect;
 	}
 
 	@Override

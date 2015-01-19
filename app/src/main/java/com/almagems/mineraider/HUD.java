@@ -18,6 +18,9 @@ import static android.opengl.GLES20.glBlendFunc;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
+import static com.almagems.mineraider.Constants.*;
+
+
 public class HUD {
     private int cachedScore;
 
@@ -86,13 +89,22 @@ public class HUD {
 
         float scale = Visuals.aspectRatio * 0.1f;
 
-        Rectangle rect;
-        Rectangle rectBlueHelmet = new Rectangle(0f, 0f, 256f, 256f);
-        Rectangle rectGreenHelmet = new Rectangle(0f, 256f, 256f, 256f);
-        Rectangle rectRedHelmet = new Rectangle(256f, 256f, 256f, 256f);
-        Rectangle rectYellowHelmet = new Rectangle(256f, 0f, 256f, 256f);
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+        Rectangle rect = rectRedHelmet;
+        switch (singleton.selectedHelmetIndex) {
+            case BLUE_HELMET:
+                rect = rectBlueHelmet;
+                break;
 
-        rect = rectRedHelmet;
+            case YELLOW_HELMET:
+                rect = rectYellowHelmet;
+                break;
+
+            case GREEN_HELMET:
+                rect = rectGreenHelmet;
+                break;
+        }
+
         final boolean flipUCoordinate = false;
         quad.init(Visuals.getInstance().textureHelmets, new MyColor(1f, 1f, 1f, 1f), rect, flipUCoordinate);
         quad.op.setPosition(-0.92f, -Visuals.aspectRatio + 0.06f /*+ 0.1f bonus*/, 0f);

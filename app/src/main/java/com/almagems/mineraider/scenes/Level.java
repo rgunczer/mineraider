@@ -187,32 +187,40 @@ public class Level extends Scene {
 	
 	@Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
-		swipeDir = SwipeDir.SwipeNone;
-		touchDownX = normalizedX;
-		touchDownY = normalizedY;
 
-		if (!match3.isAnimating) {
-			Ray ray = convertNormalized2DPointToRay(touchDownX, touchDownY);
-			GemPosition selectedGem = getSelectedGemFromRay(ray);
-			
-			//doEditorStuff(selectedGem);
+        // temp solution to be able to go back
+        final float y = -0.9f;
+        if (normalizedY < y) {
+            ClassicSingleton singleton = ClassicSingleton.getInstance();
+            singleton.showSceneMenu();
+        } else {
+            swipeDir = SwipeDir.SwipeNone;
+            touchDownX = normalizedX;
+            touchDownY = normalizedY;
 
-			if (selectedGem == null) {
-				match3.showOrHideHints();
-			} else {
-				if (match3.firstSelected == null) {
-					match3.firstSelected = selectedGem;
-				} else {
-					match3.secondSelected = selectedGem;
-                    if (match3.firstSelected == match3.secondSelected) { // Same Gems are selected
-                        match3.firstSelected = null;
-                        match3.secondSelected = null;
+            if (!match3.isAnimating) {
+                Ray ray = convertNormalized2DPointToRay(touchDownX, touchDownY);
+                GemPosition selectedGem = getSelectedGemFromRay(ray);
+
+                //doEditorStuff(selectedGem);
+
+                if (selectedGem == null) {
+                    match3.showOrHideHints();
+                } else {
+                    if (match3.firstSelected == null) {
+                        match3.firstSelected = selectedGem;
                     } else {
-                        match3.handle();
+                        match3.secondSelected = selectedGem;
+                        if (match3.firstSelected == match3.secondSelected) { // Same Gems are selected
+                            match3.firstSelected = null;
+                            match3.secondSelected = null;
+                        } else {
+                            match3.handle();
+                        }
                     }
-				}
-			}
-		}		
+                }
+            }
+        }
 	}
 	
 	@Override

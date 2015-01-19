@@ -105,7 +105,6 @@ public class MineRaiderActivity extends Activity {
 			}
 		});
 
-        loadPreferences();
         //initAds();
 	}
 	
@@ -155,10 +154,10 @@ public class MineRaiderActivity extends Activity {
 		}
 		super.onPause();		
 		if (rendererSet) {
-			glSurfaceView.onPause();
-		}
+            glSurfaceView.onPause();
+        }
 
-        savePreferences();
+        ClassicSingleton.getInstance().savePreferences();
 	}
 	
 	@Override
@@ -172,47 +171,5 @@ public class MineRaiderActivity extends Activity {
 		}
 	}
 
-    private void savePreferences() {
-        System.out.println("Save Preferences...");
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        // TODO: current user!?
-
-        // save score
-        editor.putInt("SCORE", singleton.getScore());
-
-        // save score by gem types
-        int[] arr = singleton.getScoreByGemTypes();
-        for(int i = 0; i < arr.length; ++i) {
-            editor.putInt("GEM" + i, arr[i]);
-        }
-
-        editor.commit();
-    }
-
-    private void loadPreferences() {
-        System.out.println("Load Preferences...");
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-
-        SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
-
-        // TODO: current user!?
-
-        // load score
-        int score = sharedPrefs.getInt("SCORE", 0);
-        singleton.setScore(score);
-        singleton.scoreCounter.dumpScore();
-
-        // load score by gem types
-        int[] arr = new int[MAX_GEM_TYPES];
-        for(int i = 0; i < MAX_GEM_TYPES; ++i) {
-            arr[i] = sharedPrefs.getInt("GEM" + i, 0);
-        }
-        singleton.setScoreByGemTypes(arr);
-        singleton.scoreCounter.dumpScoreByGemTypes();
-    }
 
 }

@@ -208,7 +208,8 @@ public class Menu extends Scene {
     @Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
 		ClassicSingleton singleton = ClassicSingleton.getInstance();
-		singleton.showSceneLevel();		
+		//singleton.showSceneLevel();
+        singleton.showSceneHelmetSelect();
 	}
 
 	@Override

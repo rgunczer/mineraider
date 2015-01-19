@@ -1,14 +1,21 @@
 package com.almagems.mineraider;
 
+import static com.almagems.mineraider.Constants.*;
 import com.almagems.mineraider.objects.MineCart;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 public class ClassicSingleton {
-	private static ClassicSingleton instance = null;
+    private static ClassicSingleton instance = null;
 	public MineRaiderRenderer renderer = null;
+    public MineRaiderActivity activity = null;
 	public MineCart cart1 = null;
 	public MineCart cart2 = null;
     public ScoreCounter scoreCounter = null;
     public HUD hud;
+    public int selectedHelmetIndex = BLUE_HELMET;
+
 
 	protected ClassicSingleton() {
         scoreCounter = new ScoreCounter();
@@ -28,9 +35,12 @@ public class ClassicSingleton {
 
     public void sendPerfectSwapNotification() { hud.showPerfectSwap(); }
 
+    // show scene
 	public void showSceneLevel() {
 		renderer.showSceneLevel();
 	}
+    public void showSceneHelmetSelect() { renderer.showSceneHelmetSelect(); }
+    public void showSceneMenu() { renderer.showSceneMenu(); }
 
     public int getScore() {
         return scoreCounter.getScore();
@@ -47,6 +57,16 @@ public class ClassicSingleton {
         }
     }
 
+    public String helmetIndexToString(int index) {
+        switch (index) {
+            case RED_HELMET: return "RED";
+            case BLUE_HELMET: return "BLUE";
+            case GREEN_HELMET: return "GREEN";
+            case YELLOW_HELMET: return "YELLOW";
+        }
+        return "UNKNOWN";
+    }
+
     public void handleGemsFromCart(int[] gemTypesArray) {
         scoreCounter.handleGemsFromCart(gemTypesArray);
     }
@@ -59,5 +79,47 @@ public class ClassicSingleton {
 //		//System.out.println("Spawn particle emitter at: " + x + ", " + y);
 //		particleManager.addParticleEmitterAt(x, y, gemType);
 //	}
-	
+
+    public void savePreferences() {
+        System.out.println("Save Preferences...");
+
+        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        String helmetColorName = helmetIndexToString(selectedHelmetIndex);
+
+        // save score
+        editor.putInt(helmetColorName + "-SCORE", getScore());
+
+        // save score by gem types
+        int[] arr = getScoreByGemTypes();
+        for(int i = 0; i < arr.length; ++i) {
+            editor.putInt(helmetColorName + "-GEM" + i, arr[i]);
+        }
+
+        editor.commit();
+    }
+
+    public int loadPreferences(int helmetIndex) {
+        System.out.println("Load Preferences... helmetIndex: " + helmetIndex);
+
+        String helmetColorName = helmetIndexToString(helmetIndex);
+        System.out.println("Helmet Color Name: " + helmetColorName);
+        SharedPreferences sharedPrefs = activity.getPreferences(Context.MODE_PRIVATE);
+
+        // load score
+        int score = sharedPrefs.getInt(helmetColorName + "-SCORE", 0);
+        setScore(score);
+        scoreCounter.dumpScore();
+
+        // load score by gem types
+        int[] arr = new int[MAX_GEM_TYPES];
+        for(int i = 0; i < MAX_GEM_TYPES; ++i) {
+            arr[i] = sharedPrefs.getInt(helmetColorName + "-GEM" + i, 0);
+        }
+        setScoreByGemTypes(arr);
+        scoreCounter.dumpScoreByGemTypes();
+
+        return score;
+    }
 }

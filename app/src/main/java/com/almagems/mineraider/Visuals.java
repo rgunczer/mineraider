@@ -88,8 +88,12 @@ public class Visuals {
 	public int textureMenuItems;
 	public int texturePickAxe;
     public int textureFonts;
-    public int textureIkon;
+    //public int textureIkon;
     public int textureHelmets;
+    public int textureNextArrow;
+
+
+
 	
 	// models
 	public Model[] gems = new Model[MAX_GEM_TYPES];
@@ -365,8 +369,9 @@ public class Visuals {
 		textureMenuItems = loadTexture(R.drawable.menu_items);
 		texturePickAxe = loadTexture(R.drawable.pickaxe_texture);
         textureFonts = loadTexture(R.drawable.fontsandroid);
-        textureIkon = loadTexture(R.drawable.ikon_texture);
+        //textureIkon = loadTexture(R.drawable.ikon_texture);
         textureHelmets = loadTexture(R.drawable.helmets_texture);
+        textureNextArrow = loadTexture(R.drawable.helmet_next_arrow_texture);
 	}
 
 	public void bindNoTexture() {

@@ -35,12 +35,21 @@ public class ClassicSingleton {
 
     public void sendPerfectSwapNotification() { hud.showPerfectSwap(); }
 
-    // show scene
-	public void showSceneLevel() {
-		renderer.showSceneLevel();
-	}
-    public void showSceneHelmetSelect() { renderer.showSceneHelmetSelect(); }
-    public void showSceneMenu() { renderer.showSceneMenu(); }
+    public void showScene(ScenesEnum sceneId) {
+        switch (sceneId) {
+            case Level:
+                renderer.showSceneLevel();
+                break;
+
+            case HelmetSelect:
+                renderer.showSceneHelmetSelect();
+                break;
+
+            case Menu:
+                renderer.showSceneMenu();
+                break;
+        }
+    }
 
     public int getScore() {
         return scoreCounter.getScore();

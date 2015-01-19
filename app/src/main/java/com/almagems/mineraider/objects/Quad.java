@@ -8,23 +8,38 @@ import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Texture;
 import com.almagems.mineraider.util.TexturedQuad;
+import com.almagems.mineraider.util.Vector;
 
 import static android.opengl.GLES20.GL_TRIANGLES;
 import static android.opengl.GLES20.glDrawArrays;
 
 public class Quad {
-    public ObjectPosition op;
+    public final ObjectPosition op;
     private VertexArray vertexArray;
     private int textureId;
 
     // ctor
     public Quad() {
+        op = new ObjectPosition();
+    }
+
+    public boolean isHit(float normalizedX, float normalizedY) {
+
+        Vector pos = new Vector(op.tx, op.ty, op.tz);
+        float w = op.sx;
+        float h = op.sy;
+
+        if ( normalizedY > (pos.y - h) && normalizedY < (pos.y + h) ) {
+            System.out.println("Here....");
+            return true;
+        }
+
+        return false;
     }
 
     public void init(int textureId, MyColor color, Rectangle rect, boolean flipUTextureCoordinate) {
         this.textureId = textureId;
 
-        op = new ObjectPosition();
         op.setPosition(0f, 0f, 0f);
         op.setRot(0f, 0f, 0f);
         op.setScale(1f, 1f, 1f);

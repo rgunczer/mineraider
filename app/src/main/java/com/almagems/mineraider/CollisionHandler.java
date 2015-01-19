@@ -40,18 +40,20 @@ public class CollisionHandler implements ContactListener {
 			} else {
 				singleton.cart2.stop();
 			}
-					
+
+            /*
 			WorldManifold worldManifold = new WorldManifold();
 			arg0.getWorldManifold(worldManifold);
 								
 			for (Vec2 pos : worldManifold.points) {						
-				particleManager.addParticleEmitterAt(pos.x, pos.y, 0);
+				//particleManager.addParticleEmitterAt(pos.x, pos.y, 0);
 				break;
 //				if (pos.x == 0.0f && pos.y == 0.0f) {
 //					System.out.println("Our guy!");
 //				}
 				
 			}
+			*/
 		}
 	}
 

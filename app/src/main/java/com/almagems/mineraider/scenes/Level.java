@@ -192,7 +192,8 @@ public class Level extends Scene {
         final float y = -0.9f;
         if (normalizedY < y) {
             ClassicSingleton singleton = ClassicSingleton.getInstance();
-            singleton.showSceneMenu();
+            singleton.savePreferences();
+            singleton.showScene(ScenesEnum.Menu);
         } else {
             swipeDir = SwipeDir.SwipeNone;
             touchDownX = normalizedX;

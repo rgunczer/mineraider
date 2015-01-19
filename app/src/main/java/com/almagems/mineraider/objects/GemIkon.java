@@ -56,6 +56,7 @@ public class GemIkon {
     }
 
     public void draw() {
+        /*
         Visuals visuals = Visuals.getInstance();
         visuals.calcMatricesForObject(op);
         visuals.textureShader.setTexture(visuals.textureIkon);
@@ -63,5 +64,6 @@ public class GemIkon {
 
         visuals.textureShader.bindData(vertexArray);
         glDrawArrays(GL_TRIANGLES, 0, 12);
+        */
     }
 }

@@ -10,11 +10,14 @@ import static android.opengl.GLES20.glEnable;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glBlendFunc;
 
+import static com.almagems.mineraider.Constants.*;
+
 import com.almagems.mineraider.ClassicSingleton;
 import com.almagems.mineraider.EffectAnims.Fade;
 import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
+import com.almagems.mineraider.objects.Quad;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Text;
@@ -23,21 +26,27 @@ import com.almagems.mineraider.util.Texture;
 public class Menu extends Scene {
 		
 	private VertexArray vertexArrayBg;
-	private VertexArray vertexArrayTitle;
-	private VertexArray vertexArrayPlay;
-	private VertexArray vertexArrayOptions;
-	private VertexArray vertexArrayAbout;
+	private final Quad title;
+	private final Quad play;
+	private final Quad options;
+	private final Quad about;
 
     private Text text;
     private Text credits;
 
     private Fade fade;
 
+    private final Visuals visuals;
+
     private ObjectPosition _op = new ObjectPosition();
 
     // ctor
 	public Menu() {
-		
+		visuals = Visuals.getInstance();
+        title = new Quad();
+        play = new Quad();
+        options = new Quad();
+        about = new Quad();
 	}
 
     private VertexArray createVertexArray(Rectangle rc, Texture texture) {
@@ -95,12 +104,35 @@ public class Menu extends Scene {
 		
 		vertexArrayBg = new VertexArray(vertexDataBg);
 
-        Texture texture = Visuals.getInstance().getTextureObj(Visuals.getInstance().textureMenuItems);
+        MyColor whiteColor = new MyColor(1f, 1f, 1f, 1f);
+        final boolean flipUTextureCoordinate = false;
 
-        vertexArrayAbout = createVertexArray( new Rectangle(0, 0, 460, 248), texture );
-        vertexArrayOptions = createVertexArray( new Rectangle(460, 0, 576, 260), texture) ;
-        vertexArrayPlay = createVertexArray( new Rectangle(1036, 0, 370, 248), texture);
-        vertexArrayTitle = createVertexArray( new Rectangle(0, 260, 1080, 346), texture );
+        about.init(visuals.textureMenuItems, whiteColor, new Rectangle(0, 0+248, 460, 248), flipUTextureCoordinate);
+        about.op.setPosition(0f, -1.32f, 0f);
+        about.op.setRot(0f, 0f, 0f);
+        about.op.setScale(0.5f * 460f * 0.0018f, 0.5f * 248f * 0.0018f, 1.0f);
+
+        options.init(visuals.textureMenuItems, whiteColor, new Rectangle(460, 0+260, 576, 260), flipUTextureCoordinate);
+        options.op.setPosition(0f, -0.67f, 0f);
+        options.op.setRot(0f, 0f, 0f);
+        options.op.setScale(0.5f * 576f * 0.0018f, 0.5f * 260f * 0.0018f, 1f);
+
+        play.init(visuals.textureMenuItems, whiteColor, new Rectangle(1036, 0+248, 370, 248), flipUTextureCoordinate);
+        play.op.setPosition(0f, 0.0f, 0f);
+        play.op.setRot(0f, 0f, 0f);
+        play.op.setScale(0.5f * 370f * 0.0018f, 0.5f * 248f * 0.0018f, 1f);
+
+        title.init(visuals.textureMenuItems, whiteColor, new Rectangle(0, 260+346, 1080, 346), flipUTextureCoordinate);
+        title.op.setPosition(0f, 1f, 0f);
+        title.op.setRot(0f, 0f, 0f);
+        title.op.setScale(0.5f*1080f*0.0018f, 0.5f*346*0.0018f, 1f);
+
+        //Texture texture = Visuals.getInstance().getTextureObj(Visuals.getInstance().textureMenuItems);
+
+//        vertexArrayAbout = createVertexArray( new Rectangle(0, 0, 460, 248), texture );
+//        vertexArrayOptions = createVertexArray( new Rectangle(460, 0, 576, 260), texture) ;
+//        vertexArrayPlay = createVertexArray( new Rectangle(1036, 0, 370, 248), texture);
+//        vertexArrayTitle = createVertexArray( new Rectangle(0, 260, 1080, 346), texture );
 
         text = new Text();
         text.setSpacingScale(0.09f);
@@ -109,7 +141,7 @@ public class Menu extends Scene {
 
         credits = new Text();
         credits.init("CREDITS", new MyColor(1f, 0f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.5f);
-        credits.pos.setPosition(-0.85f, 1.0f, 0f);
+        credits.pos.setPosition(-0.85f, 1.04f, 0f);
 
         fade = new Fade();
         fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
@@ -122,6 +154,9 @@ public class Menu extends Scene {
 
 	@Override
 	public void draw() {
+
+        //play.op.tx += 0.01f;
+
         visuals.setProjectionMatrix2D();
         visuals.textureShader.useProgram();
 
@@ -134,10 +169,16 @@ public class Menu extends Scene {
 		glEnable(GL_BLEND);
 
         visuals.textureShader.setTexture(visuals.textureMenuItems);
+/*
 		drawTitle();
 		drawPlay();
 		drawOptions();
 		drawAbout();
+*/
+        title.draw();
+        play.draw();
+        options.draw();
+        about.draw();
 
         visuals.textureShader.setTexture(visuals.textureFonts);
         text.draw();
@@ -147,7 +188,8 @@ public class Menu extends Scene {
         fade.update();
         fade.draw();
 	}
-	
+
+	/*
 	private void drawAbout() {
 		ObjectPosition op = new ObjectPosition();
 		op.setPosition(0f, -1.32f, 0f);
@@ -182,7 +224,7 @@ public class Menu extends Scene {
         visuals.textureShader.bindData(vertexArrayPlay);
 		glDrawArrays(GL_TRIANGLES, 0, 6);		
 	}
-
+*/
 	private void drawBg() {
 		_op.setPosition(0f, 0f, 0f);
         _op.setRot(0f, 0f, 0f);
@@ -193,7 +235,7 @@ public class Menu extends Scene {
         visuals.textureShader.bindData(vertexArrayBg);
 		glDrawArrays(GL_TRIANGLES, 0, 6);			
 	}
-
+/*
     private void drawTitle() {
         _op.setPosition(0f, 1.03f, 0f);
         _op.setRot(0f, 0f, 0f);
@@ -204,12 +246,19 @@ public class Menu extends Scene {
         visuals.textureShader.bindData(vertexArrayTitle);
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
-
+*/
     @Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
-		ClassicSingleton singleton = ClassicSingleton.getInstance();
-		//singleton.showSceneLevel();
-        singleton.showSceneHelmetSelect();
+
+
+
+        boolean isHit = play.isHit(normalizedX, normalizedY);
+
+        if (isHit) {
+            //System.out.println("is hit...");
+            ClassicSingleton.getInstance().showScene(ScenesEnum.HelmetSelect);
+        }
+
 	}
 
 	@Override

@@ -23,9 +23,9 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
 import android.widget.Toast;
 
+import com.almagems.mineraider.scenes.HelmetSelect;
 import com.almagems.mineraider.scenes.Level;
 import com.almagems.mineraider.scenes.Menu;
-import com.almagems.mineraider.scenes.PlayerSelect;
 import com.almagems.mineraider.scenes.Scene;
 import com.almagems.mineraider.shaders.ParticleShader;
 
@@ -52,12 +52,14 @@ public class MineRaiderRenderer implements Renderer {
 	}
 	
 	public void showSceneLevel() {
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		visuals.setProjectionMatrix3D();
 		level.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
 		current = level;
 	}
 
     public void showSceneHelmetSelect() {
+        glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
         visuals.setProjectionMatrix2D();
         playerSelect.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
         current = playerSelect;
@@ -122,7 +124,7 @@ public class MineRaiderRenderer implements Renderer {
 		}
 
         if (playerSelect == null) {
-            playerSelect = new PlayerSelect();
+            playerSelect = new HelmetSelect();
         }
 
 		//current = level;

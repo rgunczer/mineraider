@@ -38,6 +38,14 @@ public class Constants {
     public static final int BLUE_HELMET = 2;
     public static final int YELLOW_HELMET = 3;
 
+    public static enum ScenesEnum {
+        None,
+        Menu,
+        HelmetSelect,
+        Level,
+        Loading,
+    }
+
 /*
     public static enum HelmetTypes {
         RedHelmet(0),

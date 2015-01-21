@@ -94,8 +94,10 @@ public class Visuals {
 
 
 
-	
-	// models
+
+
+
+    // models
 	public Model[] gems = new Model[MAX_GEM_TYPES];
     public Model[] gemsPlates = new Model[MAX_GEM_TYPES];
 	public Model marker;
@@ -171,10 +173,10 @@ public class Visuals {
 					
 		textureShader = new TextureShader(context);
 		colorShader = new ColorShader(context);
-		dirLightShader = new DirLightShader(context);	
+		dirLightShader = new DirLightShader(context);
 		particleShader = new ParticleShader(context);
-		normalColorShader = new NormalColorShader(context);		
-		pointLightShader = new PointLightShader(context);		
+		normalColorShader = new NormalColorShader(context);
+		pointLightShader = new PointLightShader(context);
 
 		System.out.println("loadShaders - END");
 	}

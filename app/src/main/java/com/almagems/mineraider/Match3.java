@@ -11,11 +11,14 @@ import com.almagems.mineraider.anims.SwapAnimation;
 import com.almagems.mineraider.anims.SwapHintManager;
 import com.almagems.mineraider.util.MyUtils;
 
+import java.util.ArrayList;
+
 public class Match3 {
 
     public int boardSize;
 	public boolean isAnimating;
     private int[] gemTypesArray = new int[MAX_GEM_TYPES];
+    public ArrayList<GemPosition> gemsList;
 	public GemPosition[][] board;
     private GemPosition[][] tempBoard;
 	public GemPosition firstSelected;
@@ -37,6 +40,7 @@ public class Match3 {
         swapAnim = new SwapAnimation();
         pooledFallGroupAnim = new FallGroupAnimation();
         pooledPopAnimation = new PopAnimation();
+        gemsList = new ArrayList<GemPosition>(boardSize * boardSize); // multiply by 2 for buffer board
         createBoards();
     }
 
@@ -44,9 +48,15 @@ public class Match3 {
         board = new GemPosition[boardSize][boardSize*2];
         tempBoard = new GemPosition[boardSize][boardSize];
 
+        GemPosition gp;
         for (int y = 0; y < boardSize * 2; ++y) {
             for (int x = 0; x < boardSize; ++x) {
-                board[x][y] = new GemPosition(x, y);
+                gp = new GemPosition(x, y);
+                board[x][y] = gp;
+
+                if (y < boardSize) {
+                    gemsList.add(gp);
+                }
             }
         }
 

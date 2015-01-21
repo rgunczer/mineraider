@@ -8,6 +8,7 @@ import static android.opengl.GLES20.glUniform1i;
 import static android.opengl.GLES20.glUseProgram;
 import android.content.Context;
 
+import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.util.ShaderHelper;
 import com.almagems.mineraider.util.TextResourceReader;
 

@@ -41,13 +41,12 @@ public class PointLightShader extends BaseShader {
 		aTextureCoordinatesLocation = glGetAttribLocation(program, "textureCoordinates");		
 	}
 	
-	public void setUniforms(MyColor color, MyColor lightColor, Vector lightPos) {
-		Visuals visuals = Visuals.getInstance();
-				
+	public void setUniforms() {
+        Visuals visuals = Visuals.getInstance();
 		glUniformMatrix4fv(uModelViewLocation, 1, false, visuals.mvMatrix, 0);		
 		glUniformMatrix4fv(uProjectionLocation, 1, false, visuals.projectionMatrix, 0);		
 		
-		glUniform4f(uColorLocation, color.r, color.g, color.b, color.a);
+		glUniform4f(uColorLocation, visuals.color.r, visuals.color.g, visuals.color.b, visuals.color.a);
 	}	
 	
 	public int getPositionAttributeLocation() {

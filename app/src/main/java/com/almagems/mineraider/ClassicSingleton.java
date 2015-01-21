@@ -15,11 +15,12 @@ public class ClassicSingleton {
     public ScoreCounter scoreCounter = null;
     public HUD hud;
     public int selectedHelmetIndex = BLUE_HELMET;
-
+    public BatchDrawer batchDrawer = null;
 
 	protected ClassicSingleton() {
         scoreCounter = new ScoreCounter();
         hud = new HUD();
+        batchDrawer = new BatchDrawer();
 	}
 	
 	public static ClassicSingleton getInstance() {

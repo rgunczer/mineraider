@@ -316,68 +316,63 @@ public class MineCart {
 			fixture = fixture.getNext();
 		}
 	}
-	
-	public void draw() {
-		Visuals visuals = Visuals.getInstance();
-								
-		//Vec2 pos = cart.getLocalCenter();
-		Vec2 pos = cart.getPosition();
-		float angle = cart.getAngle();
-		float degree = (float)Math.toDegrees(angle);
-		
-		// cart					
-		_op.setScale(1f, 1f, 1f);				
-		_op.setRot(0f, 0f, degree);		
-		_op.setPosition(pos.x, pos.y, 1f); //position;
-		visuals.calcMatricesForObject(_op);	
-		
-		MyColor color = new MyColor(1f, 1f, 1f);
-		
-		visuals.dirLightShader.setTexture(visuals.textureCart);
-		visuals.dirLightShader.setUniforms(color, visuals.lightColor, visuals.lightNorm);		
-		visuals.mineCart.bindData(visuals.dirLightShader);
-		visuals.mineCart.draw();
-//		visuals.rampa.bindData(visuals.dirLightShader);
-//		visuals.rampa.draw();
-//		visuals.mineCartWheel.bindData(visuals.dirLightShader);
-//		visuals.mineCartWheel.draw();
-		
-		//r+=1.0f;
-		
-		
-		
-		// wheels
-		visuals.dirLightShader.setTexture(visuals.textureWheel);
-		
+
+    public void draw() {
+        update();
+
+        Visuals visuals = Visuals.getInstance();
+        _op.setScale(1f, 1f, 1f);
+
+        visuals.dirLightShader.setTexture(visuals.textureCart);
+        visuals.mineCart.bindData(visuals.dirLightShader);
+        drawCart();
+
+        visuals.dirLightShader.setTexture(visuals.textureWheel);
+        visuals.wheel.bindData(visuals.dirLightShader);
+        drawWheels();
+
+        //glDisable(GL_DEPTH_TEST);
+        //drawCartFixture();
+        //glEnable(GL_DEPTH_TEST);
+    }
+
+	private void drawCart() {
+        Visuals visuals = Visuals.getInstance();
+        Vec2 pos = cart.getPosition();
+        float degree = (float) Math.toDegrees(cart.getAngle());
+
+        _op.setPosition(pos.x, pos.y, 1f);
+        _op.setRot(0f, 0f, degree);
+        visuals.calcMatricesForObject(_op);
+        visuals.dirLightShader.setUniforms();
+        visuals.mineCart.draw();
+    }
+
+    private void drawWheels() {
+        Visuals visuals = Visuals.getInstance();
+        Vec2 pos;
+        float degree;
+
 		// wheel 1
-		//op.position = new Vector(pos.x - 1.5f, pos.y - 1.5f, 2f);
 		pos = wheel1.getPosition();
-		angle = wheel1.getAngle();
-		degree = (float)Math.toDegrees(angle);
+		degree = (float)Math.toDegrees( wheel1.getAngle() );
+
 		_op.setPosition(pos.x, pos.y, 2f);		
 		_op.setRot(0f, 0f, degree);
-		
-		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.setUniforms(color, visuals.lightColor, visuals.lightNorm);		
-		visuals.wheel.bindData(visuals.dirLightShader);
+
+        visuals.calcMatricesForObject(_op);
+		visuals.dirLightShader.setUniforms();
 		visuals.wheel.draw();
 			
 		// wheel 2
-		//op.position = new Vector(pos.x + 1.5f, pos.y - 1.5f, 2f);
 		pos = wheel2.getPosition();
-		angle = wheel2.getAngle();
-		degree = (float)Math.toDegrees(angle); 
+		degree = (float)Math.toDegrees( wheel2.getAngle() );
 
-		_op.setPosition(pos.x, pos.y, 2f);
+        _op.setPosition(pos.x, pos.y, 2f);
 		_op.setRot(0f, 0f, degree);
-		
-		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.setUniforms(color, visuals.lightColor, visuals.lightNorm);		
-		visuals.wheel.bindData(visuals.dirLightShader);
+
+        visuals.calcMatricesForObject(_op);
+		visuals.dirLightShader.setUniforms();
 		visuals.wheel.draw();
-		
-		//glDisable(GL_DEPTH_TEST);
-		//drawCartFixture();
-		//glEnable(GL_DEPTH_TEST);
 	}
 }

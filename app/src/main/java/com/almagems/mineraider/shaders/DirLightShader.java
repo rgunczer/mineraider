@@ -43,10 +43,9 @@ public class DirLightShader extends BaseShader {
 		aTextureCoordinatesLocation = glGetAttribLocation(program, "a_TextureCoordinates");
 	}
 		
-	public void setUniforms(MyColor color, MyColor lightColor, Vector lightDir) {
-		Visuals visuals = Visuals.getInstance();
-		
-		glUniform4f(uColorLocation, color.r, color.g, color.b, color.a);
+	public void setUniforms() {
+        Visuals visuals = Visuals.getInstance();
+		glUniform4f(uColorLocation, visuals.color.r, visuals.color.g, visuals.color.b, visuals.color.a);
 		glUniformMatrix4fv(uMVPMatrixLocation, 1, false, visuals.mvpMatrix, 0);
 		glUniformMatrix4fv(uMVMatrixLocation, 1, false, visuals.mvMatrix, 0);
 		glUniform3f(uLightPosLocation, 	visuals.mLightPosInEyeSpace[0], 

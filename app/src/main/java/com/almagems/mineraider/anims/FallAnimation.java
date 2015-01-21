@@ -1,14 +1,10 @@
 package com.almagems.mineraider.anims;
 
 import com.almagems.mineraider.GemPosition;
-import com.almagems.mineraider.Visuals;
-import com.almagems.mineraider.objects.Model;
 
 public class FallAnimation {
-    public static Visuals visuals;
-
-	public GemPosition animGemFrom;
-	public GemPosition animGemTo;
+	public final GemPosition animGemFrom;
+	public final GemPosition animGemTo;
 
     public boolean isDone;
 
@@ -18,18 +14,19 @@ public class FallAnimation {
 	//private final float friction = 0.9f;
 	private final float g = 0.065f;
 	private int bounceCounter = 0;
-    private Model gem;
-    private Model plate;
+    int type;
 
     // ctor
 	public FallAnimation() {
+        animGemFrom = new GemPosition();
+        animGemTo = new GemPosition();
     }
 
     public void init(GemPosition from, GemPosition to) {
 		this.isDone = false;
 
-        this.animGemFrom = new GemPosition(from);
-		this.animGemTo = new GemPosition(to);
+        this.animGemFrom.init(from);
+		this.animGemTo.init(to);
 		
 		this.animGemFrom.type = from.type;
 		this.animGemFrom.op.setPosition(from.op.tx, from.op.ty, from.op.tz);
@@ -37,8 +34,7 @@ public class FallAnimation {
 		
 		this.animGemTo.op.setPosition(to.op.tx, to.op.ty, to.op.tz);
 
-        gem = visuals.gems[ from.type ];
-        plate = visuals.gemsPlates[ from.type ];
+        this.type = from.type;
 
 		vy = 0.1f;
 		bounceCounter = 0;
@@ -46,7 +42,6 @@ public class FallAnimation {
 
 	public void update() {
 		if (!isDone) {
-			//System.out.println("FallAnimation update... from(" + animGemFrom.boardX + "," + animGemFrom.boardY + ") to(" + animGemTo.boardX + "," + animGemTo.boardY + ")");
 			vy += g;
 			animGemFrom.op.ty -= vy;
 			
@@ -60,22 +55,5 @@ public class FallAnimation {
 				isDone = true;
 			}
 		}
-	}
-
-	public void draw() {
-        float temp;
-		visuals.calcMatricesForObject(animGemFrom.op);
-		visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
-		gem.bindData(visuals.pointLightShader);
-		gem.draw();
-
-        temp = animGemFrom.op.tz;
-        animGemFrom.op.tz -= 0.11f;
-        visuals.calcMatricesForObject(animGemFrom.op);
-        visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
-        plate.bindData(visuals.pointLightShader);
-        plate.draw();
-
-        animGemFrom.op.tz = temp;
 	}
 }

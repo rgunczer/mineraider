@@ -1,27 +1,24 @@
 package com.almagems.mineraider.anims;
 
+import com.almagems.mineraider.ClassicSingleton;
 import com.almagems.mineraider.GemPosition;
-import com.almagems.mineraider.Visuals;
 
 import java.util.ArrayList;
 
 
 public class FallGroupAnimation extends BaseAnimation {
 
-    private static Visuals visuals;
     private ArrayList<FallAnimation> pool = new ArrayList<FallAnimation>();
 	private ArrayList<FallAnimation> list = new ArrayList<FallAnimation>();
 
 	public FallGroupAnimation() {
-		visuals = Visuals.getInstance();
-        FallAnimation.visuals = visuals;
         isDone = false;
 	}
 
     public void add(GemPosition from, GemPosition to) {
         FallAnimation fall = getFromPool();
         fall.init(from, to);
-        list.add( fall ); // new FallAnimation(from, to)
+        list.add( fall );
     }
 
     private FallAnimation getFromPool() {
@@ -81,11 +78,6 @@ public class FallGroupAnimation extends BaseAnimation {
 
 	@Override
 	public void draw() {
-        FallAnimation fall;
-        int size = list.size();
-		for (int i = 0; i < size; ++i) {
-			fall = list.get(i);
-			fall.draw();
-		}
-	}
+        ClassicSingleton.getInstance().batchDrawer.draw(this);
+    }
 }

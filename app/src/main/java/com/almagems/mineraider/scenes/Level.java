@@ -146,8 +146,6 @@ public class Level extends Scene {
         visuals.setProjectionMatrix3D();
         visuals.updateViewProjMatrix();
 
-        drawFloorWallSoil();
-
         glEnable(GL_DEPTH_TEST);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -156,23 +154,45 @@ public class Level extends Scene {
 
         glDisable(GL_BLEND);
         animManager.draw();
-
-        //glDisable(GL_BLEND);
 		drawBoardGems();
+		glEnable(GL_DEPTH_TEST);
 
+		drawGemsUnderPhysics();
         drawSelectionMarker();
 
-		glEnable(GL_DEPTH_TEST);
         match3.swapHintManager.draw();
-		drawFallingGems();
 
+        glDisable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
+        visuals.dirLightShader.useProgram();
+
+        visuals.dirLightShader.setTexture(visuals.textureFloor);
+        drawFloor();
+
+        visuals.dirLightShader.setTexture(visuals.textureWall);
+        drawWall();
+
+        visuals.dirLightShader.setTexture(visuals.textureSoil);
+        drawSoil();
+
+        visuals.dirLightShader.setTexture(visuals.textureCliff142);
 		drawRocks();
+
+        visuals.dirLightShader.setTexture(visuals.texturePillar);
 		drawPillars();
+
+        visuals.dirLightShader.setTexture(visuals.textureBeam);
 		drawBeam();
 
+        visuals.dirLightShader.setTexture(visuals.textureRailRoad);
 		drawRailRoad();
+
 		drawMineCarts();
+
+        visuals.dirLightShader.setTexture(visuals.textureCrate);
 		drawCrates();
+
+        visuals.dirLightShader.setTexture(visuals.texturePickAxe);
 		drawPickAxes();
 
         //drawPhysics();
@@ -477,82 +497,10 @@ public class Level extends Scene {
 		edgeDrawer.bindData(visuals.colorShader);
 		edgeDrawer.draw();
 	}
-	
-	private void drawFallingGems() {	
-		/*
-		MyColor color = new MyColor(0f, 0f, 0f, 1f);
-		
-		visuals.pointLightShader.setTexture(visuals.textureGems);
-		
-		for(Body body : physics.boxes) {									
-			if ( body.m_type == BodyType.DYNAMIC && body.m_userData != null ) {
-				Vec2 pos = body.getPosition();
-				float angle = body.getAngle();
-				float degree = (float) Math.toDegrees(angle);			
-				float d = GEM_FRAGMENT_SIZE + (0.15f * GEM_FRAGMENT_SIZE);
-				
-				Integer integer = (Integer)body.m_userData;
-				int gemType = integer.intValue();
-				Model gem = visuals.gems[gemType];				
-				_op.setPosition(pos.x, pos.y, 1.0f);
-				_op.setScale(d, d, 1f);				
-				_op.setRot(0f, 0f, degree);
-				
-				visuals.calcMatricesForObject(_op);				
-				visuals.pointLightShader.useProgram();
-				
-				visuals.pointLightShader.setUniforms(color, visuals.lightColor, visuals.lightNorm);						
-				gem.bindData(visuals.pointLightShader);					
-				gem.draw();
-			}
-		}
-*/
-		//glDisable(GL_DEPTH_TEST);
-        glDisable(GL_BLEND);
 
-		Body body;
-        Model gem;
-        Vec2 pos;
-        Integer integer;
-        int gemType;
-        float angle;
-        float degree;
-        float d;
-		int size = physics.fragments.size();
-		for(int i = 0; i < size; ++i) {
-			body = physics.fragments.get(i);
-            pos = body.getPosition();
-            angle = body.getAngle();
-            degree = (float) Math.toDegrees(angle);
-            d = GEM_FRAGMENT_SIZE;
-
-            integer = (Integer)body.m_userData;
-            gemType = integer;
-            gem = visuals.gems[gemType];
-            _op.setPosition(pos.x, pos.y, 1.0f);
-            _op.setRot(0f, 0f, degree);
-            _op.setScale(d, d, 1f);
-
-            visuals.calcMatricesForObject(_op);
-            visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightNorm);
-            gem.bindData(visuals.pointLightShader);
-            gem.draw();
-
-
-            gem = visuals.gemsPlates[gemType];
-            _op.setPosition(pos.x, pos.y, 1.0f);
-            _op.setRot(0f, 0f, degree);
-            _op.setScale(d, d, 1f);
-
-            visuals.calcMatricesForObject(_op);
-            visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightNorm);
-            gem.bindData(visuals.pointLightShader);
-            gem.draw();
-
-
-        }
-		//glEnable(GL_DEPTH_TEST);
-	}
+    private void drawGemsUnderPhysics() {
+        ClassicSingleton.getInstance().batchDrawer.draw(physics);
+    }
 
     private void drawPhysicsStatics() {
         visuals.colorShader.useProgram();
@@ -662,84 +610,35 @@ public class Level extends Scene {
             markerPos.setScale(1.0f + d, 1.0f + d, 1.0f);
 
 			visuals.calcMatricesForObject(markerPos);
-			visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
+			visuals.pointLightShader.setUniforms();
 			visuals.marker.bindData(visuals.pointLightShader);
 			visuals.marker.draw();
 		}
 	}
 
-	void drawBoardGems() {
-		int yMax = match3.boardSize;
-		if (DRAW_BUFFER_BOARD) {
-			yMax = match3.boardSize * 2;
-		}
+    void drawBoardGems() {
+        ClassicSingleton.getInstance().batchDrawer.draw(match3);
+    }
 
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glBlendFunc(GL_ONE, GL_ONE);
+	void drawRailRoad() {
+        visuals.railroad.bindData(visuals.dirLightShader);
 
-        Model gem;
-        GemPosition gp;
-
-        glDisable(GL_BLEND);
-        // draw gems
-		for(int y = 0; y < yMax; ++y) {
-            for (int x = 0; x < match3.boardSize; ++x) {
-                gp = match3.board[x][y];
-
-                if (gp.type != GEM_TYPE_NONE && gp.visible) {
-                    gem = visuals.gems[gp.type];
-
-                    visuals.calcMatricesForObject(gp.op);
-                    visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightDir);
-                    gem.bindData(visuals.pointLightShader);
-                    gem.draw();
-                }
-            }
-        }
-
-        glEnable(GL_BLEND);
-        // draw gem plates
-        for(int y = 0; y < yMax; ++y) {
-            for (int x = 0; x < match3.boardSize; ++x) {
-                gp = match3.board[x][y];
-
-                if (gp.type != GEM_TYPE_NONE && gp.visible) {
-                    gem = visuals.gemsPlates[gp.type];
-
-                    markerPos.init(gp.op);
-                    markerPos.tz -= 0.11f;
-
-                    visuals.calcMatricesForObject(markerPos);
-                    visuals.pointLightShader.setUniforms(colorWhite, visuals.lightColor, visuals.lightDir);
-                    gem.bindData(visuals.pointLightShader);
-                    gem.draw();
-                }
-            }
-        }
-        glDisable(GL_BLEND);
-	}
-	
-	void drawRailRoad() {		
-		float x, y, z;
-		
-		x = -10f;
-		y = -20.0f;
-		z =  1.0f;		
-		for(int i = 0; i < 3; ++i) {			
-			float tempZ = z;			
+		float x = -10f;
+		float y = -20.0f;
+		float z =  1.0f;
+        float tempZ;
+		for(int i = 0; i < 3; ++i) {
+            tempZ = z;
 			_op.setPosition(x, y, z);
 			_op.setRot(0f, 0f, 0f);
 			_op.setScale(1f, 1f, 1f);
-							
+
 			visuals.calcMatricesForObject(_op);
-			visuals.dirLightShader.useProgram();
-			visuals.dirLightShader.setTexture(visuals.textureRailRoad);
-			visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);			
-			visuals.railroad.bindData(visuals.dirLightShader);
+			visuals.dirLightShader.setUniforms();
 			visuals.railroad.draw();
 
 			z = tempZ;
-			x+=10.0f;
+			x += 10.0f;
 		}		
 	}	
 	
@@ -749,34 +648,26 @@ public class Level extends Scene {
 		_op.setRot(0f, 0f, degree);
 		
 		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.useProgram();
-		visuals.dirLightShader.setTexture(visuals.textureCliff142);		
-		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
+		visuals.dirLightShader.setUniforms();
 		rock.bindData(visuals.dirLightShader);
 		rock.draw();		
 	}
 
 	void drawPickAxes() {
 		Model pickAxe = visuals.pickAxe;
-		
-		float x = 9f;//-3f;
-		float y = -20f;//-19f;
-		float z = 4.0f;//-3f;		
-		
-		_op.setPosition(x, y, z);
+
+		_op.setPosition(9f, -20f, 4.0f);
 		_op.setScale(1f, 1f, 1f);		
 		_op.setRot(90f, 30f, 50f);
 				
 		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.useProgram();		
-		visuals.dirLightShader.setTexture(visuals.texturePickAxe);
-		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
+		visuals.dirLightShader.setUniforms();
 		pickAxe.bindData(visuals.dirLightShader);
 		pickAxe.draw();				
 	}
 			
 	void drawRocks() {
-		// rock types
+        // rock types
 //		float y = -15f;
 //		float z = 0f;
 //		float degree = 0f;
@@ -851,76 +742,55 @@ public class Level extends Scene {
 		drawRock(visuals.rock5, -11.5f, 0.0f, -4.75f, 8.0f);		
 	}
 	
-	void drawFloorWallSoil() {
-        visuals.dirLightShader.useProgram();
+	void drawFloor() {
+        _op.setPosition(0f, -20.5f, 0f);
+        _op.setRot(0f, 0f, 0f);
+        _op.setScale(1.0f, 1.0f, 1.0f);
+        visuals.calcMatricesForObject(_op);
+        visuals.dirLightShader.setUniforms();
+        visuals.floor.bindData(visuals.dirLightShader);
+        visuals.floor.bind();
+        visuals.floor.draw();
+        visuals.floor.unbind();
+    }
 
-		// floor
-		_op.setPosition(0f, -20.5f, 0f);
-		_op.setRot(0f, 0f, 0f);
-		_op.setScale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.setTexture(visuals.textureFloor);
-		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
-		visuals.floor.bindData(visuals.dirLightShader);
-		visuals.floor.bind();
-		visuals.floor.draw();
-		visuals.floor.unbind();
-		
-		// wall
-		_op.setPosition(0f, -15f, -4f);
-		_op.setRot(0f, 0f, 0f);
-		_op.setScale(1f, 1f, 1f);		
-		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.setTexture(visuals.textureWall);
-		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
-		visuals.wall.bindData(visuals.dirLightShader);
-		visuals.wall.bind();
-		visuals.wall.draw();
-		visuals.wall.unbind();
-		
-		// soil
+    void drawWall() {
+        _op.setPosition(0f, -15f, -4f);
+        _op.setRot(0f, 0f, 0f);
+        _op.setScale(1f, 1f, 1f);
+        visuals.calcMatricesForObject(_op);
+        visuals.dirLightShader.setUniforms();
+        visuals.wall.bindData(visuals.dirLightShader);
+        visuals.wall.bind();
+        visuals.wall.draw();
+        visuals.wall.unbind();
+    }
+
+    void drawSoil() {
 		_op.setPosition(0f, 5f, -3.5f);
 		_op.setRot(0f, 0f, 0f);
 		_op.setScale(1.9f, 1.5f, 1.0f);					
 		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.setTexture(visuals.textureSoil);		
-		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
+		visuals.dirLightShader.setUniforms();
 		visuals.soil.bindData(visuals.dirLightShader);
-		visuals.soil.bind();
 		visuals.soil.draw();
-		visuals.soil.unbind();
 	}
 	
 	void drawCrates() {
-		float x, y, z;
-		
-		x = -12.5f;
-		y = -18.6f;
-		z = -2.0f;					
-		_op.setPosition(x, y, z);
+        visuals.crate.bindData(visuals.dirLightShader);
+
+		_op.setPosition(-12.5f, -18.6f, -2.0f);
 		_op.setRot(0.0f, -20.0f, 0.0f);
 		_op.setScale(1.0f, 1.0f, 1.0f);
-				
-		visuals.dirLightShader.setTexture(visuals.textureCrate);
 		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.useProgram();
-		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
-		visuals.crate.bindData(visuals.dirLightShader);
+		visuals.dirLightShader.setUniforms();
 		visuals.crate.draw();
 
-		
-		x = 12.0f;
-		y = -18.6f;
-		z = -2.0f;				
-		_op.setPosition(x, y, z);
+		_op.setPosition(12.0f, -18.6f, -2.0f);
 		_op.setRot(0.0f, 2.0f, 0.0f);
-		_op.setScale(1.0f, 1.0f, 1.0f);		
-
-		visuals.dirLightShader.setTexture(visuals.textureCrate);
+		_op.setScale(1.0f, 1.0f, 1.0f);
 		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.useProgram();
-		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
-		visuals.crate.bindData(visuals.dirLightShader);
+		visuals.dirLightShader.setUniforms();
 		visuals.crate.draw();	
 	}
 	
@@ -928,42 +798,33 @@ public class Level extends Scene {
 		_op.setPosition(0f, -16f, -2.5f);
 		_op.setRot(0f, 0f, 0f);
 		_op.setScale(1.0f, 1.0f, 1.0f);
-		visuals.dirLightShader.setTexture(visuals.textureBeam);
 		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.useProgram();
-		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
+		visuals.dirLightShader.setUniforms();
 		visuals.beam.bindData(visuals.dirLightShader);
 		visuals.beam.draw();		
 	}
 	
-	void drawPillars() {	
-		float x = -9.5f;
-		float y = -16f;
-		float z = -2.5f;
-		
-		_op.setPosition(x, y, z);
+	void drawPillars() {
+        visuals.pillar.bindData(visuals.dirLightShader);
+
+		_op.setPosition(-9.5f, -16f, -2.5f);
 		_op.setRot(0f, 0f, 0f);
-		_op.setScale(1.0f, 1.0f, 1.0f);			
-		visuals.dirLightShader.setTexture(visuals.texturePillar);
+		_op.setScale(1.0f, 1.0f, 1.0f);
 		visuals.calcMatricesForObject(_op);
-		visuals.dirLightShader.useProgram();
-		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);		
-		visuals.pillar.bindData(visuals.dirLightShader);
+		visuals.dirLightShader.setUniforms();
 		visuals.pillar.draw();		
-		
-		x = 9.5f;
-		_op.setPosition(x, y, z);
+
+		_op.setPosition(9.5f, -16f, -2.5f);
 		_op.setRot(0f, 0f, 0f);
-		_op.setScale(1.0f, 1.0f, 1.0f);				
-		visuals.calcMatricesForObject(_op);		
-		visuals.dirLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);			
+		_op.setScale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(_op);
+		visuals.dirLightShader.setUniforms();
 		visuals.pillar.draw();				
 	}
 		
 	void drawMineCarts() {
 		int size = mineCarts.size();
 		for (int i = 0; i < size; ++i) {
-			mineCarts.get(i).update();
 			mineCarts.get(i).draw();
 		}
 	}	

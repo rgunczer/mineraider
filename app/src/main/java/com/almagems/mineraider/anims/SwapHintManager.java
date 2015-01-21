@@ -33,12 +33,12 @@ public class SwapHintManager {
     }
 
     public void add(GemPosition first, GemPosition second) {
-        SwapHint swapHint = getFromDead();
+        SwapHint swapHint = getFromPool();
         swapHint.init(first, second);
         live.add(swapHint);
     }
 
-    private SwapHint getFromDead() {
+    private SwapHint getFromPool() {
         int size = pool.size();
         if (size > 0) {
             SwapHint swapHint = pool.get( size - 1 );
@@ -58,7 +58,7 @@ public class SwapHintManager {
             hint = live.get(i);
             hint.update();
             visuals.calcMatricesForObject( hint.op );
-            visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
+            visuals.pointLightShader.setUniforms();
             visuals.hint.draw();
         }
     }

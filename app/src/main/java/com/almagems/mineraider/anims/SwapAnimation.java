@@ -165,26 +165,26 @@ public class SwapAnimation extends BaseAnimation {
 
 		gem = visuals.gems[firstAnim.type];
 		visuals.calcMatricesForObject(firstAnim.op);
-		visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
+		visuals.pointLightShader.setUniforms();
 		gem.bindData(visuals.pointLightShader);
 		gem.draw();
 
         gem = visuals.gemsPlates[firstAnim.type];
         visuals.calcMatricesForObject(firstAnim.op);
-        visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
+        visuals.pointLightShader.setUniforms();
         gem.bindData(visuals.pointLightShader);
         gem.draw();
 
 
         gem = visuals.gems[secondAnim.type];
 		visuals.calcMatricesForObject(secondAnim.op);
-		visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
+		visuals.pointLightShader.setUniforms();
 		gem.bindData(visuals.pointLightShader);
 		gem.draw();
 
         gem = visuals.gemsPlates[secondAnim.type];
         visuals.calcMatricesForObject(secondAnim.op);
-        visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
+        visuals.pointLightShader.setUniforms();
         gem.bindData(visuals.pointLightShader);
         gem.draw();
 

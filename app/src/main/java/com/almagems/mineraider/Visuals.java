@@ -88,7 +88,6 @@ public class Visuals {
 	public int textureMenuItems;
 	public int texturePickAxe;
     public int textureFonts;
-    //public int textureIkon;
     public int textureHelmets;
     public int textureNextArrow;
 

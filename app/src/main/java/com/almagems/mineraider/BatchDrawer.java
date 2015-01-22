@@ -1,7 +1,11 @@
 package com.almagems.mineraider;
 
+import com.almagems.mineraider.anims.AnimationManager;
+import com.almagems.mineraider.anims.BaseAnimation;
 import com.almagems.mineraider.anims.FallAnimation;
 import com.almagems.mineraider.anims.FallGroupAnimation;
+import com.almagems.mineraider.anims.PopAnimation;
+import com.almagems.mineraider.anims.SwapAnimation;
 import com.almagems.mineraider.objects.Model;
 
 import org.jbox2d.common.Vec2;
@@ -23,15 +27,15 @@ import static com.almagems.mineraider.Constants.GEM_TYPE_6;
 import static com.almagems.mineraider.Constants.GEM_TYPE_NONE;
 
 public class BatchDrawer {
-    public ArrayList<ObjectPosition> gemsType0 = new ArrayList<ObjectPosition>(60);
-    public ArrayList<ObjectPosition> gemsType1 = new ArrayList<ObjectPosition>(60);
-    public ArrayList<ObjectPosition> gemsType2 = new ArrayList<ObjectPosition>(60);
-    public ArrayList<ObjectPosition> gemsType3 = new ArrayList<ObjectPosition>(60);
-    public ArrayList<ObjectPosition> gemsType4 = new ArrayList<ObjectPosition>(60);
-    public ArrayList<ObjectPosition> gemsType5 = new ArrayList<ObjectPosition>(60);
-    public ArrayList<ObjectPosition> gemsType6 = new ArrayList<ObjectPosition>(60);
+    public ArrayList<ObjectPosition> gemsType0 = new ArrayList<ObjectPosition>(90);
+    public ArrayList<ObjectPosition> gemsType1 = new ArrayList<ObjectPosition>(90);
+    public ArrayList<ObjectPosition> gemsType2 = new ArrayList<ObjectPosition>(90);
+    public ArrayList<ObjectPosition> gemsType3 = new ArrayList<ObjectPosition>(90);
+    public ArrayList<ObjectPosition> gemsType4 = new ArrayList<ObjectPosition>(90);
+    public ArrayList<ObjectPosition> gemsType5 = new ArrayList<ObjectPosition>(90);
+    public ArrayList<ObjectPosition> gemsType6 = new ArrayList<ObjectPosition>(90);
 
-    private static final int MAX_POOL_GEMPOSITIONS = 100;
+    private static final int MAX_POOL_GEMPOSITIONS = 630;
     private ArrayList<ObjectPosition> pool = new ArrayList<ObjectPosition>(MAX_POOL_GEMPOSITIONS);
 
     private final Visuals visuals;
@@ -46,7 +50,34 @@ public class BatchDrawer {
         }
     }
 
-    private void reset() {
+    private ObjectPosition getFromPool() {
+        ObjectPosition pos;
+        int size = pool.size();
+        //if (size > 0) {
+            pos = pool.get( size - 1 );
+            pool.remove( size - 1 );
+        //} /*else {
+            //pos = new ObjectPosition();
+        //}
+        return pos;
+    }
+
+    private void recycle(ArrayList<ObjectPosition> list) {
+        int size = list.size();
+        for(int i = size - 1; i > -1; --i) {
+            pool.add( list.get(i) );
+        }
+    }
+
+    public void begin() {
+        recycle(gemsType0);
+        recycle(gemsType1);
+        recycle(gemsType2);
+        recycle(gemsType3);
+        recycle(gemsType4);
+        recycle(gemsType5);
+        recycle(gemsType6);
+
         gemsType0.clear();
         gemsType1.clear();
         gemsType2.clear();
@@ -56,84 +87,54 @@ public class BatchDrawer {
         gemsType6.clear();
     }
 
-    public void draw(Match3 match3) {
-        reset();
+    public void add(Match3 match3) {
+        ObjectPosition pos;
         GemPosition gp;
         int size = match3.gemsList.size();
         for(int i = 0; i < size; ++i) {
             gp = match3.gemsList.get(i);
-            sortItem(gp.op, gp.type, gp.visible);
+            pos = getFromPool();
+            pos.init(gp.op);
+            sortItem(pos, gp.type, gp.visible);
         }
-
-        batchDraw();
     }
 
-    public void drawOld(Match3 match3) {
-        reset();
+    public void add(AnimationManager animManager) {
+        if (!animManager.isDone()) {
+            ObjectPosition pos1;
+            ObjectPosition pos2;
+            BaseAnimation baseAnim = animManager.running;
+            if (baseAnim instanceof SwapAnimation) {
+                SwapAnimation anim = (SwapAnimation)baseAnim;
 
-        GemPosition gp;
-        for (int y = 0; y < match3.boardSize; ++y) {
-            for (int x = 0; x < match3.boardSize; ++x) {
-                gp = match3.board[x][y];
-//                public void sortItem(ObjectPosition pos, int type, boolean visible) {
-                sortItem(gp.op, gp.type, gp.visible);
+                pos1 = getFromPool();
+                pos2 = getFromPool();
+                pos1.init(anim.firstAnim.op);
+                pos2.init(anim.secondAnim.op);
+                sortItem(pos1, anim.firstAnim.type, true);
+                sortItem(pos2, anim.secondAnim.type, true);
+                return;
             }
-        }
 
-        batchDraw();
+            if (baseAnim instanceof FallGroupAnimation) {
+                ObjectPosition pos;
+                FallGroupAnimation anim = (FallGroupAnimation)baseAnim;
+                FallAnimation fall;
+                int size = anim.count();
+                for (int i = 0; i < size; ++i) {
+                    fall = anim.getAnimAt(i);
+                    pos = getFromPool();
+                    pos.init(fall.animGemFrom.op);
+                    sortItem(pos, fall.animGemFrom.type, true);
+                }
+            }
+
+//            if (baseAnim instanceof PopAnimation) {
+//            }
+        }
     }
 
-    public void draw(FallGroupAnimation anim) {
-        reset();
-
-        FallAnimation fall;
-        int size = anim.count();
-        for (int i = 0; i < size; ++i) {
-            fall = anim.getAnimAt(i);
-
-//          public void sortItem(ObjectPosition pos, int type, boolean visible) {
-            sortItem(fall.animGemFrom.op, fall.animGemFrom.type, true);
-
-/*
-            model = visuals.gems[ fall.type ];
-
-            float temp;
-            visuals.calcMatricesForObject(fall.animGemFrom.op);
-            visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
-            model.bindData(visuals.pointLightShader);
-            model.draw();
-
-            model = visuals.gemsPlates[ fall.type ];
-
-            temp = fall.animGemFrom.op.tz;
-            fall.animGemFrom.op.tz -= 0.11f;
-            visuals.calcMatricesForObject(fall.animGemFrom.op);
-            visuals.pointLightShader.setUniforms(visuals.color, visuals.lightColor, visuals.lightNorm);
-            model.bindData(visuals.pointLightShader);
-            model.draw();
-
-            fall.animGemFrom.op.tz = temp;
-*/
-        }
-
-        batchDraw();
-    }
-
-    private ObjectPosition getFromPool() {
-        ObjectPosition pos;
-        int size = pool.size();
-        if (size > 0) {
-            pos = pool.get( size - 1 );
-            pool.remove( size - 1 );
-        } else {
-            pos = new ObjectPosition();
-        }
-        return pos;
-    }
-
-    public void draw(Physics physics) {
-        reset();
-
+    public void add(Physics physics) {
         int gemType;
         ObjectPosition position;
         Body body;
@@ -150,15 +151,11 @@ public class BatchDrawer {
             position.setPosition(pos.x, pos.y, 1.0f);
             position.setRot(0f, 0f, degree);
             position.setScale(d, d, 1f);
-
-//            public void sortItem(ObjectPosition pos, int type, boolean visible) {
             sortItem(position, gemType, true);
         }
-
-        batchDraw();
     }
 
-    private void batchDraw() {
+    public void drawAll() {
         glEnable(GL_BLEND);
         drawGemsPlatesByType(gemsType0, GEM_TYPE_0);
         drawGemsPlatesByType(gemsType1, GEM_TYPE_1);
@@ -203,6 +200,8 @@ public class BatchDrawer {
                     gemsType6.add(pos);
                     break;
             }
+        } else {
+            pool.add(pos);
         }
     }
 

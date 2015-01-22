@@ -13,6 +13,7 @@ import com.almagems.mineraider.particlesystem.ParticleManager;
 public class PopAnimation extends BaseAnimation {
 	
 	public enum State {
+        Blow,
 		Pop,
 		Fall
 	}
@@ -28,13 +29,12 @@ public class PopAnimation extends BaseAnimation {
 	public PopAnimation() {
 	}
 
-    @Override
     public void reset() {
         for(int i = 0; i < MAX_GEM_TYPES; ++i) {
             gemTypesCounter[i] = 0;
         }
         isDone = false;
-        state = State.Pop;
+        state = State.Blow;
 
         int size = list.size();
         for(int i = 0; i < size; ++i) {
@@ -174,58 +174,51 @@ public class PopAnimation extends BaseAnimation {
 			break;
 		}
 	}	
-	
-	@Override
-	public void prepare() {
-		ParticleManager particleManager = ParticleManager.getInstance();		
-		for(GemPosition item : list) {
-			particleManager.addParticleEmitterAt(item.op.tx, item.op.ty, item.type);
-		}
-	}
-	
+
 	@Override
 	public void update() {			
 		switch(state) {
-		case Pop:			
-			float z = 0.0f;
-			for (GemPosition item : list) {
-				item.op.tz += 0.4f;
-								
-				if (z < item.op.tz) {
-					z = item.op.tz;
-				}
-			}
-			
-			if (z > 1.0f) {
-				state = State.Fall;
-			}
-			break;
-			
-		case Fall:							
-			for(GemPosition item : list) {
-				addPhysicsEntity(item.op.tx, item.op.ty, item.type);
-			}
-			isDone = true;
-			break;
-		}
-	}
+            case Pop: {
+                float z = 0.0f;
+                int size = list.size();
+                GemPosition gp;
+                for (int i = 0; i < size; ++i) {
+                    gp = list.get(i);
+                    gp.op.tz += 0.4f;
 
-	@Override
-	public void draw() {
-//		Visuals visuals = Visuals.getInstance();		
-//		for (ObjectPosition item : list) {
-//			Model gem = visuals.gems[item.gemType];	
-//			ObjectPosition gp = new ObjectPosition(item.boardX, item.boardY);			
-//			gp.gemType = item.gemType;
-//			gp.position = new Vector(item.position.x, item.position.y, item.position.z);
-//			gp.scale = new Vector(item.scale.x, item.scale.y, item.scale.z);
-//			
-//			visuals.calcMatricesForObject(gp);
-//			visuals.pointLightShader.useProgram();			
-//			visuals.pointLightShader.setTexture(visuals.textures[gp.gemType]);
-//			visuals.pointLightShader.setUniforms(gem.color, visuals.lightColor, visuals.lightNorm);
-//			gem.bindData(visuals.pointLightShader);
-//			gem.draw();
-//		}
+                    if (z < gp.op.tz) {
+                        z = gp.op.tz;
+                    }
+                }
+
+                if (z > 1.0f) {
+                    state = State.Fall;
+                }
+            }
+                break;
+
+            case Fall: {
+                int size = list.size();
+                GemPosition gp;
+                 for(int i = 0; i < size; ++i) {
+                     gp = list.get(i);
+                    addPhysicsEntity(gp.op.tx, gp.op.ty, gp.type);
+                }
+                isDone = true;
+            }
+                break;
+
+            case Blow: {
+                ParticleManager particleManager = ParticleManager.getInstance();
+                int size = list.size();
+                GemPosition gp;
+                for(int i = 0; i < size; ++i) {
+                    gp = list.get(i);
+                    particleManager.addParticleEmitterAt(gp.op.tx, gp.op.ty, gp.type);
+                }
+                state = State.Pop;
+            }
+            break;
+        }
 	}
 }

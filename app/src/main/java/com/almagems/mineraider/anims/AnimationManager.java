@@ -1,7 +1,7 @@
 package com.almagems.mineraider.anims;
 
 public class AnimationManager {	
-	private BaseAnimation running;
+	public BaseAnimation running;
 	public BaseAnimation finished;
 	
 	public AnimationManager() {		
@@ -10,7 +10,6 @@ public class AnimationManager {
 	public void add(BaseAnimation anim) {
 		finished = null;
 		running = anim;
-		running.prepare();
 	}
 	
 	public void update() {		
@@ -23,13 +22,7 @@ public class AnimationManager {
 			}
 		}
 	}
-	
-	public void draw() {
-		if (running != null) {
-			running.draw();
-		}
-	}
-	
+
 	public boolean isDone() {
 		return running == null;
 	}

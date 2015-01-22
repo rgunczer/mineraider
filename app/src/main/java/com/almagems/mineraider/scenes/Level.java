@@ -153,11 +153,9 @@ public class Level extends Scene {
         visuals.dirLightShader.setTexture(visuals.textureGems);
 
         glDisable(GL_BLEND);
-        animManager.draw();
-		drawBoardGems();
+		drawGems();
 		glEnable(GL_DEPTH_TEST);
 
-		drawGemsUnderPhysics();
         drawSelectionMarker();
 
         match3.swapHintManager.draw();
@@ -498,10 +496,6 @@ public class Level extends Scene {
 		edgeDrawer.draw();
 	}
 
-    private void drawGemsUnderPhysics() {
-        ClassicSingleton.getInstance().batchDrawer.draw(physics);
-    }
-
     private void drawPhysicsStatics() {
         visuals.colorShader.useProgram();
 
@@ -616,8 +610,13 @@ public class Level extends Scene {
 		}
 	}
 
-    void drawBoardGems() {
-        ClassicSingleton.getInstance().batchDrawer.draw(match3);
+    void drawGems() {
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+        singleton.batchDrawer.begin();
+        singleton.batchDrawer.add(match3);
+        singleton.batchDrawer.add(animManager);
+        singleton.batchDrawer.add(physics);
+        singleton.batchDrawer.drawAll();
     }
 
 	void drawRailRoad() {

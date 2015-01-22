@@ -21,8 +21,6 @@ public class GemPosition {
 	public ObjectPosition op = new ObjectPosition();	
 	public Sphere boundingSphere;
 	public int type;
-	public float animDirAndStep = 0.0f;
-	public String animAxis;
 	public boolean visible = true;	
     public GemExtras extra = GemExtras.Nothing;
 
@@ -51,8 +49,6 @@ public class GemPosition {
 
         this.boundingSphere = another.boundingSphere;
         this.type = another.type;
-        this.animDirAndStep = another.animDirAndStep;
-        this.animAxis = another.animAxis;
         this.visible = another.visible;
         this.extra = another.extra;
     }

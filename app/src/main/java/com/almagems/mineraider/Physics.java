@@ -23,8 +23,8 @@ public class Physics {
     private final BodyDef gemBodyDef = new BodyDef();
     private final FixtureDef gemFixtureDef = new FixtureDef();
 
-	public static int velIterations = 10; //4;
-	public static int posIterations = 10; //8;
+	public static int velIterations = 2; //4;
+	public static int posIterations = 4; //8;
 	
 	public ArrayList<Body> balls = new ArrayList<Body>();
 	public ArrayList<Body> polygons = new ArrayList<Body>();

@@ -52,7 +52,7 @@ public class MineRaiderRenderer implements Renderer {
 	}
 	
 	public void showSceneLevel() {
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
 		visuals.setProjectionMatrix3D();
 		level.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
 		current = level;

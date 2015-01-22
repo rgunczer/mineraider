@@ -1,76 +1,68 @@
 package com.almagems.mineraider.anims;
 
 import com.almagems.mineraider.GemPosition;
-import com.almagems.mineraider.Visuals;
-import com.almagems.mineraider.objects.Model;
-
 
 public class SwapAnimation extends BaseAnimation {
-	public GemPosition firstAnim;
-	public GemPosition secondAnim;
-	
-	private GemPosition first;
-	private GemPosition second;
-	
+	public final GemPosition firstAnim;
+	public final GemPosition secondAnim;
+
+    private GemPosition firstGem;
+    private GemPosition secondGem;
+
 	private boolean animAxisY;	
 	public boolean undo;	
 	
 	private float prevDiff1;
 	private float prevDiff2;
 	
-	private final float animSpeed = 0.3f;
+	private final float animStep = 0.3f;
+
+    private float firstAnimStepAndDir;
+    private float secondAnimStepAndDir;
 
     // ctor
 	public SwapAnimation() {
-
+        firstAnim = new GemPosition();
+        secondAnim = new GemPosition();
     }
 
-    public void init(GemPosition firstSelectedGem, GemPosition secondSelectedGem, boolean undo) {
+    public void init(GemPosition firstSelected, GemPosition secondSelected, boolean undo) {
 		this.undo = undo;
-		
-		firstSelectedGem.visible = false;
-		secondSelectedGem.visible = false;
-		
-		this.first = firstSelectedGem;
-		this.second = secondSelectedGem;
-		
-		this.firstAnim = new GemPosition(first);
-		this.secondAnim = new GemPosition(second);
-		
-		this.firstAnim.type = first.type;
-		this.secondAnim.type = second.type;
-		
-		this.firstAnim.op.setPosition(first.op.tx, first.op.ty, first.op.tz);
-		this.secondAnim.op.setPosition(second.op.tx, second.op.ty, second.op.tz);
-		
+
+        firstGem = firstSelected;
+        secondGem = secondSelected;
+
+		firstSelected.visible = false;
+		secondSelected.visible = false;
+
+		this.firstAnim.init(firstSelected);
+		this.secondAnim.init(secondSelected);
+
 		final float scale = 0.1f;
-		
-		this.firstAnim.op.setScale(first.op.sx + scale, first.op.sy + scale, first.op.sz + scale);
-		this.secondAnim.op.setScale(second.op.sx - scale, second.op.sy - scale, second.op.sz - scale);		
+		firstAnim.op.setScale(firstAnim.op.sx + scale, firstAnim.op.sy + scale, firstAnim.op.sz + scale);
+		secondAnim.op.setScale(secondAnim.op.sx - scale, secondAnim.op.sy - scale, secondAnim.op.sz - scale);
 		
 		// determinde axis
-		if (first.boardX == second.boardX) {
-			//System.out.println("col anim...");			
+		if (firstAnim.boardX == secondAnim.boardX) {
 			animAxisY = true;			
 			
 			// determine direction
-			if (first.boardY < second.boardY) {
-				this.firstAnim.animDirAndStep = animSpeed;				
-				this.secondAnim.animDirAndStep = -animSpeed;
+			if (firstAnim.boardY < secondAnim.boardY) {
+				firstAnimStepAndDir = animStep;
+				secondAnimStepAndDir = -animStep;
 			} else {				
-				this.firstAnim.animDirAndStep = -animSpeed;			
-				this.secondAnim.animDirAndStep = animSpeed;				
+				firstAnimStepAndDir = -animStep;
+				secondAnimStepAndDir = animStep;
 			}			
-		} else if (first.boardY == second.boardY) {
-			//System.out.println("row anim...");			
+		} else if (firstAnim.boardY == secondAnim.boardY) {
 			animAxisY = false;
 						
-			if (first.boardX > second.boardX) {
-				this.firstAnim.animDirAndStep = -animSpeed;				
-				this.secondAnim.animDirAndStep = animSpeed;	
+			if (firstAnim.boardX > secondAnim.boardX) {
+				firstAnimStepAndDir = -animStep;
+				secondAnimStepAndDir = animStep;
 			} else {
-				this.firstAnim.animDirAndStep = animSpeed;				
-				this.secondAnim.animDirAndStep = -animSpeed;				
+				firstAnimStepAndDir = animStep;
+				secondAnimStepAndDir = -animStep;
 			}
 		} else {
 			//System.out.println("Unable to animate not in the same row or column!");
@@ -79,49 +71,41 @@ public class SwapAnimation extends BaseAnimation {
 
 		// calc prevDiff
 		if (animAxisY) {
-			firstAnim.op.setPosition(firstAnim.op.tx, firstAnim.op.ty + firstAnim.animDirAndStep, firstAnim.op.tz);
-			secondAnim.op.setPosition(secondAnim.op.tx, secondAnim.op.ty + secondAnim.animDirAndStep, secondAnim.op.tz);			
+			firstAnim.op.setPosition(firstAnim.op.tx, firstAnim.op.ty + firstAnimStepAndDir, firstAnim.op.tz);
+			secondAnim.op.setPosition(secondAnim.op.tx, secondAnim.op.ty + secondAnimStepAndDir, secondAnim.op.tz);
 			
-			prevDiff1 = Math.abs(second.op.ty - firstAnim.op.ty);
-			prevDiff2 = Math.abs(first.op.ty - secondAnim.op.ty);								
+			prevDiff1 = Math.abs(secondAnim.op.ty - firstAnim.op.ty);
+			prevDiff2 = Math.abs(firstAnim.op.ty - secondAnim.op.ty);
 		} else {
-			firstAnim.op.setPosition(firstAnim.op.tx + firstAnim.animDirAndStep, firstAnim.op.ty, firstAnim.op.tz);
-			secondAnim.op.setPosition(secondAnim.op.tx + secondAnim.animDirAndStep, secondAnim.op.ty, secondAnim.op.tz);			
+			firstAnim.op.setPosition(firstAnim.op.tx + firstAnimStepAndDir, firstAnim.op.ty, firstAnim.op.tz);
+			secondAnim.op.setPosition(secondAnim.op.tx + secondAnimStepAndDir, secondAnim.op.ty, secondAnim.op.tz);
 			
-			prevDiff1 = Math.abs(second.op.tx - firstAnim.op.tx);
-			prevDiff2 = Math.abs(first.op.tx - secondAnim.op.tx);									
+			prevDiff1 = Math.abs(secondAnim.op.tx - firstAnim.op.tx);
+			prevDiff2 = Math.abs(firstAnim.op.tx - secondAnim.op.tx);
 		}
 		
 		isDone = false;
-	}
-
-    @Override
-    public void reset() {
-    }
-
-	@Override
-	public void prepare() {
 	}
 	
 	@Override
 	public void update() {				
 		if (animAxisY) {			
-			firstAnim.op.setPosition(firstAnim.op.tx, firstAnim.op.ty + firstAnim.animDirAndStep, firstAnim.op.tz);
-			secondAnim.op.setPosition(secondAnim.op.tx, secondAnim.op.ty + secondAnim.animDirAndStep, secondAnim.op.tz);			
+			firstAnim.op.setPosition(firstAnim.op.tx, firstAnim.op.ty + firstAnimStepAndDir, firstAnim.op.tz);
+			secondAnim.op.setPosition(secondAnim.op.tx, secondAnim.op.ty + secondAnimStepAndDir, secondAnim.op.tz);
 			
-			float diff1 = Math.abs(second.op.ty - firstAnim.op.ty);
-			float diff2 = Math.abs(first.op.ty - secondAnim.op.ty);
+			float diff1 = Math.abs(secondGem.op.ty - firstAnim.op.ty);
+			float diff2 = Math.abs(firstGem.op.ty - secondAnim.op.ty);
 					
 			boolean don1 = false;
 			boolean don2 = false;
 			
-			if (diff1 < prevDiff1) {
+			if (diff1 <= prevDiff1) {
 				prevDiff1 = diff1;
 			} else {
 				don1 = true;
 			}
 			
-			if (diff2 < prevDiff2) {
+			if (diff2 <= prevDiff2) {
 				prevDiff2 = diff2;
 			} else {
 				don2 = true;
@@ -131,22 +115,22 @@ public class SwapAnimation extends BaseAnimation {
 				isDone = true;
 			}
 		} else {
-			firstAnim.op.setPosition(firstAnim.op.tx + firstAnim.animDirAndStep, firstAnim.op.ty, firstAnim.op.tz);
-			secondAnim.op.setPosition(secondAnim.op.tx + secondAnim.animDirAndStep, secondAnim.op.ty, secondAnim.op.tz);			
+			firstAnim.op.setPosition(firstAnim.op.tx + firstAnimStepAndDir, firstAnim.op.ty, firstAnim.op.tz);
+			secondAnim.op.setPosition(secondAnim.op.tx + secondAnimStepAndDir, secondAnim.op.ty, secondAnim.op.tz);
 			
-			float diff1 = Math.abs(second.op.tx - firstAnim.op.tx);
-			float diff2 = Math.abs(first.op.tx - secondAnim.op.tx);
+			float diff1 = Math.abs(secondGem.op.tx - firstAnim.op.tx);
+			float diff2 = Math.abs(firstGem.op.tx - secondAnim.op.tx);
 		
 			boolean don1 = false;
 			boolean don2 = false;
 			
-			if (diff1 < prevDiff1) {
+			if (diff1 <= prevDiff1) {
 				prevDiff1 = diff1;
 			} else {
 				don1 = true;
 			}
 			
-			if (diff2 < prevDiff2) {
+			if (diff2 <= prevDiff2) {
 				prevDiff2 = diff2;
 			} else {
 				don2 = true;
@@ -156,37 +140,5 @@ public class SwapAnimation extends BaseAnimation {
 				isDone = true;
 			}			
 		}
-	}
-	
-	@Override
-	public void draw() {
-		Model gem;
-		Visuals visuals = Visuals.getInstance();
-
-		gem = visuals.gems[firstAnim.type];
-		visuals.calcMatricesForObject(firstAnim.op);
-		visuals.pointLightShader.setUniforms();
-		gem.bindData(visuals.pointLightShader);
-		gem.draw();
-
-        gem = visuals.gemsPlates[firstAnim.type];
-        visuals.calcMatricesForObject(firstAnim.op);
-        visuals.pointLightShader.setUniforms();
-        gem.bindData(visuals.pointLightShader);
-        gem.draw();
-
-
-        gem = visuals.gems[secondAnim.type];
-		visuals.calcMatricesForObject(secondAnim.op);
-		visuals.pointLightShader.setUniforms();
-		gem.bindData(visuals.pointLightShader);
-		gem.draw();
-
-        gem = visuals.gemsPlates[secondAnim.type];
-        visuals.calcMatricesForObject(secondAnim.op);
-        visuals.pointLightShader.setUniforms();
-        gem.bindData(visuals.pointLightShader);
-        gem.draw();
-
 	}
 }

@@ -185,7 +185,7 @@ public class Level extends Scene {
         visuals.dirLightShader.setTexture(visuals.textureRailRoad);
 		drawRailRoad();
 
-		drawMineCarts();
+    	drawMineCarts();
 
         visuals.dirLightShader.setTexture(visuals.textureCrate);
 		drawCrates();
@@ -193,7 +193,7 @@ public class Level extends Scene {
         visuals.dirLightShader.setTexture(visuals.texturePickAxe);
 		drawPickAxes();
 
-        //drawPhysics();
+//        drawPhysics();
 		particleManager.draw();
 
         ClassicSingleton.getInstance().hud.draw();

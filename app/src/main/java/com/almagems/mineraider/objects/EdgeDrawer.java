@@ -1,8 +1,7 @@
 package com.almagems.mineraider.objects;
 
-import static android.opengl.GLES20.GL_LINES;
-import static android.opengl.GLES20.glDrawArrays;
-import static com.almagems.mineraider.Constants.BYTES_PER_FLOAT;
+import static android.opengl.GLES20.*;
+import static com.almagems.mineraider.Constants.*;
 
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.shaders.ColorShader;

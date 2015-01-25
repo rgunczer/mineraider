@@ -8,13 +8,7 @@ import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Text;
 
-import static android.opengl.GLES20.GL_BLEND;
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
-import static android.opengl.GLES20.GL_SRC_ALPHA;
-import static android.opengl.GLES20.glBlendFunc;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
+import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 
 

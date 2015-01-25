@@ -10,8 +10,7 @@ import com.almagems.mineraider.util.Texture;
 import com.almagems.mineraider.util.TexturedQuad;
 import com.almagems.mineraider.util.Vector;
 
-import static android.opengl.GLES20.GL_TRIANGLES;
-import static android.opengl.GLES20.glDrawArrays;
+import static android.opengl.GLES20.*;
 
 public class Quad {
     public final ObjectPosition op;
@@ -24,12 +23,9 @@ public class Quad {
     }
 
     public boolean isHit(float normalizedX, float normalizedY) {
-
-        Vector pos = new Vector(op.tx, op.ty, op.tz);
-        float w = op.sx;
         float h = op.sy;
 
-        if ( normalizedY > (pos.y - h) && normalizedY < (pos.y + h) ) {
+        if ( normalizedY > (op.ty - h) && normalizedY < (op.ty + h) ) {
             System.out.println("Here....");
             return true;
         }
@@ -67,14 +63,14 @@ public class Quad {
 
         if (!flipUTextureCoordinate) {
             float[] vertexData = {
-                    // x, y, z, 		// r g b a                            u, v,
-                    -1f, -1f, 0.0f, color.r, color.g, color.b, color.a, tx0, ty1,
-                    1f, -1f, 0.0f, color.r, color.g, color.b, color.a, tx1, ty1,
-                    1f, 1f, 0.0f, color.r, color.g, color.b, color.a, tx1, ty0,
+                    // x, y, z, 		// r g b a                              u, v,
+                    -1f, -1f, 0.0f,     color.r, color.g, color.b, color.a,     tx0, ty1,
+                     1f, -1f, 0.0f,     color.r, color.g, color.b, color.a,     tx1, ty1,
+                     1f,  1f, 0.0f,     color.r, color.g, color.b, color.a,     tx1, ty0,
 
-                    -1f, -1f, 0.0f, color.r, color.g, color.b, color.a, tx0, ty1,
-                    1f, 1f, 0.0f, color.r, color.g, color.b, color.a, tx1, ty0,
-                    -1f, 1f, 0.0f, color.r, color.g, color.b, color.a, tx0, ty0
+                    -1f, -1f, 0.0f,     color.r, color.g, color.b, color.a,     tx0, ty1,
+                     1f,  1f, 0.0f,     color.r, color.g, color.b, color.a,     tx1, ty0,
+                    -1f,  1f, 0.0f,     color.r, color.g, color.b, color.a,     tx0, ty0
             };
             vertexArray = new VertexArray(vertexData);
         } else {

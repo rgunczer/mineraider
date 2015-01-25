@@ -4,7 +4,6 @@ import com.almagems.mineraider.anims.AnimationManager;
 import com.almagems.mineraider.anims.BaseAnimation;
 import com.almagems.mineraider.anims.FallAnimation;
 import com.almagems.mineraider.anims.FallGroupAnimation;
-import com.almagems.mineraider.anims.PopAnimation;
 import com.almagems.mineraider.anims.SwapAnimation;
 import com.almagems.mineraider.objects.Model;
 
@@ -13,9 +12,7 @@ import org.jbox2d.dynamics.Body;
 
 import java.util.ArrayList;
 
-import static android.opengl.GLES20.GL_BLEND;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
+import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.GEM_FRAGMENT_SIZE;
 import static com.almagems.mineraider.Constants.GEM_TYPE_0;
 import static com.almagems.mineraider.Constants.GEM_TYPE_1;

@@ -1,10 +1,6 @@
 package com.almagems.mineraider.shaders;
 
-import static android.opengl.GLES20.glGetAttribLocation;
-import static android.opengl.GLES20.glGetUniformLocation;
-import static android.opengl.GLES20.glUniform3f;
-import static android.opengl.GLES20.glUniform4f;
-import static android.opengl.GLES20.glUniformMatrix4fv;
+import static android.opengl.GLES20.*;
 import android.content.Context;
 
 import com.almagems.mineraider.R;

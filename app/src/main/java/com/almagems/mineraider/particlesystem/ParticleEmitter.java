@@ -2,10 +2,7 @@ package com.almagems.mineraider.particlesystem;
 
 import java.util.Random;
 
-import static android.opengl.Matrix.setRotateEulerM;
-import static android.opengl.Matrix.multiplyMV;
-
-import android.graphics.Color;
+import static android.opengl.Matrix.*;
 
 import com.almagems.mineraider.util.Vector;
 

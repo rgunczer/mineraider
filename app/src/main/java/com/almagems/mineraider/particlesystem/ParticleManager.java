@@ -1,12 +1,6 @@
 package com.almagems.mineraider.particlesystem;
 
-import static android.opengl.GLES20.GL_BLEND;
-import static android.opengl.GLES20.GL_ONE;
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.glBlendFunc;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
-import static com.almagems.mineraider.Constants.GEM_TYPE_0;
+import static android.opengl.GLES20.*;
 
 import java.util.ArrayList;
 

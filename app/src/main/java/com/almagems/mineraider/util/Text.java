@@ -5,9 +5,7 @@ import com.almagems.mineraider.ObjectPosition;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 
-import static android.opengl.GLES20.GL_TRIANGLES;
-import static android.opengl.GLES20.glDrawArrays;
-
+import static android.opengl.GLES20.*;
 
 public class Text {
 

@@ -5,8 +5,7 @@ import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.util.MyColor;
 
-import static android.opengl.GLES20.GL_TRIANGLES;
-import static android.opengl.GLES20.glDrawArrays;
+import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.util.MyUtils.LERP;
 
 public class Fade extends EffectAnim {

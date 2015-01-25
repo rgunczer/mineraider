@@ -13,11 +13,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import com.almagems.mineraider.Constants;
+import static com.almagems.mineraider.Constants.*;
 
 public class VertexBuffer {
 
-	private final int bufferId;
+	public final int bufferId;
 	
 	public VertexBuffer(float[] vertexData) {
 		// allocate buffer
@@ -35,24 +35,26 @@ public class VertexBuffer {
 
 		// Transfer data to native memory
 		FloatBuffer vertexArray = ByteBuffer
-				.allocateDirect(vertexData.length * Constants.BYTES_PER_FLOAT)
+				.allocateDirect(vertexData.length * BYTES_PER_FLOAT)
 				.order(ByteOrder.nativeOrder())
 				.asFloatBuffer()
 				.put(vertexData);
 		vertexArray.position(0);
 		
 		// Transfer data from native memory to GPU buffer
-		glBufferData(GL_ARRAY_BUFFER, vertexArray.capacity() * Constants.BYTES_PER_FLOAT, vertexArray, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertexArray.capacity() * BYTES_PER_FLOAT, vertexArray, GL_STATIC_DRAW);
 		
 		// IMPORTANT: unbind from the buffer when we're done with it
 		glBindBuffer(GL_ARRAY_BUFFER, 0);		
 	}
 	
 	public void setVertexAttribPointer(int dataOffset, int attributeLocation, int componentCount, int stride) {
-		glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+		//glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+
 		glVertexAttribPointer(attributeLocation, componentCount, GL_FLOAT, false, stride, dataOffset);
-		glEnableVertexAttribArray(attributeLocation);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glEnableVertexAttribArray(attributeLocation);
+
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	public void bind() {

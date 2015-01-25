@@ -1,11 +1,7 @@
 package com.almagems.mineraider.shaders;
 
-import static android.opengl.GLES20.GL_TEXTURE0;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
-import static android.opengl.GLES20.glActiveTexture;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glUniform1i;
-import static android.opengl.GLES20.glUseProgram;
+import static android.opengl.GLES20.*;
+
 import android.content.Context;
 
 import com.almagems.mineraider.Visuals;

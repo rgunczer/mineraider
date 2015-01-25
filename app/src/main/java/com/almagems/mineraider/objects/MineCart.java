@@ -2,10 +2,9 @@ package com.almagems.mineraider.objects;
 
 import java.util.Random;
 
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static com.almagems.mineraider.Constants.MAX_GEM_TYPES;
+import static android.opengl.GLES20.*;
+
+import static com.almagems.mineraider.Constants.*;
 
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;

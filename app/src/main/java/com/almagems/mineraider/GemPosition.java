@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 import com.almagems.mineraider.util.Sphere;
 
-import static com.almagems.mineraider.Constants.GEM_TYPE_NONE;
+import static com.almagems.mineraider.Constants.*;
 
 
 public class GemPosition {

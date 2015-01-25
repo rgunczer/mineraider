@@ -1,18 +1,7 @@
 package com.almagems.mineraider.scenes;
 
-import static android.opengl.GLES20.GL_BLEND;
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
-import static android.opengl.GLES20.GL_ONE;
-import static android.opengl.GLES20.GL_SRC_ALPHA;
-import static android.opengl.GLES20.glBlendFunc;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
-import static android.opengl.Matrix.multiplyMM;
-import static android.opengl.Matrix.multiplyMV;
-import static android.opengl.Matrix.rotateM;
-import static android.opengl.Matrix.setIdentityM;
-import static android.opengl.Matrix.translateM;
+import static android.opengl.GLES20.*;
+import static android.opengl.Matrix.*;
 import static com.almagems.mineraider.Constants.*;
 
 import java.util.ArrayList;
@@ -201,6 +190,7 @@ public class Level extends Scene {
         // needs to be set for picking to work correctly
         visuals.setProjectionMatrix3D();
         visuals.updateViewProjMatrix();
+
 	}
 	
 	@Override

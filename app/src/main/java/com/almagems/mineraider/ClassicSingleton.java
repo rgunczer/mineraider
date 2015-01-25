@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 
 public class ClassicSingleton {
     private static ClassicSingleton instance = null;
+    public static float adHeight;
 	public MineRaiderRenderer renderer = null;
     public MineRaiderActivity activity = null;
 	public MineCart cart1 = null;

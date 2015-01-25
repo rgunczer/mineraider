@@ -1,9 +1,7 @@
 package com.almagems.mineraider.particlesystem;
 
-import static com.almagems.mineraider.Constants.BYTES_PER_FLOAT;
-
-import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.GL_POINTS;
+import static com.almagems.mineraider.Constants.*;
+import static android.opengl.GLES20.*;
 
 import android.graphics.Color;
 

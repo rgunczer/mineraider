@@ -1,18 +1,7 @@
 package com.almagems.mineraider;
 
-import static android.opengl.GLES20.GL_TEXTURE_2D;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.Matrix.invertM;
-import static android.opengl.Matrix.multiplyMM;
-import static android.opengl.Matrix.multiplyMV;
-import static android.opengl.Matrix.scaleM;
-import static android.opengl.Matrix.rotateM;
-import static android.opengl.Matrix.setIdentityM;
-import static android.opengl.Matrix.setLookAtM;
-import static android.opengl.Matrix.translateM;
-import static android.opengl.Matrix.invertM;
-import static android.opengl.Matrix.transposeM;
-import static android.opengl.Matrix.orthoM;
+import static android.opengl.GLES20.*;
+import static android.opengl.Matrix.*;
 import static com.almagems.mineraider.Constants.*;
 
 import android.content.Context;
@@ -389,9 +378,11 @@ public class Visuals {
 //		final float aspectRatio = width > height ? (float)width / (float)height : (float)height / (float)width;
 
 		if (width > height) {
-			orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f); // landscape
+            // landscape
+			orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f);
 		} else {
-			orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f); // portrait
+		    // portrait
+			orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
 		}
 
         setIdentityM(viewMatrix, 0);

@@ -1,18 +1,6 @@
 package com.almagems.mineraider;
 
-import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
-import static android.opengl.GLES20.GL_CULL_FACE;
-import static android.opengl.GLES20.GL_DEPTH_BUFFER_BIT;
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-
-import static android.opengl.GLES20.GL_LESS;
-import static android.opengl.GLES20.GL_ONE;
-import static android.opengl.GLES20.glDepthFunc;
-import static android.opengl.GLES20.glEnable;
-import static android.opengl.GLES20.glBlendFunc;
-import static android.opengl.GLES20.glClear;
-import static android.opengl.GLES20.glClearColor;
-import static android.opengl.GLES20.glViewport;
+import static android.opengl.GLES20.*;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -86,10 +74,10 @@ public class MineRaiderRenderer implements Renderer {
 	public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
 		limitFrameRate(30);
 		//glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
+		glClearColor(1.0f, 0.3f, 0.3f, 0.0f);
 		//glClearColor(0.1f, 0.1f, 0.1f, 0.0f);		
 		
-		glEnable(GL_CULL_FACE);	
+		glDisable(GL_CULL_FACE);
 		glDepthFunc(GL_LESS);
 		//glDepthMask(true);
 					
@@ -134,11 +122,15 @@ public class MineRaiderRenderer implements Renderer {
 
 	@Override
 	public void onSurfaceChanged(GL10 glUnused, int width, int height) {
-		glViewport(0, 0, width, height);
+        float w = width;
+        float h = height - ClassicSingleton.adHeight;
+		glViewport(0, 0, (int)w, (int)h);
+        //glViewport(0, 0, 200, 400);
 
-        Visuals.screenWidth = width;
-        Visuals.screenHeight = height;
-        Visuals.aspectRatio = width > height ? (float)width / (float)height : (float)height / (float)width;
+
+        Visuals.screenWidth = w;
+        Visuals.screenHeight = h;
+        Visuals.aspectRatio = w > h ? w / h : h / w;
         Visuals.scaleFactor = Visuals.screenWidth / Visuals.referenceScreenWidth;
 
         ParticleShader.pointSize = width * 0.1f;

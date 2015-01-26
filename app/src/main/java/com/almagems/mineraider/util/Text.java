@@ -1,7 +1,7 @@
 package com.almagems.mineraider.util;
 
 import com.almagems.mineraider.EffectAnims.EffectAnim;
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 
@@ -14,7 +14,7 @@ public class Text {
     private String text;
     private float fontScale;
     private float fontSpacingScale = 0.06f;
-    public ObjectPosition pos = new ObjectPosition();
+    public PositionInfo pos = new PositionInfo();
     private EffectAnim anim;
 
 

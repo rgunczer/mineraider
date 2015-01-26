@@ -7,10 +7,10 @@ public abstract class Scene {
 	protected float touchDownX;
 	protected float touchDownY;
 	
-	protected Visuals visuals;
-	
+	public static Visuals visuals;
+
+    //  ctor
 	public Scene() {
-		visuals = Visuals.getInstance();
 	}
 
 	public abstract void surfaceChanged(int width, int height);

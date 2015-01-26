@@ -1,31 +1,31 @@
 package com.almagems.mineraider.objects;
 
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
-import com.almagems.mineraider.shaders.TextureShader;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Texture;
 import com.almagems.mineraider.util.TexturedQuad;
-import com.almagems.mineraider.util.Vector;
 
 import static android.opengl.GLES20.*;
 
 public class Quad {
-    public final ObjectPosition op;
+    public final PositionInfo pos;
     private VertexArray vertexArray;
     private int textureId;
 
     // ctor
     public Quad() {
-        op = new ObjectPosition();
+        pos = new PositionInfo();
     }
 
-    public boolean isHit(float normalizedX, float normalizedY) {
-        float h = op.sy;
+    public boolean isHit(float x, float y) {
+        final float h = pos.sy;
+        final float w = pos.sx;
 
-        if ( normalizedY > (op.ty - h) && normalizedY < (op.ty + h) ) {
+        if ( y > (pos.ty - h) && y < (pos.ty + h) &&
+             x > (pos.tx - w) && x < (pos.tx + w) ) {
             System.out.println("Here....");
             return true;
         }
@@ -36,9 +36,9 @@ public class Quad {
     public void init(int textureId, MyColor color, Rectangle rect, boolean flipUTextureCoordinate) {
         this.textureId = textureId;
 
-        op.setPosition(0f, 0f, 0f);
-        op.setRot(0f, 0f, 0f);
-        op.setScale(1f, 1f, 1f);
+        pos.trans(0f, 0f, 0f);
+        pos.rot(0f, 0f, 0f);
+        pos.scale(1f, 1f, 1f);
 
         float x = rect.x;
         float y = rect.y;
@@ -94,7 +94,7 @@ public class Quad {
 
     public void draw() {
         Visuals visuals = Visuals.getInstance();
-        visuals.calcMatricesForObject(op);
+        visuals.calcMatricesForObject(pos);
         visuals.textureShader.useProgram();
         visuals.textureShader.setTexture(textureId);
         visuals.textureShader.setUniforms(visuals.mvpMatrix);

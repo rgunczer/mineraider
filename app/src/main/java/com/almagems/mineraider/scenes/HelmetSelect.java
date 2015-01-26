@@ -29,12 +29,12 @@ public class HelmetSelect extends Scene {
     private final Text textTitle;
     private final Text textContinue;
     private final Text textBack;
-    private final Visuals visuals;
 
     private boolean showNextHelmetArrow;
     private boolean showPrevHelmetArrow;
 
 
+    // ctor
     public HelmetSelect() {
         helmets = new Quad[MAX_HELMET_TYPES];
         for (int i = 0; i < MAX_HELMET_TYPES; ++i) {
@@ -48,8 +48,6 @@ public class HelmetSelect extends Scene {
         textTitle = new Text();
         textContinue = new Text();
         textBack = new Text();
-
-        visuals = Visuals.getInstance();
     }
 
     public void init() {
@@ -70,28 +68,28 @@ public class HelmetSelect extends Scene {
 
         textTitle.init("SELECT YOUR HELMET", new MyColor(1f, 0f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.6f);
         textWidth = textTitle.getTextWidth();
-        textTitle.pos.setPosition(-textWidth / 2f, Visuals.aspectRatio * 0.7f, 0f);
-        textTitle.pos.setRot(0f, 0f, 0f);
-        textTitle.pos.setScale(1f, 1f, 1f);
+        textTitle.pos.trans(-textWidth / 2f, Visuals.aspectRatio * 0.7f, 0f);
+        textTitle.pos.rot(0f, 0f, 0f);
+        textTitle.pos.scale(1f, 1f, 1f);
 
         textContinue.init("CONTINUE", new MyColor(1f, 0f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
         textWidth = textContinue.getTextWidth();
-        textContinue.pos.setPosition(0.5f - (textWidth / 2f) , -Visuals.aspectRatio * 0.9f, 0f);
-        textContinue.pos.setRot(0f, 0f, 0f);
-        textContinue.pos.setScale(1f, 1f, 1f);
+        textContinue.pos.trans(0.5f - (textWidth / 2f) , -Visuals.aspectRatio * 0.9f, 0f);
+        textContinue.pos.rot(0f, 0f, 0f);
+        textContinue.pos.scale(1f, 1f, 1f);
 
         textBack.init("BACK", new MyColor(1f, 0f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
         textWidth = textContinue.getTextWidth();
-        textBack.pos.setPosition(-0.5f - (textWidth / 2f), -Visuals.aspectRatio * 0.9f, 0f);
-        textBack.pos.setRot(0f, 0f, 0f);
-        textBack.pos.setScale(1f, 1f, 1f);
+        textBack.pos.trans(-0.5f - (textWidth / 2f), -Visuals.aspectRatio * 0.9f, 0f);
+        textBack.pos.rot(0f, 0f, 0f);
+        textBack.pos.scale(1f, 1f, 1f);
 
 
         textScore.init("SCORE", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.0f);
         textWidth = textScore.getTextWidth();
-        textScore.pos.setPosition(-textWidth / 2f, -0.4f, 0f);
-        textScore.pos.setRot(0f, 0f, 0f);
-        textScore.pos.setScale(1f, 1f, 1f);
+        textScore.pos.trans(-textWidth / 2f, -0.4f, 0f);
+        textScore.pos.rot(0f, 0f, 0f);
+        textScore.pos.scale(1f, 1f, 1f);
 
         float quadScale = 0.1f;
         final boolean flipUCoordinate = false;
@@ -99,42 +97,42 @@ public class HelmetSelect extends Scene {
 
 
         leftArrow.init(visuals.textureNextArrow, colorWhite, new Rectangle(0f, 0f, -256f, 256f), flipUCoordinate);
-        leftArrow.op.setPosition(-0.9f, 0.0f, 0f);
-        leftArrow.op.setRot(0f, 0f, 0f);
-        leftArrow.op.setScale(quadScale, quadScale, 1f);
+        leftArrow.pos.trans(-0.9f, 0.0f, 0f);
+        leftArrow.pos.rot(0f, 0f, 0f);
+        leftArrow.pos.scale(quadScale, quadScale, 1f);
 
 
         rightArrow.init(visuals.textureNextArrow, colorWhite, new Rectangle(0f, 0f, 256f, 256f), flipUCoordinate);
-        rightArrow.op.setPosition(0.9f, 0.0f, 0f);
-        rightArrow.op.setRot(0f, 0f, 0f);
-        rightArrow.op.setScale(quadScale, quadScale, 1f);
+        rightArrow.pos.trans(0.9f, 0.0f, 0f);
+        rightArrow.pos.rot(0f, 0f, 0f);
+        rightArrow.pos.scale(quadScale, quadScale, 1f);
 
 
         quadScale = 0.3f;
 
         // red
         helmets[RED_HELMET].init(visuals.textureHelmets, colorWhite, rectRedHelmet, flipUCoordinate);
-        helmets[RED_HELMET].op.setPosition(0.0f, 0.0f, 0f);
-        helmets[RED_HELMET].op.setRot(0f, 0f, 0f);
-        helmets[RED_HELMET].op.setScale(quadScale, quadScale, 1f);
+        helmets[RED_HELMET].pos.trans(0.0f, 0.0f, 0f);
+        helmets[RED_HELMET].pos.rot(0f, 0f, 0f);
+        helmets[RED_HELMET].pos.scale(quadScale, quadScale, 1f);
 
         // green
         helmets[GREEN_HELMET].init(visuals.textureHelmets, colorWhite, rectGreenHelmet, flipUCoordinate);
-        helmets[GREEN_HELMET].op.setPosition(0.0f, 0.0f, 0f);
-        helmets[GREEN_HELMET].op.setRot(0f, 0f, 0f);
-        helmets[GREEN_HELMET].op.setScale(quadScale, quadScale, 1f);
+        helmets[GREEN_HELMET].pos.trans(0.0f, 0.0f, 0f);
+        helmets[GREEN_HELMET].pos.rot(0f, 0f, 0f);
+        helmets[GREEN_HELMET].pos.scale(quadScale, quadScale, 1f);
 
         // blue
         helmets[BLUE_HELMET].init(visuals.textureHelmets, colorWhite, rectBlueHelmet, flipUCoordinate);
-        helmets[BLUE_HELMET].op.setPosition(0.0f, 0.0f, 0f);
-        helmets[BLUE_HELMET].op.setRot(0f, 0f, 0f);
-        helmets[BLUE_HELMET].op.setScale(quadScale, quadScale, 1f);
+        helmets[BLUE_HELMET].pos.trans(0.0f, 0.0f, 0f);
+        helmets[BLUE_HELMET].pos.rot(0f, 0f, 0f);
+        helmets[BLUE_HELMET].pos.scale(quadScale, quadScale, 1f);
 
         // yellow
         helmets[YELLOW_HELMET].init(visuals.textureHelmets, colorWhite, rectYellowHelmet, flipUCoordinate);
-        helmets[YELLOW_HELMET].op.setPosition(0.0f, 0.0f, 0f);
-        helmets[YELLOW_HELMET].op.setRot(0f, 0f, 0f);
-        helmets[YELLOW_HELMET].op.setScale(quadScale, quadScale, 1f);
+        helmets[YELLOW_HELMET].pos.trans(0.0f, 0.0f, 0f);
+        helmets[YELLOW_HELMET].pos.rot(0f, 0f, 0f);
+        helmets[YELLOW_HELMET].pos.scale(quadScale, quadScale, 1f);
 
         ClassicSingleton singleton = ClassicSingleton.getInstance();
         currentHelmetIndex = singleton.selectedHelmetIndex;
@@ -149,9 +147,9 @@ public class HelmetSelect extends Scene {
 
         textScore.init("" + score, new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.0f);
         float textWidth = textScore.getTextWidth();
-        textScore.pos.setPosition(-textWidth / 2f, -0.4f, 0f);
-        textScore.pos.setRot(0f, 0f, 0f);
-        textScore.pos.setScale(1f, 1f, 1f);
+        textScore.pos.trans(-textWidth / 2f, -0.4f, 0f);
+        textScore.pos.rot(0f, 0f, 0f);
+        textScore.pos.scale(1f, 1f, 1f);
     }
 
     private void stepCurrentHelmet(int step) {

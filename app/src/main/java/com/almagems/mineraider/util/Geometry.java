@@ -1,5 +1,9 @@
 package com.almagems.mineraider.util;
 
+import com.almagems.mineraider.Visuals;
+
+import static android.opengl.Matrix.*;
+
 public class Geometry {
 
     public static Vector intersectionPoint(Ray ray, Plane plane) {
@@ -38,7 +42,54 @@ public class Geometry {
 		float distanceFromPointToRay = areaOfTriangleTimesTwo / lengthOfBase;
 		return distanceFromPointToRay;
 	}
-	
 
-	
+    public static void divideByW(float[] vector) {
+        vector[0] /= vector[3];
+        vector[1] /= vector[3];
+        vector[2] /= vector[3];
+    }
+
+    public static Ray convertNormalized2DPointToRay(float normalizedX, float normalizedY, float[] invertedViewProjectionMatrix) {
+        // Convert normalized device coordinates (NDC) into world-space coordinates.
+        // We will pick a point on the near and far planes, and draw a
+        // line between them. To do this transform, we need to first multiply by
+        // the inverse matrix, and then we need to undo the perspective divide
+        final float[] nearPointNdc = { normalizedX, normalizedY, -1, 1 };
+        final float[] farPointNdc  = { normalizedX, normalizedY,  1, 1 };
+
+        final float[] nearPointWorld = new float[4];
+        final float[] farPointWorld = new float[4];
+
+        multiplyMV(nearPointWorld, 0, invertedViewProjectionMatrix, 0, nearPointNdc, 0);
+        multiplyMV(farPointWorld, 0, invertedViewProjectionMatrix, 0, farPointNdc, 0);
+
+        divideByW(nearPointWorld);
+        divideByW(farPointWorld);
+
+        Vector nearPointRay = new Vector(nearPointWorld[0], nearPointWorld[1], nearPointWorld[2]);
+        Vector farPointRay = new Vector(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
+
+        return new Ray(nearPointRay, Geometry.vectorBetween(nearPointRay, farPointRay));
+    }
+
+    // screen to world 2D
+    public static Vector convertNormalized2DPointToNormalizedDevicePoint2D(float normalizedX, float normalizedY, float[] invertedViewProjectionMatrix) {
+
+        float[] normalizedPoint = new float[4];
+        float[] outPoint = new float[4];
+
+        normalizedPoint[0] = normalizedX;
+        normalizedPoint[1] = normalizedY;
+        normalizedPoint[2] = -1f;
+        normalizedPoint[3] =  1f;
+
+        multiplyMV( outPoint, 0,
+                    invertedViewProjectionMatrix, 0,
+                    normalizedPoint, 0);
+
+        System.out.println("outPoint is: " + outPoint[0] + ", " + outPoint[1]);
+
+        return new Vector(outPoint[0], outPoint[1], 0f);
+    }
+
 }

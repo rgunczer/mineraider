@@ -1,6 +1,6 @@
 package com.almagems.mineraider.EffectAnims;
 
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.util.MyColor;
@@ -53,7 +53,7 @@ public class Fade extends EffectAnim {
     }
 
     @Override
-    public void init(ObjectPosition pos) {
+    public void init(PositionInfo pos) {
     }
 
     @Override
@@ -75,9 +75,9 @@ public class Fade extends EffectAnim {
     public void draw() {
         // blending must be enabled!
         // use color shader!? (no textures)
-        pos.setPosition(0f, 0f, 0f);
-        pos.setRot(0f, 0f, 0f);
-        pos.setScale(1f, 1f, 1f);
+        pos.trans(0f, 0f, 0f);
+        pos.rot(0f, 0f, 0f);
+        pos.scale(1f, 1f, 1f);
 
         visuals.calcMatricesForObject(pos);
         visuals.colorShader.useProgram();

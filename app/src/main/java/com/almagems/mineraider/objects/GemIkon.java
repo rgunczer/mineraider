@@ -1,14 +1,12 @@
 package com.almagems.mineraider.objects;
 
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 
-import static android.opengl.GLES20.*;
-
 public class GemIkon {
 
-    private ObjectPosition op;
+    private PositionInfo pos;
     private VertexArray vertexArray;
 
     // ctor
@@ -44,10 +42,10 @@ public class GemIkon {
 
         vertexArray = new VertexArray(vertexData);
 
-        op = new ObjectPosition();
-        op.setPosition(-0.92f, -Visuals.aspectRatio + 0.075f, 0f);
-        op.setRot(0f, 0f, -30f);
-        op.setScale(1f, 1f, 1f);
+        pos = new PositionInfo();
+        pos.trans(-0.92f, -Visuals.aspectRatio + 0.075f, 0f);
+        pos.rot(0f, 0f, -30f);
+        pos.scale(1f, 1f, 1f);
     }
 
     public void update() {

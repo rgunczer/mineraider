@@ -29,10 +29,10 @@ public class FallAnimation {
 		this.animGemTo.init(to);
 		
 		this.animGemFrom.type = from.type;
-		this.animGemFrom.op.setPosition(from.op.tx, from.op.ty, from.op.tz);
-		this.animGemFrom.op.setScale(from.op.sx, from.op.sy, from.op.sz);
+		this.animGemFrom.pos.trans(from.pos.tx, from.pos.ty, from.pos.tz);
+		this.animGemFrom.pos.scale(from.pos.sx, from.pos.sy, from.pos.sz);
 		
-		this.animGemTo.op.setPosition(to.op.tx, to.op.ty, to.op.tz);
+		this.animGemTo.pos.trans(to.pos.tx, to.pos.ty, to.pos.tz);
 
         this.type = from.type;
 
@@ -43,10 +43,10 @@ public class FallAnimation {
 	public void update() {
 		if (!isDone) {
 			vy += g;
-			animGemFrom.op.ty -= vy;
+			animGemFrom.pos.ty -= vy;
 			
-			if (animGemFrom.op.ty < animGemTo.op.ty) {
-				animGemFrom.op.ty = animGemTo.op.ty;
+			if (animGemFrom.pos.ty < animGemTo.pos.ty) {
+				animGemFrom.pos.ty = animGemTo.pos.ty;
 				vy *= -0.4f;			
 				++bounceCounter;
 			}

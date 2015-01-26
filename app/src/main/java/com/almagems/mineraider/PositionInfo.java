@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class ObjectPosition {
+public class PositionInfo {
 	
 	public float tx; // translation along x axis
 	public float ty; // translation along y axis
@@ -15,15 +15,15 @@ public class ObjectPosition {
 	public float sz; // scale along z axis	
 						
 	// ctor
-	public ObjectPosition() {
+	public PositionInfo() {
 	}
 	
 	// cctor
-	public ObjectPosition(ObjectPosition another) {
+	public PositionInfo(PositionInfo another) {
         init(another);
 	}
 
-    public void init(ObjectPosition another) {
+    public void init(PositionInfo another) {
         // translate
         this.tx = another.tx;
         this.ty = another.ty;
@@ -55,21 +55,39 @@ public class ObjectPosition {
 		this.sz = sz;				
 	}
 	
-	public void setPosition(float x, float y, float z) {
+	public void trans(float x, float y, float z) {
 		tx = x;
 		ty = y;
 		tz = z;
 	}
 
-	public void setRot(float x, float y, float z) {		
+    public void trans(PositionInfo another) {
+        tx = another.tx;
+        ty = another.ty;
+        tz = another.tz;
+    }
+
+    public void rot(float x, float y, float z) {
 		rx = x;
 		ry = y;
 		rz = z;		
-	}	
-	
-	public void setScale(float x, float y, float z) {
+	}
+
+    public void rot(PositionInfo another) {
+        rx = another.rx;
+        ry = another.ry;
+        rz = another.rz;
+    }
+
+    public void scale(float x, float y, float z) {
 		sx = x;
 		sy = y;
 		sz = z;
 	}
+
+    public void scale(PositionInfo another) {
+        sx = another.sx;
+        sy = another.sy;
+        sz = another.sz;
+    }
 }

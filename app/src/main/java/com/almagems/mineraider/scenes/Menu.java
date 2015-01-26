@@ -1,22 +1,27 @@
 package com.almagems.mineraider.scenes;
 
-
 import static android.opengl.GLES20.*;
+import static android.opengl.Matrix.*;
+
 import static com.almagems.mineraider.Constants.*;
 
 import com.almagems.mineraider.ClassicSingleton;
 import com.almagems.mineraider.EffectAnims.Fade;
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.IndexBuffer;
 import com.almagems.mineraider.data.VertexBuffer;
+import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.Quad;
+import com.almagems.mineraider.util.Geometry;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
-import com.almagems.mineraider.util.Text;
 import com.almagems.mineraider.util.Texture;
+import com.almagems.mineraider.util.Vector;
 
 public class Menu extends Scene {
+
+    private final EdgeDrawer edgeDrawer;
 
     private VertexBuffer vbBg;
     private IndexBuffer ibBg;
@@ -30,12 +35,9 @@ public class Menu extends Scene {
     private final Quad minerSign;
 
     private Fade fade;
-    private final Visuals visuals;
-    private ObjectPosition _op = new ObjectPosition();
 
     // ctor
     public Menu() {
-        visuals = Visuals.getInstance();
         title = new Quad();
         play = new Quad();
         options = new Quad();
@@ -43,11 +45,13 @@ public class Menu extends Scene {
         minecart = new Quad();
         gemTypes = new Quad();
         minerSign = new Quad();
+
+        edgeDrawer = new EdgeDrawer(32);
     }
 
     private VertexBuffer createVertexBuffer(Rectangle rc, Texture texture) {
         float width = Visuals.screenWidth;
-        float scale = width / 1080f;
+        float scale = width / Visuals.referenceScreenWidth;
 
         float tw = texture.width;
         float th = texture.height;
@@ -66,13 +70,13 @@ public class Menu extends Scene {
         float y = (rc.h / width) * scale;
         float[] vertexData = {
                 // x, y, z, 	                u, v,
-                -x, -y, 0.0f, r, g, b, a, tx0, ty0,
-                x, -y, 0.0f, r, g, b, a, tx1, ty0,
-                x, y, 0.0f, r, g, b, a, tx1, ty1,
+                -x, -y, 0.0f,   r, g, b, a,     tx0, ty0,
+                 x, -y, 0.0f,   r, g, b, a,     tx1, ty0,
+                 x,  y, 0.0f,   r, g, b, a,     tx1, ty1,
 
-                -x, -y, 0.0f, r, g, b, a, tx0, ty0,
-                x, y, 0.0f, r, g, b, a, tx1, ty1,
-                -x, y, 0.0f, r, g, b, a, tx0, ty1
+                -x, -y, 0.0f,   r, g, b, a,     tx0, ty0,
+                 x,  y, 0.0f,   r, g, b, a,     tx1, ty1,
+                -x,  y, 0.0f,   r, g, b, a,     tx0, ty1
         };
 
         VertexBuffer vb = new VertexBuffer(vertexData);
@@ -91,7 +95,7 @@ public class Menu extends Scene {
         final float y = aspect;
 
 		float[] vertices = {
-				// x, y, z, 			                u, v,
+				// x, y, z, 			        u, v,
 				-x, -y, 0.0f,   r, g, b, a,     0.0f, 0.0f, // 0
 				 x, -y, 0.0f,	r, g, b, a,     1.0f, 0.0f, // 1
 				 x,  y, 0.0f,	r, g, b, a,     1.0f, 1.0f, // 2
@@ -122,49 +126,46 @@ public class Menu extends Scene {
 
         rect = new Rectangle(0, 0+259, 496, 259);
         about.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
-        about.op.setPosition(0.48f, -aspect * 0.8f, 0f);
-        about.op.setRot(0f, 0f, 0f);
-        about.op.setScale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
+        about.pos.trans(0.48f, -aspect * 0.8f, 0f);
+        about.pos.rot(0f, 0f, 0f);
+        about.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
         rect = new Rectangle(817, 259+279, 638, 279);
         options.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
-        options.op.setPosition(0.14f, -aspect * 0.5f, 0f);
-        options.op.setRot(0f, 0f, 0f);
-        options.op.setScale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
+        options.pos.trans(0.14f, -aspect * 0.5f, 0f);
+        options.pos.rot(0f, 0f, 0f);
+        options.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
         rect = new Rectangle(1455, 259+288, 394, 288);
         play.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
-        play.op.setPosition(-0.35f, -0.2f, 0f);
-        play.op.setRot(0f, 0f, 0f);
-        play.op.setScale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
+        play.pos.trans(-0.35f, -0.2f, 0f);
+        play.pos.rot(0f, 0f, 0f);
+        play.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
         rect = new Rectangle(0, 684+286, 1080, 286);
         title.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
-        title.op.setPosition(0f, aspect*0.85f, 0f);
-        title.op.setRot(0f, 0f, 0f);
-        title.op.setScale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
+        title.pos.trans(0f, aspect * 0.85f, 0f);
+        title.pos.rot(0f, 0f, 0f);
+        title.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
 
         rect = new Rectangle(496, 0+211, 1080, 211);
         gemTypes.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
-        gemTypes.op.setPosition(0f,  aspect*0.62f, 0f);
-        gemTypes.op.setRot(0f, 0f, 0f);
-        gemTypes.op.setScale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
+        gemTypes.pos.trans(0f,  aspect*0.62f, 0f);
+        gemTypes.pos.rot(0f, 0f, 0f);
+        gemTypes.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
         rect = new Rectangle(0, 259+425, 489, 425);
         minerSign.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
-        minerSign.op.setPosition(0f, aspect * 0.24f, 0f);
-        minerSign.op.setRot(0f, 0f, 0f);
-        minerSign.op.setScale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
+        minerSign.pos.trans(0f, aspect * 0.24f, 0f);
+        minerSign.pos.rot(0f, 0f, 0f);
+        minerSign.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
         rect = new Rectangle(489, 259+254, 328, 254);
         minecart.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
-        minecart.op.setPosition(-0.68f, -aspect * 0.8f, 0f);
-        minecart.op.setRot(0f, 0f, 0f);
-        minecart.op.setScale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
-
-
-
+        minecart.pos.trans(-0.68f, -aspect * 0.8f, 0f);
+        minecart.pos.rot(0f, 0f, 0f);
+        minecart.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
         fade = new Fade();
         fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
@@ -207,6 +208,10 @@ public class Menu extends Scene {
        // credits.draw();
 
         visuals.bindNoTexture();
+
+        drawEdge();
+
+
         fade.update();
         fade.draw();
 	}
@@ -231,21 +236,47 @@ public class Menu extends Scene {
 */
 	}
 
+    private void drawEdge() {
+        edgeDrawer.begin();
+        edgeDrawer.addLine(	-1f, 0f, 0f,
+                             1f, 0f, 0f);
+
+        edgeDrawer.addLine( 0f, -1f, 0f,
+                            0f,  1f, 0f);
+
+        setIdentityM(visuals.modelMatrix, 0);
+        multiplyMM( visuals.mvpMatrix, 0,
+                    visuals.viewProjectionMatrix, 0,
+                    visuals.modelMatrix, 0);
+
+        visuals.colorShader.useProgram();
+        visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.blackColor);
+        edgeDrawer.bindData(visuals.colorShader);
+        edgeDrawer.draw();
+    }
+
     @Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
 
-        if ( play.isHit(normalizedX, normalizedY) ) {
+        Vector pos = Geometry.convertNormalized2DPointToNormalizedDevicePoint2D(normalizedX, normalizedY, visuals.invertedViewProjectionMatrix);
+
+        if ( play.isHit(pos.x, pos.y) ) {
             System.out.println("play is hit...");
             //ClassicSingleton.getInstance().showScene(ScenesEnum.HelmetSelect);
+            return;
         }
 
-        if  (options.isHit(normalizedX, normalizedY) ) {
+        if  (options.isHit(pos.x, pos.y) ) {
             System.out.println("options is hit...");
+
+            return;
         }
 
-        if ( about.isHit(normalizedX, normalizedY) ) {
+        if ( about.isHit(pos.x, pos.y) ) {
             System.out.println("about is hit...");
+
         }
+
 	}
 
 	@Override

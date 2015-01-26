@@ -1,13 +1,6 @@
 package com.almagems.mineraider.data;
 
-import static android.opengl.GLES20.glGenBuffers;
-import static android.opengl.GLES20.glBindBuffer;
-import static android.opengl.GLES20.GL_ARRAY_BUFFER;
-import static android.opengl.GLES20.glBufferData;
-import static android.opengl.GLES20.GL_STATIC_DRAW;
-import static android.opengl.GLES20.glVertexAttribPointer;
-import static android.opengl.GLES20.glEnableVertexAttribArray;
-import static android.opengl.GLES20.GL_FLOAT;
+import static android.opengl.GLES20.*;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

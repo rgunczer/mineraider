@@ -1,10 +1,10 @@
 package com.almagems.mineraider.anims;
 
 import com.almagems.mineraider.GemPosition;
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 
 public class SwapHint {
-	public final ObjectPosition op;
+	public final PositionInfo pos;
 	
 	private float animStep = 0.0f;
 	private float centerX = 0.0f;
@@ -14,13 +14,13 @@ public class SwapHint {
 
     // ctor
 	public SwapHint() {
-        op = new ObjectPosition();
+        pos = new PositionInfo();
     }
 
     public void init(GemPosition first, GemPosition second) {
 		float x;
 		float y;
-		float z = first.op.tz + 0.7f;
+		float z = first.pos.tz + 0.7f;
 		float r = 0.0f;
 		float diff;
 		animStep = 0.025f;
@@ -28,50 +28,50 @@ public class SwapHint {
 		// calc position
 		if (first.boardX == second.boardX) { // same col
             isHorizontal = false;
-			x = first.op.tx;
-			diff = Math.abs(first.op.ty - second.op.ty);
+			x = first.pos.tx;
+			diff = Math.abs(first.pos.ty - second.pos.ty);
 			
 			if (first.boardY > second.boardY) {
-				y = first.op.ty - (diff / 2.0f);
+				y = first.pos.ty - (diff / 2.0f);
 			} else {
-				y = first.op.ty + (diff / 2.0f);
+				y = first.pos.ty + (diff / 2.0f);
 			}
 			r = 90.0f;			
 		} else { //if (first.boardY == second.boardY) { // same row
             isHorizontal = true;
-			y = first.op.ty;
-			diff = Math.abs(first.op.tx - second.op.tx);
+			y = first.pos.ty;
+			diff = Math.abs(first.pos.tx - second.pos.tx);
 			
 			if (first.boardX > second.boardX) {
-				x = first.op.tx - (diff / 2.0f);
+				x = first.pos.tx - (diff / 2.0f);
 			} else {
-                x = first.op.tx + (diff / 2.0f);
+                x = first.pos.tx + (diff / 2.0f);
 			}			
 		}
 	
-		op.setPosition(x, y, z);
-		op.setScale(1.2f, 1.2f, 1.0f);
-		op.setRot(0f, 0f, r);
+		pos.trans(x, y, z);
+		pos.scale(1.2f, 1.2f, 1.0f);
+		pos.rot(0f, 0f, r);
 		
-		centerX = op.tx;
-		centerY = op.ty;
+		centerX = pos.tx;
+		centerY = pos.ty;
 	}
 
 	public void update() {
         if (isHorizontal) {
-			op.tx += animStep;
+			pos.tx += animStep;
 			
-			if (op.tx > centerX + limit) {
+			if (pos.tx > centerX + limit) {
 				animStep *= -1.0f;
-			} else if (op.tx < centerX - limit) {
+			} else if (pos.tx < centerX - limit) {
 				animStep *= -1.0f;
 			}
 		} else {
-			op.ty += animStep;
+			pos.ty += animStep;
 			
-			if (op.ty > centerY + limit) {
+			if (pos.ty > centerY + limit) {
 				animStep *= -1.0f;
-			} else if (op.ty < centerY - limit) {
+			} else if (pos.ty < centerY - limit) {
 				animStep *= -1.0f;
 			}
 		}

@@ -39,8 +39,8 @@ public class SwapAnimation extends BaseAnimation {
 		this.secondAnim.init(secondSelected);
 
 		final float scale = 0.1f;
-		firstAnim.op.setScale(firstAnim.op.sx + scale, firstAnim.op.sy + scale, firstAnim.op.sz + scale);
-		secondAnim.op.setScale(secondAnim.op.sx - scale, secondAnim.op.sy - scale, secondAnim.op.sz - scale);
+		firstAnim.pos.scale(firstAnim.pos.sx + scale, firstAnim.pos.sy + scale, firstAnim.pos.sz + scale);
+		secondAnim.pos.scale(secondAnim.pos.sx - scale, secondAnim.pos.sy - scale, secondAnim.pos.sz - scale);
 		
 		// determinde axis
 		if (firstAnim.boardX == secondAnim.boardX) {
@@ -71,17 +71,17 @@ public class SwapAnimation extends BaseAnimation {
 
 		// calc prevDiff
 		if (animAxisY) {
-			firstAnim.op.setPosition(firstAnim.op.tx, firstAnim.op.ty + firstAnimStepAndDir, firstAnim.op.tz);
-			secondAnim.op.setPosition(secondAnim.op.tx, secondAnim.op.ty + secondAnimStepAndDir, secondAnim.op.tz);
+			firstAnim.pos.trans(firstAnim.pos.tx, firstAnim.pos.ty + firstAnimStepAndDir, firstAnim.pos.tz);
+			secondAnim.pos.trans(secondAnim.pos.tx, secondAnim.pos.ty + secondAnimStepAndDir, secondAnim.pos.tz);
 			
-			prevDiff1 = Math.abs(secondAnim.op.ty - firstAnim.op.ty);
-			prevDiff2 = Math.abs(firstAnim.op.ty - secondAnim.op.ty);
+			prevDiff1 = Math.abs(secondAnim.pos.ty - firstAnim.pos.ty);
+			prevDiff2 = Math.abs(firstAnim.pos.ty - secondAnim.pos.ty);
 		} else {
-			firstAnim.op.setPosition(firstAnim.op.tx + firstAnimStepAndDir, firstAnim.op.ty, firstAnim.op.tz);
-			secondAnim.op.setPosition(secondAnim.op.tx + secondAnimStepAndDir, secondAnim.op.ty, secondAnim.op.tz);
+			firstAnim.pos.trans(firstAnim.pos.tx + firstAnimStepAndDir, firstAnim.pos.ty, firstAnim.pos.tz);
+			secondAnim.pos.trans(secondAnim.pos.tx + secondAnimStepAndDir, secondAnim.pos.ty, secondAnim.pos.tz);
 			
-			prevDiff1 = Math.abs(secondAnim.op.tx - firstAnim.op.tx);
-			prevDiff2 = Math.abs(firstAnim.op.tx - secondAnim.op.tx);
+			prevDiff1 = Math.abs(secondAnim.pos.tx - firstAnim.pos.tx);
+			prevDiff2 = Math.abs(firstAnim.pos.tx - secondAnim.pos.tx);
 		}
 		
 		isDone = false;
@@ -90,11 +90,11 @@ public class SwapAnimation extends BaseAnimation {
 	@Override
 	public void update() {				
 		if (animAxisY) {			
-			firstAnim.op.setPosition(firstAnim.op.tx, firstAnim.op.ty + firstAnimStepAndDir, firstAnim.op.tz);
-			secondAnim.op.setPosition(secondAnim.op.tx, secondAnim.op.ty + secondAnimStepAndDir, secondAnim.op.tz);
+			firstAnim.pos.trans(firstAnim.pos.tx, firstAnim.pos.ty + firstAnimStepAndDir, firstAnim.pos.tz);
+			secondAnim.pos.trans(secondAnim.pos.tx, secondAnim.pos.ty + secondAnimStepAndDir, secondAnim.pos.tz);
 			
-			float diff1 = Math.abs(secondGem.op.ty - firstAnim.op.ty);
-			float diff2 = Math.abs(firstGem.op.ty - secondAnim.op.ty);
+			float diff1 = Math.abs(secondGem.pos.ty - firstAnim.pos.ty);
+			float diff2 = Math.abs(firstGem.pos.ty - secondAnim.pos.ty);
 					
 			boolean don1 = false;
 			boolean don2 = false;
@@ -115,11 +115,11 @@ public class SwapAnimation extends BaseAnimation {
 				isDone = true;
 			}
 		} else {
-			firstAnim.op.setPosition(firstAnim.op.tx + firstAnimStepAndDir, firstAnim.op.ty, firstAnim.op.tz);
-			secondAnim.op.setPosition(secondAnim.op.tx + secondAnimStepAndDir, secondAnim.op.ty, secondAnim.op.tz);
+			firstAnim.pos.trans(firstAnim.pos.tx + firstAnimStepAndDir, firstAnim.pos.ty, firstAnim.pos.tz);
+			secondAnim.pos.trans(secondAnim.pos.tx + secondAnimStepAndDir, secondAnim.pos.ty, secondAnim.pos.tz);
 			
-			float diff1 = Math.abs(secondGem.op.tx - firstAnim.op.tx);
-			float diff2 = Math.abs(firstGem.op.tx - secondAnim.op.tx);
+			float diff1 = Math.abs(secondGem.pos.tx - firstAnim.pos.tx);
+			float diff2 = Math.abs(firstGem.pos.tx - secondAnim.pos.tx);
 		
 			boolean don1 = false;
 			boolean don2 = false;

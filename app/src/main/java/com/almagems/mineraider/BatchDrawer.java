@@ -24,42 +24,42 @@ import static com.almagems.mineraider.Constants.GEM_TYPE_6;
 import static com.almagems.mineraider.Constants.GEM_TYPE_NONE;
 
 public class BatchDrawer {
-    public ArrayList<ObjectPosition> gemsType0 = new ArrayList<ObjectPosition>(90);
-    public ArrayList<ObjectPosition> gemsType1 = new ArrayList<ObjectPosition>(90);
-    public ArrayList<ObjectPosition> gemsType2 = new ArrayList<ObjectPosition>(90);
-    public ArrayList<ObjectPosition> gemsType3 = new ArrayList<ObjectPosition>(90);
-    public ArrayList<ObjectPosition> gemsType4 = new ArrayList<ObjectPosition>(90);
-    public ArrayList<ObjectPosition> gemsType5 = new ArrayList<ObjectPosition>(90);
-    public ArrayList<ObjectPosition> gemsType6 = new ArrayList<ObjectPosition>(90);
+    public ArrayList<PositionInfo> gemsType0 = new ArrayList<PositionInfo>(90);
+    public ArrayList<PositionInfo> gemsType1 = new ArrayList<PositionInfo>(90);
+    public ArrayList<PositionInfo> gemsType2 = new ArrayList<PositionInfo>(90);
+    public ArrayList<PositionInfo> gemsType3 = new ArrayList<PositionInfo>(90);
+    public ArrayList<PositionInfo> gemsType4 = new ArrayList<PositionInfo>(90);
+    public ArrayList<PositionInfo> gemsType5 = new ArrayList<PositionInfo>(90);
+    public ArrayList<PositionInfo> gemsType6 = new ArrayList<PositionInfo>(90);
 
     private static final int MAX_POOL_GEMPOSITIONS = 630;
-    private ArrayList<ObjectPosition> pool = new ArrayList<ObjectPosition>(MAX_POOL_GEMPOSITIONS);
+    private ArrayList<PositionInfo> pool = new ArrayList<PositionInfo>(MAX_POOL_GEMPOSITIONS);
 
     private final Visuals visuals;
-    private ObjectPosition pos = new ObjectPosition();
+    private PositionInfo pos = new PositionInfo();
 
     // ctor
     public BatchDrawer() {
         visuals = Visuals.getInstance();
 
         for (int i = 0; i < MAX_POOL_GEMPOSITIONS; ++i) {
-            pool.add( new ObjectPosition() );
+            pool.add( new PositionInfo() );
         }
     }
 
-    private ObjectPosition getFromPool() {
-        ObjectPosition pos;
+    private PositionInfo getFromPool() {
+        PositionInfo pos;
         int size = pool.size();
         //if (size > 0) {
             pos = pool.get( size - 1 );
             pool.remove( size - 1 );
         //} /*else {
-            //pos = new ObjectPosition();
+            //pos = new PositionInfo();
         //}
         return pos;
     }
 
-    private void recycle(ArrayList<ObjectPosition> list) {
+    private void recycle(ArrayList<PositionInfo> list) {
         int size = list.size();
         for(int i = size - 1; i > -1; --i) {
             pool.add( list.get(i) );
@@ -85,43 +85,43 @@ public class BatchDrawer {
     }
 
     public void add(Match3 match3) {
-        ObjectPosition pos;
+        PositionInfo pos;
         GemPosition gp;
         int size = match3.gemsList.size();
         for(int i = 0; i < size; ++i) {
             gp = match3.gemsList.get(i);
             pos = getFromPool();
-            pos.init(gp.op);
+            pos.init(gp.pos);
             sortItem(pos, gp.type, gp.visible);
         }
     }
 
     public void add(AnimationManager animManager) {
         if (!animManager.isDone()) {
-            ObjectPosition pos1;
-            ObjectPosition pos2;
+            PositionInfo pos1;
+            PositionInfo pos2;
             BaseAnimation baseAnim = animManager.running;
             if (baseAnim instanceof SwapAnimation) {
                 SwapAnimation anim = (SwapAnimation)baseAnim;
 
                 pos1 = getFromPool();
                 pos2 = getFromPool();
-                pos1.init(anim.firstAnim.op);
-                pos2.init(anim.secondAnim.op);
+                pos1.init(anim.firstAnim.pos);
+                pos2.init(anim.secondAnim.pos);
                 sortItem(pos1, anim.firstAnim.type, true);
                 sortItem(pos2, anim.secondAnim.type, true);
                 return;
             }
 
             if (baseAnim instanceof FallGroupAnimation) {
-                ObjectPosition pos;
+                PositionInfo pos;
                 FallGroupAnimation anim = (FallGroupAnimation)baseAnim;
                 FallAnimation fall;
                 int size = anim.count();
                 for (int i = 0; i < size; ++i) {
                     fall = anim.getAnimAt(i);
                     pos = getFromPool();
-                    pos.init(fall.animGemFrom.op);
+                    pos.init(fall.animGemFrom.pos);
                     sortItem(pos, fall.animGemFrom.type, true);
                 }
             }
@@ -133,7 +133,7 @@ public class BatchDrawer {
 
     public void add(Physics physics) {
         int gemType;
-        ObjectPosition position;
+        PositionInfo position;
         Body body;
         Vec2 pos;
         float degree;
@@ -145,9 +145,9 @@ public class BatchDrawer {
             degree = (float) Math.toDegrees( body.getAngle() );
             gemType = (Integer)body.m_userData;
             position = getFromPool();
-            position.setPosition(pos.x, pos.y, 1.0f);
-            position.setRot(0f, 0f, degree);
-            position.setScale(d, d, 1f);
+            position.trans(pos.x, pos.y, 1.0f);
+            position.rot(0f, 0f, degree);
+            position.scale(d, d, 1f);
             sortItem(position, gemType, true);
         }
     }
@@ -172,7 +172,7 @@ public class BatchDrawer {
         drawGemsByType(gemsType6, GEM_TYPE_6);
     }
 
-    public void sortItem(ObjectPosition pos, int type, boolean visible) {
+    public void sortItem(PositionInfo pos, int type, boolean visible) {
         if (visible && type != GEM_TYPE_NONE && pos.tx < 14.5f) {
             switch (type) {
                 case GEM_TYPE_0:
@@ -202,10 +202,10 @@ public class BatchDrawer {
         }
     }
 
-    void drawGemsByType(ArrayList<ObjectPosition> gems, int type) {
+    void drawGemsByType(ArrayList<PositionInfo> gems, int type) {
         int size = gems.size();
         if (size > 0) {
-            ObjectPosition pos;
+            PositionInfo pos;
             Model model = visuals.gems[type];
             model.bindData(visuals.pointLightShader);
 
@@ -218,11 +218,11 @@ public class BatchDrawer {
         }
     }
 
-    void drawGemsPlatesByType(ArrayList<ObjectPosition> gems, int type) {
+    void drawGemsPlatesByType(ArrayList<PositionInfo> gems, int type) {
         int size = gems.size();
         if (size > 0) {
             float temp;
-            ObjectPosition pos;
+            PositionInfo pos;
             Model model = visuals.gemsPlates[type];
             model.bindData(visuals.pointLightShader);
 

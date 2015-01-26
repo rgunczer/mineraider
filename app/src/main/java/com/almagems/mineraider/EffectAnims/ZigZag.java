@@ -1,6 +1,6 @@
 package com.almagems.mineraider.EffectAnims;
 
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 
 import java.util.Random;
 
@@ -19,7 +19,7 @@ public class ZigZag extends EffectAnim {
     }
 
     @Override
-    public void init(ObjectPosition pos) {
+    public void init(PositionInfo pos) {
         this.pos = pos;
         posOrigin.init(pos);
         cooling = 10;

@@ -184,10 +184,10 @@ public class PopAnimation extends BaseAnimation {
                 GemPosition gp;
                 for (int i = 0; i < size; ++i) {
                     gp = list.get(i);
-                    gp.op.tz += 0.4f;
+                    gp.pos.tz += 0.4f;
 
-                    if (z < gp.op.tz) {
-                        z = gp.op.tz;
+                    if (z < gp.pos.tz) {
+                        z = gp.pos.tz;
                     }
                 }
 
@@ -202,7 +202,7 @@ public class PopAnimation extends BaseAnimation {
                 GemPosition gp;
                  for(int i = 0; i < size; ++i) {
                      gp = list.get(i);
-                    addPhysicsEntity(gp.op.tx, gp.op.ty, gp.type);
+                    addPhysicsEntity(gp.pos.tx, gp.pos.ty, gp.type);
                 }
                 isDone = true;
             }
@@ -214,7 +214,7 @@ public class PopAnimation extends BaseAnimation {
                 GemPosition gp;
                 for(int i = 0; i < size; ++i) {
                     gp = list.get(i);
-                    particleManager.addParticleEmitterAt(gp.op.tx, gp.op.ty, gp.type);
+                    particleManager.addParticleEmitterAt(gp.pos.tx, gp.pos.ty, gp.type);
                 }
                 state = State.Pop;
             }

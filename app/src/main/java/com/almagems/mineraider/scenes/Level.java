@@ -11,13 +11,12 @@ import org.jbox2d.collision.shapes.EdgeShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 
 import com.almagems.mineraider.ClassicSingleton;
 import com.almagems.mineraider.GemPosition;
 import com.almagems.mineraider.Match3;
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.RockData;
 import com.almagems.mineraider.Visuals;
@@ -29,7 +28,6 @@ import com.almagems.mineraider.objects.Model;
 import com.almagems.mineraider.particlesystem.ParticleManager;
 import com.almagems.mineraider.util.Geometry;
 import com.almagems.mineraider.util.MyColor;
-import com.almagems.mineraider.util.Vector;
 import com.almagems.mineraider.util.Ray;
 
 public class Level extends Scene {
@@ -52,7 +50,7 @@ public class Level extends Scene {
     private final MyColor colorBlack;
     private final MyColor colorWhite;
 
-    private ObjectPosition markerPos = new ObjectPosition();
+    private PositionInfo markerPos = new PositionInfo();
 
 	private boolean editorEnabled = false;
 	
@@ -63,13 +61,12 @@ public class Level extends Scene {
 
 	private ArrayList<RockData> rocks = new ArrayList<RockData>();
 	
-	private ObjectPosition _op = new ObjectPosition();
+	private PositionInfo _pos = new PositionInfo();
 	
 	public Level() {
         colorWhite = new MyColor(1f, 1f, 1f, 1f);
         colorBlack = new MyColor(0f, 0f, 0f, 1f);
 
-		visuals = Visuals.getInstance();
 		physics = Physics.getInstance();
 
 		animManager = new AnimationManager();
@@ -121,7 +118,6 @@ public class Level extends Scene {
 	
 	@Override
 	public void update() {
-		Visuals visuals = Visuals.getInstance();
 		visuals.updateViewProjMatrix();
 		
 		physics.update();
@@ -208,7 +204,7 @@ public class Level extends Scene {
             touchDownY = normalizedY;
 
             if (!match3.isAnimating) {
-                Ray ray = convertNormalized2DPointToRay(touchDownX, touchDownY);
+                Ray ray = Geometry.convertNormalized2DPointToRay(touchDownX, touchDownY, visuals.invertedViewProjectionMatrix);
                 GemPosition selectedGem = getSelectedGemFromRay(ray);
 
                 //doEditorStuff(selectedGem);
@@ -388,36 +384,7 @@ public class Level extends Scene {
 			}
 		}
 	}	
-	
-	private void divideByW(float[] vector) {
-		vector[0] /= vector[3];
-		vector[1] /= vector[3];
-		vector[2] /= vector[3];
-	}	
-	
-	private Ray convertNormalized2DPointToRay(float normalizedX, float normalizedY) {
-		// we will convert these normalized device coordinates int world-space
-		// coordinates. We will pick a point on the near and far planes, and draw a 
-		// line between them. To do this transform, we need to first multiply by
-		// the inverse matrix, and then we need to undo the perspective divide
-		final float[] nearPointNdc = { normalizedX, normalizedY, -1, 1 };
-		final float[] farPointNdc  = { normalizedX, normalizedY,  1, 1 };
-		
-		final float[] nearPointWorld = new float[4];
-		final float[] farPointWorld = new float[4];
-		
-		multiplyMV(nearPointWorld, 0, visuals.invertedViewProjectionMatrix, 0, nearPointNdc, 0);
-		multiplyMV(farPointWorld, 0, visuals.invertedViewProjectionMatrix, 0, farPointNdc, 0);
-		
-		divideByW(nearPointWorld);
-		divideByW(farPointWorld);
-		
-		Vector nearPointRay = new Vector(nearPointWorld[0], nearPointWorld[1], nearPointWorld[2]);
-		Vector farPointRay = new Vector(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
-		
-		return new Ray(nearPointRay, Geometry.vectorBetween(nearPointRay, farPointRay));
-	}	
-	
+
 	private GemPosition getSelectedGemFromRay(Ray ray) {		
 		for(int y = 0; y < match3.boardSize; ++y) {
 			for (int x = 0; x < match3.boardSize; ++x) {
@@ -523,7 +490,7 @@ public class Level extends Scene {
                     rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);
                     multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
 
-                    visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.color);
+                    visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.whiteColor);
                     edgeDrawer.bindData(visuals.colorShader);
                     edgeDrawer.draw();
                 }
@@ -574,7 +541,7 @@ public class Level extends Scene {
                 rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);
                 multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
 
-                visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.color);
+                visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.whiteColor);
                 edgeDrawer.bindData(visuals.colorShader);
                 edgeDrawer.draw();
 
@@ -589,9 +556,9 @@ public class Level extends Scene {
 			float d = (((float)Math.sin(elapsed) + 1f) / 2f) * 0.08f;
 			//System.out.println("d is: " + d);
 
-			markerPos.init(match3.firstSelected.op);
+			markerPos.init(match3.firstSelected.pos);
 			markerPos.tz -= 0.2f;
-            markerPos.setScale(1.0f + d, 1.0f + d, 1.0f);
+            markerPos.scale(1.0f + d, 1.0f + d, 1.0f);
 
 			visuals.calcMatricesForObject(markerPos);
 			visuals.pointLightShader.setUniforms();
@@ -618,11 +585,11 @@ public class Level extends Scene {
         float tempZ;
 		for(int i = 0; i < 3; ++i) {
             tempZ = z;
-			_op.setPosition(x, y, z);
-			_op.setRot(0f, 0f, 0f);
-			_op.setScale(1f, 1f, 1f);
+			_pos.trans(x, y, z);
+			_pos.rot(0f, 0f, 0f);
+			_pos.scale(1f, 1f, 1f);
 
-			visuals.calcMatricesForObject(_op);
+			visuals.calcMatricesForObject(_pos);
 			visuals.dirLightShader.setUniforms();
 			visuals.railroad.draw();
 
@@ -632,11 +599,11 @@ public class Level extends Scene {
 	}	
 	
 	void drawRock(Model rock, float x, float y, float z, float degree) {
-		_op.setPosition(x, y, z);
-		_op.setScale(1f, 1f, 1f);		
-		_op.setRot(0f, 0f, degree);
+		_pos.trans(x, y, z);
+        _pos.rot(0f, 0f, degree); // ???
+        _pos.scale(1f, 1f, 1f);
 		
-		visuals.calcMatricesForObject(_op);
+		visuals.calcMatricesForObject(_pos);
 		visuals.dirLightShader.setUniforms();
 		rock.bindData(visuals.dirLightShader);
 		rock.draw();		
@@ -645,11 +612,11 @@ public class Level extends Scene {
 	void drawPickAxes() {
 		Model pickAxe = visuals.pickAxe;
 
-		_op.setPosition(9f, -20f, 4.0f);
-		_op.setScale(1f, 1f, 1f);		
-		_op.setRot(90f, 30f, 50f);
-				
-		visuals.calcMatricesForObject(_op);
+		_pos.trans(9f, -20f, 4.0f);
+        _pos.rot(90f, 30f, 50f);
+        _pos.scale(1f, 1f, 1f);
+
+		visuals.calcMatricesForObject(_pos);
 		visuals.dirLightShader.setUniforms();
 		pickAxe.bindData(visuals.dirLightShader);
 		pickAxe.draw();				
@@ -732,10 +699,10 @@ public class Level extends Scene {
 	}
 	
 	void drawFloor() {
-        _op.setPosition(0f, -20.5f, 0f);
-        _op.setRot(0f, 0f, 0f);
-        _op.setScale(1.0f, 1.0f, 1.0f);
-        visuals.calcMatricesForObject(_op);
+        _pos.trans(0f, -20.5f, 0f);
+        _pos.rot(0f, 0f, 0f);
+        _pos.scale(1.0f, 1.0f, 1.0f);
+        visuals.calcMatricesForObject(_pos);
         visuals.dirLightShader.setUniforms();
         visuals.floor.bindData(visuals.dirLightShader);
         visuals.floor.bind();
@@ -744,10 +711,10 @@ public class Level extends Scene {
     }
 
     void drawWall() {
-        _op.setPosition(0f, -15f, -4f);
-        _op.setRot(0f, 0f, 0f);
-        _op.setScale(1f, 1f, 1f);
-        visuals.calcMatricesForObject(_op);
+        _pos.trans(0f, -15f, -4f);
+        _pos.rot(0f, 0f, 0f);
+        _pos.scale(1f, 1f, 1f);
+        visuals.calcMatricesForObject(_pos);
         visuals.dirLightShader.setUniforms();
         visuals.wall.bindData(visuals.dirLightShader);
         visuals.wall.bind();
@@ -756,10 +723,10 @@ public class Level extends Scene {
     }
 
     void drawSoil() {
-		_op.setPosition(0f, 5f, -3.5f);
-		_op.setRot(0f, 0f, 0f);
-		_op.setScale(1.9f, 1.5f, 1.0f);					
-		visuals.calcMatricesForObject(_op);
+		_pos.trans(0f, 5f, -3.5f);
+		_pos.rot(0f, 0f, 0f);
+		_pos.scale(1.9f, 1.5f, 1.0f);
+		visuals.calcMatricesForObject(_pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.soil.bindData(visuals.dirLightShader);
 		visuals.soil.draw();
@@ -768,26 +735,26 @@ public class Level extends Scene {
 	void drawCrates() {
         visuals.crate.bindData(visuals.dirLightShader);
 
-		_op.setPosition(-12.5f, -18.6f, -2.0f);
-		_op.setRot(0.0f, -20.0f, 0.0f);
-		_op.setScale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_op);
+		_pos.trans(-12.5f, -18.6f, -2.0f);
+		_pos.rot(0.0f, -20.0f, 0.0f);
+		_pos.scale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(_pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.crate.draw();
 
-		_op.setPosition(12.0f, -18.6f, -2.0f);
-		_op.setRot(0.0f, 2.0f, 0.0f);
-		_op.setScale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_op);
+		_pos.trans(12.0f, -18.6f, -2.0f);
+		_pos.rot(0.0f, 2.0f, 0.0f);
+		_pos.scale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(_pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.crate.draw();	
 	}
 	
 	void drawBeam() {						
-		_op.setPosition(0f, -16f, -2.5f);
-		_op.setRot(0f, 0f, 0f);
-		_op.setScale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_op);
+		_pos.trans(0f, -16f, -2.5f);
+		_pos.rot(0f, 0f, 0f);
+		_pos.scale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(_pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.beam.bindData(visuals.dirLightShader);
 		visuals.beam.draw();		
@@ -796,17 +763,17 @@ public class Level extends Scene {
 	void drawPillars() {
         visuals.pillar.bindData(visuals.dirLightShader);
 
-		_op.setPosition(-9.5f, -16f, -2.5f);
-		_op.setRot(0f, 0f, 0f);
-		_op.setScale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_op);
+		_pos.trans(-9.5f, -16f, -2.5f);
+		_pos.rot(0f, 0f, 0f);
+		_pos.scale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(_pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.pillar.draw();		
 
-		_op.setPosition(9.5f, -16f, -2.5f);
-		_op.setRot(0f, 0f, 0f);
-		_op.setScale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_op);
+		_pos.trans(9.5f, -16f, -2.5f);
+		_pos.rot(0f, 0f, 0f);
+		_pos.scale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(_pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.pillar.draw();				
 	}

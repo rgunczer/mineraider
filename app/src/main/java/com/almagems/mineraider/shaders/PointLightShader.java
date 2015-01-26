@@ -40,7 +40,7 @@ public class PointLightShader extends BaseShader {
 		glUniformMatrix4fv(uModelViewLocation, 1, false, visuals.mvMatrix, 0);		
 		glUniformMatrix4fv(uProjectionLocation, 1, false, visuals.projectionMatrix, 0);		
 		
-		glUniform4f(uColorLocation, visuals.color.r, visuals.color.g, visuals.color.b, visuals.color.a);
+		glUniform4f(uColorLocation, visuals.whiteColor.r, visuals.whiteColor.g, visuals.whiteColor.b, visuals.whiteColor.a);
 	}	
 	
 	public int getPositionAttributeLocation() {

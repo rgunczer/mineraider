@@ -2,8 +2,6 @@ package com.almagems.mineraider.objects;
 
 import java.util.Random;
 
-import static android.opengl.GLES20.*;
-
 import static com.almagems.mineraider.Constants.*;
 
 import org.jbox2d.collision.shapes.CircleShape;
@@ -18,7 +16,7 @@ import org.jbox2d.dynamics.joints.WheelJoint;
 import org.jbox2d.dynamics.joints.WheelJointDef;
 
 import com.almagems.mineraider.ClassicSingleton;
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.util.MyColor;
@@ -47,7 +45,7 @@ public class MineCart {
 	int stopTimeout = 0;
 	int collisionStopTimer = 0;
 	
-	private ObjectPosition _op = new ObjectPosition();
+	private PositionInfo _op = new PositionInfo();
 	
 	public MineCart(float x, float y) {
 
@@ -277,7 +275,7 @@ public class MineCart {
 		
 		EdgeDrawer edgeDrawer = new EdgeDrawer(100);
 		Fixture fixture = cart.getFixtureList();
-        ObjectPosition op = new ObjectPosition();
+        PositionInfo op = new PositionInfo();
 		while(fixture != null) {
 			PolygonShape shape = (PolygonShape)fixture.getShape();
 			edgeDrawer.begin();
@@ -298,9 +296,9 @@ public class MineCart {
 			edgeDrawer.addLine(	v3.x, v3.y, 0.0f,
 								v0.x, v0.y, 0.0f );
 
-			op.setPosition(pos.x, pos.y, 1.0f);
-			op.setRot(0f, 0f, degree);
-			op.setScale(1f, 1f, 1f);
+			op.trans(pos.x, pos.y, 1.0f);
+			op.rot(0f, 0f, degree);
+			op.scale(1f, 1f, 1f);
 			visuals.calcMatricesForObject(op);
 			
 //			setIdentityM(visuals.modelMatrix, 0);							
@@ -320,7 +318,7 @@ public class MineCart {
         update();
 
         Visuals visuals = Visuals.getInstance();
-        _op.setScale(1f, 1f, 1f);
+        _op.scale(1f, 1f, 1f);
 
         visuals.dirLightShader.setTexture(visuals.textureCart);
         visuals.mineCart.bindData(visuals.dirLightShader);
@@ -340,8 +338,8 @@ public class MineCart {
         Vec2 pos = cart.getPosition();
         float degree = (float) Math.toDegrees(cart.getAngle());
 
-        _op.setPosition(pos.x, pos.y, 1f);
-        _op.setRot(0f, 0f, degree);
+        _op.trans(pos.x, pos.y, 1f);
+        _op.rot(0f, 0f, degree);
         visuals.calcMatricesForObject(_op);
         visuals.dirLightShader.setUniforms();
         visuals.mineCart.draw();
@@ -356,8 +354,8 @@ public class MineCart {
 		pos = wheel1.getPosition();
 		degree = (float)Math.toDegrees( wheel1.getAngle() );
 
-		_op.setPosition(pos.x, pos.y, 2f);		
-		_op.setRot(0f, 0f, degree);
+		_op.trans(pos.x, pos.y, 2f);
+		_op.rot(0f, 0f, degree);
 
         visuals.calcMatricesForObject(_op);
 		visuals.dirLightShader.setUniforms();
@@ -367,8 +365,8 @@ public class MineCart {
 		pos = wheel2.getPosition();
 		degree = (float)Math.toDegrees( wheel2.getAngle() );
 
-        _op.setPosition(pos.x, pos.y, 2f);
-		_op.setRot(0f, 0f, degree);
+        _op.trans(pos.x, pos.y, 2f);
+		_op.rot(0f, 0f, degree);
 
         visuals.calcMatricesForObject(_op);
 		visuals.dirLightShader.setUniforms();

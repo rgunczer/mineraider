@@ -41,7 +41,9 @@ public class Visuals {
 	public Context context;
 
     // custom
-	public MyColor color = new  MyColor(1f, 1f, 1f);
+	public MyColor whiteColor = new  MyColor(1f, 1f, 1f);
+    public MyColor blackColor = new  MyColor(0f, 0f, 0f);
+
     public Map<String, TexturedQuad> fonts = new HashMap<String, TexturedQuad>();
     private ArrayList<Texture> textures = new ArrayList<Texture>(20);
 	
@@ -438,7 +440,7 @@ public class Visuals {
 	}
 
 
-    public void calcMatricesForObject(ObjectPosition op) {
+    public void calcMatricesForObject(PositionInfo op) {
 		setIdentityM(modelMatrix, 0);
 
         // translation

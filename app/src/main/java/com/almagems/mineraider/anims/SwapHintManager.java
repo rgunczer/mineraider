@@ -57,7 +57,7 @@ public class SwapHintManager {
         for(int i = 0; i < size; ++i) {
             hint = live.get(i);
             hint.update();
-            visuals.calcMatricesForObject( hint.op );
+            visuals.calcMatricesForObject( hint.pos );
             visuals.pointLightShader.setUniforms();
             visuals.hint.draw();
         }

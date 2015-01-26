@@ -1,6 +1,6 @@
 package com.almagems.mineraider.EffectAnims;
 
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 
 public class WahWah extends EffectAnim {
 
@@ -14,7 +14,7 @@ public class WahWah extends EffectAnim {
     }
 
     @Override
-    public void init(ObjectPosition pos) {
+    public void init(PositionInfo pos) {
         this.pos = pos;
         posOrigin.init(pos);
         elapsed = 0f;
@@ -26,6 +26,6 @@ public class WahWah extends EffectAnim {
         elapsed += 0.9f;
         d = (((float)Math.sin(elapsed) + 1f) / 2f) * wahScale; // 0.095f; // for combo
         //d = (((float)Math.sin(elapsed) + 1f) / 2f) * 0.2f;
-        pos.setScale(1f, 1f + d, 1f);
+        pos.scale(1f, 1f + d, 1f);
     }
 }

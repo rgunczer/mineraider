@@ -1,6 +1,5 @@
 package com.almagems.mineraider;
 
-import com.almagems.mineraider.EffectAnims.EffectAnim;
 import com.almagems.mineraider.EffectAnims.WahWah;
 import com.almagems.mineraider.EffectAnims.ZigZag;
 import com.almagems.mineraider.objects.EdgeDrawer;
@@ -10,8 +9,7 @@ import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Text;
 
-import static android.opengl.Matrix.setIdentityM;
-import static android.opengl.Matrix.multiplyMM;
+import static android.opengl.Matrix.*;
 
 import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
@@ -73,13 +71,13 @@ public class HUD {
 
         scoreX = -0.8f;
         scoreY = -Visuals.aspectRatio + (scoreText.getTextHeight() / 3f);
-        scoreText.pos.setPosition(scoreX, scoreY, 0f);
-        scoreText.pos.setRot(0f, 0f, 0f);
-        scoreText.pos.setScale(1f, 1f, 1f);
+        scoreText.pos.trans(scoreX, scoreY, 0f);
+        scoreText.pos.rot(0f, 0f, 0f);
+        scoreText.pos.scale(1f, 1f, 1f);
 
         extraText.setSpacingScale(0.065f);
         extraText.init("WATCH FOR MINECARTS", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), comboScale);
-        extraText.pos.setPosition(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
+        extraText.pos.trans(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
 
         ikon.init();
 
@@ -103,11 +101,11 @@ public class HUD {
 
         final boolean flipUCoordinate = false;
         quad.init(Visuals.getInstance().textureHelmets, new MyColor(1f, 1f, 1f, 1f), rect, flipUCoordinate);
-        quad.op.setPosition(-0.92f, -Visuals.aspectRatio + 0.06f /*+ 0.1f bonus*/, 0f);
-        quad.op.setRot(0f, 0f, 0f);
+        quad.pos.trans(-0.92f, -Visuals.aspectRatio + 0.06f /*+ 0.1f bonus*/, 0f);
+        quad.pos.rot(0f, 0f, 0f);
 
         float sc = 0.075f;
-        quad.op.setScale(sc, sc, 1f);
+        quad.pos.scale(sc, sc, 1f);
 
         extraTextCooling = 0;
         comboCounter = 0;
@@ -117,9 +115,9 @@ public class HUD {
     public void showBonusCartGems(int numberOfGems) {
         gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), 0.6f);
         float textWidth = gemsFromCartText.getTextWidth();
-        gemsFromCartText.pos.setPosition(-textWidth / 2f, -1.0f, 0f);
-        gemsFromCartText.pos.setRot(0f, 0f, 0f);
-        gemsFromCartText.pos.setScale(1f, 1f, 1f);
+        gemsFromCartText.pos.trans(-textWidth / 2f, -1.0f, 0f);
+        gemsFromCartText.pos.rot(0f, 0f, 0f);
+        gemsFromCartText.pos.scale(1f, 1f, 1f);
 
         bonusFromCartCooling = 100;
     }
@@ -129,9 +127,9 @@ public class HUD {
 
         extraText.init("COMBOx" + comboCounter, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), comboScale);
         float textWidth = extraText.getTextWidth();
-        extraText.pos.setPosition(-textWidth / 2f, -0.4f, 0f);
-        extraText.pos.setRot(0f, 0f, 0f);
-        extraText.pos.setScale(1f, 1f, 1f);
+        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
+        extraText.pos.rot(0f, 0f, 0f);
+        extraText.pos.scale(1f, 1f, 1f);
 
         extraTextCooling = 100;
         comboScale += 0.05f;
@@ -143,9 +141,9 @@ public class HUD {
     public void showPerfectSwap() {
         extraText.init("PERFECT SWAP", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), perfectSwapScale);
         float textWidth = extraText.getTextWidth();
-        extraText.pos.setPosition(-textWidth / 2f, -0.4f, 0f);
-        extraText.pos.setRot(0f, 0f, 0f);
-        extraText.pos.setScale(1f, 1f, 1f);
+        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
+        extraText.pos.rot(0f, 0f, 0f);
+        extraText.pos.scale(1f, 1f, 1f);
 
         extraTextCooling = 25;
         effectWahWah.wahScale = 0.6f;

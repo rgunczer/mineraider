@@ -89,6 +89,7 @@ public class MineRaiderRenderer implements Renderer {
 				
 		visuals = Visuals.getInstance();
 		visuals.init(context);
+        Scene.visuals = visuals;
 
 		try {		
 			visuals.loadAssets();
@@ -123,10 +124,9 @@ public class MineRaiderRenderer implements Renderer {
 	@Override
 	public void onSurfaceChanged(GL10 glUnused, int width, int height) {
         float w = width;
-        float h = height - ClassicSingleton.adHeight;
+        float h = height; // - ClassicSingleton.adHeight;
 		glViewport(0, 0, (int)w, (int)h);
         //glViewport(0, 0, 200, 400);
-
 
         Visuals.screenWidth = w;
         Visuals.screenHeight = h;

@@ -18,7 +18,7 @@ public class GemPosition {
     public int boardX;
 	public int boardY;
 
-	public ObjectPosition op = new ObjectPosition();	
+	public PositionInfo pos = new PositionInfo();
 	public Sphere boundingSphere;
 	public int type;
 	public boolean visible = true;	
@@ -45,7 +45,7 @@ public class GemPosition {
         this.boardX = another.boardX;
         this.boardY = another.boardY;
 
-        this.op.init(another.op);
+        this.pos.init(another.pos);
 
         this.boundingSphere = another.boundingSphere;
         this.type = another.type;
@@ -56,9 +56,9 @@ public class GemPosition {
 	public void init( float tx, float ty, float tz,
 			 		  float sx, float sy, float sz) {
 	
-		op.setPosition(tx, ty, tz);
-		op.setRot(0f, 0f, 0f);
-		op.setScale(sx, sy, sz);
+		pos.trans(tx, ty, tz);
+		pos.rot(0f, 0f, 0f);
+		pos.scale(sx, sy, sz);
 		
 		final float radius = 1.5f;
 		this.boundingSphere = new Sphere(tx, ty, tz, radius);		

@@ -1,13 +1,13 @@
 package com.almagems.mineraider.EffectAnims;
 
-import com.almagems.mineraider.ObjectPosition;
+import com.almagems.mineraider.PositionInfo;
 
 public abstract class EffectAnim {
 
-    public ObjectPosition posOrigin = new ObjectPosition();
-    public ObjectPosition pos;
+    public PositionInfo posOrigin = new PositionInfo();
+    public PositionInfo pos;
 
-    public abstract void init(ObjectPosition pos);
+    public abstract void init(PositionInfo pos);
     public abstract void update();
 
 }

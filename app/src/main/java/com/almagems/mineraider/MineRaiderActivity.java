@@ -3,7 +3,6 @@ package com.almagems.mineraider;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -22,9 +21,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-
-
-import static com.almagems.mineraider.Constants.*;
 
 
 public class MineRaiderActivity extends Activity {
@@ -70,7 +66,7 @@ public class MineRaiderActivity extends Activity {
 					// convert touch coordinates into normalized device
 					// coordinates, keeping in mind that Android's Y coordinates are inverted
 					final float normalizedX = (event.getX() / (float) v.getWidth()) * 2 - 1;
-					final float normalizedY = -((event.getY() / (float) v.getHeight()) * 2 - 1);
+					final float normalizedY = -((event.getY() / (float)v.getHeight() ) * 2 - 1);
 
 					if (event.getAction() == MotionEvent.ACTION_DOWN) {
 						System.out.println("Action Down... " + normalizedX + ", " + normalizedY);

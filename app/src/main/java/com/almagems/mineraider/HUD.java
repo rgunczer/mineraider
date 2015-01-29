@@ -223,6 +223,8 @@ public class HUD {
 
         quad.draw();
 
+
+/*
         MyColor color = new MyColor(1f, 1f, 0f, 1f);
 
         edgeDrawer.begin();
@@ -239,6 +241,6 @@ public class HUD {
         visuals.colorShader.setUniforms(visuals.mvpMatrix, color);
         edgeDrawer.bindData(visuals.colorShader);
         edgeDrawer.draw();
-
+*/
     }
 }

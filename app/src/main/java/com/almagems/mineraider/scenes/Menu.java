@@ -34,10 +34,14 @@ public class Menu extends Scene {
     private final Quad gemTypes;
     private final Quad minerSign;
 
+    private final PositionInfo _pos;
+
     private Fade fade;
 
     // ctor
     public Menu() {
+        _pos = new PositionInfo();
+
         title = new Quad();
         play = new Quad();
         options = new Quad();
@@ -211,20 +215,17 @@ public class Menu extends Scene {
 
         drawEdge();
 
-
         fade.update();
         fade.draw();
 	}
 
 	private void drawBg() {
-/*
-        _op.setPosition(0f, 0f, 0f);
-        _op.setRot(0f, 0f, 0f);
-        _op.setScale(1.0f, 1.0f, 1.0f);
+        _pos.trans(0f, 0f, 0f);
+        _pos.rot(0f, 0f, 0f);
+        _pos.scale(1.0f, 1.0f, 1.0f);
 
-		visuals.calcMatricesForObject(_op);
+		visuals.calcMatricesForObject(_pos);
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
-
 
         vbBg.bind();
         visuals.textureShader.bindData(vbBg);
@@ -233,7 +234,6 @@ public class Menu extends Scene {
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
         vbBg.unbind();
         ibBg.unbind();
-*/
 	}
 
     private void drawEdge() {
@@ -262,7 +262,7 @@ public class Menu extends Scene {
 
         if ( play.isHit(pos.x, pos.y) ) {
             System.out.println("play is hit...");
-            //ClassicSingleton.getInstance().showScene(ScenesEnum.HelmetSelect);
+            ClassicSingleton.getInstance().showScene(ScenesEnum.HelmetSelect);
             return;
         }
 

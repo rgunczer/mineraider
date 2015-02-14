@@ -81,8 +81,8 @@ public class Visuals {
     public int textureFonts;
     public int textureHelmets;
     public int textureNextArrow;
-
-
+    public int textureMineEntranceBeam;
+    public int textureEditorButtons;
 
 
 
@@ -113,6 +113,7 @@ public class Visuals {
 	public Model rock7;
 	public Model rock8;
 	public Model pickAxe;
+    public Model mineEntranceBeam;
 	
 	// shaders
 	public TextureShader textureShader;
@@ -324,6 +325,10 @@ public class Visuals {
 		ml = new ModelLoader();
 		ml.init(context, R.drawable.pickaxe, "PickAxe");
 		pickAxe = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.mine_entrance_beam, "MineEntranceBeam");
+        mineEntranceBeam = new Model(ml);
 	}	
 
     private int loadTexture(int resourceId) {
@@ -364,6 +369,8 @@ public class Visuals {
         //textureIkon = loadTexture(R.drawable.ikon_texture);
         textureHelmets = loadTexture(R.drawable.helmets_texture);
         textureNextArrow = loadTexture(R.drawable.helmet_next_arrow_texture);
+        textureMineEntranceBeam = loadTexture(R.drawable.mine_entrance_beam_texture);
+        textureEditorButtons = loadTexture(R.drawable.editor_buttons);
 	}
 
 	public void bindNoTexture() {
@@ -392,7 +399,17 @@ public class Visuals {
 //		orthoM(projectionMatrix, 0, 0f, width, 0f, height, 0f, 100f);
 		//setLookAtM(viewMatrix, 0, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f);
 	}
-	
+
+    public void setProjectionMatrix3dForMenu()
+    {
+        MatrixHelper.perspectiveM(projectionMatrix, 45, screenWidth / screenHeight, 1f, 100f);
+
+        setLookAtM(viewMatrix, 0,
+                -47f,  0f, 35f,	// eye
+                0f,  0f, 0f,    // at
+                0f,  1f, 0f);   // up
+    }
+
 	public void setProjectionMatrix3D() {
 				
 		float eyeZ = 49.0f;

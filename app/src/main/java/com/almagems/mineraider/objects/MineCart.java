@@ -63,9 +63,7 @@ public class MineCart {
 	}
 	
 	private void CreateWheelJoint() {
-
-		
-		WheelJointDef wd =  new WheelJointDef();
+		WheelJointDef wd = new WheelJointDef();
 		wd.bodyA = cart;
 		wd.bodyB = wheel1;
 		wd.localAnchorA.set(-1.6f, -2.2f);

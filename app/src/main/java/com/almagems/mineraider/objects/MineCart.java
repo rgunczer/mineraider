@@ -352,22 +352,28 @@ public class MineCart {
 		pos = wheel1.getPosition();
 		degree = (float)Math.toDegrees( wheel1.getAngle() );
 
-		_op.trans(pos.x, pos.y, 2f);
+		_op.trans(pos.x, pos.y, 1f);// 2f);
 		_op.rot(0f, 0f, degree);
 
         visuals.calcMatricesForObject(_op);
 		visuals.dirLightShader.setUniforms();
 		visuals.wheel.draw();
-			
+
+
+
+
+
 		// wheel 2
 		pos = wheel2.getPosition();
 		degree = (float)Math.toDegrees( wheel2.getAngle() );
 
-        _op.trans(pos.x, pos.y, 2f);
+        _op.trans(pos.x, pos.y, 1f);
 		_op.rot(0f, 0f, degree);
 
         visuals.calcMatricesForObject(_op);
 		visuals.dirLightShader.setUniforms();
 		visuals.wheel.draw();
+
+
 	}
 }

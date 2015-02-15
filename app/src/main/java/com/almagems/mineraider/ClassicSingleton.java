@@ -39,6 +39,10 @@ public class ClassicSingleton {
 
     public void showScene(ScenesEnum sceneId) {
         switch (sceneId) {
+            case Shaft:
+                renderer.showSceneShaft();
+                break;
+
             case Level:
                 renderer.showSceneLevel();
                 break;

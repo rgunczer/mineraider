@@ -134,43 +134,43 @@ public class PopAnimation extends BaseAnimation {
 		case GEM_TYPE_0:
 			physics.addFragmentGem0(x1, y1);
 			physics.addFragmentGem0(x2, y2);
-			physics.addFragmentGem0(x3, y3);
+			//physics.addFragmentGem0(x3, y3);
 			break;
 		
 		case GEM_TYPE_1:
 			physics.addFragmentGem1(x1, y1);
 			physics.addFragmentGem1(x2, y2);
-			physics.addFragmentGem1(x3, y3);
+			//physics.addFragmentGem1(x3, y3);
 			break;
 		
 		case GEM_TYPE_2:
 			physics.addFragmentGem2(x1, y1);
 			physics.addFragmentGem2(x2, y2);
-			physics.addFragmentGem2(x3, y3);
+			//physics.addFragmentGem2(x3, y3);
 			break;
 		
 		case GEM_TYPE_3:
 			physics.addFragmentGem3(x1, y1);
 			physics.addFragmentGem3(x2, y2);
-			physics.addFragmentGem3(x3, y3);
+			//physics.addFragmentGem3(x3, y3);
 			break;
 			
 		case GEM_TYPE_4:
 			physics.addFragmentGem4(x1, y1);
 			physics.addFragmentGem4(x2, y2);
-			physics.addFragmentGem4(x3, y3);
+			//physics.addFragmentGem4(x3, y3);
 			break;
 		
 		case GEM_TYPE_5:
 			physics.addFragmentGem5(x1, y1);
 			physics.addFragmentGem5(x2, y2);
-			physics.addFragmentGem5(x3, y3);
+			//physics.addFragmentGem5(x3, y3);
 			break;
 		
 		case GEM_TYPE_6:
 			physics.addFragmentGem6(x1, y1);
 			physics.addFragmentGem6(x2, y2);
-			physics.addFragmentGem6(x3, y3);
+			//physics.addFragmentGem6(x3, y3);
 			break;
 		}
 	}	

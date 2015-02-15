@@ -35,6 +35,8 @@ public class Menu extends Scene {
 
     private final EdgeDrawer edgeDrawer;
 
+    private final boolean editorEnabled = false;
+
     private VertexBuffer vbBg;
     private IndexBuffer ibBg;
 
@@ -84,6 +86,7 @@ public class Menu extends Scene {
         options = new Quad();
         about = new Quad();
 
+
         editorTXPlus = new Quad();
         editorTXMinus = new Quad();
         editorTYPlus = new Quad();
@@ -118,40 +121,6 @@ public class Menu extends Scene {
 
         // minecart
         mineCart = new MineCart(-1f, -15.7f);
-    }
-
-    private VertexBuffer createVertexBuffer(Rectangle rc, Texture texture) {
-        float width = Visuals.screenWidth;
-        float scale = width / Visuals.referenceScreenWidth;
-
-        float tw = texture.width;
-        float th = texture.height;
-
-        float r = 1f;
-        float g = 1f;
-        float b = 1f;
-        float a = 1f;
-
-        float tx0 = rc.x / tw;
-        float tx1 = (rc.x + rc.w) / tw;
-        float ty0 = ((th - rc.y) - rc.h) / th;
-        float ty1 = ((th - rc.y)) / th;
-
-        float x = (rc.w / width) * scale;
-        float y = (rc.h / width) * scale;
-        float[] vertexData = {
-                // x, y, z, 	                u, v,
-                -x, -y, 0.0f,   r, g, b, a,     tx0, ty0,
-                 x, -y, 0.0f,   r, g, b, a,     tx1, ty0,
-                 x,  y, 0.0f,   r, g, b, a,     tx1, ty1,
-
-                -x, -y, 0.0f,   r, g, b, a,     tx0, ty0,
-                 x,  y, 0.0f,   r, g, b, a,     tx1, ty1,
-                -x,  y, 0.0f,   r, g, b, a,     tx0, ty1
-        };
-
-        VertexBuffer vb = new VertexBuffer(vertexData);
-        return vb;
     }
 
     @Override
@@ -205,29 +174,28 @@ public class Menu extends Scene {
 
 
 
-
-        rect = new Rectangle(0, 308+439, 1080, 439);
+        rect = new Rectangle(0, 1215+371, 1080, 371);
         title.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
         title.pos.trans(0f, aspect * 0.65f, 0f);
         title.pos.rot(0f, 0f, 0f);
         title.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
 
-        rect = new Rectangle(1155, 0+308, 407, 308);
+        rect = new Rectangle(0, 584+308, 1080, 308);
         play.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
-        play.pos.trans(0.0f, aspect * 0.3f, 0f);
+        play.pos.trans(0.0f, aspect * 0.1f, 0f);
         play.pos.rot(0f, 0f, 0f);
         play.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
-        rect = new Rectangle(525, 0+296, 630, 296);
+        rect = new Rectangle(0, 288+296, 1080, 296);
         options.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
-        options.pos.trans(0.0f, -aspect * 0.0f, 0f);
+        options.pos.trans(0.0f, -aspect * 0.2f, 0f);
         options.pos.rot(0f, 0f, 0f);
         options.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
-        rect = new Rectangle(0, 0+288, 525, 288);
+        rect = new Rectangle(0, 0+288, 1080, 288);
         about.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
-        about.pos.trans(0.0f, -aspect * 0.3f, 0f);
+        about.pos.trans(0.0f, -aspect * 0.5f, 0f);
         about.pos.rot(0f, 0f, 0f);
         about.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
@@ -384,15 +352,6 @@ public class Menu extends Scene {
 
 
 
-
-
-
-        fade = new Fade();
-        fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
-
-
-
-
         rocks.add( new RockData(3, -1.5f, -21.0f, -8.25f, 0.0f, 0.0f, 0.0f, 2.1000001f, 1.8000002f, 1.7000002f) );
         rocks.add( new RockData(0, -13.0f, -19.0f, -7.75f, 0.0f, 0.0f, 0.0f, 2.1000001f, 1.9000002f, 1.6000001f) );
         rocks.add( new RockData(2, -7.0f, -20.5f, -9.25f, 0.0f, 0.0f, 0.0f, 2.3999999f, 1.9000002f, 2.1000001f) );
@@ -424,6 +383,19 @@ public class Menu extends Scene {
         rocks.add( new RockData(1, 17.5f, -7.0f, -0.25f, 0.0f, 0.0f, 0.0f, 2.0f, 1.25f, 1.75f) );
         rocks.add( new RockData(0, 9.5f, -7.0f, 12.75f, 0.0f, -39.0f, -33.0f, 1.5f, 1.5f, 1.75f) );
         rocks.add( new RockData(0, 15.5f, -6.0f, 6.25f, -39.0f, 0.0f, 0.0f, 1.5f, 1.5f, 1.5f) );
+        rocks.add( new RockData(1, -22.0f, -20.5f, -9.25f, 0.0f, 39.0f, 0.0f, 2.25f, 2.25f, 2.25f) );
+        rocks.add( new RockData(7, -17.0f, -20.0f, -9.25f, 18.0f, 93.0f, 0.0f, 2.5f, 2.25f, 2.75f) );
+        rocks.add( new RockData(3, 2.5f, -13.0f, -14.25f, 57.0f, 6.0f, 57.0f, 2.0f, 2.0f, 1.75f) );
+        rocks.add( new RockData(0, 3.5f, -6.5f, -1.25f, -30.0f, 0.0f, 0.0f, 1.25f, 1.25f, 1.5f) );
+        rocks.add( new RockData(6, 1.0f, -11.0f, -7.75f, 0.0f, -39.0f, 15.0f, 1.5f, 1.5f, 1.75f) );
+
+
+
+
+        fade = new Fade();
+        fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
+
+
 
 
 
@@ -465,6 +437,10 @@ public class Menu extends Scene {
         visuals.dirLightShader.setTexture(visuals.textureMineEntranceBeam);
         drawBeams();
 
+        visuals.dirLightShader.setTexture(visuals.textureMineInterior);
+        drawMineInterior();
+
+
         drawMineCarts();
 
         visuals.dirLightShader.setTexture(visuals.textureCliff142);
@@ -487,9 +463,9 @@ public class Menu extends Scene {
         about.draw();
         title.draw();
 
-
-        //drawEditorButtons();
-
+        if (editorEnabled) {
+            drawEditorButtons();
+        }
 
         //visuals.textureShader.setTexture(visuals.textureFonts);
         //text.draw();
@@ -543,34 +519,34 @@ public class Menu extends Scene {
         rock.draw();
     }
 
-    void drawRocks() {
-        RockData rd = new RockData();
-/*
+    void drawRockTypes() {
         // rock types
-
+        RockData rd = new RockData();
         rd.x = 13.5f;
-		rd.y = 10f;
-		rd.z = 0f;
+        rd.y = 10f;
+        rd.z = 0f;
 
-		drawRock(visuals.rock0, rd);
+        drawRock(visuals.rock0, rd);
         rd.x = 10f;
-		drawRock(visuals.rock1, rd);
+        drawRock(visuals.rock1, rd);
         rd.x = 7f;
-		drawRock(visuals.rock2,	rd);
+        drawRock(visuals.rock2,	rd);
         rd.x = 4f;
-		drawRock(visuals.rock3,	rd);
+        drawRock(visuals.rock3,	rd);
         rd.x = 1f;
-		drawRock(visuals.rock4,	rd);
+        drawRock(visuals.rock4,	rd);
         rd.x = -3f;
-		drawRock(visuals.rock5,	rd);
+        drawRock(visuals.rock5,	rd);
         rd.x = -7f;
-		drawRock(visuals.rock6, rd);
+        drawRock(visuals.rock6, rd);
         rd.x = -10f;
-		drawRock(visuals.rock7, rd);
+        drawRock(visuals.rock7, rd);
         rd.x = -13.5f;
-		drawRock(visuals.rock8, rd);
-*/
+        drawRock(visuals.rock8, rd);
+    }
 
+    void drawRocks() {
+        RockData rd;
         int size = rocks.size();
         for (int i = 0; i < size; ++i) {
             rd = rocks.get(i);
@@ -586,31 +562,41 @@ public class Menu extends Scene {
                 case 8: drawRock(visuals.rock8, rd); break;
             }
         }
-
     }
 
     void drawMineCarts() {
         mineCart.draw();
     }
 
+    void drawMineInterior() {
+        visuals.mineInterior.bindData(visuals.dirLightShader);
+
+        _pos.trans(10f, -17.0f, -4f);
+        _pos.rot(0f, 0f, 0f);
+        _pos.scale(1.0f, 1.0f, 1.0f);
+        visuals.calcMatricesForObject(_pos);
+        visuals.dirLightShader.setUniforms();
+        visuals.mineInterior.draw();
+    }
+
     void drawFloor() {
         visuals.floor.bindData(visuals.dirLightShader);
 
-        _pos.trans(0f, -20.5f, 0f);
+        _pos.trans(-10f, -20.5f, 0f);
         _pos.rot(0f, 0f, 0f);
         _pos.scale(1.0f, 1.0f, 1.0f);
         visuals.calcMatricesForObject(_pos);
         visuals.dirLightShader.setUniforms();
         visuals.floor.draw();
 
-        _pos.trans(0f, -20.5f, 10f);
+        _pos.trans(-10f, -20.5f, 10f);
         _pos.rot(0f, 0f, 0f);
         _pos.scale(1.0f, 1.0f, 1.0f);
         visuals.calcMatricesForObject(_pos);
         visuals.dirLightShader.setUniforms();
         visuals.floor.draw();
 
-        _pos.trans(0f, -20.5f, -10f);
+        _pos.trans(-10f, -20.5f, -10f);
         _pos.rot(0f, 0f, 0f);
         _pos.scale(1.0f, 1.0f, 1.0f);
         visuals.calcMatricesForObject(_pos);
@@ -621,7 +607,7 @@ public class Menu extends Scene {
     void drawRailRoad() {
         visuals.railroad.bindData(visuals.dirLightShader);
 
-        float x = -10f;
+        float x = -22f;
         float y = -20.0f;
         float z =  1.0f;
         float tempZ;
@@ -691,6 +677,134 @@ public class Menu extends Scene {
         ibBg.unbind();
 	}
 
+    private void doEditorStuff(float x, float y) {
+        if (currentRock != null) {
+
+            // trans
+            if (editorTXPlus.isHit(x, y)) {
+                System.out.println("tx plus");
+                currentRock.x += 0.5f;
+            }
+
+            if (editorTXMinus.isHit(x, y)) {
+                System.out.println("tx minus");
+                currentRock.x -= 0.5f;
+            }
+
+            if (editorTYPlus.isHit(x, y)) {
+                System.out.println("ty plus");
+                currentRock.y += 0.5f;
+            }
+
+            if (editorTYMinus.isHit(x, y)) {
+                System.out.println("ty minus");
+                currentRock.y -= 0.5f;
+            }
+
+            if (editorTZPlus.isHit(x, y)) {
+                System.out.println("tz plus");
+                currentRock.z += 0.5f;
+            }
+
+            if (editorTZMinus.isHit(x, y)) {
+                System.out.println("tz minus");
+                currentRock.z -= 0.5f;
+            }
+
+
+            // rot
+            if (editorRXPlus.isHit(x, y)) {
+                System.out.println("rx plus");
+                currentRock.rx += 3.0f;
+            }
+
+            if (editorRXMinus.isHit(x, y)) {
+                System.out.println("rx minus");
+                currentRock.rx -= 3.0f;
+            }
+
+            if (editorRYPlus.isHit(x, y)) {
+                System.out.println("ry plus");
+                currentRock.ry += 3.0f;
+            }
+
+            if (editorRYMinus.isHit(x, y)) {
+                System.out.println("ry minus");
+                currentRock.ry -= 3.0f;
+            }
+
+            if (editorRZPlus.isHit(x, y)) {
+                System.out.println("rz plus");
+                currentRock.rz += 3.0f;
+            }
+
+            if (editorRZMinus.isHit(x, y)) {
+                System.out.println("rz minus");
+                currentRock.rz -= 3.0f;
+            }
+
+
+            // scal
+            if (editorSXPlus.isHit(x, y)) {
+                System.out.println("sx plus");
+                currentRock.sx += 0.25f;
+            }
+
+            if (editorSXMinus.isHit(x, y)) {
+                System.out.println("sx minus");
+                currentRock.sx -= 0.25f;
+            }
+
+            if (editorSYPlus.isHit(x, y)) {
+                System.out.println("sy plus");
+                currentRock.sy += 0.25f;
+            }
+
+            if (editorSYMinus.isHit(x, y)) {
+                System.out.println("sy minus");
+                currentRock.sy -= 0.25f;
+            }
+
+            if (editorSZPlus.isHit(x, y)) {
+                System.out.println("sz plus");
+                currentRock.sz += 0.25f;
+            }
+
+            if (editorSZMinus.isHit(x, y)) {
+                System.out.println("sz minus");
+                currentRock.sz -= 0.25f;
+            }
+
+            if (editorChangeType.isHit(x, y)) {
+                System.out.println("Change type...");
+
+                ++currentRock.rockId;
+
+                if (currentRock.rockId > 8) {
+                    currentRock.rockId = 0;
+                }
+            }
+        }
+
+        if (editorAddNew.isHit(x, y)) {
+            System.out.println("Add new...");
+
+            currentRock = new RockData();
+            rocks.add(currentRock);
+        }
+
+        if (editorDump.isHit(x, y)) {
+            System.out.println("Dump rocks...");
+
+            for (RockData rd : rocks) {
+                System.out.println("rocks.add( new RockData(" + rd.rockId + ", "
+                        + rd.x + "f, " + rd.y + "f, " + rd.z + "f, " +
+                        + rd.rx + "f, " + rd.ry + "f, " + rd.rz + "f, " +
+                        + rd.sx + "f, " + rd.sy + "f, " + rd.sz + "f) );");
+            }
+        }
+    }
+
     private void drawEdge() {
         edgeDrawer.begin();
         edgeDrawer.addLine(	-1f, 0f, 0f,
@@ -715,136 +829,15 @@ public class Menu extends Scene {
 
         Vector pos = Geometry.convertNormalized2DPointToNormalizedDevicePoint2D(normalizedX, normalizedY, visuals.invertedViewProjectionMatrix);
 
-        if (currentRock != null) {
 
-            // trans
-            if (editorTXPlus.isHit(pos.x, pos.y)) {
-                System.out.println("tx plus");
-                currentRock.x += 0.5f;
-            }
-
-            if (editorTXMinus.isHit(pos.x, pos.y)) {
-                System.out.println("tx minus");
-                currentRock.x -= 0.5f;
-            }
-
-            if (editorTYPlus.isHit(pos.x, pos.y)) {
-                System.out.println("ty plus");
-                currentRock.y += 0.5f;
-            }
-
-            if (editorTYMinus.isHit(pos.x, pos.y)) {
-                System.out.println("ty minus");
-                currentRock.y -= 0.5f;
-            }
-
-            if (editorTZPlus.isHit(pos.x, pos.y)) {
-                System.out.println("tz plus");
-                currentRock.z += 0.5f;
-            }
-
-            if (editorTZMinus.isHit(pos.x, pos.y)) {
-                System.out.println("tz minus");
-                currentRock.z -= 0.5f;
-            }
-
-
-            // rot
-            if (editorRXPlus.isHit(pos.x, pos.y)) {
-                System.out.println("rx plus");
-                currentRock.rx += 3.0f;
-            }
-
-            if (editorRXMinus.isHit(pos.x, pos.y)) {
-                System.out.println("rx minus");
-                currentRock.rx -= 3.0f;
-            }
-
-            if (editorRYPlus.isHit(pos.x, pos.y)) {
-                System.out.println("ry plus");
-                currentRock.ry += 3.0f;
-            }
-
-            if (editorRYMinus.isHit(pos.x, pos.y)) {
-                System.out.println("ry minus");
-                currentRock.ry -= 3.0f;
-            }
-
-            if (editorRZPlus.isHit(pos.x, pos.y)) {
-                System.out.println("rz plus");
-                currentRock.rz += 3.0f;
-            }
-
-            if (editorRZMinus.isHit(pos.x, pos.y)) {
-                System.out.println("rz minus");
-                currentRock.rz -= 3.0f;
-            }
-
-
-            // scal
-            if (editorSXPlus.isHit(pos.x, pos.y)) {
-                System.out.println("sx plus");
-                currentRock.sx += 0.25f;
-            }
-
-            if (editorSXMinus.isHit(pos.x, pos.y)) {
-                System.out.println("sx minus");
-                currentRock.sx -= 0.25f;
-            }
-
-            if (editorSYPlus.isHit(pos.x, pos.y)) {
-                System.out.println("sy plus");
-                currentRock.sy += 0.25f;
-            }
-
-            if (editorSYMinus.isHit(pos.x, pos.y)) {
-                System.out.println("sy minus");
-                currentRock.sy -= 0.25f;
-            }
-
-            if (editorSZPlus.isHit(pos.x, pos.y)) {
-                System.out.println("sz plus");
-                currentRock.sz += 0.25f;
-            }
-
-            if (editorSZMinus.isHit(pos.x, pos.y)) {
-                System.out.println("sz minus");
-                currentRock.sz -= 0.25f;
-            }
-
-            if (editorChangeType.isHit(pos.x, pos.y)) {
-                System.out.println("Change type...");
-
-                ++currentRock.rockId;
-
-                if (currentRock.rockId > 8) {
-                    currentRock.rockId = 0;
-                }
-            }
-        }
-
-        if (editorAddNew.isHit(pos.x, pos.y)) {
-            System.out.println("Add new...");
-
-            currentRock = new RockData();
-            rocks.add(currentRock);
-        }
-
-        if (editorDump.isHit(pos.x, pos.y)) {
-            System.out.println("Dump rocks...");
-
-            for (RockData rd : rocks) {
-                System.out.println("rocks.add( new RockData(" + rd.rockId + ", "
-                                                              + rd.x + "f, " + rd.y + "f, " + rd.z + "f, " +
-                                                              + rd.rx + "f, " + rd.ry + "f, " + rd.rz + "f, " +
-                                                              + rd.sx + "f, " + rd.sy + "f, " + rd.sz + "f) );");
-            }
+        if (editorEnabled) {
+            doEditorStuff(pos.x, pos.y);
+            return;
         }
 
         if ( play.isHit(pos.x, pos.y) ) {
             System.out.println("play is hit...");
-            //ClassicSingleton.getInstance().showScene(ScenesEnum.HelmetSelect);
-
+            ClassicSingleton.getInstance().showScene(ScenesEnum.HelmetSelect);
             return;
         }
 

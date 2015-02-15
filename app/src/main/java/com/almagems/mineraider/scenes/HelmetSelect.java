@@ -240,7 +240,7 @@ public class HelmetSelect extends Scene {
             //System.out.println(ClassicSingleton.getInstance().helmetIndexToString(currentHelmetIndex));
 
             if (normalizedX > 0.3f) {
-                nextSceneId = ScenesEnum.Level;
+                nextSceneId = ScenesEnum.Shaft;
             } else if (normalizedX < -0.3f) {
                 nextSceneId = ScenesEnum.Menu;
             } else {

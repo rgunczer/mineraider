@@ -7,6 +7,7 @@ import static com.almagems.mineraider.Constants.*;
 import android.content.Context;
 import android.graphics.Color;
 
+import com.almagems.mineraider.data.VertexBuffer;
 import com.almagems.mineraider.objects.Model;
 import com.almagems.mineraider.shaders.ColorShader;
 import com.almagems.mineraider.shaders.NormalColorShader;
@@ -83,7 +84,8 @@ public class Visuals {
     public int textureNextArrow;
     public int textureMineEntranceBeam;
     public int textureEditorButtons;
-
+    public int textureMineInterior;
+    public int textureShaftBg;
 
 
 
@@ -114,7 +116,8 @@ public class Visuals {
 	public Model rock8;
 	public Model pickAxe;
     public Model mineEntranceBeam;
-	
+	public Model mineInterior;
+
 	// shaders
 	public TextureShader textureShader;
 	public ColorShader colorShader;
@@ -329,6 +332,10 @@ public class Visuals {
         ml = new ModelLoader();
         ml.init(context, R.drawable.mine_entrance_beam, "MineEntranceBeam");
         mineEntranceBeam = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.mine_interior, "MineInterior");
+        mineInterior = new Model(ml);
 	}	
 
     private int loadTexture(int resourceId) {
@@ -371,6 +378,8 @@ public class Visuals {
         textureNextArrow = loadTexture(R.drawable.helmet_next_arrow_texture);
         textureMineEntranceBeam = loadTexture(R.drawable.mine_entrance_beam_texture);
         textureEditorButtons = loadTexture(R.drawable.editor_buttons);
+        textureMineInterior = loadTexture(R.drawable.brick_messy_texture);
+        textureShaftBg = loadTexture(R.drawable.shaft_bg_texture);
 	}
 
 	public void bindNoTexture() {
@@ -405,8 +414,10 @@ public class Visuals {
         MatrixHelper.perspectiveM(projectionMatrix, 45, screenWidth / screenHeight, 1f, 100f);
 
         setLookAtM(viewMatrix, 0,
-                -47f,  0f, 35f,	// eye
-                0f,  0f, 0f,    // at
+                -40f,  0f, 50f,	// eye
+                //-40f, 0f, 0f,
+                -10f,  1f, 0f,    // at
+                //0f, -10f, 0f,
                 0f,  1f, 0f);   // up
     }
 
@@ -508,7 +519,41 @@ public class Visuals {
 		invertM(normalMatrix, 0, modelMatrix, 0);
 		transposeM(normalMatrix, 0, normalMatrix, 0);
 	}
-	
+
+    public VertexBuffer createFullScreenVertexBuffer(Rectangle rc, Texture texture) {
+        float width = screenWidth;
+        float scale = width / referenceScreenWidth;
+
+        float tw = texture.width;
+        float th = texture.height;
+
+        float r = 1f;
+        float g = 1f;
+        float b = 1f;
+        float a = 1f;
+
+        float tx0 = rc.x / tw;
+        float tx1 = (rc.x + rc.w) / tw;
+        float ty0 = ((th - rc.y) - rc.h) / th;
+        float ty1 = ((th - rc.y)) / th;
+
+        float x = (rc.w / width) * scale;
+        float y = (rc.h / width) * scale;
+        float[] vertexData = {
+                // x, y, z, 	                u, v,
+                -x, -y, 0.0f,   r, g, b, a,     tx0, ty0,
+                 x, -y, 0.0f,   r, g, b, a,     tx1, ty0,
+                 x,  y, 0.0f,   r, g, b, a,     tx1, ty1,
+
+                -x, -y, 0.0f,   r, g, b, a,     tx0, ty0,
+                 x,  y, 0.0f,   r, g, b, a,     tx1, ty1,
+                -x,  y, 0.0f,   r, g, b, a,     tx0, ty1
+        };
+
+        VertexBuffer vb = new VertexBuffer(vertexData);
+        return vb;
+    }
+
 	public int colorFromGemType(int type) {		
 		switch (type) {
 			case GEM_TYPE_0: return Color.rgb(255, 6, 0);	

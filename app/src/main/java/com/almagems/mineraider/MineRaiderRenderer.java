@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.almagems.mineraider.scenes.HelmetSelect;
 import com.almagems.mineraider.scenes.Level;
 import com.almagems.mineraider.scenes.Menu;
+import com.almagems.mineraider.scenes.MineShaft;
 import com.almagems.mineraider.scenes.Scene;
 import com.almagems.mineraider.shaders.ParticleShader;
 
@@ -25,6 +26,7 @@ public class MineRaiderRenderer implements Renderer {
     private Scene playerSelect;
 	private Scene menu;
 	private Scene level;
+    private Scene shaft;
 	private Scene current;
 
 	
@@ -38,6 +40,13 @@ public class MineRaiderRenderer implements Renderer {
 		instance.renderer = this;
         instance.activity = (MineRaiderActivity)context;
 	}
+
+    public void showSceneShaft() {
+        glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
+        visuals.setProjectionMatrix2D();
+        shaft.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+        current = shaft;
+    }
 	
 	public void showSceneLevel() {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -103,6 +112,10 @@ public class MineRaiderRenderer implements Renderer {
 			});
 			return;
 		}
+
+        if (shaft == null) {
+            shaft = new MineShaft();
+        }
 
 		if (level == null) {
 			level = new Level();

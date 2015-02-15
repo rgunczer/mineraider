@@ -43,6 +43,7 @@ public class Constants {
         None,
         Menu,
         HelmetSelect,
+        Shaft,
         Level,
         Loading,
     }

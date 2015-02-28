@@ -23,7 +23,6 @@ public class Fade extends EffectAnim {
     // ctor
     public Fade() {
         visuals = Visuals.getInstance();
-        createVertexArray();
     }
 
     public void init(MyColor from, MyColor to) { // do we need speed param!? for how fast the fading should occur
@@ -33,6 +32,7 @@ public class Fade extends EffectAnim {
         t = 0.0f;
         done = false;
         pos = posOrigin;
+        createVertexArray();
     }
 
     private void createVertexArray() {
@@ -68,7 +68,7 @@ public class Fade extends EffectAnim {
             colorCurrent.g = LERP(colorFrom.g, colorTo.g, t);
             colorCurrent.b = LERP(colorFrom.b, colorTo.b, t);
             colorCurrent.a = LERP(colorFrom.a, colorTo.a, t);
-            //System.out.println("Fade update... " + t + ", " + colorCurrent.toString());
+            System.out.println("Fade update... " + t + ", " + colorCurrent.toString());
         }
     }
 
@@ -85,6 +85,6 @@ public class Fade extends EffectAnim {
         visuals.colorShader.bindData(vertexArray);
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
-        //System.out.println("Fade draw...");
+        System.out.println("Fade draw...");
     }
 }

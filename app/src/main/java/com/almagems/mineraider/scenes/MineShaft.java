@@ -2,6 +2,8 @@ package com.almagems.mineraider.scenes;
 
 
 import com.almagems.mineraider.ClassicSingleton;
+
+import static android.opengl.GLES20.glEnable;
 import static com.almagems.mineraider.Constants.*;
 import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Visuals;
@@ -22,18 +24,27 @@ public class MineShaft extends Scene {
 
     private final PositionInfo _pos;
 
+    private float _elevatorY = 0f;
+    private float _elevatorYstep = 0.15f;
+    private float _elevatorStopTimeout = 1f;
+    private boolean _stopped = false;
+
+    private final float _topTunnelY = 13.8f;
+    private final float _middleTunnelY = -4.4f;
+    private final float _bottomTunnelY = -22.0f;
+
+    private static Visuals visuals;
+
     // ctor
     public MineShaft() {
         System.out.print("MineShaft ctor...");
 
         _pos = new PositionInfo();
-
+        visuals = Visuals.getInstance();
     }
 
     @Override
     public void surfaceChanged(int width, int height) {
-
-
         final float r = 1f;
         final float g = 1f;
         final float b = 1f;
@@ -68,10 +79,7 @@ public class MineShaft extends Scene {
 
         vbBg = new VertexBuffer(vertices);
         ibBg = new IndexBuffer(indices);
-
-
     }
-
 
     private void drawBg() {
         _pos.trans(0f, 0f, 0f);
@@ -90,10 +98,128 @@ public class MineShaft extends Scene {
         ibBg.unbind();
     }
 
+    private void drawShaft() {
+        visuals.shaft.bindData(visuals.dirLightShader);
+
+        _pos.trans(-4f, 0.0f, 0f);
+        _pos.rot(0f, 0f, 0f);
+        _pos.scale(1.0f, 1.0f, 1.0f);
+        visuals.calcMatricesForObject(_pos);
+        visuals.dirLightShader.setUniforms();
+        visuals.shaft.draw();
+    }
+
+    private void drawElevator() {
+        visuals.elevator.bindData(visuals.dirLightShader);
+
+        _pos.trans(-4f, _elevatorY, 0f);
+        _pos.rot(0f, 0f, 0f);
+        _pos.scale(1.0f, 1.0f, 1.0f);
+        visuals.calcMatricesForObject(_pos);
+        visuals.dirLightShader.setUniforms();
+        visuals.shaft.draw();
+    }
+
+    void drawRailRoads() {
+        float x, y, z,  tempZ;
+        visuals.railroad.bindData(visuals.dirLightShader);
+
+        // top tunnel
+        x = 6.5f;
+        y = 11.8f;
+        z = 0.0f;
+        for(int i = 0; i < 2; ++i) {
+            tempZ = z;
+            _pos.trans(x, y, z);
+            _pos.rot(0f, 0f, 0f);
+            _pos.scale(1f, 1f, 1f);
+
+            visuals.calcMatricesForObject(_pos);
+            visuals.dirLightShader.setUniforms();
+            visuals.railroad.draw();
+
+            z = tempZ;
+            x += 10.0f;
+        }
+
+        // middle tunnel
+        x = 6.5f;
+        y = -6.5f;
+        z = 0.0f;
+        for(int i = 0; i < 2; ++i) {
+            tempZ = z;
+            _pos.trans(x, y, z);
+            _pos.rot(0f, 0f, 0f);
+            _pos.scale(1f, 1f, 1f);
+
+            visuals.calcMatricesForObject(_pos);
+            visuals.dirLightShader.setUniforms();
+            visuals.railroad.draw();
+
+            z = tempZ;
+            x += 10.0f;
+        }
+
+        // bottom tunnel
+        x = 6.5f;
+        y = -24.3f;
+        z = 0.0f;
+        for(int i = 0; i < 2; ++i) {
+            tempZ = z;
+            _pos.trans(x, y, z);
+            _pos.rot(0f, 0f, 0f);
+            _pos.scale(1f, 1f, 1f);
+
+            visuals.calcMatricesForObject(_pos);
+            visuals.dirLightShader.setUniforms();
+            visuals.railroad.draw();
+
+            z = tempZ;
+            x += 10.0f;
+        }
+
+        // railroad part in elevator
+        x = -4f;
+        y = _elevatorY - 2f;
+        z = 0f;
+        _pos.trans(x, y, z);
+        _pos.rot(0f, 0f, 0f);
+        _pos.scale(1f, 1f, 1f);
+
+        visuals.calcMatricesForObject(_pos);
+        visuals.dirLightShader.setUniforms();
+        visuals.railroad.draw();
+    }
 
     @Override
     public void update() {
 
+        if (!_stopped) {
+            if (Math.abs(_elevatorY - _topTunnelY) < 0.1f) {
+                _elevatorStopTimeout = 10f;
+                _stopped = true;
+            } else if (Math.abs(_elevatorY - _middleTunnelY) < 0.1f) {
+                _elevatorStopTimeout = 10f;
+                _stopped = true;
+            } else if (Math.abs(_elevatorY - _bottomTunnelY) < 0.1f) {
+                _elevatorStopTimeout = 10f;
+                _stopped = true;
+            } else {
+                _elevatorY -= _elevatorYstep;
+            }
+        } else {
+            _elevatorStopTimeout -= 0.1f;
+
+            if (_elevatorStopTimeout < 0f) {
+                _stopped = false;
+                _elevatorY -= _elevatorYstep*2f;
+            }
+        }
+
+        if (_elevatorY  > 33.0f)
+            _elevatorYstep *= -1f;
+        else if (_elevatorY < -37.0f)
+            _elevatorYstep *= -1f;
     }
 
     @Override
@@ -108,13 +234,34 @@ public class MineShaft extends Scene {
         visuals.textureShader.setTexture(visuals.textureShaftBg);
         drawBg();
 
+        glEnable(GL_DEPTH_TEST);
+        visuals.setProjectionMatrix3dForShaft();
+        visuals.updateViewProjMatrix();
+
+        visuals.dirLightShader.useProgram();
+        visuals.dirLightShader.setTexture(visuals.textureShaft);
+        drawShaft();
+
+
+        visuals.dirLightShader.setTexture(visuals.textureElevator);
+        drawElevator();
+
+        visuals.dirLightShader.setTexture(visuals.textureRailRoad);
+        drawRailRoads();
 
     }
 
     @Override
     public void handleTouchPress(float normalizedX, float normalizedY) {
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-        singleton.showScene(ScenesEnum.Level);
+
+        if (_stopped) {
+            ClassicSingleton singleton = ClassicSingleton.getInstance();
+            singleton.showScene(ScenesEnum.Level);
+        }
+
+
+
+        //System.out.println("ElevatorY: " + _elevatorY);
     }
 
     @Override

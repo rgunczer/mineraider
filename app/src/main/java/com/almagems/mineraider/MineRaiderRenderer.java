@@ -132,6 +132,7 @@ public class MineRaiderRenderer implements Renderer {
 		//current = level;
 		current = menu;
         //current = playerSelect;
+        //current = shaft;
 	}
 
 	@Override

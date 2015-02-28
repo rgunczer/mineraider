@@ -1,12 +1,19 @@
 package com.almagems.mineraider.scenes;
 
+import com.almagems.mineraider.Constants;
+import com.almagems.mineraider.EffectAnims.Fade;
 import com.almagems.mineraider.Visuals;
 
 public abstract class Scene {
 	
 	protected float touchDownX;
 	protected float touchDownY;
-	
+
+    protected Constants.ScenesEnum nextSceneId;
+    protected boolean goNextScene;
+
+    protected Fade _fade = new Fade();
+
 	public static Visuals visuals;
 
     //  ctor

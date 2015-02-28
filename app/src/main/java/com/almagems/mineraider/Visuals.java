@@ -86,6 +86,10 @@ public class Visuals {
     public int textureEditorButtons;
     public int textureMineInterior;
     public int textureShaftBg;
+    public int textureShaft;
+    public int textureElevator;
+
+
 
 
 
@@ -117,6 +121,8 @@ public class Visuals {
 	public Model pickAxe;
     public Model mineEntranceBeam;
 	public Model mineInterior;
+    public Model shaft;
+    public Model elevator;
 
 	// shaders
 	public TextureShader textureShader;
@@ -336,6 +342,14 @@ public class Visuals {
         ml = new ModelLoader();
         ml.init(context, R.drawable.mine_interior, "MineInterior");
         mineInterior = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.shaft, "Shaft");
+        shaft = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.elevator, "Elevator");
+        elevator = new Model(ml);
 	}	
 
     private int loadTexture(int resourceId) {
@@ -380,6 +394,8 @@ public class Visuals {
         textureEditorButtons = loadTexture(R.drawable.editor_buttons);
         textureMineInterior = loadTexture(R.drawable.brick_messy_texture);
         textureShaftBg = loadTexture(R.drawable.shaft_bg_texture);
+        textureShaft = loadTexture(R.drawable.shaft_texture);
+        textureElevator = loadTexture(R.drawable.elevator_texture);
 	}
 
 	public void bindNoTexture() {
@@ -418,6 +434,16 @@ public class Visuals {
                 //-40f, 0f, 0f,
                 -10f,  1f, 0f,    // at
                 //0f, -10f, 0f,
+                0f,  1f, 0f);   // up
+    }
+
+    public void setProjectionMatrix3dForShaft()
+    {
+        MatrixHelper.perspectiveM(projectionMatrix, 45, screenWidth / screenHeight, 1f, 100f);
+
+        setLookAtM(viewMatrix, 0,
+                0f,  0f, 68f,	// eye
+                0f,  0f, 0f,  // at
                 0f,  1f, 0f);   // up
     }
 

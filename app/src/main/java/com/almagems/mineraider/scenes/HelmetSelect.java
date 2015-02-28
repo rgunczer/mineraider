@@ -15,11 +15,9 @@ import static com.almagems.mineraider.Constants.*;
 
 public class HelmetSelect extends Scene {
 
-    private ScenesEnum nextSceneId;
-    private boolean goNextScene;
     private int currentHelmetIndex;
 
-    private Fade fade;
+
     private final Quad leftArrow;
     private final Quad rightArrow;
     private Quad helmetInFocus;
@@ -48,6 +46,8 @@ public class HelmetSelect extends Scene {
         textTitle = new Text();
         textContinue = new Text();
         textBack = new Text();
+
+        _fade = new Fade();
     }
 
     public void init() {
@@ -61,8 +61,8 @@ public class HelmetSelect extends Scene {
 
         nextSceneId = ScenesEnum.None;
         goNextScene = false;
-        fade = new Fade();
-        fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
+
+        _fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
 
         float textWidth;
 
@@ -209,17 +209,15 @@ public class HelmetSelect extends Scene {
             rightArrow.draw();
         }
 
-        if (!fade.done) {
+        if (!_fade.done) {
             visuals.bindNoTexture();
-            fade.update();
-            fade.draw();
+            _fade.update();
+            _fade.draw();
 
-            if (fade.done) {
-                if (goNextScene) {
-                    ClassicSingleton singleton = ClassicSingleton.getInstance();
-                    singleton.selectedHelmetIndex = currentHelmetIndex;
-                    singleton.showScene(nextSceneId);
-                }
+            if (_fade.done && goNextScene) {
+                ClassicSingleton singleton = ClassicSingleton.getInstance();
+                singleton.selectedHelmetIndex = currentHelmetIndex;
+                singleton.showScene(nextSceneId);
             }
         }
     }
@@ -248,7 +246,7 @@ public class HelmetSelect extends Scene {
             }
 
             if (nextSceneId != ScenesEnum.None) {
-                fade.init(new MyColor(0f, 0f, 0f, 0f), new MyColor(0f, 0f, 0f, 1f));
+                _fade.init(new MyColor(0f, 0f, 0f, 0f), new MyColor(0f, 0f, 0f, 1f));
                 goNextScene = true;
             }
         }

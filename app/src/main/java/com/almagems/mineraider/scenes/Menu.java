@@ -72,8 +72,6 @@ public class Menu extends Scene {
 
     private final PositionInfo _pos;
 
-    private Fade fade;
-
     private RockData currentRock;
 
 
@@ -389,11 +387,7 @@ public class Menu extends Scene {
         rocks.add( new RockData(0, 3.5f, -6.5f, -1.25f, -30.0f, 0.0f, 0.0f, 1.25f, 1.25f, 1.5f) );
         rocks.add( new RockData(6, 1.0f, -11.0f, -7.75f, 0.0f, -39.0f, 15.0f, 1.5f, 1.5f, 1.75f) );
 
-
-
-
-        fade = new Fade();
-        fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
+        _fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
 
 
 
@@ -410,7 +404,6 @@ public class Menu extends Scene {
 
 	@Override
 	public void draw() {
-
         //play.op.tx += 0.01f;
 
         visuals.setProjectionMatrix2D();
@@ -474,9 +467,17 @@ public class Menu extends Scene {
         visuals.bindNoTexture();
 
         //drawEdge();
+        glDisable(GL_DEPTH_TEST);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
 
-        fade.update();
-        fade.draw();
+        if (!_fade.done) {
+            visuals.bindNoTexture();
+            _fade.update();
+            _fade.draw();
+        }
+
+
 
 	}
 
@@ -829,6 +830,7 @@ public class Menu extends Scene {
 
         Vector pos = Geometry.convertNormalized2DPointToNormalizedDevicePoint2D(normalizedX, normalizedY, visuals.invertedViewProjectionMatrix);
 
+        _fade.init(new MyColor(0f, 0f, 1f, 1f), new MyColor(1f, 0f, 0f, 1f));
 
         if (editorEnabled) {
             doEditorStuff(pos.x, pos.y);

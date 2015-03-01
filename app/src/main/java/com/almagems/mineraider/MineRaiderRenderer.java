@@ -32,7 +32,12 @@ public class MineRaiderRenderer implements Renderer {
 	
 	private final Context context;	
 	private Visuals visuals;			
-			
+
+    private void setCurrentScene(Scene scene) {
+        scene.prepare();
+        current = scene;
+    }
+
 	// ctor
 	public MineRaiderRenderer(Context context) {
 		this.context = context;
@@ -45,27 +50,27 @@ public class MineRaiderRenderer implements Renderer {
         glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
         visuals.setProjectionMatrix2D();
         shaft.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
-        current = shaft;
+        setCurrentScene(shaft);
     }
 	
 	public void showSceneLevel() {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		visuals.setProjectionMatrix3D();
 		level.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
-		current = level;
+		setCurrentScene(level);
 	}
 
     public void showSceneHelmetSelect() {
         glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
         visuals.setProjectionMatrix2D();
         playerSelect.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
-        current = playerSelect;
+        setCurrentScene(playerSelect);
     }
 
     public void showSceneMenu() {
         visuals.setProjectionMatrix2D();
         menu.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
-        current = menu;
+        setCurrentScene(menu);
     }
 
 	private void limitFrameRate(int framesPerSecond) {

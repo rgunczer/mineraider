@@ -4,11 +4,24 @@ package com.almagems.mineraider.scenes;
 import com.almagems.mineraider.ClassicSingleton;
 
 import static android.opengl.GLES20.glEnable;
+import static android.opengl.Matrix.multiplyMM;
+import static android.opengl.Matrix.rotateM;
+import static android.opengl.Matrix.setIdentityM;
+import static android.opengl.Matrix.translateM;
 import static com.almagems.mineraider.Constants.*;
+
+import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.IndexBuffer;
 import com.almagems.mineraider.data.VertexBuffer;
+import com.almagems.mineraider.objects.EdgeDrawer;
+import com.almagems.mineraider.objects.MineCart;
+
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.Fixture;
 
 import static android.opengl.GLES20.GL_BLEND;
 import static android.opengl.GLES20.GL_DEPTH_TEST;
@@ -18,6 +31,19 @@ import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glDrawElements;
 
 public class MineShaft extends Scene {
+    private enum ElevatorPostions {
+        None,
+        Top,
+        Middle,
+        Bottom
+    }
+
+    private MineCart _mineCart;
+
+    private ElevatorPostions _elevatorPositions = ElevatorPostions.None;
+
+    private Body _bodyElevatorBottom;
+    private Body _bodyElevatorLeftWall;
 
     private VertexBuffer vbBg;
     private IndexBuffer ibBg;
@@ -28,19 +54,34 @@ public class MineShaft extends Scene {
     private float _elevatorYstep = 0.15f;
     private float _elevatorStopTimeout = 1f;
     private boolean _stopped = false;
+    private boolean _elevatorStays = false;
 
     private final float _topTunnelY = 13.8f;
-    private final float _middleTunnelY = -4.4f;
+    private final float _middleTunnelY = -4.2f;
     private final float _bottomTunnelY = -22.0f;
 
     private static Visuals visuals;
+    private Physics _physics;
 
     // ctor
     public MineShaft() {
         System.out.print("MineShaft ctor...");
 
+        _physics = new Physics();
         _pos = new PositionInfo();
         visuals = Visuals.getInstance();
+
+        // setup physics world and objects
+
+        _mineCart = new MineCart(_physics, -4f, 4f);
+
+        _bodyElevatorBottom = _physics.addBoxStatic(-4f, 0f, 0f, 10.0f, 1.0f); // elevator
+        _bodyElevatorLeftWall = _physics.addBoxStatic(-9f, 0f, 0f, 0.5f, 6.0f); // elevator
+
+
+        _physics.addBoxStatic(11.5f, 11.75f, 0f, 20.0f, 1.0f); // top
+        _physics.addBoxStatic(11.5f, -6.4f, 0f, 20.0f, 1.0f); // middle
+        _physics.addBoxStatic(11.5f, -24.4f, 0f, 20.0f, 1.0f); // bottom
     }
 
     @Override
@@ -127,7 +168,7 @@ public class MineShaft extends Scene {
         // top tunnel
         x = 6.5f;
         y = 11.8f;
-        z = 0.0f;
+        z = -0.75f;
         for(int i = 0; i < 2; ++i) {
             tempZ = z;
             _pos.trans(x, y, z);
@@ -145,7 +186,6 @@ public class MineShaft extends Scene {
         // middle tunnel
         x = 6.5f;
         y = -6.5f;
-        z = 0.0f;
         for(int i = 0; i < 2; ++i) {
             tempZ = z;
             _pos.trans(x, y, z);
@@ -163,7 +203,6 @@ public class MineShaft extends Scene {
         // bottom tunnel
         x = 6.5f;
         y = -24.3f;
-        z = 0.0f;
         for(int i = 0; i < 2; ++i) {
             tempZ = z;
             _pos.trans(x, y, z);
@@ -181,7 +220,7 @@ public class MineShaft extends Scene {
         // railroad part in elevator
         x = -4f;
         y = _elevatorY - 2f;
-        z = 0f;
+
         _pos.trans(x, y, z);
         _pos.rot(0f, 0f, 0f);
         _pos.scale(1f, 1f, 1f);
@@ -191,28 +230,128 @@ public class MineShaft extends Scene {
         visuals.railroad.draw();
     }
 
+    void drawPhysics() {
+        //glDisable(GL_DEPTH_TEST);
+        drawPhysicsStatics(_physics);
+//        drawPhysicsGemsFixtures();
+//        drawPhysicsEdges();
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    private void drawPhysicsStatics(Physics physics) {
+        visuals.colorShader.useProgram();
+
+        float z = 0.5f;
+        Body body;
+        Vec2 pos;
+        float angle;
+        float degree;
+        Fixture fixture;
+        PolygonShape polygon;
+        EdgeDrawer edgeDrawer = new EdgeDrawer(100);
+        int size = physics.statics.size();
+        for(int i = 0; i < size; ++i) {
+            body = physics.statics.get(i);
+            pos = body.getPosition();
+            angle = body.getAngle();
+            degree = (float) Math.toDegrees(angle);
+
+            fixture = body.getFixtureList();
+            while(fixture != null) {
+                polygon = (PolygonShape)fixture.getShape();
+                if (polygon.m_count == 4) { // box
+                    edgeDrawer.begin();
+                    Vec2 v0 = polygon.m_vertices[0];
+                    Vec2 v1 = polygon.m_vertices[1];
+                    Vec2 v2 = polygon.m_vertices[2];
+                    Vec2 v3 = polygon.m_vertices[3];
+
+                    edgeDrawer.addLine(	v0.x, v0.y, 0f,   v1.x, v1.y, 0f);
+                    edgeDrawer.addLine(	v1.x, v1.y, 0f,   v2.x, v2.y, 0f);
+                    edgeDrawer.addLine(	v2.x, v2.y, 0f,   v3.x, v3.y, 0f);
+                    edgeDrawer.addLine(	v3.x, v3.y, 0f,   v0.x, v0.y, 0f);
+
+                    setIdentityM(visuals.modelMatrix, 0);
+                    translateM(visuals.modelMatrix, 0, pos.x, pos.y, z);
+                    rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);
+                    multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
+
+                    visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.whiteColor);
+                    edgeDrawer.bindData(visuals.colorShader);
+                    edgeDrawer.draw();
+                }
+                fixture = fixture.getNext();
+            }
+        }
+    }
+
+    @Override
+    public void prepare() {
+        Vec2 pos = _mineCart.cart.getPosition();
+        pos.x = -5f;
+        _mineCart.cart.setTransform(pos, 0f);
+
+        _mineCart.wheel1.setTransform(pos, 0f);
+        _mineCart.wheel2.setTransform(pos, 0f);
+
+        _mineCart.stop();
+
+        _elevatorStays = false;
+        _stopped = false;
+    }
+
     @Override
     public void update() {
-
-        if (!_stopped) {
-            if (Math.abs(_elevatorY - _topTunnelY) < 0.1f) {
-                _elevatorStopTimeout = 10f;
-                _stopped = true;
-            } else if (Math.abs(_elevatorY - _middleTunnelY) < 0.1f) {
-                _elevatorStopTimeout = 10f;
-                _stopped = true;
-            } else if (Math.abs(_elevatorY - _bottomTunnelY) < 0.1f) {
-                _elevatorStopTimeout = 10f;
-                _stopped = true;
+        if (!_elevatorStays) {
+            if (!_stopped) {
+                if (Math.abs(_elevatorY - _topTunnelY) < 0.1f) {
+                    _elevatorStopTimeout = 10f;
+                    _elevatorPositions = ElevatorPostions.Top;
+                    _stopped = true;
+                } else if (Math.abs(_elevatorY - _middleTunnelY) < 0.1f) {
+                    _elevatorStopTimeout = 10f;
+                    _elevatorPositions = ElevatorPostions.Middle;
+                    _stopped = true;
+                } else if (Math.abs(_elevatorY - _bottomTunnelY) < 0.1f) {
+                    _elevatorStopTimeout = 10f;
+                    _elevatorPositions = ElevatorPostions.Bottom;
+                    _stopped = true;
+                } else {
+                    _elevatorY -= _elevatorYstep;
+                }
             } else {
-                _elevatorY -= _elevatorYstep;
+                _elevatorStopTimeout -= 0.1f;
+
+                if (_elevatorStopTimeout < 0f) {
+                    _stopped = false;
+                    _elevatorPositions = ElevatorPostions.None;
+                    _elevatorY -= _elevatorYstep * 2f;
+                }
             }
         } else {
-            _elevatorStopTimeout -= 0.1f;
+            Vec2 pos = _mineCart.cart.getPosition();
 
-            if (_elevatorStopTimeout < 0f) {
-                _stopped = false;
-                _elevatorY -= _elevatorYstep*2f;
+            if (pos.x > 20f) {
+                ClassicSingleton singleton = ClassicSingleton.getInstance();
+                switch (_elevatorPositions) {
+                    case None:
+                        break;
+
+                    case Top:
+                        System.out.println("Top Tunnel");
+                        singleton.showScene(ScenesEnum.Level);
+                        break;
+
+                    case Middle:
+                        System.out.println("Middle Tunnel");
+                        singleton.showScene(ScenesEnum.Level);
+                        break;
+
+                    case Bottom:
+                        System.out.println("Bottom Tunnel");
+                        singleton.showScene(ScenesEnum.Level);
+                        break;
+                }
             }
         }
 
@@ -220,6 +359,17 @@ public class MineShaft extends Scene {
             _elevatorYstep *= -1f;
         else if (_elevatorY < -37.0f)
             _elevatorYstep *= -1f;
+
+        Vec2 pos;
+        pos = _bodyElevatorBottom.getPosition();
+        pos.y = _elevatorY - 2f;
+        _bodyElevatorBottom.setTransform(pos, 0f);
+
+        pos = _bodyElevatorLeftWall.getPosition();
+        pos.y = _elevatorY + 1f;
+        _bodyElevatorLeftWall.setTransform(pos, 0f);
+
+        _physics.update();
     }
 
     @Override
@@ -249,14 +399,22 @@ public class MineShaft extends Scene {
         visuals.dirLightShader.setTexture(visuals.textureRailRoad);
         drawRailRoads();
 
+
+        _mineCart.draw();
+
+        //drawPhysics();
+
     }
 
     @Override
     public void handleTouchPress(float normalizedX, float normalizedY) {
-
-        if (_stopped) {
-            ClassicSingleton singleton = ClassicSingleton.getInstance();
-            singleton.showScene(ScenesEnum.Level);
+        if (!_elevatorStays) {
+            if (_stopped) {
+                //ClassicSingleton singleton = ClassicSingleton.getInstance();
+                //singleton.showScene(ScenesEnum.Level);
+                _mineCart.start(-4f);
+                _elevatorStays = true;
+            }
         }
 
 

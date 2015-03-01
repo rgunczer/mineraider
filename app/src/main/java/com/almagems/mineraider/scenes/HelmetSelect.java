@@ -177,6 +177,11 @@ public class HelmetSelect extends Scene {
     }
 
     @Override
+    public void prepare() {
+
+    }
+
+    @Override
     public void update() {
         textTitle.update();
     }

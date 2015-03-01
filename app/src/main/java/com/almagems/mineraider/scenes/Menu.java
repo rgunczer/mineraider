@@ -112,13 +112,13 @@ public class Menu extends Scene {
 
         edgeDrawer = new EdgeDrawer(32);
 
-        physics = Physics.getInstance();
+        physics = new Physics();
 
         // sin
         physics.addBoxStatic(0.0f, -19.7f, 0f, 70.0f, 0.5f);
 
         // minecart
-        mineCart = new MineCart(-1f, -15.7f);
+        mineCart = new MineCart(physics, -1f, -15.7f);
     }
 
     @Override
@@ -141,8 +141,7 @@ public class Menu extends Scene {
 				-x, -y, 0.0f,	r, g, b, a,     0.0f, 0.0f, // 3
 			 	 x,  y, 0.0f,	r, g, b, a,     1.0f, 1.0f, // 4
 				-x,  y, 0.0f,	r, g, b, a,     0.0f, 1.0f  // 5
-			};		
-
+		};
 
         short[] indices = {
             // for gl_lines
@@ -395,6 +394,11 @@ public class Menu extends Scene {
 
 
 	}
+
+    @Override
+    public void prepare() {
+
+    }
 
 	@Override
 	public void update() {

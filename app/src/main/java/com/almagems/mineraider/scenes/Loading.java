@@ -14,6 +14,11 @@ public class Loading extends Scene {
     }
 
     @Override
+    public void prepare() {
+
+    }
+
+    @Override
     public void update() {
 
     }

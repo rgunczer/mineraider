@@ -23,6 +23,7 @@ public abstract class Scene {
 	public abstract void surfaceChanged(int width, int height);
 	public abstract void update();
 	public abstract void draw();
+    public abstract void prepare();
 
 	// input
 	public abstract void handleTouchPress(float normalizedX, float normalizedY);

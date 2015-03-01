@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Physics {
-	private static Physics instance = null;
 
     private final Random random = new Random();
 
@@ -36,15 +35,8 @@ public class Physics {
 	public CollisionHandler collisionHandler = new CollisionHandler();
 	
 	public World world;
-		
-	public static Physics getInstance() {
-		if (instance == null) {
-			instance = new Physics(); 
-		}
-		return instance;
-	}
 
-	private Physics() {
+	public Physics() {
 		Vec2 gravity = new Vec2(0.0f, -32.0f);
 		world = new World(gravity);
 		world.setSleepingAllowed(true);
@@ -347,7 +339,7 @@ public class Physics {
 //		boxes.add(body);
 //	}
 		
-	public void addBoxStatic(float x, float y, float angle, float w, float h) {
+	public Body addBoxStatic(float x, float y, float angle, float w, float h) {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.STATIC;
 		bodyDef.position.set(x, y);
@@ -366,6 +358,8 @@ public class Physics {
 		body.createFixture(fixture);
 		
 		statics.add(body);
+
+        return  body;
 	}
 	
 	public void update() {

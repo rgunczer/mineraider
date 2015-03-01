@@ -67,7 +67,7 @@ public class Level extends Scene {
         colorWhite = new MyColor(1f, 1f, 1f, 1f);
         colorBlack = new MyColor(0f, 0f, 0f, 1f);
 
-		physics = Physics.getInstance();
+		physics = new Physics();
 
 		animManager = new AnimationManager();
 		match3 = new Match3(8, animManager, ClassicSingleton.getInstance().scoreCounter);
@@ -97,12 +97,14 @@ public class Level extends Scene {
 		float y = -15.7f;
 		MineCart mineCart;
 		
-		mineCart = new MineCart(x, y);
+		mineCart = new MineCart(physics, x, y);
+        mineCart._sceneType = ScenesEnum.Level;
 		mineCarts.add(mineCart);
 		ClassicSingleton.getInstance().cart1 = mineCart;
 
 		x = -30f;
-		mineCart = new MineCart(x, y);
+		mineCart = new MineCart(physics, x, y);
+        mineCart._sceneType = ScenesEnum.Level;
 		mineCarts.add(mineCart);
 		ClassicSingleton.getInstance().cart2 = mineCart;
 
@@ -115,7 +117,12 @@ public class Level extends Scene {
         ClassicSingleton.getInstance().hud.init();
         ClassicSingleton.getInstance().hud.updateScore(ClassicSingleton.getInstance().getScore());
 	}
-	
+
+    @Override
+    public void prepare() {
+
+    }
+
 	@Override
 	public void update() {
 		visuals.updateViewProjMatrix();

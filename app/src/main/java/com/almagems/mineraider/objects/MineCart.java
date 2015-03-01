@@ -25,9 +25,11 @@ import com.almagems.mineraider.util.MyColor;
 
 public class MineCart {
 	public Body cart;
-	Body wheel1;
-	Body wheel2;
-	
+	public Body wheel1;
+	public Body wheel2;
+
+    public ScenesEnum _sceneType = ScenesEnum.None;
+
 	WheelJoint wheelJoint1;
 	WheelJoint wheelJoint2;
 	
@@ -39,7 +41,7 @@ public class MineCart {
 	private boolean check = true;
 	private boolean collisionStop = false;
 
-    private final Physics physics;
+    private Physics physics;
 
 	float r = 0.0f;
 	int stopTimeout = 0;
@@ -47,9 +49,8 @@ public class MineCart {
 	
 	private PositionInfo _op = new PositionInfo();
 	
-	public MineCart(float x, float y) {
-
-        physics = Physics.getInstance();
+	public MineCart(Physics physics, float x, float y) {
+        this.physics = physics;
 
 		--collisionGroupIndexCounter;
 		collisionGroupIndex = collisionGroupIndexCounter;
@@ -70,7 +71,7 @@ public class MineCart {
 		wd.frequencyHz = 6;
 		wd.dampingRatio = 0.3f;
 		wd.maxMotorTorque = 1000;
-		wd.motorSpeed = -6.0f;
+		wd.motorSpeed = 0f; //-6.0f;
 		wd.enableMotor = true;
 		wd.localAxisA.set(0f, 1f);
 		
@@ -171,7 +172,12 @@ public class MineCart {
 		cart.createFixture(fixture1);
 		cart.createFixture(fixture2);		
 	}
-	
+
+    public void start(float xSpeed) {
+        wheelJoint1.setMotorSpeed(xSpeed);
+        wheelJoint2.setMotorSpeed(xSpeed);
+    }
+
 	public void stop() {
 		wheelJoint1.setMotorSpeed(0.0f);
 		wheelJoint2.setMotorSpeed(0.0f);
@@ -179,7 +185,31 @@ public class MineCart {
 		collisionStopTimer = 0;
 	}
 	
-	public void update() {		
+	public void update() {
+        switch (_sceneType) {
+            case Level:
+                updateOnLevel();
+                break;
+
+            case Shaft:
+                updateOnShaft();
+                break;
+
+            case Menu:
+                updateOnMenu();
+                break;
+        }
+    }
+
+    private void updateOnMenu() {
+
+    }
+
+    private void updateOnShaft() {
+
+    }
+
+    private void updateOnLevel() {
 		Vec2 pos = cart.getPosition();
 		
 		if (collisionStop) {
@@ -336,7 +366,7 @@ public class MineCart {
         Vec2 pos = cart.getPosition();
         float degree = (float) Math.toDegrees(cart.getAngle());
 
-        _op.trans(pos.x, pos.y, 1f);
+        _op.trans(pos.x, pos.y, 0f-0.75f);
         _op.rot(0f, 0f, degree);
         visuals.calcMatricesForObject(_op);
         visuals.dirLightShader.setUniforms();
@@ -352,7 +382,7 @@ public class MineCart {
 		pos = wheel1.getPosition();
 		degree = (float)Math.toDegrees( wheel1.getAngle() );
 
-		_op.trans(pos.x, pos.y, 1f);// 2f);
+		_op.trans(pos.x, pos.y, 0f-0.75f);// 2f);
 		_op.rot(0f, 0f, degree);
 
         visuals.calcMatricesForObject(_op);
@@ -367,7 +397,7 @@ public class MineCart {
 		pos = wheel2.getPosition();
 		degree = (float)Math.toDegrees( wheel2.getAngle() );
 
-        _op.trans(pos.x, pos.y, 1f);
+        _op.trans(pos.x, pos.y, 0f-0.75f);
 		_op.rot(0f, 0f, degree);
 
         visuals.calcMatricesForObject(_op);

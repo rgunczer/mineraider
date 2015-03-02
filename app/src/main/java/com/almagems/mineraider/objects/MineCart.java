@@ -43,6 +43,7 @@ public class MineCart {
 
     private Physics physics;
 
+    public float z = 0f;
 	float r = 0.0f;
 	int stopTimeout = 0;
 	int collisionStopTimer = 0;
@@ -202,7 +203,16 @@ public class MineCart {
     }
 
     private void updateOnMenu() {
+        Vec2 pos = cart.getPosition();
 
+        if (pos.x > 6.0f) {
+            wheelJoint1.setMotorSpeed(3.0f);
+            wheelJoint2.setMotorSpeed(3.0f);
+
+        } else if (pos.x < -20.0f) {
+            wheelJoint1.setMotorSpeed(-3.0f);
+            wheelJoint2.setMotorSpeed(-3.0f);
+        }
     }
 
     private void updateOnShaft() {
@@ -366,7 +376,7 @@ public class MineCart {
         Vec2 pos = cart.getPosition();
         float degree = (float) Math.toDegrees(cart.getAngle());
 
-        _op.trans(pos.x, pos.y, 0f-0.75f);
+        _op.trans(pos.x, pos.y, z); //-0.75f);
         _op.rot(0f, 0f, degree);
         visuals.calcMatricesForObject(_op);
         visuals.dirLightShader.setUniforms();
@@ -382,7 +392,7 @@ public class MineCart {
 		pos = wheel1.getPosition();
 		degree = (float)Math.toDegrees( wheel1.getAngle() );
 
-		_op.trans(pos.x, pos.y, 0f-0.75f);// 2f);
+		_op.trans(pos.x, pos.y, z); //-0.75f);// 2f);
 		_op.rot(0f, 0f, degree);
 
         visuals.calcMatricesForObject(_op);
@@ -397,7 +407,7 @@ public class MineCart {
 		pos = wheel2.getPosition();
 		degree = (float)Math.toDegrees( wheel2.getAngle() );
 
-        _op.trans(pos.x, pos.y, 0f-0.75f);
+        _op.trans(pos.x, pos.y, z); // 0f-0.75f);
 		_op.rot(0f, 0f, degree);
 
         visuals.calcMatricesForObject(_op);

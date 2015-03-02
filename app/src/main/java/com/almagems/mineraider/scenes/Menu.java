@@ -119,6 +119,9 @@ public class Menu extends Scene {
 
         // minecart
         mineCart = new MineCart(physics, -1f, -15.7f);
+        mineCart.z = 1f;
+        mineCart._sceneType = ScenesEnum.Menu;
+        mineCart.start(-3f);
     }
 
     @Override

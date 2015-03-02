@@ -99,12 +99,16 @@ public class Level extends Scene {
 		
 		mineCart = new MineCart(physics, x, y);
         mineCart._sceneType = ScenesEnum.Level;
+        mineCart.start(-3f);
+        mineCart.z = 1f;
 		mineCarts.add(mineCart);
 		ClassicSingleton.getInstance().cart1 = mineCart;
 
 		x = -30f;
 		mineCart = new MineCart(physics, x, y);
         mineCart._sceneType = ScenesEnum.Level;
+        mineCart.start(-3f);
+        mineCart.z = 1f;
 		mineCarts.add(mineCart);
 		ClassicSingleton.getInstance().cart2 = mineCart;
 

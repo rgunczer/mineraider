@@ -17,6 +17,7 @@ import java.util.Random;
 
 public class Physics {
 
+    private final PolygonShape polygonShape = new PolygonShape();
     private final Random random = new Random();
 
     private final BodyDef gemBodyDef = new BodyDef();
@@ -56,9 +57,6 @@ public class Physics {
         gemBodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
 		
 		final float d = GEM_FRAGMENT_SIZE;
-		
-		PolygonShape shape = new PolygonShape();
-		//shape.setAsBox(d, d);
 
         Vec2[] vertices = new Vec2[4];
         vertices[0] = new Vec2( 0, d);
@@ -66,9 +64,9 @@ public class Physics {
         vertices[2] = new Vec2( 0, -d);
         vertices[3] = new Vec2( -d, 0);
         int count = 4;
-        shape.set(vertices, count);
+        polygonShape.set(vertices, count);
 
-        gemFixtureDef.shape = shape;
+        gemFixtureDef.shape = polygonShape;
         gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
@@ -95,11 +93,9 @@ public class Physics {
         vertices[6] = new Vec2( d*0.3f, -d);
          vertices[7] = new Vec2( -d*0.8f, -d*0.5f);
 
+		polygonShape.set(vertices, count);
 
-		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);
-
-        gemFixtureDef.shape = shape;
+        gemFixtureDef.shape = polygonShape;
         gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
@@ -123,11 +119,10 @@ public class Physics {
 		vertices[2] = new Vec2(  0, d);
 		vertices[3] = new Vec2(  d, d/3);
 		vertices[4] = new Vec2(  d3, -d);		
-		
-		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);
 
-        gemFixtureDef.shape = shape;
+		polygonShape.set(vertices, count);
+
+        gemFixtureDef.shape = polygonShape;
         gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
@@ -151,11 +146,10 @@ public class Physics {
 		vertices[3] = new Vec2( d*0.8f,  d/2);
 		vertices[4] = new Vec2( d*0.8f, -d/2);
 		vertices[5] = new Vec2( 0, -d);
-		
-		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);
 
-        gemFixtureDef.shape = shape;
+		polygonShape.set(vertices, count);
+
+        gemFixtureDef.shape = polygonShape;
         gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
@@ -182,11 +176,9 @@ public class Physics {
         vertices[6] = new Vec2( d*0.9f, -d*0.3f);
         vertices[7] = new Vec2( d*0.6f, -d*0.9f);
 
-		
-		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);
+		polygonShape.set(vertices, count);
 
-        gemFixtureDef.shape = shape;
+        gemFixtureDef.shape = polygonShape;
         gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
@@ -212,11 +204,10 @@ public class Physics {
 		vertices[5] = new Vec2(d, d*0.5f);
 		vertices[6] = new Vec2(d*0.9f, 0f);
 		//vertices[7] = new Vec2(d*0.9f, 0f);
-		
-		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);
 
-        gemFixtureDef.shape = shape;
+		polygonShape.set(vertices, count);
+
+        gemFixtureDef.shape = polygonShape;
         gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		
@@ -243,11 +234,10 @@ public class Physics {
 		vertices[5] = new Vec2( d2, -d2);
 		vertices[6] = new Vec2( 0f, -d);
 		vertices[7] = new Vec2(-d2, -d2);
-		
-		PolygonShape shape = new PolygonShape();
-		shape.set(vertices, count);
 
-        gemFixtureDef.shape = shape;
+		polygonShape.set(vertices, count);
+
+        gemFixtureDef.shape = polygonShape;
         gemFixtureDef.restitution = 0.1f;
 		//fixture.friction = 0.75f;
 		

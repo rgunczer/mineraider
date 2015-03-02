@@ -462,10 +462,8 @@ public class Visuals {
     }
 
 	public void setProjectionMatrix3D() {
-				
 		float eyeZ = 49.0f;
-		//float eyeZ = 190.0f;
-		
+		//float eyeZ = 90.0f;
 		
 		if (Constants.DRAW_BUFFER_BOARD) {
 			eyeZ = 70.0f;

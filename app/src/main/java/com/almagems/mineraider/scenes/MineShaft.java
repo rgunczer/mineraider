@@ -3,6 +3,9 @@ package com.almagems.mineraider.scenes;
 
 import com.almagems.mineraider.ClassicSingleton;
 
+import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
+import static android.opengl.GLES20.GL_SRC_ALPHA;
+import static android.opengl.GLES20.glBlendFunc;
 import static android.opengl.GLES20.glEnable;
 import static android.opengl.Matrix.multiplyMM;
 import static android.opengl.Matrix.rotateM;
@@ -17,6 +20,7 @@ import com.almagems.mineraider.data.IndexBuffer;
 import com.almagems.mineraider.data.VertexBuffer;
 import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.MineCart;
+import com.almagems.mineraider.util.MyColor;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -74,6 +78,7 @@ public class MineShaft extends Scene {
         // setup physics world and objects
 
         _mineCart = new MineCart(_physics, -4f, 4f);
+        _mineCart.z = -0.75f;
 
         _bodyElevatorBottom = _physics.addBoxStatic(-4f, 0f, 0f, 10.0f, 1.0f); // elevator
         _bodyElevatorLeftWall = _physics.addBoxStatic(-9f, 0f, 0f, 0.5f, 6.0f); // elevator
@@ -120,6 +125,8 @@ public class MineShaft extends Scene {
 
         vbBg = new VertexBuffer(vertices);
         ibBg = new IndexBuffer(indices);
+
+        _fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
     }
 
     private void drawBg() {
@@ -403,7 +410,19 @@ public class MineShaft extends Scene {
         _mineCart.draw();
 
         //drawPhysics();
+        visuals.setProjectionMatrix2D();
+        visuals.updateViewProjMatrix();
 
+        glDisable(GL_DEPTH_TEST);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+
+
+        if (!_fade.done) {
+            visuals.bindNoTexture();
+            _fade.update();
+            _fade.draw();
+        }
     }
 
     @Override

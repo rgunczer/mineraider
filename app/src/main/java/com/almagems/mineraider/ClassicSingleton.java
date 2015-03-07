@@ -37,24 +37,8 @@ public class ClassicSingleton {
 
     public void sendPerfectSwapNotification() { hud.showPerfectSwap(); }
 
-    public void showScene(ScenesEnum sceneId) {
-        switch (sceneId) {
-            case Shaft:
-                renderer.showSceneShaft();
-                break;
-
-            case Level:
-                renderer.showSceneLevel();
-                break;
-
-            case HelmetSelect:
-                renderer.showSceneHelmetSelect();
-                break;
-
-            case Menu:
-                renderer.showSceneMenu();
-                break;
-        }
+    public void showScene(ScenesEnum sceneTypeId) {
+        renderer.showScene(sceneTypeId);
     }
 
     public int getScore() {

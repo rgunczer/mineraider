@@ -18,6 +18,7 @@ import com.almagems.mineraider.scenes.MineShaft;
 import com.almagems.mineraider.scenes.Scene;
 import com.almagems.mineraider.shaders.ParticleShader;
 
+import static com.almagems.mineraider.Constants.*;
 
 public class MineRaiderRenderer implements Renderer { 
 
@@ -33,10 +34,8 @@ public class MineRaiderRenderer implements Renderer {
 	private final Context context;	
 	private Visuals visuals;			
 
-    private void setCurrentScene(Scene scene) {
-        scene.prepare();
-        current = scene;
-    }
+
+
 
 	// ctor
 	public MineRaiderRenderer(Context context) {
@@ -46,31 +45,28 @@ public class MineRaiderRenderer implements Renderer {
         instance.activity = (MineRaiderActivity)context;
 	}
 
-    public void showSceneShaft() {
-        glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
-        visuals.setProjectionMatrix2D();
-        shaft.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
-        setCurrentScene(shaft);
-    }
-	
-	public void showSceneLevel() {
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		visuals.setProjectionMatrix3D();
-		level.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
-		setCurrentScene(level);
-	}
+    public void showScene(ScenesEnum sceneTypeId) {
+        switch (sceneTypeId) {
+            case Shaft:
+                glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
+                current = shaft;
+                break;
 
-    public void showSceneHelmetSelect() {
-        glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
-        visuals.setProjectionMatrix2D();
-        playerSelect.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
-        setCurrentScene(playerSelect);
-    }
+            case Level:
+                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                current = level;
+                break;
 
-    public void showSceneMenu() {
-        visuals.setProjectionMatrix2D();
-        menu.surfaceChanged((int)Visuals.screenWidth, (int)Visuals.screenHeight);
-        setCurrentScene(menu);
+            case HelmetSelect:
+                glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
+                current = playerSelect;
+                break;
+
+            case Menu:
+                current = menu;
+                break;
+        }
+        current.prepare();
     }
 
 	private void limitFrameRate(int framesPerSecond) {
@@ -134,10 +130,11 @@ public class MineRaiderRenderer implements Renderer {
             playerSelect = new HelmetSelect();
         }
 
-		//current = level;
+		//current = loading;
 		current = menu;
         //current = playerSelect;
         //current = shaft;
+        //current = level;
 	}
 
 	@Override
@@ -154,7 +151,7 @@ public class MineRaiderRenderer implements Renderer {
 
         ParticleShader.pointSize = width * 0.1f;
 
-        current.surfaceChanged(width, height);
+        current.prepare();
 	}
 
 	@Override

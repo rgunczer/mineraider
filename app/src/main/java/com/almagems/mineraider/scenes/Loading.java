@@ -1,6 +1,8 @@
 package com.almagems.mineraider.scenes;
 
 
+import com.almagems.mineraider.util.MyColor;
+
 public class Loading extends Scene {
 
     // ctor
@@ -15,6 +17,8 @@ public class Loading extends Scene {
 
     @Override
     public void prepare() {
+        super.prepare();
+
 
     }
 
@@ -26,6 +30,7 @@ public class Loading extends Scene {
     @Override
     public void draw() {
 
+        super.drawFade();
     }
 
     @Override

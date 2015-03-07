@@ -124,18 +124,19 @@ public class Level extends Scene {
 
     @Override
     public void prepare() {
+        super.prepare();
 
     }
 
 	@Override
 	public void update() {
-		visuals.updateViewProjMatrix();
-		
-		physics.update();
-		match3.update();
-        ClassicSingleton.getInstance().hud.update();
-        ClassicSingleton.getInstance().hud.updateScore(ClassicSingleton.getInstance().scoreCounter.getScore());
-	}
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+        visuals.updateViewProjMatrix();
+        physics.update();
+        match3.update();
+        singleton.hud.update();
+        singleton.hud.updateScore(ClassicSingleton.getInstance().scoreCounter.getScore());
+    }
 	
 	@Override
 	public void draw() {
@@ -194,10 +195,12 @@ public class Level extends Scene {
 
         ClassicSingleton.getInstance().hud.draw();
 
+        visuals.setProjectionMatrix2D();
+        super.drawFade();
+
         // needs to be set for picking to work correctly
         visuals.setProjectionMatrix3D();
         visuals.updateViewProjMatrix();
-
 	}
 	
 	@Override
@@ -206,9 +209,9 @@ public class Level extends Scene {
         // temp solution to be able to go back
         final float y = -0.9f;
         if (normalizedY < y) {
-            ClassicSingleton singleton = ClassicSingleton.getInstance();
-            singleton.savePreferences();
-            singleton.showScene(ScenesEnum.Menu);
+            goNextScene = true;
+            nextSceneId = ScenesEnum.Menu;
+            super.initFadeOut();
         } else {
             swipeDir = SwipeDir.SwipeNone;
             touchDownX = normalizedX;

@@ -125,7 +125,7 @@ public class Menu extends Scene {
     }
 
     @Override
-	public void surfaceChanged(int width, int height) {
+	protected void surfaceChanged(int width, int height) {
         final float r = 1f;
         final float g = 1f;
         final float b = 1f;
@@ -388,18 +388,11 @@ public class Menu extends Scene {
         rocks.add( new RockData(3, 2.5f, -13.0f, -14.25f, 57.0f, 6.0f, 57.0f, 2.0f, 2.0f, 1.75f) );
         rocks.add( new RockData(0, 3.5f, -6.5f, -1.25f, -30.0f, 0.0f, 0.0f, 1.25f, 1.25f, 1.5f) );
         rocks.add( new RockData(6, 1.0f, -11.0f, -7.75f, 0.0f, -39.0f, 15.0f, 1.5f, 1.5f, 1.75f) );
-
-        _fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
-
-
-
-
-
-
 	}
 
     @Override
     public void prepare() {
+        super.prepare();
 
     }
 
@@ -478,14 +471,7 @@ public class Menu extends Scene {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
 
-        if (!_fade.done) {
-            visuals.bindNoTexture();
-            _fade.update();
-            _fade.draw();
-        }
-
-
-
+        super.drawFade();
 	}
 
     void drawEditorButtons() {
@@ -837,7 +823,7 @@ public class Menu extends Scene {
 
         Vector pos = Geometry.convertNormalized2DPointToNormalizedDevicePoint2D(normalizedX, normalizedY, visuals.invertedViewProjectionMatrix);
 
-        _fade.init(new MyColor(0f, 0f, 1f, 1f), new MyColor(1f, 0f, 0f, 1f));
+        //_fade.init(new MyColor(0f, 0f, 1f, 1f), new MyColor(1f, 0f, 0f, 1f));
 
         if (editorEnabled) {
             doEditorStuff(pos.x, pos.y);
@@ -846,7 +832,9 @@ public class Menu extends Scene {
 
         if ( play.isHit(pos.x, pos.y) ) {
             System.out.println("play is hit...");
-            ClassicSingleton.getInstance().showScene(ScenesEnum.HelmetSelect);
+            nextSceneId = ScenesEnum.HelmetSelect;
+            goNextScene = true;
+            super.initFadeOut();
             return;
         }
 

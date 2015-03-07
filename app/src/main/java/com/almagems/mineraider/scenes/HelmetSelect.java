@@ -178,6 +178,8 @@ public class HelmetSelect extends Scene {
 
     @Override
     public void prepare() {
+        super.prepare();
+
 
     }
 
@@ -214,17 +216,7 @@ public class HelmetSelect extends Scene {
             rightArrow.draw();
         }
 
-        if (!_fade.done) {
-            visuals.bindNoTexture();
-            _fade.update();
-            _fade.draw();
-
-            if (_fade.done && goNextScene) {
-                ClassicSingleton singleton = ClassicSingleton.getInstance();
-                singleton.selectedHelmetIndex = currentHelmetIndex;
-                singleton.showScene(nextSceneId);
-            }
-        }
+        super.drawFade();
     }
 
     @Override
@@ -251,8 +243,9 @@ public class HelmetSelect extends Scene {
             }
 
             if (nextSceneId != ScenesEnum.None) {
-                _fade.init(new MyColor(0f, 0f, 0f, 0f), new MyColor(0f, 0f, 0f, 1f));
                 goNextScene = true;
+                ClassicSingleton.getInstance().selectedHelmetIndex = currentHelmetIndex;
+                super.initFadeOut();
             }
         }
     }

@@ -44,6 +44,8 @@ public class MineShaft extends Scene {
 
     private MineCart _mineCart;
 
+    private boolean _fadeOutCheck;
+
     private ElevatorPostions _elevatorPositions = ElevatorPostions.None;
 
     private Body _bodyElevatorBottom;
@@ -84,9 +86,9 @@ public class MineShaft extends Scene {
         _bodyElevatorLeftWall = _physics.addBoxStatic(-9f, 0f, 0f, 0.5f, 6.0f); // elevator
 
 
-        _physics.addBoxStatic(11.5f, 11.75f, 0f, 20.0f, 1.0f); // top
-        _physics.addBoxStatic(11.5f, -6.4f, 0f, 20.0f, 1.0f); // middle
-        _physics.addBoxStatic(11.5f, -24.4f, 0f, 20.0f, 1.0f); // bottom
+        _physics.addBoxStatic(16.5f, 11.75f, 0f, 30.0f, 1.0f); // top
+        _physics.addBoxStatic(16.5f, -6.4f, 0f, 30.0f, 1.0f); // middle
+        _physics.addBoxStatic(16.5f, -24.4f, 0f, 30.0f, 1.0f); // bottom
     }
 
     @Override
@@ -165,7 +167,7 @@ public class MineShaft extends Scene {
         _pos.scale(1.0f, 1.0f, 1.0f);
         visuals.calcMatricesForObject(_pos);
         visuals.dirLightShader.setUniforms();
-        visuals.shaft.draw();
+        visuals.elevator.draw();
     }
 
     void drawRailRoads() {
@@ -294,6 +296,10 @@ public class MineShaft extends Scene {
 
     @Override
     public void prepare() {
+        super.prepare();
+
+        _fadeOutCheck = true;
+
         Vec2 pos = _mineCart.cart.getPosition();
         pos.x = -5f;
         _mineCart.cart.setTransform(pos, 0f);
@@ -338,27 +344,27 @@ public class MineShaft extends Scene {
         } else {
             Vec2 pos = _mineCart.cart.getPosition();
 
-            if (pos.x > 20f) {
-                ClassicSingleton singleton = ClassicSingleton.getInstance();
+            if (_fadeOutCheck && pos.x > 20f) {
                 switch (_elevatorPositions) {
                     case None:
                         break;
 
                     case Top:
                         System.out.println("Top Tunnel");
-                        singleton.showScene(ScenesEnum.Level);
+                        super.initFadeOut();
                         break;
 
                     case Middle:
                         System.out.println("Middle Tunnel");
-                        singleton.showScene(ScenesEnum.Level);
+                        super.initFadeOut();
                         break;
 
                     case Bottom:
                         System.out.println("Bottom Tunnel");
-                        singleton.showScene(ScenesEnum.Level);
+                        super.initFadeOut();
                         break;
                 }
+                _fadeOutCheck = false;
             }
         }
 
@@ -399,13 +405,11 @@ public class MineShaft extends Scene {
         visuals.dirLightShader.setTexture(visuals.textureShaft);
         drawShaft();
 
-
         visuals.dirLightShader.setTexture(visuals.textureElevator);
         drawElevator();
 
         visuals.dirLightShader.setTexture(visuals.textureRailRoad);
         drawRailRoads();
-
 
         _mineCart.draw();
 
@@ -417,26 +421,19 @@ public class MineShaft extends Scene {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
 
-
-        if (!_fade.done) {
-            visuals.bindNoTexture();
-            _fade.update();
-            _fade.draw();
-        }
+        super.drawFade();
     }
 
     @Override
     public void handleTouchPress(float normalizedX, float normalizedY) {
         if (!_elevatorStays) {
             if (_stopped) {
-                //ClassicSingleton singleton = ClassicSingleton.getInstance();
-                //singleton.showScene(ScenesEnum.Level);
                 _mineCart.start(-4f);
                 _elevatorStays = true;
+                nextSceneId = ScenesEnum.Level;
+                goNextScene = true;
             }
         }
-
-
 
         //System.out.println("ElevatorY: " + _elevatorY);
     }
@@ -450,6 +447,4 @@ public class MineShaft extends Scene {
     public void handleTouchRelease(float normalizedX, float normalizedY) {
 
     }
-
-
 }

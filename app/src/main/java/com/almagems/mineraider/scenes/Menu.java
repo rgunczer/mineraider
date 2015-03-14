@@ -663,12 +663,11 @@ public class Menu extends Scene {
 		visuals.textureShader.setUniforms(visuals.mvpMatrix);
 
         vbBg.bind();
-        visuals.textureShader.bindData(vbBg);
-
         ibBg.bind();
+        visuals.textureShader.bindData(vbBg);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-        vbBg.unbind();
         ibBg.unbind();
+        vbBg.unbind();
 	}
 
     private void doEditorStuff(float x, float y) {

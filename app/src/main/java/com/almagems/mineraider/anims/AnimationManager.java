@@ -23,6 +23,11 @@ public class AnimationManager {
 		}
 	}
 
+    public void clear() {
+        running = null;
+        finished = null;
+    }
+
 	public boolean isDone() {
 		return running == null;
 	}

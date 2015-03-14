@@ -21,6 +21,7 @@ import com.almagems.mineraider.data.VertexBuffer;
 import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.MineCart;
 import com.almagems.mineraider.util.MyColor;
+import com.almagems.mineraider.util.Text;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -50,11 +51,16 @@ public class MineShaft extends Scene {
 
     private Body _bodyElevatorBottom;
     private Body _bodyElevatorLeftWall;
+    private Body _bodyElevatorRightWall;
 
     private VertexBuffer vbBg;
     private IndexBuffer ibBg;
 
+    private float _elevatorDoorYOffset = 0f;
+
     private final PositionInfo _pos;
+
+    private final Text _textBack;
 
     private float _elevatorY = 0f;
     private float _elevatorYstep = 0.15f;
@@ -77,18 +83,24 @@ public class MineShaft extends Scene {
         _pos = new PositionInfo();
         visuals = Visuals.getInstance();
 
+        _textBack = new Text();
+
         // setup physics world and objects
 
-        _mineCart = new MineCart(_physics, -4f, 4f);
+        _mineCart = new MineCart(_physics, 0f, 0f);
         _mineCart.z = -0.75f;
+        _mineCart._sceneType = ScenesEnum.Shaft;
 
-        _bodyElevatorBottom = _physics.addBoxStatic(-4f, 0f, 0f, 10.0f, 1.0f); // elevator
-        _bodyElevatorLeftWall = _physics.addBoxStatic(-9f, 0f, 0f, 0.5f, 6.0f); // elevator
+        // elevator
+        _bodyElevatorBottom = _physics.addBoxStatic(-4f, 0f, 0f, 10.0f, 1.0f);
+        _bodyElevatorLeftWall = _physics.addBoxStatic(-9f, 0f, 0f, 0.5f, 9.0f);
+        _bodyElevatorRightWall = _physics.addBoxStatic(1f, 0f, 0f, 0.5f, 9.0f);
 
-
-        _physics.addBoxStatic(16.5f, 11.75f, 0f, 30.0f, 1.0f); // top
-        _physics.addBoxStatic(16.5f, -6.4f, 0f, 30.0f, 1.0f); // middle
-        _physics.addBoxStatic(16.5f, -24.4f, 0f, 30.0f, 1.0f); // bottom
+        // tunnels
+        _physics.addBoxStatic(16.5f, 24.5f, 0f, 30f, 8f);
+        _physics.addBoxStatic(16.5f, 11.75f-4f, 0f, 30.0f, 9f); // top
+        _physics.addBoxStatic(16.5f, -6.4f-4f, 0f, 30.0f, 9f); // middle
+        _physics.addBoxStatic(16.5f, -24.4f-4f, 0f, 30.0f, 9f); // bottom
     }
 
     @Override
@@ -104,13 +116,13 @@ public class MineShaft extends Scene {
 
         float[] vertices = {
                 // x, y, z, 			        u, v,
-                -x, -y, 0.0f,   r, g, b, a,     0.0f, 0.0f, // 0
-                x, -y, 0.0f,	r, g, b, a,     1.0f, 0.0f, // 1
-                x,  y, 0.0f,	r, g, b, a,     1.0f, 1.0f, // 2
+                -x, -y, 0.0f, r, g, b, a, 0.0f, 0.0f, // 0
+                x, -y, 0.0f, r, g, b, a, 1.0f, 0.0f, // 1
+                x, y, 0.0f, r, g, b, a, 1.0f, 1.0f, // 2
 
-                -x, -y, 0.0f,	r, g, b, a,     0.0f, 0.0f, // 3
-                x,  y, 0.0f,	r, g, b, a,     1.0f, 1.0f, // 4
-                -x,  y, 0.0f,	r, g, b, a,     0.0f, 1.0f  // 5
+                -x, -y, 0.0f, r, g, b, a, 0.0f, 0.0f, // 3
+                x, y, 0.0f, r, g, b, a, 1.0f, 1.0f, // 4
+                -x, y, 0.0f, r, g, b, a, 0.0f, 1.0f  // 5
         };
 
 
@@ -128,10 +140,17 @@ public class MineShaft extends Scene {
         vbBg = new VertexBuffer(vertices);
         ibBg = new IndexBuffer(indices);
 
-        _fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
+        float textWidth;
+
+        _textBack.init("BACK", new MyColor(1f, 0f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
+        textWidth = _textBack.getTextWidth();
+        _textBack.pos.trans(-0.8f - (textWidth / 2f), -Visuals.aspectRatio * 0.95f, 0f);
+        _textBack.pos.rot(0f, 0f, 0f);
+        _textBack.pos.scale(1f, 1f, 1f);
     }
 
     private void drawBg() {
+        /*
         _pos.trans(0f, 0f, 0f);
         _pos.rot(0f, 0f, 0f);
         _pos.scale(1.0f, 1.0f, 1.0f);
@@ -146,6 +165,7 @@ public class MineShaft extends Scene {
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
         vbBg.unbind();
         ibBg.unbind();
+        */
     }
 
     private void drawShaft() {
@@ -171,14 +191,14 @@ public class MineShaft extends Scene {
     }
 
     void drawRailRoads() {
-        float x, y, z,  tempZ;
+        float x, y, z, tempZ;
         visuals.railroad.bindData(visuals.dirLightShader);
 
         // top tunnel
         x = 6.5f;
         y = 11.8f;
         z = -0.75f;
-        for(int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i) {
             tempZ = z;
             _pos.trans(x, y, z);
             _pos.rot(0f, 0f, 0f);
@@ -195,7 +215,7 @@ public class MineShaft extends Scene {
         // middle tunnel
         x = 6.5f;
         y = -6.5f;
-        for(int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i) {
             tempZ = z;
             _pos.trans(x, y, z);
             _pos.rot(0f, 0f, 0f);
@@ -212,7 +232,7 @@ public class MineShaft extends Scene {
         // bottom tunnel
         x = 6.5f;
         y = -24.3f;
-        for(int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i) {
             tempZ = z;
             _pos.trans(x, y, z);
             _pos.rot(0f, 0f, 0f);
@@ -240,7 +260,7 @@ public class MineShaft extends Scene {
     }
 
     void drawPhysics() {
-        //glDisable(GL_DEPTH_TEST);
+        glDisable(GL_DEPTH_TEST);
         drawPhysicsStatics(_physics);
 //        drawPhysicsGemsFixtures();
 //        drawPhysicsEdges();
@@ -259,15 +279,15 @@ public class MineShaft extends Scene {
         PolygonShape polygon;
         EdgeDrawer edgeDrawer = new EdgeDrawer(100);
         int size = physics.statics.size();
-        for(int i = 0; i < size; ++i) {
+        for (int i = 0; i < size; ++i) {
             body = physics.statics.get(i);
             pos = body.getPosition();
             angle = body.getAngle();
             degree = (float) Math.toDegrees(angle);
 
             fixture = body.getFixtureList();
-            while(fixture != null) {
-                polygon = (PolygonShape)fixture.getShape();
+            while (fixture != null) {
+                polygon = (PolygonShape) fixture.getShape();
                 if (polygon.m_count == 4) { // box
                     edgeDrawer.begin();
                     Vec2 v0 = polygon.m_vertices[0];
@@ -275,10 +295,10 @@ public class MineShaft extends Scene {
                     Vec2 v2 = polygon.m_vertices[2];
                     Vec2 v3 = polygon.m_vertices[3];
 
-                    edgeDrawer.addLine(	v0.x, v0.y, 0f,   v1.x, v1.y, 0f);
-                    edgeDrawer.addLine(	v1.x, v1.y, 0f,   v2.x, v2.y, 0f);
-                    edgeDrawer.addLine(	v2.x, v2.y, 0f,   v3.x, v3.y, 0f);
-                    edgeDrawer.addLine(	v3.x, v3.y, 0f,   v0.x, v0.y, 0f);
+                    edgeDrawer.addLine(v0.x, v0.y, 0f, v1.x, v1.y, 0f);
+                    edgeDrawer.addLine(v1.x, v1.y, 0f, v2.x, v2.y, 0f);
+                    edgeDrawer.addLine(v2.x, v2.y, 0f, v3.x, v3.y, 0f);
+                    edgeDrawer.addLine(v3.x, v3.y, 0f, v0.x, v0.y, 0f);
 
                     setIdentityM(visuals.modelMatrix, 0);
                     translateM(visuals.modelMatrix, 0, pos.x, pos.y, z);
@@ -300,17 +320,21 @@ public class MineShaft extends Scene {
 
         _fadeOutCheck = true;
 
+        _elevatorDoorYOffset = 0f;
+        _elevatorY = 30f;
+        updateElevatorPhysics();
+
         Vec2 pos = _mineCart.cart.getPosition();
         pos.x = -5f;
-        _mineCart.cart.setTransform(pos, 0f);
-
-        _mineCart.wheel1.setTransform(pos, 0f);
-        _mineCart.wheel2.setTransform(pos, 0f);
+        pos.y = 30f;
+        _mineCart.reposition(pos.x, pos.y);
 
         _mineCart.stop();
 
         _elevatorStays = false;
         _stopped = false;
+
+        _physics.update();
     }
 
     @Override
@@ -321,14 +345,17 @@ public class MineShaft extends Scene {
                     _elevatorStopTimeout = 10f;
                     _elevatorPositions = ElevatorPostions.Top;
                     _stopped = true;
+                    _elevatorDoorYOffset = 10f;
                 } else if (Math.abs(_elevatorY - _middleTunnelY) < 0.1f) {
                     _elevatorStopTimeout = 10f;
                     _elevatorPositions = ElevatorPostions.Middle;
                     _stopped = true;
+                    _elevatorDoorYOffset = 10f;
                 } else if (Math.abs(_elevatorY - _bottomTunnelY) < 0.1f) {
                     _elevatorStopTimeout = 10f;
                     _elevatorPositions = ElevatorPostions.Bottom;
                     _stopped = true;
+                    _elevatorDoorYOffset = 10f;
                 } else {
                     _elevatorY -= _elevatorYstep;
                 }
@@ -337,6 +364,7 @@ public class MineShaft extends Scene {
 
                 if (_elevatorStopTimeout < 0f) {
                     _stopped = false;
+                    _elevatorDoorYOffset = 0f;
                     _elevatorPositions = ElevatorPostions.None;
                     _elevatorY -= _elevatorYstep * 2f;
                 }
@@ -368,21 +396,29 @@ public class MineShaft extends Scene {
             }
         }
 
-        if (_elevatorY  > 33.0f)
+        if (_elevatorY > 33.0f)
             _elevatorYstep *= -1f;
         else if (_elevatorY < -37.0f)
             _elevatorYstep *= -1f;
 
+        updateElevatorPhysics();
+
+        _physics.update();
+    }
+
+    void updateElevatorPhysics() {
         Vec2 pos;
         pos = _bodyElevatorBottom.getPosition();
         pos.y = _elevatorY - 2f;
-        _bodyElevatorBottom.setTransform(pos, 0f);
+        _bodyElevatorBottom.setTransform(pos,0f);
 
         pos = _bodyElevatorLeftWall.getPosition();
         pos.y = _elevatorY + 1f;
-        _bodyElevatorLeftWall.setTransform(pos, 0f);
+        _bodyElevatorLeftWall.setTransform(pos,0f);
 
-        _physics.update();
+        pos = _bodyElevatorRightWall.getPosition();
+        pos.y = _elevatorY + 1f + _elevatorDoorYOffset;
+        _bodyElevatorRightWall.setTransform(pos,0f);
     }
 
     @Override
@@ -421,20 +457,36 @@ public class MineShaft extends Scene {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
 
+        visuals.textureShader.useProgram();
+        visuals.textureShader.setTexture(visuals.textureFonts);
+        _textBack.draw();
+
         super.drawFade();
     }
 
     @Override
     public void handleTouchPress(float normalizedX, float normalizedY) {
-        if (!_elevatorStays) {
-            if (_stopped) {
-                _mineCart.start(-4f);
-                _elevatorStays = true;
-                nextSceneId = ScenesEnum.Level;
-                goNextScene = true;
+        if (!goNextScene) {
+            if (normalizedY < -0.75f) {
+                if (normalizedX < -0.3f) {
+                    nextSceneId = ScenesEnum.HelmetSelect;
+                }
+
+                if (nextSceneId != ScenesEnum.None) {
+                    goNextScene = true;
+                    super.initFadeOut();
+                }
+            } else {
+                if (!_elevatorStays) {
+                    if (_stopped) {
+                        _mineCart.start(-4f);
+                        _elevatorStays = true;
+                        nextSceneId = ScenesEnum.Level;
+                        goNextScene = true;
+                    }
+                }
             }
         }
-
         //System.out.println("ElevatorY: " + _elevatorY);
     }
 

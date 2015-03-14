@@ -26,8 +26,8 @@ public class Physics {
 	public static int velIterations = 4; //4;
 	public static int posIterations = 8; //8;
 	
-	public ArrayList<Body> balls = new ArrayList<Body>();
-	public ArrayList<Body> polygons = new ArrayList<Body>();
+//	public ArrayList<Body> balls = new ArrayList<Body>();
+//	public ArrayList<Body> polygons = new ArrayList<Body>();
 	public ArrayList<Body> fragments = new ArrayList<Body>();
     public ArrayList<Body> statics = new ArrayList<Body>();
 	public ArrayList<Body> edges = new ArrayList<Body>();
@@ -49,6 +49,16 @@ public class Physics {
         gemFixtureDef.density = GEM_DENSITY;
 	}
 
+    public void clear() {
+        Body body;
+        int size = fragments.size();
+        while (size > 0) {
+            body = fragments.get(size - 1);
+            fragments.remove(body);
+            world.destroyBody(body);
+            size = fragments.size();
+        }
+    }
 	
 	// Fragments	
 	
@@ -249,7 +259,7 @@ public class Physics {
 	}
 
 	/////////////// end of fragments ////////////////
-	
+	/*
 	public void addBall(float x, float y, float radius) {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DYNAMIC;
@@ -267,7 +277,8 @@ public class Physics {
 		body.createFixture(fixture);
 		balls.add(body);		
 	}
-	
+*/
+/*
 	public void addPolygon(float x, float y, float[] verts) {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DYNAMIC;
@@ -291,7 +302,7 @@ public class Physics {
 		body.createFixture(fixture);
 		polygons.add(body);
 	}
-	
+*/
 	public void addEdge(float x1, float y1, float x2, float y2) {
 		BodyDef bodyDef = new BodyDef();
 		

@@ -180,8 +180,8 @@ public class MineCart {
     }
 
 	public void stop() {
-		wheelJoint1.setMotorSpeed(0.0f);
-		wheelJoint2.setMotorSpeed(0.0f);
+		wheelJoint1.setMotorSpeed(0f);
+		wheelJoint2.setMotorSpeed(0f);
 		collisionStop = true;
 		collisionStopTimer = 0;
 	}
@@ -219,6 +219,13 @@ public class MineCart {
 
     }
 
+    public void reposition(float x, float y) {
+        Vec2 pos = new Vec2(x, y);
+        cart.setTransform(pos, 0f);
+        wheel1.setTransform(pos, 0f);
+        wheel2.setTransform(pos, 0f);
+    }
+
     private void updateOnLevel() {
 		Vec2 pos = cart.getPosition();
 		
@@ -254,9 +261,7 @@ public class MineCart {
 				Random rand = new Random();
 				pos.x = -19.0f - (rand.nextFloat() * 3f);
 				pos.y = -16.5f;
-				cart.setTransform(pos, 0f);
-				wheel1.setTransform(pos, 0f);
-				wheel2.setTransform(pos, 0f);
+                reposition(pos.x, pos.y);
 				check = true;
 				stopTimeout = 0;
 				Stopped = false;
@@ -288,17 +293,6 @@ public class MineCart {
                 physics.removeFragments();
 			}
 		}
-		/*
-		if (pos.x > 8.0f) {
-			wheelJoint1.setMotorSpeed(1.0f);
-			wheelJoint2.setMotorSpeed(1.0f);
-		}
-		
-		if (pos.x < -8.0f) {
-			wheelJoint1.setMotorSpeed(-1.0f);
-			wheelJoint2.setMotorSpeed(-1.0f);
-		}
-		*/
 	}
 	
 	private void drawCartFixture() {

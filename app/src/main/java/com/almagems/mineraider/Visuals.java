@@ -446,16 +446,16 @@ public class Visuals {
                 0f,  0f, 0f,  // at
                 0f,  1f, 0f);   // up
 
-
 /*
+
         // debug
         setLookAtM(viewMatrix, 0,
-                -15f,  0f, 6f,	// eye
+                0f,  0f, 90f,	// eye
                 0f,  0f, 0f,  // at
                 0f,  1f, 0f);   // up
 
-*/
 
+*/
 
 
 

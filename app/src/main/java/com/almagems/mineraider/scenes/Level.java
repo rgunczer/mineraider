@@ -15,6 +15,7 @@ import org.jbox2d.dynamics.Fixture;
 
 import com.almagems.mineraider.ClassicSingleton;
 import com.almagems.mineraider.GemPosition;
+import com.almagems.mineraider.HUD;
 import com.almagems.mineraider.Match3;
 import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Physics;
@@ -47,6 +48,10 @@ public class Level extends Scene {
 
 	private float elapsed = 0f;
 
+    private final float cartX = -20f;
+    private final float cartX2nd = -30f;
+    private final float cartY = -15f;
+
     private final MyColor colorBlack;
     private final MyColor colorWhite;
 
@@ -73,11 +78,7 @@ public class Level extends Scene {
 		match3 = new Match3(8, animManager, ClassicSingleton.getInstance().scoreCounter);
 
 		initBoardGeometry();		
-				
-		match3.placeInitialGems();
-		match3.dumpBoardStat();
-		match3.createInitialFallAnim();
-	
+
 		particleManager = ParticleManager.getInstance();
 		particleManager.init();
 				
@@ -93,24 +94,25 @@ public class Level extends Scene {
 		// sin
 		physics.addBoxStatic(0.0f, -19.7f, 0f, 70.0f, 0.5f);
 
-		float x = -20f;
-		float y = -15.7f;
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+
+
+		float x = cartX; //-20f;
+		float y = cartY; //-15.7f;
 		MineCart mineCart;
 		
 		mineCart = new MineCart(physics, x, y);
         mineCart._sceneType = ScenesEnum.Level;
-        mineCart.start(-3f);
         mineCart.z = 1f;
 		mineCarts.add(mineCart);
-		ClassicSingleton.getInstance().cart1 = mineCart;
+		singleton.cart1 = mineCart;
 
-		x = -30f;
+		x = cartX2nd;
 		mineCart = new MineCart(physics, x, y);
         mineCart._sceneType = ScenesEnum.Level;
-        mineCart.start(-3f);
         mineCart.z = 1f;
 		mineCarts.add(mineCart);
-		ClassicSingleton.getInstance().cart2 = mineCart;
+		singleton.cart2 = mineCart;
 
         PopAnimation.physics = physics;
 	}
@@ -118,14 +120,35 @@ public class Level extends Scene {
 	@Override
 	public void surfaceChanged(int width, int height) {
 		visuals.setProjectionMatrix3D();
-        ClassicSingleton.getInstance().hud.init();
-        ClassicSingleton.getInstance().hud.updateScore(ClassicSingleton.getInstance().getScore());
+        HUD hud = ClassicSingleton.getInstance().hud;
+        hud.init();
+        hud.updateScore(ClassicSingleton.getInstance().getScore());
 	}
 
     @Override
     public void prepare() {
         super.prepare();
 
+        final float cartSpeed = -3f;
+        MineCart cart;
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+
+        cart = singleton.cart1;
+        cart.reposition(cartX, cartY);
+        cart.start(cartSpeed);
+
+        cart = singleton.cart2;
+        cart.reposition(cartX2nd, cartY);
+        cart.start(cartSpeed);
+
+        physics.clear();
+        animManager.clear();
+
+        match3.placeInitialGems();
+        match3.dumpBoardStat();
+        match3.createInitialFallAnim();
+
+        singleton.hud.reset();
     }
 
 	@Override

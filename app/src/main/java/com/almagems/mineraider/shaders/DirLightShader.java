@@ -1,10 +1,14 @@
 package com.almagems.mineraider.shaders;
 
 import static android.opengl.GLES20.*;
+import static com.almagems.mineraider.Constants.BYTES_PER_FLOAT;
+
 import android.content.Context;
 
 import com.almagems.mineraider.R;
 import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.data.VertexArray;
+import com.almagems.mineraider.data.VertexBuffer;
 
 
 public class DirLightShader extends BaseShader {	
@@ -57,5 +61,33 @@ public class DirLightShader extends BaseShader {
 	
 	public int getTextureAttributeLocation() {
 		return aTextureCoordinatesLocation;
-	}	
+	}
+
+    public void bindData(VertexArray vertexArray) {
+        final int POSITION_COMPONENT_COUNT = 3;
+        final int NORMAL_COMPONENT_COUNT = 3;
+        final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
+        final int STRIDE = (POSITION_COMPONENT_COUNT +
+                            NORMAL_COMPONENT_COUNT +
+                            TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
+
+        vertexArray.setVertexAttribPointer(
+                0,
+                getPositionAttributeLocation(),
+                POSITION_COMPONENT_COUNT,
+                STRIDE);
+
+        vertexArray.setVertexAttribPointer(
+                POSITION_COMPONENT_COUNT,
+                getNormalAttributeLocation(),
+                NORMAL_COMPONENT_COUNT,
+                STRIDE);
+
+        vertexArray.setVertexAttribPointer(
+                POSITION_COMPONENT_COUNT + NORMAL_COMPONENT_COUNT,
+                getTextureAttributeLocation(),
+                TEXTURE_COORDINATES_COMPONENT_COUNT,
+                STRIDE);
+    }
+
 }

@@ -6,6 +6,7 @@ import com.almagems.mineraider.ClassicSingleton;
 import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
 import static android.opengl.GLES20.GL_SRC_ALPHA;
 import static android.opengl.GLES20.glBlendFunc;
+import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glEnable;
 import static android.opengl.Matrix.multiplyMM;
 import static android.opengl.Matrix.rotateM;
@@ -17,11 +18,20 @@ import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.data.IndexBuffer;
+import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.data.VertexBuffer;
 import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.MineCart;
+import com.almagems.mineraider.objects.Quad;
+import com.almagems.mineraider.util.Geometry;
 import com.almagems.mineraider.util.MyColor;
+import com.almagems.mineraider.util.Ray;
+import com.almagems.mineraider.util.Rectangle;
+import com.almagems.mineraider.util.Sphere;
 import com.almagems.mineraider.util.Text;
+import com.almagems.mineraider.util.Texture;
+import com.almagems.mineraider.util.TexturedQuad;
+import com.almagems.mineraider.util.Vector;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -53,24 +63,32 @@ public class MineShaft extends Scene {
     private Body _bodyElevatorLeftWall;
     private Body _bodyElevatorRightWall;
 
-    private VertexBuffer vbBg;
-    private IndexBuffer ibBg;
-
     private float _elevatorDoorYOffset = 0f;
 
     private final PositionInfo _pos;
 
     private final Text _textBack;
 
+
+    private float _elevatorX = -4f;
     private float _elevatorY = 0f;
-    private float _elevatorYstep = 0.15f;
-    private float _elevatorStopTimeout = 1f;
+
+    private Quad _quadTunnelTop;
+    private Quad _quadTunnelMiddle;
+    private Quad _quadTunnelBottom;
+
+    private final float elevatorSpeed = 0.15f;
+    private float _elevatorYstep = elevatorSpeed;
     private boolean _stopped = false;
     private boolean _elevatorStays = false;
 
     private final float _topTunnelY = 13.8f;
     private final float _middleTunnelY = -4.2f;
     private final float _bottomTunnelY = -22.0f;
+
+    private Vector _posElevatorUp = new Vector(0f, 0f, 0f);
+    private Vector _posElevatorDown = new Vector(0f, 0f, 0f);
+    private Vector _poselevatorEnter = new Vector(0f, 0f, 0f);
 
     private static Visuals visuals;
     private Physics _physics;
@@ -84,6 +102,10 @@ public class MineShaft extends Scene {
         visuals = Visuals.getInstance();
 
         _textBack = new Text();
+
+        _quadTunnelTop = new Quad();
+        _quadTunnelMiddle = new Quad();
+        _quadTunnelBottom = new Quad();
 
         // setup physics world and objects
 
@@ -115,14 +137,14 @@ public class MineShaft extends Scene {
         final float y = aspect;
 
         float[] vertices = {
-                // x, y, z, 			        u, v,
-                -x, -y, 0.0f, r, g, b, a, 0.0f, 0.0f, // 0
-                x, -y, 0.0f, r, g, b, a, 1.0f, 0.0f, // 1
-                x, y, 0.0f, r, g, b, a, 1.0f, 1.0f, // 2
+                // xyz, 	    rgba,	        uv
+                -x, -y, 0f,     r, g, b, a,     0.0f, 0.0f, // 0
+                 x, -y, 0f,     r, g, b, a,     1.0f, 0.0f, // 1
+                 x,  y, 0f,     r, g, b, a,     1.0f, 1.0f, // 2
 
-                -x, -y, 0.0f, r, g, b, a, 0.0f, 0.0f, // 3
-                x, y, 0.0f, r, g, b, a, 1.0f, 1.0f, // 4
-                -x, y, 0.0f, r, g, b, a, 0.0f, 1.0f  // 5
+                -x, -y, 0f,     r, g, b, a,     0.0f, 0.0f, // 3
+                 x,  y, 0f,     r, g, b, a,     1.0f, 1.0f, // 4
+                -x,  y, 0f,     r, g, b, a,     0.0f, 1.0f  // 5
         };
 
 
@@ -137,9 +159,6 @@ public class MineShaft extends Scene {
                 3, 4, 5
         };
 
-        vbBg = new VertexBuffer(vertices);
-        ibBg = new IndexBuffer(indices);
-
         float textWidth;
 
         _textBack.init("BACK", new MyColor(1f, 0f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
@@ -147,25 +166,103 @@ public class MineShaft extends Scene {
         _textBack.pos.trans(-0.8f - (textWidth / 2f), -Visuals.aspectRatio * 0.95f, 0f);
         _textBack.pos.rot(0f, 0f, 0f);
         _textBack.pos.scale(1f, 1f, 1f);
+
+        float start = 4f;
+        Rectangle rect;
+
+        rect = new Rectangle(0f, 32f * start, 256f, 32f);
+        _quadTunnelTop.initWithNormalVectors(visuals.textureTunnels, rect, false);
+        _quadTunnelTop.pos.trans(9f, 18f, -2f);
+        _quadTunnelTop.pos.scale(6f, 1f, 1f);
+
+
+        rect = new Rectangle(0f, 32f * (start + 1f), 256f, 32f);
+        _quadTunnelMiddle.initWithNormalVectors(visuals.textureTunnels, rect, false);
+        _quadTunnelMiddle.pos.trans(9f, 0f, -2f);
+        _quadTunnelMiddle.pos.scale(6f, 1f, 1f);
+
+
+        rect = new Rectangle(0f, 32f * (start + 2f), 256f, 32f);
+        _quadTunnelBottom.initWithNormalVectors(visuals.textureTunnels, rect, false);
+        _quadTunnelBottom.pos.trans(9f, -18f, -2f);
+        _quadTunnelBottom.pos.scale(6f, 1f, 1f);
+
+
+/*
+
+
+        Texture texture = Visuals.getInstance().getTextureObj(visuals.textureTunnels);
+        float tw = texture.width;
+        float th = texture.height;
+
+        TexturedQuad pFont = new TexturedQuad();
+        // x								// y
+        pFont.tx_lo_left.x = x / tw;        pFont.tx_lo_left.y = (th - (y - h)) / th;  // 0
+        pFont.tx_lo_right.x = (x + w) / tw; pFont.tx_lo_right.y = (th - (y - h)) / th; // 1
+        pFont.tx_up_right.x = (x + w) / tw; pFont.tx_up_right.y = (th - y) / th;       // 2
+        pFont.tx_up_left.x = x / tw;        pFont.tx_up_left.y =  (th - y) / th;       // 3
+
+        float tx0 = pFont.tx_lo_left.x;
+        float tx1 = pFont.tx_up_right.x;
+        float ty0 = pFont.tx_lo_left.y;
+        float ty1 = pFont.tx_up_right.y;
+
+        float[] vertexData = {
+                // xyz, rgba, uv
+                -1f, -1f, 0f,   color.r, color.g, color.b, color.a,     tx1, ty1,
+                 1f, -1f, 0f,   color.r, color.g, color.b, color.a,     tx0, ty1,
+                 1f,  1f, 0f,   color.r, color.g, color.b, color.a,     tx0, ty0,
+
+                -1f, -1f, 0f,   color.r, color.g, color.b, color.a,     tx1, ty1,
+                 1f,  1f, 0f,   color.r, color.g, color.b, color.a,     tx0, ty0,
+                -1f,  1f, 0f,   color.r, color.g, color.b, color.a,     tx1, ty0
+        };
+
+        vertexArrayTunnel = new VertexArray(vertexData);
+*/
     }
 
-    private void drawBg() {
-        /*
-        _pos.trans(0f, 0f, 0f);
+    private void  drawElevatorButtons() {
+        visuals.elevatorButton.bindData(visuals.dirLightShader);
+
+        final float xoff = -2.5f;
+
+        _posElevatorUp.x = _elevatorX + xoff;
+        _posElevatorUp.y = _elevatorY + 8.5f;
+        _posElevatorUp.z = 2f;
+
+        _pos.trans(_posElevatorUp.x, _posElevatorUp.y, _posElevatorUp.z);
         _pos.rot(0f, 0f, 0f);
         _pos.scale(1.0f, 1.0f, 1.0f);
-
         visuals.calcMatricesForObject(_pos);
-        visuals.textureShader.setUniforms(visuals.mvpMatrix);
+        visuals.dirLightShader.setUniforms();
+        visuals.elevatorButton.draw();
 
-        vbBg.bind();
-        visuals.textureShader.bindData(vbBg);
 
-        ibBg.bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-        vbBg.unbind();
-        ibBg.unbind();
-        */
+        _posElevatorDown.x = _elevatorX + xoff;
+        _posElevatorDown.y = _elevatorY - 4.5f;
+        _posElevatorDown.z = 2f;
+
+        _pos.trans(_posElevatorDown.x, _posElevatorDown.y, _posElevatorDown.z);
+        _pos.rot(0f, 0f, 180f);
+        _pos.scale(1.0f, 1.0f, 1.0f);
+        visuals.calcMatricesForObject(_pos);
+        visuals.dirLightShader.setUniforms();
+        visuals.elevatorButton.draw();
+
+
+        _poselevatorEnter.x = _elevatorX; // + xoff + ;
+        _poselevatorEnter.y = _elevatorY + 1.2f;
+        _poselevatorEnter.z = 2f;
+
+        visuals.elevatorEnter.bindData(visuals.dirLightShader);
+        visuals.dirLightShader.setTexture(visuals.textureElevatorEnter);
+        _pos.trans(_poselevatorEnter.x, _poselevatorEnter.y, _poselevatorEnter.z);
+        _pos.rot(0f, 0f, 0f);
+        _pos.scale(1.0f, 1.0f, 1.0f);
+        visuals.calcMatricesForObject(_pos);
+        visuals.dirLightShader.setUniforms();
+        visuals.elevatorEnter.draw();
     }
 
     private void drawShaft() {
@@ -182,7 +279,7 @@ public class MineShaft extends Scene {
     private void drawElevator() {
         visuals.elevator.bindData(visuals.dirLightShader);
 
-        _pos.trans(-4f, _elevatorY, 0f);
+        _pos.trans(_elevatorX, _elevatorY, 0f);
         _pos.rot(0f, 0f, 0f);
         _pos.scale(1.0f, 1.0f, 1.0f);
         visuals.calcMatricesForObject(_pos);
@@ -314,6 +411,12 @@ public class MineShaft extends Scene {
         }
     }
 
+    private void drawTunnelLabels() {
+        _quadTunnelTop.draw1();
+        _quadTunnelMiddle.draw1();
+        _quadTunnelBottom.draw1();
+    }
+
     @Override
     public void prepare() {
         super.prepare();
@@ -342,31 +445,19 @@ public class MineShaft extends Scene {
         if (!_elevatorStays) {
             if (!_stopped) {
                 if (Math.abs(_elevatorY - _topTunnelY) < 0.1f) {
-                    _elevatorStopTimeout = 10f;
                     _elevatorPositions = ElevatorPostions.Top;
                     _stopped = true;
                     _elevatorDoorYOffset = 10f;
                 } else if (Math.abs(_elevatorY - _middleTunnelY) < 0.1f) {
-                    _elevatorStopTimeout = 10f;
                     _elevatorPositions = ElevatorPostions.Middle;
                     _stopped = true;
                     _elevatorDoorYOffset = 10f;
                 } else if (Math.abs(_elevatorY - _bottomTunnelY) < 0.1f) {
-                    _elevatorStopTimeout = 10f;
                     _elevatorPositions = ElevatorPostions.Bottom;
                     _stopped = true;
                     _elevatorDoorYOffset = 10f;
                 } else {
-                    _elevatorY -= _elevatorYstep;
-                }
-            } else {
-                _elevatorStopTimeout -= 0.1f;
-
-                if (_elevatorStopTimeout < 0f) {
-                    _stopped = false;
-                    _elevatorDoorYOffset = 0f;
-                    _elevatorPositions = ElevatorPostions.None;
-                    _elevatorY -= _elevatorYstep * 2f;
+                    _elevatorY += _elevatorYstep;
                 }
             }
         } else {
@@ -404,6 +495,7 @@ public class MineShaft extends Scene {
         updateElevatorPhysics();
 
         _physics.update();
+        visuals.updateViewProjMatrix();
     }
 
     void updateElevatorPhysics() {
@@ -418,7 +510,7 @@ public class MineShaft extends Scene {
 
         pos = _bodyElevatorRightWall.getPosition();
         pos.y = _elevatorY + 1f + _elevatorDoorYOffset;
-        _bodyElevatorRightWall.setTransform(pos,0f);
+        _bodyElevatorRightWall.setTransform(pos, 0f);
     }
 
     @Override
@@ -429,9 +521,6 @@ public class MineShaft extends Scene {
 
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
-
-        visuals.textureShader.setTexture(visuals.textureShaftBg);
-        drawBg();
 
         glEnable(GL_DEPTH_TEST);
         visuals.setProjectionMatrix3dForShaft();
@@ -447,7 +536,15 @@ public class MineShaft extends Scene {
         visuals.dirLightShader.setTexture(visuals.textureRailRoad);
         drawRailRoads();
 
+        visuals.dirLightShader.setTexture(visuals.textureTunnels);
+        drawTunnelLabels();
+
         _mineCart.draw();
+
+        if (_stopped) {
+            visuals.dirLightShader.setTexture(visuals.textureElevatorButton);
+            drawElevatorButtons();
+        }
 
         //drawPhysics();
         visuals.setProjectionMatrix2D();
@@ -457,36 +554,99 @@ public class MineShaft extends Scene {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
 
+
+
         visuals.textureShader.useProgram();
         visuals.textureShader.setTexture(visuals.textureFonts);
         _textBack.draw();
+        //_quadTunnelTop.draw();
 
         super.drawFade();
+
+        // needs to be set for picking to work correctly
+        visuals.setProjectionMatrix3dForShaft();
+        visuals.updateViewProjMatrix();
+
     }
 
     @Override
     public void handleTouchPress(float normalizedX, float normalizedY) {
-        if (!goNextScene) {
-            if (normalizedY < -0.75f) {
-                if (normalizedX < -0.3f) {
-                    nextSceneId = ScenesEnum.HelmetSelect;
-                }
+        if (goNextScene) {
+            return;
+        }
 
-                if (nextSceneId != ScenesEnum.None) {
-                    goNextScene = true;
-                    super.initFadeOut();
-                }
-            } else {
-                if (!_elevatorStays) {
-                    if (_stopped) {
+        touchDownX = normalizedX;
+        touchDownY = normalizedY;
+
+        if (normalizedY < -0.75f) {
+            if (normalizedX < -0.3f) {
+                nextSceneId = ScenesEnum.HelmetSelect;
+            }
+
+            if (nextSceneId != ScenesEnum.None) {
+                goNextScene = true;
+                super.initFadeOut();
+            }
+        } else {
+            if (!_elevatorStays) {
+                if (_stopped) {
+
+
+        // needs to be set for picking to work correctly
+        visuals.setProjectionMatrix3dForShaft();
+        visuals.updateViewProjMatrix();
+
+        Ray ray = Geometry.convertNormalized2DPointToRay(touchDownX, touchDownY, visuals.invertedViewProjectionMatrix);
+
+        Sphere sphere;
+        sphere = new Sphere(_posElevatorUp.x, _posElevatorUp.y, _posElevatorUp.z, 2f);
+        if (Geometry.intersects(sphere, ray)) {
+            System.out.println("Elevator: Move Up");
+            _stopped = false;
+            _elevatorDoorYOffset = 0f;
+            _elevatorPositions = ElevatorPostions.None;
+            _elevatorYstep = elevatorSpeed;
+            _elevatorY += _elevatorYstep * 2f;
+        }
+
+        sphere = new Sphere(_posElevatorDown.x, _posElevatorDown.y, _posElevatorDown.z, 2f);
+        if (Geometry.intersects(sphere, ray)) {
+            System.out.println("Elevator: Move Down");
+            _stopped = false;
+            _elevatorDoorYOffset = 0f;
+            _elevatorPositions = ElevatorPostions.None;
+            _elevatorYstep = -elevatorSpeed;
+            _elevatorY += _elevatorYstep * 2f;
+        }
+
+                    sphere = new Sphere(_poselevatorEnter.x,  _poselevatorEnter.y, _poselevatorEnter.z, 3f);
+                    if (Geometry.intersects(sphere, ray)) {
+                        System.out.println("Elevator: time to play");
+
                         _mineCart.start(-4f);
                         _elevatorStays = true;
                         nextSceneId = ScenesEnum.Level;
                         goNextScene = true;
                     }
+
+
+
                 }
             }
         }
+
+/*
+                    _mineCart.start(-4f);
+                    _elevatorStays = true;
+                    nextSceneId = ScenesEnum.Level;
+                    goNextScene = true;
+
+            _stopped = false;
+            _elevatorDoorYOffset = 0f;
+            _elevatorPositions = ElevatorPostions.None;
+            _elevatorY -= _elevatorYstep * 2f;
+*/
+
         //System.out.println("ElevatorY: " + _elevatorY);
     }
 

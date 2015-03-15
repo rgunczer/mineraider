@@ -85,11 +85,11 @@ public class Visuals {
     public int textureMineEntranceBeam;
     public int textureEditorButtons;
     public int textureMineInterior;
-    public int textureShaftBg;
+    public int textureElevatorButton;
     public int textureShaft;
     public int textureElevator;
-
-
+    public int textureElevatorEnter;
+    public int textureTunnels;
 
 
 
@@ -123,6 +123,8 @@ public class Visuals {
 	public Model mineInterior;
     public Model shaft;
     public Model elevator;
+    public Model elevatorButton;
+    public Model elevatorEnter;
 
 	// shaders
 	public TextureShader textureShader;
@@ -350,6 +352,15 @@ public class Visuals {
         ml = new ModelLoader();
         ml.init(context, R.drawable.elevator, "Elevator");
         elevator = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.elevator_button, "ElevatorButton");
+        elevatorButton = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.elevator_enter, "ElevatorEnter");
+        elevatorEnter = new Model(ml);
+
 	}	
 
     private int loadTexture(int resourceId) {
@@ -387,15 +398,16 @@ public class Visuals {
 		textureMenuItems = loadTexture(R.drawable.menu_items);
 		texturePickAxe = loadTexture(R.drawable.pickaxe_texture);
         textureFonts = loadTexture(R.drawable.fontsandroid);
-        //textureIkon = loadTexture(R.drawable.ikon_texture);
         textureHelmets = loadTexture(R.drawable.helmets_texture);
         textureNextArrow = loadTexture(R.drawable.helmet_next_arrow_texture);
         textureMineEntranceBeam = loadTexture(R.drawable.mine_entrance_beam_texture);
         textureEditorButtons = loadTexture(R.drawable.editor_buttons);
         textureMineInterior = loadTexture(R.drawable.brick_messy_texture);
-        textureShaftBg = loadTexture(R.drawable.shaft_bg_texture);
+        textureElevatorButton = loadTexture(R.drawable.elevator_button_texture);
         textureShaft = loadTexture(R.drawable.shaft_texture);
         textureElevator = loadTexture(R.drawable.elevator_texture);
+        textureElevatorEnter = loadTexture(R.drawable.elevator_enter_texture);
+        textureTunnels = loadTexture(R.drawable.tunnels_texture);
 	}
 
 	public void bindNoTexture() {

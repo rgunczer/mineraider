@@ -11,7 +11,6 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
 import android.widget.Toast;
 
-import com.almagems.mineraider.scenes.HelmetSelect;
 import com.almagems.mineraider.scenes.Level;
 import com.almagems.mineraider.scenes.Menu;
 import com.almagems.mineraider.scenes.MineShaft;
@@ -24,7 +23,6 @@ public class MineRaiderRenderer implements Renderer {
 
 	private long frameStartTimeMS;
 
-    private Scene playerSelect;
 	private Scene menu;
 	private Scene level;
     private Scene shaft;
@@ -55,11 +53,6 @@ public class MineRaiderRenderer implements Renderer {
             case Level:
                 glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
                 current = level;
-                break;
-
-            case HelmetSelect:
-                glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
-                current = playerSelect;
                 break;
 
             case Menu:
@@ -126,13 +119,8 @@ public class MineRaiderRenderer implements Renderer {
 			menu = new Menu();
 		}
 
-        if (playerSelect == null) {
-            playerSelect = new HelmetSelect();
-        }
-
 		//current = loading;
 		current = menu;
-        //current = playerSelect;
         //current = shaft;
         //current = level;
 	}

@@ -42,7 +42,6 @@ public class Constants {
     public static enum ScenesEnum {
         None,
         Menu,
-        HelmetSelect,
         Shaft,
         Level,
         Loading,

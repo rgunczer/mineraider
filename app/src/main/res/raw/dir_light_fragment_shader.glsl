@@ -17,9 +17,9 @@ void main()
 	
 	vec3 lightVector = normalize(u_LightPos - v_Position);
 	
-	float diffuse = max(dot(v_Normal, lightVector), 0.25);
+	float diffuse = max(dot(v_Normal, lightVector), 0.5);
 	
 	//gl_FragColor = v_Color * diffuse;
-	gl_FragColor = texture2D(u_TextureUnit, v_TextureCoordinates) * v_Color * diffuse;
+	gl_FragColor = texture2D(u_TextureUnit, v_TextureCoordinates) * v_Color* diffuse;
 	
 }

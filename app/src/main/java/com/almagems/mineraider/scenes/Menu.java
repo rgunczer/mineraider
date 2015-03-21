@@ -20,6 +20,7 @@ import com.almagems.mineraider.objects.Quad;
 import com.almagems.mineraider.util.Geometry;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
+import com.almagems.mineraider.util.Text;
 import com.almagems.mineraider.util.Texture;
 import com.almagems.mineraider.util.Vector;
 
@@ -27,15 +28,47 @@ import java.util.ArrayList;
 
 public class Menu extends Scene {
 
+    // helmet select vars
+    private boolean _showNextHelmetArrow;
+    private boolean _showPrevHelmetArrow;
+
+    private int _currentHelmetIndex;
+
+    private final Quad _leftArrow;
+    private final Quad _rightArrow;
+    private Quad _helmetInFocus;
+    private final Quad[] _helmets;
+
+    private final Text _textScore;
+    private final Text _textSubTitle;
+    private final Text _textContinue;
+    private final Text _textBack;
+
+
+
+
+
+
+    private Fade _fadeSub = new Fade();
+
+
     private Physics physics;
 
     MineCart mineCart;
 
     private ArrayList<RockData> rocks = new ArrayList<RockData>();
 
+    private boolean _animatePlayButton = false;
+    private boolean _animateOptionsButton = false;
+    private boolean _animateAboutButton = false;
+
     private final EdgeDrawer edgeDrawer;
 
     private final boolean editorEnabled = false;
+
+    private final float menuAnimSpeed = 0.05f;
+    private float menuAnimCurrentValue;
+    private float menuAnimEndValue;
 
     private VertexBuffer vbBg;
     private IndexBuffer ibBg;
@@ -74,6 +107,14 @@ public class Menu extends Scene {
 
     private RockData currentRock;
 
+    private enum MenuState {
+        MainMenu,
+        HelmetSelect,
+        Options,
+        About
+    }
+
+    private MenuState _state = MenuState.MainMenu;
 
     // ctor
     public Menu() {
@@ -122,6 +163,21 @@ public class Menu extends Scene {
         mineCart.z = 1f;
         mineCart._sceneType = ScenesEnum.Menu;
         mineCart.start(-3f);
+
+
+        _helmets = new Quad[MAX_HELMET_TYPES];
+        for (int i = 0; i < MAX_HELMET_TYPES; ++i) {
+            _helmets[i] = new Quad();
+        }
+
+        _leftArrow = new Quad();
+        _rightArrow = new Quad();
+
+        _textScore = new Text();
+        _textSubTitle = new Text();
+        _textContinue = new Text();
+        _textBack = new Text();
+
     }
 
     @Override
@@ -166,34 +222,26 @@ public class Menu extends Scene {
 
 
 
-
-
-
-
-
-
-
-
-        rect = new Rectangle(0, 1215+371, 1080, 371);
+        rect = new Rectangle(0, 573+306, 1080, 306);
         title.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
         title.pos.trans(0f, aspect * 0.65f, 0f);
         title.pos.rot(0f, 0f, 0f);
         title.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
 
-        rect = new Rectangle(0, 584+308, 1080, 308);
+        rect = new Rectangle(0, 382+191, 1080, 191);
         play.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
         play.pos.trans(0.0f, aspect * 0.1f, 0f);
         play.pos.rot(0f, 0f, 0f);
         play.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
-        rect = new Rectangle(0, 288+296, 1080, 296);
+        rect = new Rectangle(0, 191+191, 1080, 191);
         options.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
         options.pos.trans(0.0f, -aspect * 0.2f, 0f);
         options.pos.rot(0f, 0f, 0f);
         options.pos.scale(rect.w / Visuals.referenceScreenWidth, rect.h / Visuals.referenceScreenWidth, 1.0f);
 
-        rect = new Rectangle(0, 0+288, 1080, 288);
+        rect = new Rectangle(0, 0+191, 1080, 191);
         about.init(visuals.textureMenuItems, whiteColor, rect, flipUTextureCoordinate);
         about.pos.trans(0.0f, -aspect * 0.5f, 0f);
         about.pos.rot(0f, 0f, 0f);
@@ -390,10 +438,166 @@ public class Menu extends Scene {
         rocks.add( new RockData(6, 1.0f, -11.0f, -7.75f, 0.0f, -39.0f, 15.0f, 1.5f, 1.5f, 1.75f) );
 	}
 
+    private void initOptions(int width, int height) {
+        float textWidth;
+
+        _textSubTitle.init("OPTIONS", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.3f);
+        textWidth = _textSubTitle.getTextWidth();
+        _textSubTitle.pos.trans(-textWidth / 2f, Visuals.aspectRatio * 0.4f, 0f);
+        _textSubTitle.pos.rot(0f, 0f, 0f);
+        _textSubTitle.pos.scale(1f, 1f, 1f);
+
+        _textBack.init("BACK", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
+        textWidth = _textBack.getTextWidth();
+        _textBack.pos.trans(-0.5f - (textWidth / 2f), -Visuals.aspectRatio * 0.9f, 0f);
+        _textBack.pos.rot(0f, 0f, 0f);
+        _textBack.pos.scale(1f, 1f, 1f);
+
+    }
+
+    private void initAbout(int width, int height) {
+        float textWidth;
+
+        _textSubTitle.init("ABOUT", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.3f);
+        textWidth = _textSubTitle.getTextWidth();
+        _textSubTitle.pos.trans(-textWidth / 2f, Visuals.aspectRatio * 0.4f, 0f);
+        _textSubTitle.pos.rot(0f, 0f, 0f);
+        _textSubTitle.pos.scale(1f, 1f, 1f);
+
+        _textBack.init("BACK", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
+        textWidth = _textBack.getTextWidth();
+        _textBack.pos.trans(-0.5f - (textWidth / 2f), -Visuals.aspectRatio * 0.9f, 0f);
+        _textBack.pos.rot(0f, 0f, 0f);
+        _textBack.pos.scale(1f, 1f, 1f);
+
+    }
+
+    private void initHelmets(int width, int height) {
+        _showNextHelmetArrow = true;
+        _showPrevHelmetArrow = true;
+
+        float textWidth;
+
+        _textSubTitle.init("SELECT YOUR HELMET", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.3f);
+        textWidth = _textSubTitle.getTextWidth();
+        _textSubTitle.pos.trans(-textWidth / 2f, Visuals.aspectRatio * 0.4f, 0f);
+        _textSubTitle.pos.rot(0f, 0f, 0f);
+        _textSubTitle.pos.scale(1f, 1f, 1f);
+
+        _textContinue.init("CONTINUE", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
+        textWidth = _textContinue.getTextWidth();
+        _textContinue.pos.trans(0.5f - (textWidth / 2f) , -Visuals.aspectRatio * 0.9f, 0f);
+        _textContinue.pos.rot(0f, 0f, 0f);
+        _textContinue.pos.scale(1f, 1f, 1f);
+
+        _textBack.init("BACK", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
+        textWidth = _textContinue.getTextWidth();
+        _textBack.pos.trans(-0.5f - (textWidth / 2f), -Visuals.aspectRatio * 0.9f, 0f);
+        _textBack.pos.rot(0f, 0f, 0f);
+        _textBack.pos.scale(1f, 1f, 1f);
+
+
+        _textScore.init("SCORE", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.0f);
+        textWidth = _textScore.getTextWidth();
+        _textScore.pos.trans(-textWidth / 2f, -0.4f, 0f);
+        _textScore.pos.rot(0f, 0f, 0f);
+        _textScore.pos.scale(1f, 1f, 1f);
+
+        float quadScale = 0.1f;
+        final boolean flipUCoordinate = false;
+        MyColor colorWhite = new MyColor(1f, 1f, 1f, 1f);
+
+
+        _leftArrow.init(visuals.textureNextArrow, colorWhite, new Rectangle(0f, 0f, -128f, 128f), flipUCoordinate);
+        _leftArrow.pos.trans(-0.75f, 0.0f, 0f);
+        _leftArrow.pos.rot(0f, 0f, 0f);
+        _leftArrow.pos.scale(quadScale, quadScale, 1f);
+
+
+        _rightArrow.init(visuals.textureNextArrow, colorWhite, new Rectangle(0f, 0f, 128f, 128f), flipUCoordinate);
+        _rightArrow.pos.trans(0.75f, 0.0f, 0f);
+        _rightArrow.pos.rot(0f, 0f, 0f);
+        _rightArrow.pos.scale(quadScale, quadScale, 1f);
+
+
+        quadScale = 0.3f;
+
+        // red
+        _helmets[RED_HELMET].init(visuals.textureHelmets, colorWhite, rectRedHelmet, flipUCoordinate);
+        _helmets[RED_HELMET].pos.trans(0.0f, 0.0f, 0f);
+        _helmets[RED_HELMET].pos.rot(0f, 0f, 0f);
+        _helmets[RED_HELMET].pos.scale(quadScale, quadScale, 1f);
+
+        // green
+        _helmets[GREEN_HELMET].init(visuals.textureHelmets, colorWhite, rectGreenHelmet, flipUCoordinate);
+        _helmets[GREEN_HELMET].pos.trans(0.0f, 0.0f, 0f);
+        _helmets[GREEN_HELMET].pos.rot(0f, 0f, 0f);
+        _helmets[GREEN_HELMET].pos.scale(quadScale, quadScale, 1f);
+
+        // blue
+        _helmets[BLUE_HELMET].init(visuals.textureHelmets, colorWhite, rectBlueHelmet, flipUCoordinate);
+        _helmets[BLUE_HELMET].pos.trans(0.0f, 0.0f, 0f);
+        _helmets[BLUE_HELMET].pos.rot(0f, 0f, 0f);
+        _helmets[BLUE_HELMET].pos.scale(quadScale, quadScale, 1f);
+
+        // yellow
+        _helmets[YELLOW_HELMET].init(visuals.textureHelmets, colorWhite, rectYellowHelmet, flipUCoordinate);
+        _helmets[YELLOW_HELMET].pos.trans(0.0f, 0.0f, 0f);
+        _helmets[YELLOW_HELMET].pos.rot(0f, 0f, 0f);
+        _helmets[YELLOW_HELMET].pos.scale(quadScale, quadScale, 1f);
+
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+        _currentHelmetIndex = singleton.selectedHelmetIndex;
+
+        setCurrentHelmet(_currentHelmetIndex);
+    }
+
+    private void setCurrentHelmet(int index) {
+        _helmetInFocus = _helmets[index];
+        _currentHelmetIndex = index;
+        int score = ClassicSingleton.getInstance().loadPreferences(_currentHelmetIndex);
+
+        _textScore.init("" + score, new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.0f);
+        float textWidth = _textScore.getTextWidth();
+        _textScore.pos.trans(-textWidth / 2f, -0.4f, 0f);
+        _textScore.pos.rot(0f, 0f, 0f);
+        _textScore.pos.scale(1f, 1f, 1f);
+    }
+
+    private void stepCurrentHelmet(int step) {
+        _showNextHelmetArrow = true;
+        _showPrevHelmetArrow = true;
+
+        int nextIndex = _currentHelmetIndex + step;
+        if (step > 0) {
+            if (nextIndex < MAX_HELMET_TYPES) {
+                setCurrentHelmet(nextIndex);
+            }
+        } else {
+            if (nextIndex >= 0) {
+                setCurrentHelmet(nextIndex);
+            }
+        }
+
+        if (_currentHelmetIndex == 0) {
+            _showPrevHelmetArrow = false;
+        }
+
+        if (_currentHelmetIndex == MAX_HELMET_TYPES - 1) {
+            _showNextHelmetArrow = false;
+        }
+    }
+
+
     @Override
     public void prepare() {
         super.prepare();
 
+        _state = MenuState.MainMenu;
+
+        _animatePlayButton = false;
+        _animateOptionsButton = false;
+        _animateAboutButton = false;
     }
 
 	@Override
@@ -451,10 +655,28 @@ public class Menu extends Scene {
 		glEnable(GL_BLEND);
 
         visuals.textureShader.setTexture(visuals.textureMenuItems);
-        play.draw();
-        options.draw();
-        about.draw();
         title.draw();
+
+
+        switch (_state) {
+            case MainMenu:
+                drawMenuItemes();
+                break;
+
+            case Options:
+                drawOptions();
+                break;
+
+            case About:
+                drawAbout();
+                break;
+
+            case HelmetSelect:
+                drawHelmetSelect();
+                break;
+        }
+
+
 
         if (editorEnabled) {
             drawEditorButtons();
@@ -646,7 +868,7 @@ public class Menu extends Scene {
 
 
         _pos.trans(x, y-4.0f, z-4.3f);
-        _pos.rot(-85f, 0f, 0f);
+        _pos.rot(-85f, 0f, 120f);
         _pos.scale(1.0f, 1f, 1.0f);
 
         visuals.calcMatricesForObject(_pos);
@@ -817,37 +1039,201 @@ public class Menu extends Scene {
         edgeDrawer.draw();
     }
 
+    private void drawMenuItemes() {
+
+        if (_animatePlayButton) {
+            menuAnimCurrentValue += menuAnimSpeed;
+            float temp = play.pos.sy;
+            play.pos.sy = menuAnimCurrentValue;
+            play.draw();
+            play.pos.sy = temp;
+
+            if (menuAnimCurrentValue > menuAnimEndValue) {
+                _animatePlayButton = false;
+                _state = MenuState.HelmetSelect;
+            }
+        } else {
+            play.draw();
+        }
+
+        if (_animateOptionsButton) {
+            menuAnimCurrentValue += menuAnimSpeed;
+            float temp = options.pos.sy;
+            options.pos.sy = menuAnimCurrentValue;
+            options.draw();
+            options.pos.sy = temp;
+
+            if (menuAnimCurrentValue > menuAnimEndValue) {
+                _animateOptionsButton = false;
+                _state = MenuState.Options;
+            }
+        } else {
+            options.draw();
+        }
+
+        if (_animateAboutButton) {
+            menuAnimCurrentValue += menuAnimSpeed;
+            float temp = play.pos.sy;
+            about.pos.sy = menuAnimCurrentValue;
+            about.draw();
+            about.pos.sy = temp;
+
+            if (menuAnimCurrentValue > menuAnimEndValue) {
+                _animateAboutButton = false;
+                _state = MenuState.About;
+            }
+        } else {
+            about.draw();
+        }
+    }
+
+    private void drawOptions() {
+        _fadeSub.draw();
+
+        visuals.textureShader.useProgram();
+        visuals.textureShader.setTexture(visuals.textureFonts);
+
+        _textSubTitle.draw();
+        _textBack.draw();
+    }
+
+    private void drawAbout() {
+        _fadeSub.draw();
+
+        visuals.textureShader.useProgram();
+        visuals.textureShader.setTexture(visuals.textureFonts);
+
+        _textSubTitle.draw();
+        _textBack.draw();
+    }
+
+    private void drawHelmetSelect() {
+        //visuals.setProjectionMatrix2D();
+        //visuals.updateViewProjMatrix();
+
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glEnable(GL_BLEND);
+        //glDisable(GL_DEPTH_TEST);
+
+        _fadeSub.draw();
+
+        visuals.textureShader.useProgram();
+        visuals.textureShader.setTexture(visuals.textureFonts);
+
+        _textScore.draw();
+        _textSubTitle.draw();
+        _textContinue.draw();
+        _textBack.draw();
+
+        visuals.textureShader.setTexture(visuals.textureHelmets);
+        _helmetInFocus.draw();
+
+        if (_showPrevHelmetArrow) {
+            _leftArrow.draw();
+        }
+
+        if (_showNextHelmetArrow) {
+            _rightArrow.draw();
+        }
+    }
+
     @Override
 	public void handleTouchPress(float normalizedX, float normalizedY) {
 
-        Vector pos = Geometry.convertNormalized2DPointToNormalizedDevicePoint2D(normalizedX, normalizedY, visuals.invertedViewProjectionMatrix);
+        switch(_state) {
+            case MainMenu:
+                Vector pos = Geometry.convertNormalized2DPointToNormalizedDevicePoint2D(normalizedX, normalizedY, visuals.invertedViewProjectionMatrix);
 
-        //_fade.init(new MyColor(0f, 0f, 1f, 1f), new MyColor(1f, 0f, 0f, 1f));
+                if (editorEnabled) {
+                    doEditorStuff(pos.x, pos.y);
+                    return;
+                }
 
-        if (editorEnabled) {
-            doEditorStuff(pos.x, pos.y);
-            return;
+                if (play.isHit(pos.x, pos.y)) {
+                    System.out.println("play is hit...");
+                    _fadeSub.init(  new MyColor(0f, 0f, 0f, 0.4f),
+                                    new MyColor(0f, 0f, 0f, 0.4f),
+                                    new Rectangle(0f, -0.35f, 0.85f, 1.1f));
+
+                    initHelmets((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+
+                    _animatePlayButton = true;
+                    menuAnimCurrentValue = play.pos.sy;
+                    menuAnimEndValue = menuAnimCurrentValue + 0.1f;
+                    return;
+                }
+
+                if (options.isHit(pos.x, pos.y)) {
+                    System.out.println("options is hit...");
+                    _animateOptionsButton = true;
+                    menuAnimCurrentValue = options.pos.sy;
+                    menuAnimEndValue = menuAnimCurrentValue + 0.1f;
+
+                    _fadeSub.init(  new MyColor(0f, 0f, 0f, 0.4f),
+                            new MyColor(0f, 0f, 0f, 0.4f),
+                            new Rectangle(0f, -0.35f, 0.85f, 1.1f));
+
+                    initOptions((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+
+                    return;
+                }
+
+                if (about.isHit(pos.x, pos.y)) {
+                    System.out.println("about is hit...");
+                    _animateAboutButton = true;
+                    menuAnimCurrentValue = about.pos.sy;
+                    menuAnimEndValue = menuAnimCurrentValue + 0.1f;
+
+                    _fadeSub.init(  new MyColor(0f, 0f, 0f, 0.4f),
+                            new MyColor(0f, 0f, 0f, 0.4f),
+                            new Rectangle(0f, -0.35f, 0.85f, 1.1f));
+
+                    initAbout((int)Visuals.screenWidth, (int)Visuals.screenHeight);
+
+                    return;
+                }
+                break;
+
+            case HelmetSelect:
+                if (normalizedY > -0.2f && normalizedY < 0.2f) {
+                    if (normalizedX < -0.6f) {
+                        //System.out.println("Helmets go left...");
+                        stepCurrentHelmet(-1);
+                    } else if (normalizedX > 0.6f) {
+                        //System.out.println("Helmets go right...");
+                        stepCurrentHelmet(1);
+                    }
+                } else if (normalizedY < -0.75f) {
+                    //System.out.println(ClassicSingleton.getInstance().helmetIndexToString(currentHelmetIndex));
+
+                    if (normalizedX > 0.3f) {
+                        nextSceneId = ScenesEnum.Shaft;
+                    } else if (normalizedX < -0.3f) {
+                        _state = MenuState.MainMenu;
+                    } else {
+                        nextSceneId = ScenesEnum.None;
+                    }
+
+                    if (nextSceneId != ScenesEnum.None) {
+                        goNextScene = true;
+                        ClassicSingleton.getInstance().selectedHelmetIndex = _currentHelmetIndex;
+                        super.initFadeOut();
+                    }
+                }
+                break;
+
+            case Options:
+                    if (normalizedY < -0.75f && normalizedX < -0.3f) {
+                        _state = MenuState.MainMenu;
+                    }
+                break;
+
+            case About:
+                    if (normalizedY < -0.75f && normalizedX < -0.3f) {
+                        _state = MenuState.MainMenu;
+                    }
+                break;
         }
-
-        if ( play.isHit(pos.x, pos.y) ) {
-            System.out.println("play is hit...");
-            nextSceneId = ScenesEnum.HelmetSelect;
-            goNextScene = true;
-            super.initFadeOut();
-            return;
-        }
-
-        if  (options.isHit(pos.x, pos.y) ) {
-            System.out.println("options is hit...");
-
-            return;
-        }
-
-        if ( about.isHit(pos.x, pos.y) ) {
-            System.out.println("about is hit...");
-
-        }
-
 	}
 
 	@Override

@@ -85,7 +85,6 @@ public class Visuals {
     public int textureMineEntranceBeam;
     public int textureEditorButtons;
     public int textureMineInterior;
-    public int textureElevatorButton;
     public int textureShaft;
     public int textureElevator;
     public int textureElevatorEnter;
@@ -403,7 +402,6 @@ public class Visuals {
         textureMineEntranceBeam = loadTexture(R.drawable.mine_entrance_beam_texture);
         textureEditorButtons = loadTexture(R.drawable.editor_buttons);
         textureMineInterior = loadTexture(R.drawable.brick_messy_texture);
-        textureElevatorButton = loadTexture(R.drawable.elevator_button_texture);
         textureShaft = loadTexture(R.drawable.shaft_texture);
         textureElevator = loadTexture(R.drawable.elevator_texture);
         textureElevatorEnter = loadTexture(R.drawable.elevator_enter_texture);
@@ -458,16 +456,16 @@ public class Visuals {
                 0f,  0f, 0f,  // at
                 0f,  1f, 0f);   // up
 
-/*
 
+/*
         // debug
         setLookAtM(viewMatrix, 0,
-                0f,  0f, 90f,	// eye
-                0f,  0f, 0f,  // at
+                0f,  0f, 0f,	// eye
+                10f,  0f, -6f,  // at
                 0f,  1f, 0f);   // up
 
-
 */
+
 
 
 

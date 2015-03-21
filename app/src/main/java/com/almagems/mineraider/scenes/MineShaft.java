@@ -161,7 +161,7 @@ public class MineShaft extends Scene {
 
         float textWidth;
 
-        _textBack.init("BACK", new MyColor(1f, 0f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
+        _textBack.init("BACK", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
         textWidth = _textBack.getTextWidth();
         _textBack.pos.trans(-0.8f - (textWidth / 2f), -Visuals.aspectRatio * 0.95f, 0f);
         _textBack.pos.rot(0f, 0f, 0f);
@@ -172,19 +172,19 @@ public class MineShaft extends Scene {
 
         rect = new Rectangle(0f, 32f * start, 256f, 32f);
         _quadTunnelTop.initWithNormalVectors(visuals.textureTunnels, rect, false);
-        _quadTunnelTop.pos.trans(9f, 18f, -2f);
+        _quadTunnelTop.pos.trans(9f, 18f, -2.85f);
         _quadTunnelTop.pos.scale(6f, 1f, 1f);
 
 
         rect = new Rectangle(0f, 32f * (start + 1f), 256f, 32f);
         _quadTunnelMiddle.initWithNormalVectors(visuals.textureTunnels, rect, false);
-        _quadTunnelMiddle.pos.trans(9f, 0f, -2f);
+        _quadTunnelMiddle.pos.trans(9f, 0f, -2.85f);
         _quadTunnelMiddle.pos.scale(6f, 1f, 1f);
 
 
         rect = new Rectangle(0f, 32f * (start + 2f), 256f, 32f);
         _quadTunnelBottom.initWithNormalVectors(visuals.textureTunnels, rect, false);
-        _quadTunnelBottom.pos.trans(9f, -18f, -2f);
+        _quadTunnelBottom.pos.trans(9f, -18f, -2.85f);
         _quadTunnelBottom.pos.scale(6f, 1f, 1f);
 
 
@@ -223,13 +223,16 @@ public class MineShaft extends Scene {
     }
 
     private void  drawElevatorButtons() {
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         visuals.elevatorButton.bindData(visuals.dirLightShader);
 
         final float xoff = -2.5f;
 
         _posElevatorUp.x = _elevatorX + xoff;
         _posElevatorUp.y = _elevatorY + 8.5f;
-        _posElevatorUp.z = 2f;
+        _posElevatorUp.z = 0f;
 
         _pos.trans(_posElevatorUp.x, _posElevatorUp.y, _posElevatorUp.z);
         _pos.rot(0f, 0f, 0f);
@@ -241,7 +244,7 @@ public class MineShaft extends Scene {
 
         _posElevatorDown.x = _elevatorX + xoff;
         _posElevatorDown.y = _elevatorY - 4.5f;
-        _posElevatorDown.z = 2f;
+        _posElevatorDown.z = 0f;
 
         _pos.trans(_posElevatorDown.x, _posElevatorDown.y, _posElevatorDown.z);
         _pos.rot(0f, 0f, 180f);
@@ -249,11 +252,12 @@ public class MineShaft extends Scene {
         visuals.calcMatricesForObject(_pos);
         visuals.dirLightShader.setUniforms();
         visuals.elevatorButton.draw();
+        glDisable(GL_BLEND);
 
 
         _poselevatorEnter.x = _elevatorX; // + xoff + ;
-        _poselevatorEnter.y = _elevatorY + 1.2f;
-        _poselevatorEnter.z = 2f;
+        _poselevatorEnter.y = _elevatorY + 4f;
+        _poselevatorEnter.z = 0f;
 
         visuals.elevatorEnter.bindData(visuals.dirLightShader);
         visuals.dirLightShader.setTexture(visuals.textureElevatorEnter);
@@ -263,6 +267,8 @@ public class MineShaft extends Scene {
         visuals.calcMatricesForObject(_pos);
         visuals.dirLightShader.setUniforms();
         visuals.elevatorEnter.draw();
+
+        glEnable(GL_DEPTH_TEST);
     }
 
     private void drawShaft() {
@@ -542,7 +548,7 @@ public class MineShaft extends Scene {
         _mineCart.draw();
 
         if (_stopped) {
-            visuals.dirLightShader.setTexture(visuals.textureElevatorButton);
+            visuals.dirLightShader.setTexture(visuals.textureNextArrow);
             drawElevatorButtons();
         }
 
@@ -580,7 +586,7 @@ public class MineShaft extends Scene {
 
         if (normalizedY < -0.75f) {
             if (normalizedX < -0.3f) {
-                nextSceneId = ScenesEnum.HelmetSelect;
+                nextSceneId = ScenesEnum.Menu;
             }
 
             if (nextSceneId != ScenesEnum.None) {

@@ -89,6 +89,7 @@ public class Visuals {
     public int textureElevator;
     public int textureElevatorEnter;
     public int textureTunnels;
+    public int textureBackButton;
 
 
 
@@ -406,6 +407,7 @@ public class Visuals {
         textureElevator = loadTexture(R.drawable.elevator_texture);
         textureElevatorEnter = loadTexture(R.drawable.elevator_enter_texture);
         textureTunnels = loadTexture(R.drawable.tunnels_texture);
+        textureBackButton = loadTexture(R.drawable.back_button_texture);
 	}
 
 	public void bindNoTexture() {

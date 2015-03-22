@@ -39,6 +39,8 @@ public class Constants {
     public static final int BLUE_HELMET = 2;
     public static final int YELLOW_HELMET = 3;
 
+    public static final float MAX_TUNNEL_NUMBER = 32f;
+
     public static enum ScenesEnum {
         None,
         Menu,

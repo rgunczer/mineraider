@@ -20,6 +20,7 @@ public class Fade extends EffectAnim {
     private float t;
     private float dt = 0.05f; // speed
     public boolean done = false;
+    public int tag = 0;
 
     // ctor
     public Fade() {

@@ -33,6 +33,8 @@ import com.almagems.mineraider.util.Texture;
 import com.almagems.mineraider.util.TexturedQuad;
 import com.almagems.mineraider.util.Vector;
 
+import com.almagems.mineraider.EffectAnims.Fade;
+
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -54,6 +56,7 @@ public class MineShaft extends Scene {
 
     private MineCart _mineCart;
 
+    private boolean _animDeeperOrUpper = false;
     private boolean _fadeOutCheck;
     private boolean _entering = false;
 
@@ -69,7 +72,7 @@ public class MineShaft extends Scene {
 
     private final Quad _quadBackButton;
 
-    private float _firstTunnelNumber = 1f;
+    private float _firstTunnelNumber = 4f;
 
     private float _elevatorX = -4f;
     private float _elevatorY = 0f;
@@ -92,6 +95,9 @@ public class MineShaft extends Scene {
     private static Visuals visuals;
     private Physics _physics;
 
+
+    private Fade _fadeDeeperUpperAnim;
+
     // ctor
     public MineShaft() {
         System.out.print("MineShaft ctor...");
@@ -105,6 +111,8 @@ public class MineShaft extends Scene {
         _quadTunnelTop = new Quad();
         _quadTunnelMiddle = new Quad();
         _quadTunnelBottom = new Quad();
+
+        _fadeDeeperUpperAnim = new Fade();
 
         // setup physics world and objects
 
@@ -386,6 +394,7 @@ public class MineShaft extends Scene {
     public void prepare() {
         super.prepare();
 
+        _animDeeperOrUpper = false;
         _entering = false;
         _fadeOutCheck = true;
 
@@ -401,66 +410,96 @@ public class MineShaft extends Scene {
 
         _mineCart.stop();
         _physics.update();
+
+        initFadeDeeperUpper();
+    }
+
+    void initFadeDeeperUpper() {
+        Rectangle rect = new Rectangle(0f, 0f, 100f, 100f);
+        _fadeDeeperUpperAnim.init(new MyColor(1f, 1f, 1f, 0f), new MyColor(1f, 1f, 1f, 1f), rect);
     }
 
     @Override
     public void update() {
-        if (!goNextScene) {
-            switch (_elevatorState) {
-                case MovingUp:
-                case MovingDown:
+        if (!goNextScene && !_animDeeperOrUpper) {
+            updateElevator();
+        }
+
+        _physics.update();
+    }
+
+    private void updateElevator() {
+        switch (_elevatorState) {
+            case MovingUp:
+            case MovingDown:
+                _elevatorY += _elevatorYstep; // move the elevator
+
+                float stopDiff = elevatorSpeed * 1.35f;
+
+                if (Math.abs(_elevatorY - _topTunnelY) < stopDiff) {
+                    _elevatorState = ElevatorState.StoppedAtTopTunnel;
+                    _elevatorDoorYOffset = 10f;
+                }
+
+                if (Math.abs(_elevatorY - _middleTunnelY) < stopDiff) {
+                    _elevatorState = ElevatorState.StoppedAtMiddleTunnel;
+                    _elevatorDoorYOffset = 10f;
+                }
+
+                if (Math.abs(_elevatorY - _bottomTunnelY) < stopDiff) {
+                    _elevatorState = ElevatorState.StoppedAtBottomTunnel;
+                    _elevatorDoorYOffset = 10f;
+                }
+                break;
+
+            case StoppedAtTopTunnel:
+                if (_entering) {
+                    checkMinecartInTunnel();
+                }
+                break;
+
+            case StoppedAtMiddleTunnel:
+                if (_entering) {
+                    checkMinecartInTunnel();
+                }
+                break;
+
+            case StoppedAtBottomTunnel:
+                if (_entering) {
+                    checkMinecartInTunnel();
+                }
+                break;
+
+            case MovingDownOffscreen:
+                if (_elevatorY < -37f) {
+                    System.out.println("out of screen BOTTOM");
+                    // go deeper...
+                    _animDeeperOrUpper = true;
+                    initFadeDeeperUpper();
+                } else {
                     _elevatorY += _elevatorYstep; // move the elevator
+                    initFadeDeeperUpper();
+                }
+                break;
 
-                    float stopDiff = elevatorSpeed * 1.35f;
+            case MovingUpOffscreen:
 
-                    if (Math.abs(_elevatorY - _topTunnelY) < stopDiff) {
-                        _elevatorState = ElevatorState.StoppedAtTopTunnel;
-                        _elevatorDoorYOffset = 10f;
+                if (_elevatorY > 33f) {
+                    System.out.println("out of screen TOP");
+                    // go upper...
+
+                    if (_firstTunnelNumber == 1f) {
+                        goNextScene = true;
+                        nextSceneId = ScenesEnum.Menu;
+                        initFadeOut();
+                    } else {
+                        _animDeeperOrUpper = true;
                     }
-
-                    if (Math.abs(_elevatorY - _middleTunnelY) < stopDiff) {
-                        _elevatorState = ElevatorState.StoppedAtMiddleTunnel;
-                        _elevatorDoorYOffset = 10f;
-                    }
-
-                    if (Math.abs(_elevatorY - _bottomTunnelY) < stopDiff) {
-                        _elevatorState = ElevatorState.StoppedAtBottomTunnel;
-                        _elevatorDoorYOffset = 10f;
-                    }
-                    break;
-
-                case StoppedAtTopTunnel:
-                    if (_entering) {
-                        checkMinecartInTunnel();
-                    }
-                    break;
-
-                case StoppedAtMiddleTunnel:
-                    if (_entering) {
-                        checkMinecartInTunnel();
-                    }
-                    break;
-
-                case StoppedAtBottomTunnel:
-                    if (_entering) {
-                        checkMinecartInTunnel();
-                    }
-                    break;
-
-                case MovingDownOffscreen:
-                    if (_elevatorY < -37f) {
-                        System.out.println("out of screen BOTTOM");
-
-                    }
-                    break;
-
-                case MovingUpOffscreen:
-                    if (_elevatorY > 33f) {
-                        System.out.println("out of screen TOP");
-
-                    }
-                    break;
-            }
+                } else {
+                    _elevatorY += _elevatorYstep; // move the elevator
+                }
+                break;
+        }
 
 /*
         if (_firstTunnelNumber < MAX_TUNNEL_NUMBER) {
@@ -471,10 +510,7 @@ public class MineShaft extends Scene {
         }
 */
 
-            updateElevatorPhysics();
-        }
-
-        _physics.update();
+        updateElevatorPhysics();
     }
 
     void checkMinecartInTunnel() {
@@ -572,6 +608,38 @@ public class MineShaft extends Scene {
         visuals.textureShader.setTexture(visuals.textureBackButton);
         _quadBackButton.draw();
 
+        if (_animDeeperOrUpper) {
+            visuals.bindNoTexture();
+            _fadeDeeperUpperAnim.update();
+            _fadeDeeperUpperAnim.draw();
+
+            if (_fadeDeeperUpperAnim.done) {
+
+                _animDeeperOrUpper = false;
+
+                if (_elevatorState == ElevatorState.MovingUpOffscreen) {
+                    _firstTunnelNumber -= 3f;
+                    setupTunnelLabels(_firstTunnelNumber);
+
+                    _elevatorState = ElevatorState.MovingUp;
+
+                    _elevatorY = -21f;
+                    updateElevatorPhysics();
+                }
+
+                if (_elevatorState == ElevatorState.MovingDownOffscreen) {
+                    _firstTunnelNumber += 3f;
+                    setupTunnelLabels(_firstTunnelNumber);
+
+                    _elevatorState = ElevatorState.MovingDown;
+
+                    _elevatorY = 10f;
+                    updateElevatorPhysics();
+                }
+            }
+
+        }
+
         super.drawFade();
     }
 
@@ -609,8 +677,13 @@ public class MineShaft extends Scene {
             if (Geometry.intersects(sphere, ray)) {
                 System.out.println("Elevator: Move Up");
 
+                if (_elevatorState == ElevatorState.StoppedAtTopTunnel) {
+                    _elevatorState = ElevatorState.MovingUpOffscreen;
+                } else {
+                    _elevatorState = ElevatorState.MovingUp;
+                }
+
                 _elevatorDoorYOffset = 0f;
-                _elevatorState = ElevatorState.MovingUp;
                 _elevatorYstep = elevatorSpeed;
                 _elevatorY += _elevatorYstep * 2f;
             }

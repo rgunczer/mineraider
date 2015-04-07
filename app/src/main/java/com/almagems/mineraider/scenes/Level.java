@@ -148,6 +148,9 @@ public class Level extends Scene {
         match3.dumpBoardStat();
         match3.createInitialFallAnim();
 
+        // initialize hud with level number
+        singleton.hud.setLevelNumber(ClassicSingleton.getInstance().levelNumber);
+
         singleton.hud.reset();
     }
 
@@ -163,6 +166,8 @@ public class Level extends Scene {
 	
 	@Override
 	public void draw() {
+        System.out.println("LevelNumber is: " + ClassicSingleton.getInstance().levelNumber);
+
         visuals.setProjectionMatrix3D();
         visuals.updateViewProjMatrix();
 

@@ -18,6 +18,8 @@ public class ClassicSingleton {
     public int selectedHelmetIndex = BLUE_HELMET;
     public BatchDrawer batchDrawer = null;
 
+    public int levelNumber = 0;
+
 	protected ClassicSingleton() {
         scoreCounter = new ScoreCounter();
         hud = new HUD();

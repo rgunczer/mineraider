@@ -121,6 +121,10 @@ public class HUD {
         bonusFromCartCooling = 0;
     }
 
+    public void setLevelNumber(int number) {
+        // TODO: set level number here
+    }
+
     public void showBonusCartGems(int numberOfGems) {
         gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), 0.6f);
         float textWidth = gemsFromCartText.getTextWidth();

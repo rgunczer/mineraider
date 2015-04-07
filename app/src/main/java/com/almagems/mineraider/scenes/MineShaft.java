@@ -72,7 +72,7 @@ public class MineShaft extends Scene {
 
     private final Quad _quadBackButton;
 
-    private float _firstTunnelNumber = 4f;
+    private float _firstTunnelNumber = 28f;
 
     private float _elevatorX = -4f;
     private float _elevatorY = 0f;
@@ -208,17 +208,22 @@ public class MineShaft extends Scene {
         visuals.dirLightShader.setUniforms();
         visuals.elevatorButton.draw();
 
+        if (_firstTunnelNumber == 28f && _elevatorState == ElevatorState.StoppedAtBottomTunnel)  { // bottom
+            // bottom of the shaft, no more down going for the elevator
+            // draw something else!?
+            _posElevatorDown.x = 1000f; // do not let the user pick down button (placing it offscreen)
+        } else {
+            _posElevatorDown.x = _elevatorX + xoff;
+            _posElevatorDown.y = _elevatorY - 4.5f;
+            _posElevatorDown.z = 0f;
 
-        _posElevatorDown.x = _elevatorX + xoff;
-        _posElevatorDown.y = _elevatorY - 4.5f;
-        _posElevatorDown.z = 0f;
-
-        _pos.trans(_posElevatorDown.x, _posElevatorDown.y, _posElevatorDown.z);
-        _pos.rot(0f, 0f, 180f);
-        _pos.scale(1.0f, 1.0f, 1.0f);
-        visuals.calcMatricesForObject(_pos);
-        visuals.dirLightShader.setUniforms();
-        visuals.elevatorButton.draw();
+            _pos.trans(_posElevatorDown.x, _posElevatorDown.y, _posElevatorDown.z);
+            _pos.rot(0f, 0f, 180f);
+            _pos.scale(1.0f, 1.0f, 1.0f);
+            visuals.calcMatricesForObject(_pos);
+            visuals.dirLightShader.setUniforms();
+            visuals.elevatorButton.draw();
+        }
         glDisable(GL_BLEND);
 
 
@@ -407,6 +412,7 @@ public class MineShaft extends Scene {
         pos.x = -5f;
         pos.y = 30f;
         _mineCart.reposition(pos.x, pos.y);
+        repositionMinecart();
 
         _mineCart.stop();
         _physics.update();
@@ -474,8 +480,13 @@ public class MineShaft extends Scene {
                 if (_elevatorY < -37f) {
                     System.out.println("out of screen BOTTOM");
                     // go deeper...
-                    _animDeeperOrUpper = true;
-                    initFadeDeeperUpper();
+
+                    if (_firstTunnelNumber == 28f) { // reached bottom of the tunnel
+                        System.out.println("Bottom of the tunnel");
+                    } else { // go deeper
+                        _animDeeperOrUpper = true;
+                        initFadeDeeperUpper();
+                    }
                 } else {
                     _elevatorY += _elevatorYstep; // move the elevator
                     initFadeDeeperUpper();
@@ -558,8 +569,17 @@ public class MineShaft extends Scene {
         _bodyElevatorRightWall.setTransform(pos, 0f);
     }
 
+
+    private void repositionMinecart() {
+        Vec2 pos = _mineCart.cart.getPosition();
+        pos.y = _elevatorY + 2f;
+        _mineCart.reposition(pos.x, pos.y);
+    }
+
     @Override
     public void draw() {
+        //System.out.println("Elevator state: " + _elevatorState.toString() + ", fist tunnel number: " + _firstTunnelNumber);
+
         visuals.setProjectionMatrix2D();
         visuals.updateViewProjMatrix();
         visuals.textureShader.useProgram();
@@ -614,7 +634,6 @@ public class MineShaft extends Scene {
             _fadeDeeperUpperAnim.draw();
 
             if (_fadeDeeperUpperAnim.done) {
-
                 _animDeeperOrUpper = false;
 
                 if (_elevatorState == ElevatorState.MovingUpOffscreen) {
@@ -623,8 +642,12 @@ public class MineShaft extends Scene {
 
                     _elevatorState = ElevatorState.MovingUp;
 
-                    _elevatorY = -21f;
-                    updateElevatorPhysics();
+                    _elevatorY = -33f;
+                    for (int i = 0; i < 10; ++i) {
+                        updateElevatorPhysics();
+                        _physics.update();
+                    }
+                    repositionMinecart();
                 }
 
                 if (_elevatorState == ElevatorState.MovingDownOffscreen) {
@@ -633,11 +656,14 @@ public class MineShaft extends Scene {
 
                     _elevatorState = ElevatorState.MovingDown;
 
-                    _elevatorY = 10f;
-                    updateElevatorPhysics();
+                    _elevatorY = 31f;
+                    for (int i = 0; i < 10; ++i) {
+                        updateElevatorPhysics();
+                        _physics.update();
+                    }
+                    repositionMinecart();
                 }
             }
-
         }
 
         super.drawFade();
@@ -692,17 +718,40 @@ public class MineShaft extends Scene {
             if (Geometry.intersects(sphere, ray)) {
                 System.out.println("Elevator: Move Down");
 
+                if (_elevatorState == ElevatorState.StoppedAtBottomTunnel) {
+                    _elevatorState = ElevatorState.MovingDownOffscreen;
+                } else {
+                    _elevatorState = ElevatorState.MovingDown;
+                }
+
                 _elevatorDoorYOffset = 0f;
-                _elevatorState = ElevatorState.MovingDown;
                 _elevatorYstep = -elevatorSpeed;
                 _elevatorY += _elevatorYstep * 2f;
             }
 
+            // enter to the level
             sphere = new Sphere(_poselevatorEnter.x, _poselevatorEnter.y, _poselevatorEnter.z, 3f);
             if (Geometry.intersects(sphere, ray)) {
                 System.out.println("Elevator: enter");
                 _mineCart.start(-4f);
                 _entering = true;
+
+                // set level number in ClassicSingleton (for level to know how to initialize itself)
+                ClassicSingleton singleton = ClassicSingleton.getInstance();
+
+                switch (_elevatorState) {
+                    case StoppedAtTopTunnel:
+                        singleton.levelNumber = (int)_firstTunnelNumber;
+                        break;
+
+                    case StoppedAtMiddleTunnel:
+                        singleton.levelNumber = (int)(_firstTunnelNumber + 1f);
+                        break;
+
+                    case StoppedAtBottomTunnel:
+                        singleton.levelNumber = (int)(_firstTunnelNumber + 2f);
+                        break;
+                }
             }
         }
     }

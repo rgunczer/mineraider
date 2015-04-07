@@ -23,6 +23,7 @@ public class HUD {
     private final Text gemsFromCartText;
     private final GemIkon ikon;
     private final Quad quad;
+    private final Quad quadPauseButton;
     private final EdgeDrawer edgeDrawer;
 
     private float scoreX;
@@ -56,6 +57,8 @@ public class HUD {
         effectZigZag = new ZigZag();
         effectWahWahScore = new WahWah();
 
+        quadPauseButton = new Quad();
+
         // cooling
         extraTextCooling = 0;
         scoreCooling = 0;
@@ -81,10 +84,18 @@ public class HUD {
 
         ikon.init();
 
+        Visuals visuals = Visuals.getInstance();
+
+        Rectangle rect = new Rectangle(0f, 0f, 128f, 128f);
+        quadPauseButton.init(visuals.textureHudPauseButton, new MyColor(1f, 1f, 1f), rect, false);
+        quadPauseButton.pos.trans(0.94f, -Visuals.aspectRatio + 0.06f /*+ 0.1f bonus*/, 0f);
+        float sc = 0.055f;
+        quadPauseButton.pos.scale(sc, sc, 1f);
+
         float scale = Visuals.aspectRatio * 0.1f;
 
         ClassicSingleton singleton = ClassicSingleton.getInstance();
-        Rectangle rect = rectRedHelmet;
+        rect = rectRedHelmet;
         switch (singleton.selectedHelmetIndex) {
             case BLUE_HELMET:
                 rect = rectBlueHelmet;
@@ -104,7 +115,7 @@ public class HUD {
         quad.pos.trans(-0.92f, -Visuals.aspectRatio + 0.06f /*+ 0.1f bonus*/, 0f);
         quad.pos.rot(0f, 0f, 0f);
 
-        float sc = 0.075f;
+        sc = 0.075f;
         quad.pos.scale(sc, sc, 1f);
 
         extraTextCooling = 0;
@@ -235,7 +246,7 @@ public class HUD {
         }
 
         quad.draw();
-
+        quadPauseButton.draw();
 
 /*
         MyColor color = new MyColor(1f, 1f, 0f, 1f);

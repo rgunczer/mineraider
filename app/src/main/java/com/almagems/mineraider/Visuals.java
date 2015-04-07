@@ -90,6 +90,7 @@ public class Visuals {
     public int textureElevatorEnter;
     public int textureTunnels;
     public int textureBackButton;
+    public int textureHudPauseButton;
 
 
 
@@ -408,6 +409,7 @@ public class Visuals {
         textureElevatorEnter = loadTexture(R.drawable.elevator_enter_texture);
         textureTunnels = loadTexture(R.drawable.tunnels_texture);
         textureBackButton = loadTexture(R.drawable.back_button_texture);
+        textureHudPauseButton = loadTexture(R.drawable.hud_pause_button_texture);
 	}
 
 	public void bindNoTexture() {

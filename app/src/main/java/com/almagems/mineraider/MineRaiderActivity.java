@@ -104,7 +104,7 @@ public class MineRaiderActivity extends Activity {
 			}
 		});
 
-        //initAds();
+        initAds();
 	}
 	
 	private void initAds() {
@@ -117,7 +117,7 @@ public class MineRaiderActivity extends Activity {
 //        }
 
 
-        //System.out.println(deviceId);
+        System.out.println(deviceId);
         //5FD98F5344B72D203C178E0B2095F330
         // note3 device id: 8EEDF3F54B832F9C4EBFB9B05391CF11
         		
@@ -131,6 +131,8 @@ public class MineRaiderActivity extends Activity {
         .addTestDevice("6503CEAA4CF8DC33F5F88E5984BA09C7") // LG LG Optimus L3 || - 4.1.1 API 16 - 240x320
         .addTestDevice("5FD98F5344B72D203C178E0B2095F330") // Google Nexus 6 - 5.0.0 API 21 1440x2560
         .addTestDevice("D4029AFBC2B78394E46D8777362D7881") // Google Nexus S - 4.1.1 - API 16 - 480x800
+        .addTestDevice("F3390873D15CC25BE479A1667DC09EB3") // Google Nexus 7
+        .addTestDevice("8A424B010E21ED3F9B72CF51A03E6D00") // Note 3 emulator genymotion
 		.build();
 		
 		//adView.loadAd(adRequest);
@@ -145,7 +147,7 @@ public class MineRaiderActivity extends Activity {
 		final FrameLayout.LayoutParams params =
 		        new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
 		                FrameLayout.LayoutParams.WRAP_CONTENT,
-		                                     Gravity.RIGHT|Gravity.TOP); 
+		                                     Gravity.RIGHT|Gravity.TOP);
 		this.addContentView(rl, params);
 		
 		rl.addView(adView);

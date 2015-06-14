@@ -38,7 +38,8 @@ public class Physics {
 	public World world;
 
 	public Physics() {
-		Vec2 gravity = new Vec2(0.0f, -32.0f);
+		//Vec2 gravity = new Vec2(0.0f, -32.0f);
+        Vec2 gravity = new Vec2(0.0f, -48.0f);
 		world = new World(gravity);
 		world.setSleepingAllowed(true);
 		world.setContactListener(collisionHandler);

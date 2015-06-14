@@ -173,19 +173,21 @@ public class MineShaft extends Scene {
     private void setupTunnelLabels(float startFrom) {
         Rectangle rect;
 
+        final float z = -2.8f; //-2.85f;
+
         rect = new Rectangle(0f, 32f * startFrom, 256f, 32f);
         _quadTunnelTop.initWithNormalVectors(visuals.textureTunnels, rect, false);
-        _quadTunnelTop.pos.trans(9f, 18f, -2.85f);
+        _quadTunnelTop.pos.trans(9f, 18f, z);
         _quadTunnelTop.pos.scale(6f, 1f, 1f);
 
         rect = new Rectangle(0f, 32f * (startFrom + 1f), 256f, 32f);
         _quadTunnelMiddle.initWithNormalVectors(visuals.textureTunnels, rect, false);
-        _quadTunnelMiddle.pos.trans(9f, 0f, -2.85f);
+        _quadTunnelMiddle.pos.trans(9f, 0f, z);
         _quadTunnelMiddle.pos.scale(6f, 1f, 1f);
 
         rect = new Rectangle(0f, 32f * (startFrom + 2f), 256f, 32f);
         _quadTunnelBottom.initWithNormalVectors(visuals.textureTunnels, rect, false);
-        _quadTunnelBottom.pos.trans(9f, -18f, -2.85f);
+        _quadTunnelBottom.pos.trans(9f, -18f, z);
         _quadTunnelBottom.pos.scale(6f, 1f, 1f);
     }
 

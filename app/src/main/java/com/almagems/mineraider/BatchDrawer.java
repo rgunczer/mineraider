@@ -203,6 +203,7 @@ public class BatchDrawer {
     }
 
     void drawGemsByType(ArrayList<PositionInfo> gems, int type) {
+
         int size = gems.size();
         if (size > 0) {
             PositionInfo pos;
@@ -216,25 +217,35 @@ public class BatchDrawer {
                 model.draw();
             }
         }
+
     }
 
     void drawGemsPlatesByType(ArrayList<PositionInfo> gems, int type) {
+
+
+
         int size = gems.size();
         if (size > 0) {
+
+            visuals.colorShader.useProgram();
+
             float temp;
             PositionInfo pos;
             Model model = visuals.gemsPlates[type];
-            model.bindData(visuals.pointLightShader);
+            model.bindData(visuals.colorShader);
 
             for (int i = 0; i < size; ++i) {
                 pos = gems.get(i);
                 temp = pos.tz;
                 pos.tz -= 0.11f;
                 visuals.calcMatricesForObject(pos);
-                visuals.pointLightShader.setUniforms();
+                visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.blackColor);
                 model.draw();
                 pos.tz = temp;
             }
+
+            visuals.pointLightShader.useProgram();
         }
+
     }
 }

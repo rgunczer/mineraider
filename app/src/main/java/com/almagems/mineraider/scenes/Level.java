@@ -166,7 +166,7 @@ public class Level extends Scene {
 	
 	@Override
 	public void draw() {
-        System.out.println("LevelNumber is: " + ClassicSingleton.getInstance().levelNumber);
+        //System.out.println("LevelNumber is: " + ClassicSingleton.getInstance().levelNumber);
 
         visuals.setProjectionMatrix3D();
         visuals.updateViewProjMatrix();
@@ -215,8 +215,8 @@ public class Level extends Scene {
         visuals.dirLightShader.setTexture(visuals.textureCrate);
 		drawCrates();
 
-        visuals.dirLightShader.setTexture(visuals.texturePickAxe);
-		drawPickAxes();
+        //visuals.dirLightShader.setTexture(visuals.texturePickAxe);
+		//drawPickAxes();
 
 //        drawPhysics();
 		particleManager.draw();
@@ -441,18 +441,18 @@ public class Level extends Scene {
 		
 	private void initBoardGeometry() {
 		float posX;
-		float posY = -2.2f;
+		float posY = -2.7f;
 		
 		if (DRAW_BUFFER_BOARD) {
 			posY = -20.0f;
 		}
 		
-		float gemDistance = 2.45f;
+		final float gemDistance = 2.66f;
 		
 		for(int y = 0; y < match3.boardSize*2; ++y) {
 			posX = -(((match3.boardSize - 1) * gemDistance) / 2.0f);
 			for (int x = 0; x < match3.boardSize; ++x) {
-				match3.board[x][y].init(posX, posY, -0.5f,	1.0f, 1.0f, 1.0f);
+				match3.board[x][y].init(posX, posY, -0.5f,	1.05f, 1.05f, 1.0f);
 				posX += gemDistance;
 			}
 			posY += gemDistance;
@@ -595,12 +595,12 @@ public class Level extends Scene {
 	void drawSelectionMarker() {				
 		if (match3.firstSelected != null) {
 			elapsed += 0.3f;
-			float d = (((float)Math.sin(elapsed) + 1f) / 2f) * 0.08f;
+			float d = (((float)Math.sin(elapsed) + 1.0f) / 2f) * 0.08f;
 			//System.out.println("d is: " + d);
 
 			markerPos.init(match3.firstSelected.pos);
 			markerPos.tz -= 0.2f;
-            markerPos.scale(1.0f + d, 1.0f + d, 1.0f);
+            markerPos.scale(1.2f + d, 1.2f + d, 1.0f);
 
 			visuals.calcMatricesForObject(markerPos);
 			visuals.pointLightShader.setUniforms();

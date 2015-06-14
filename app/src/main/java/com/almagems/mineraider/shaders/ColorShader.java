@@ -12,8 +12,13 @@ import com.almagems.mineraider.util.MyColor;
 
 public class ColorShader extends BaseShader {
     private static final int POSITION_COMPONENT_COUNT = 3;
-    private static final int TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT;
-    private static final int STRIDE = TOTAL_COMPONENT_COUNT * BYTES_PER_FLOAT;
+    private static final int COLOR_COMPONENT_COUNT = 4;
+    private static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
+    private static final int NORMAL_COMPONENT_COUNT = 3;
+    private static final int STRIDE = (POSITION_COMPONENT_COUNT +
+                                       COLOR_COMPONENT_COUNT +
+                                       TEXTURE_COORDINATES_COMPONENT_COUNT +
+                                       NORMAL_COMPONENT_COUNT) * BYTES_PER_FLOAT;
 
 	// uniform locations
 	private final int uMatrixLocation;
@@ -43,10 +48,11 @@ public class ColorShader extends BaseShader {
 	}
 
     public void bindData(VertexArray vertexArray) {
-        vertexArray.setVertexAttribPointer(0,
+        vertexArray.setVertexAttribPointer(
+                0,
                 getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
-                STRIDE);
+                0);
     }
 
 

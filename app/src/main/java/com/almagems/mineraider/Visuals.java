@@ -487,8 +487,8 @@ public class Visuals {
 		
 		setLookAtM(viewMatrix, 0,		
 				// real
-				0f,  11f, eyeZ,	// eye
-				0f,  0f, 0f,    // at
+				0f,  12f, eyeZ,	// eye
+				0f,  1.2f, 0f,    // at
 				0f,  1f, 0f);   // up
 					
 //				// debug railway upclose

@@ -59,7 +59,6 @@ public class Model {
 			} else {
 				System.out.println("Our guy!");
 			}
-			
 		}		
 		
 		vertexArray = new VertexArray(vertexData);
@@ -71,10 +70,11 @@ public class Model {
 	}
 	
 	public void bindData(ColorShader colorProgram) {
-		vertexArray.setVertexAttribPointer(0, 
+		vertexArray.setVertexAttribPointer(
+                0,
 				colorProgram.getPositionAttributeLocation(), 
 				POSITION_COMPONENT_COUNT, 
-				0);		
+				STRIDE);
 	}
 	
 	public void bindData(TextureShader textureProgram) {

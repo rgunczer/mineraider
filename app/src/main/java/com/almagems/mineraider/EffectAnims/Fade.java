@@ -21,6 +21,7 @@ public class Fade extends EffectAnim {
     private float dt = 0.05f; // speed
     public boolean done = false;
     public int tag = 0;
+    public Rectangle rect;
 
     // ctor
     public Fade() {
@@ -44,6 +45,8 @@ public class Fade extends EffectAnim {
         t = 0.0f;
         done = false;
         pos = posOrigin;
+        this.rect = rect;
+
         createVertexArray(rect);
     }
 

@@ -34,7 +34,12 @@ public class HUD {
     private float comboScale;
 
     private float perfectSwapScale;
+    private float _bonusPosX;
+    private float _bonusCartGemsTextWidth;
+    private float _bonusDiff;
+    private float _bonusTargetPosX;
 
+    private int _centerCounter;
     private int scoreCooling;
     private int bonusFromCartCooling;
 
@@ -58,6 +63,9 @@ public class HUD {
         effectWahWahScore = new WahWah();
 
         quadPauseButton = new Quad();
+
+        _bonusPosX = 0f;
+        _bonusCartGemsTextWidth = 0f;
 
         // cooling
         extraTextCooling = 0;
@@ -127,6 +135,10 @@ public class HUD {
         comboCounter = 0;
         comboScale = 1.0f;
 
+        _bonusPosX = -10f;
+        _bonusCartGemsTextWidth = 0f;
+        _centerCounter = 0;
+
         extraTextCooling = 0;
         scoreCooling = 0;
         bonusFromCartCooling = 0;
@@ -137,13 +149,21 @@ public class HUD {
     }
 
     public void showBonusCartGems(int numberOfGems) {
-        gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), 0.6f);
-        float textWidth = gemsFromCartText.getTextWidth();
-        gemsFromCartText.pos.trans(-textWidth / 2f, -1.0f, 0f);
+        gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.75f);
+        _bonusCartGemsTextWidth = gemsFromCartText.getTextWidth();
+
+        _bonusTargetPosX = -_bonusCartGemsTextWidth / 2f;
+        _bonusPosX = 1.0f; // + _bonusCartGemsTextWidth / 2f;
+        _centerCounter = 32;
+
+        //gemsFromCartText.pos.trans(-textWidth / 2f, -0.9f, 0f);
+        gemsFromCartText.pos.trans(_bonusPosX, -0.9f, 0f);
         gemsFromCartText.pos.rot(0f, 0f, 0f);
         gemsFromCartText.pos.scale(1f, 1f, 1f);
 
-        bonusFromCartCooling = 100;
+        bonusFromCartCooling = 200;
+
+        _bonusDiff = -100f;
     }
 
     public void showCombo() {
@@ -216,6 +236,30 @@ public class HUD {
 
         if (bonusFromCartCooling > 0) {
             --bonusFromCartCooling;
+
+            float easing = 0.075f;
+            float vx = (_bonusTargetPosX - _bonusPosX) * easing;
+
+            //System.out.println("vx is: " + vx);
+            //System.out.println("posX is: " + _bonusPosX);
+
+            _bonusPosX += vx;
+
+            if (_bonusPosX < -0.47) {
+                _bonusTargetPosX = -1.2f - _bonusCartGemsTextWidth;
+            }
+
+
+/*
+            if (_centerCounter != 0) {
+                if (diff < _bonusDiff) {
+                    --_centerCounter;
+                    _bonusPosX += speed;
+                }
+            }
+*/
+
+            gemsFromCartText.pos.trans(_bonusPosX, -0.9f, 0f);
 
             if (bonusFromCartCooling == 0) {
                 // TODO: remove effect if any on text obj

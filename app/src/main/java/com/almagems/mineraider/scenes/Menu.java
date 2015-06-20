@@ -443,16 +443,17 @@ public class Menu extends Scene {
 
         _textSubTitle.init("OPTIONS", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.3f);
         textWidth = _textSubTitle.getTextWidth();
-        _textSubTitle.pos.trans(-textWidth / 2f, Visuals.aspectRatio * 0.4f, 0f);
+        _textSubTitle.pos.trans(-textWidth / 2f, /*Visuals.aspectRatio * 0.4f*/ _fadeSub.pos.ty + _fadeSub.rect.h / 2f, 0f);
         _textSubTitle.pos.rot(0f, 0f, 0f);
         _textSubTitle.pos.scale(1f, 1f, 1f);
 
         _textBack.init("BACK", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
         textWidth = _textBack.getTextWidth();
-        _textBack.pos.trans(-0.5f - (textWidth / 2f), -Visuals.aspectRatio * 0.9f, 0f);
+        float y = (_fadeSub.rect.y -_fadeSub.rect.h) + _textBack.getTextHeight() / 2f;
+
+        _textBack.pos.trans(-0.5f - (textWidth / 2f), /*-Visuals.aspectRatio * 0.9f*/ y, 0f);
         _textBack.pos.rot(0f, 0f, 0f);
         _textBack.pos.scale(1f, 1f, 1f);
-
     }
 
     private void initAbout(int width, int height) {
@@ -460,13 +461,14 @@ public class Menu extends Scene {
 
         _textSubTitle.init("ABOUT", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.3f);
         textWidth = _textSubTitle.getTextWidth();
-        _textSubTitle.pos.trans(-textWidth / 2f, Visuals.aspectRatio * 0.4f, 0f);
+        _textSubTitle.pos.trans(-textWidth / 2f, /*Visuals.aspectRatio * 0.4f*/ _fadeSub.pos.ty + _fadeSub.rect.h / 2f, 0f);
         _textSubTitle.pos.rot(0f, 0f, 0f);
         _textSubTitle.pos.scale(1f, 1f, 1f);
 
         _textBack.init("BACK", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
         textWidth = _textBack.getTextWidth();
-        _textBack.pos.trans(-0.5f - (textWidth / 2f), -Visuals.aspectRatio * 0.9f, 0f);
+        float y = (_fadeSub.rect.y -_fadeSub.rect.h) + _textBack.getTextHeight() / 2f;
+        _textBack.pos.trans(-0.5f - (textWidth / 2f), /*-Visuals.aspectRatio * 0.9f*/ y, 0f);
         _textBack.pos.rot(0f, 0f, 0f);
         _textBack.pos.scale(1f, 1f, 1f);
 
@@ -480,19 +482,25 @@ public class Menu extends Scene {
 
         _textSubTitle.init("SELECT YOUR HELMET", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 1.3f);
         textWidth = _textSubTitle.getTextWidth();
-        _textSubTitle.pos.trans(-textWidth / 2f, Visuals.aspectRatio * 0.4f, 0f);
+        _textSubTitle.pos.trans(-textWidth / 2f, /*Visuals.aspectRatio * 0.4f*/ _fadeSub.pos.ty + _fadeSub.rect.h / 2f, 0f);
         _textSubTitle.pos.rot(0f, 0f, 0f);
         _textSubTitle.pos.scale(1f, 1f, 1f);
 
         _textContinue.init("CONTINUE", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
         textWidth = _textContinue.getTextWidth();
-        _textContinue.pos.trans(0.5f - (textWidth / 2f) , -Visuals.aspectRatio * 0.9f, 0f);
+
+        //-0.35f
+
+        float y = (_fadeSub.rect.y -_fadeSub.rect.h) + _textContinue.getTextHeight() / 2f;
+
+        _textContinue.pos.trans(0.5f - (textWidth / 2f), /*-Visuals.aspectRatio * 0.9f*/ y, 0f);
         _textContinue.pos.rot(0f, 0f, 0f);
         _textContinue.pos.scale(1f, 1f, 1f);
 
         _textBack.init("BACK", new MyColor(1f, 1f, 1f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.9f);
         textWidth = _textContinue.getTextWidth();
-        _textBack.pos.trans(-0.5f - (textWidth / 2f), -Visuals.aspectRatio * 0.9f, 0f);
+        y = (_fadeSub.rect.y -_fadeSub.rect.h) + _textBack.getTextHeight() / 2f;
+        _textBack.pos.trans(-0.5f - (textWidth / 2f), /*-Visuals.aspectRatio * 0.9f*/ y, 0f);
         _textBack.pos.rot(0f, 0f, 0f);
         _textBack.pos.scale(1f, 1f, 1f);
 
@@ -1151,9 +1159,9 @@ public class Menu extends Scene {
 
                 if (play.isHit(pos.x, pos.y)) {
                     System.out.println("play is hit...");
-                    _fadeSub.init(  new MyColor(0f, 0f, 0f, 0.4f),
-                                    new MyColor(0f, 0f, 0f, 0.4f),
-                                    new Rectangle(0f, -0.35f, 0.85f, 1.1f));
+                    _fadeSub.init(new MyColor(0f, 0f, 0f, 0.4f),
+                            new MyColor(0f, 0f, 0f, 0.4f),
+                            new Rectangle(0f, -0.35f, 0.85f, 1.1f));
 
                     initHelmets((int)Visuals.screenWidth, (int)Visuals.screenHeight);
 

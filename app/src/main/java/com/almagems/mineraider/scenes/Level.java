@@ -26,10 +26,13 @@ import com.almagems.mineraider.anims.PopAnimation;
 import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.MineCart;
 import com.almagems.mineraider.objects.Model;
+import com.almagems.mineraider.objects.Quad;
 import com.almagems.mineraider.particlesystem.ParticleManager;
 import com.almagems.mineraider.util.Geometry;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Ray;
+import com.almagems.mineraider.util.Rectangle;
+
 
 public class Level extends Scene {
 
@@ -45,6 +48,8 @@ public class Level extends Scene {
 
 	private Physics physics;
 	private Match3 match3;
+
+	private final Quad _tunnelLabel;
 
 	private float elapsed = 0f;
 
@@ -71,6 +76,8 @@ public class Level extends Scene {
 	public Level() {
         colorWhite = new MyColor(1f, 1f, 1f, 1f);
         colorBlack = new MyColor(0f, 0f, 0f, 1f);
+
+		_tunnelLabel = new Quad();
 
 		physics = new Physics();
 
@@ -152,6 +159,23 @@ public class Level extends Scene {
         singleton.hud.setLevelNumber(ClassicSingleton.getInstance().levelNumber);
 
         singleton.hud.reset();
+
+
+		// tunnel label
+		Rectangle rect;
+		rect = new Rectangle(0f, 64f, 256f, 64f);
+		_tunnelLabel.init(visuals.textureTunnels, visuals.whiteColor, rect, false);
+		_tunnelLabel.pos.trans(0f, 0f, 0f);
+		_tunnelLabel.pos.rot(0f, 0f, 0f);
+		_tunnelLabel.pos.scale((rect.w / Visuals.referenceScreenWidth) * 0.75f, (rect.h / Visuals.referenceScreenWidth) * 0.75f, 1f);
+
+		rect = new Rectangle(0f, 32f * ClassicSingleton.getInstance().levelNumber, 256f, 32f);
+		_tunnelLabel.initWithNormalVectors(visuals.textureTunnels, rect, false);
+		_tunnelLabel.pos.trans(0f, -15.5f, -3.9f);
+
+		final float d = 0.75f;
+
+		_tunnelLabel.pos.scale(6f*d, 1f*d, 1f);
     }
 
 	@Override
@@ -214,6 +238,9 @@ public class Level extends Scene {
 
         visuals.dirLightShader.setTexture(visuals.textureCrate);
 		drawCrates();
+
+		visuals.dirLightShader.setTexture(visuals.textureTunnels);
+		drawTunnelLabel();
 
         //visuals.dirLightShader.setTexture(visuals.texturePickAxe);
 		//drawPickAxes();
@@ -765,9 +792,9 @@ public class Level extends Scene {
     }
 
     void drawSoil() {
-		_pos.trans(0f, 5f, -3.5f);
+		_pos.trans(0f, 6f, -3.5f);
 		_pos.rot(0f, 0f, 0f);
-		_pos.scale(1.9f, 1.5f, 1.0f);
+		_pos.scale(1.9f, 1.6f, 1.0f);
 		visuals.calcMatricesForObject(_pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.soil.bindData(visuals.dirLightShader);
@@ -791,7 +818,11 @@ public class Level extends Scene {
 		visuals.dirLightShader.setUniforms();
 		visuals.crate.draw();	
 	}
-	
+
+	void drawTunnelLabel() {
+		_tunnelLabel.draw1();
+	}
+
 	void drawBeam() {						
 		_pos.trans(0f, -16f, -2.5f);
 		_pos.rot(0f, 0f, 0f);

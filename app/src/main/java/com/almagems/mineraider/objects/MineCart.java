@@ -28,6 +28,7 @@ public class MineCart {
 	public Body wheel1;
 	public Body wheel2;
 
+	public float speed = 0f;
     public ScenesEnum _sceneType = ScenesEnum.None;
 
 	WheelJoint wheelJoint1;
@@ -175,11 +176,13 @@ public class MineCart {
 	}
 
     public void start(float xSpeed) {
+		speed = xSpeed;
         wheelJoint1.setMotorSpeed(xSpeed);
         wheelJoint2.setMotorSpeed(xSpeed);
     }
 
 	public void stop() {
+		speed = 0f;
 		wheelJoint1.setMotorSpeed(0f);
 		wheelJoint2.setMotorSpeed(0f);
 		collisionStop = true;

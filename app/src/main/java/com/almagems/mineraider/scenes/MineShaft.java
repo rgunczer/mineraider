@@ -1,25 +1,14 @@
 package com.almagems.mineraider.scenes;
 
-
 import com.almagems.mineraider.ClassicSingleton;
 
-import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
-import static android.opengl.GLES20.GL_SRC_ALPHA;
-import static android.opengl.GLES20.glBlendFunc;
-import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.glEnable;
-import static android.opengl.Matrix.multiplyMM;
-import static android.opengl.Matrix.rotateM;
-import static android.opengl.Matrix.setIdentityM;
-import static android.opengl.Matrix.translateM;
+import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
+import static android.opengl.Matrix.*;
 
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Visuals;
-import com.almagems.mineraider.data.IndexBuffer;
-import com.almagems.mineraider.data.VertexArray;
-import com.almagems.mineraider.data.VertexBuffer;
 import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.MineCart;
 import com.almagems.mineraider.objects.Quad;
@@ -28,11 +17,7 @@ import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Ray;
 import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Sphere;
-import com.almagems.mineraider.util.Text;
-import com.almagems.mineraider.util.Texture;
-import com.almagems.mineraider.util.TexturedQuad;
 import com.almagems.mineraider.util.Vector;
-
 import com.almagems.mineraider.EffectAnims.Fade;
 
 import org.jbox2d.collision.shapes.PolygonShape;
@@ -40,7 +25,6 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
 
-import static android.opengl.GLES20.*;
 
 public class MineShaft extends Scene {
 
@@ -72,7 +56,7 @@ public class MineShaft extends Scene {
 
     private final Quad _quadBackButton;
 
-    private float _firstTunnelNumber = 28f;
+    private float _firstTunnelNumber = 1f;
 
     private float _elevatorX = -4f;
     private float _elevatorY = 0f;
@@ -127,9 +111,9 @@ public class MineShaft extends Scene {
 
         // tunnels
         _physics.addBoxStatic(16.5f, 24.5f, 0f, 30f, 8f);
-        _physics.addBoxStatic(16.5f, 11.75f-4f, 0f, 30.0f, 9f); // top
-        _physics.addBoxStatic(16.5f, -6.4f-4f, 0f, 30.0f, 9f); // middle
-        _physics.addBoxStatic(16.5f, -24.4f-4f, 0f, 30.0f, 9f); // bottom
+        _physics.addBoxStatic(16.5f, 11.75f - 4f, 0f, 30.0f, 9f); // top
+        _physics.addBoxStatic(16.5f, -6.4f - 4f, 0f, 30.0f, 9f); // middle
+        _physics.addBoxStatic(16.5f, -24.4f - 4f, 0f, 30.0f, 9f); // bottom
     }
 
     @Override
@@ -401,23 +385,57 @@ public class MineShaft extends Scene {
     public void prepare() {
         super.prepare();
 
+        goNextScene = false;
         _animDeeperOrUpper = false;
-        _entering = false;
         _fadeOutCheck = true;
+        _entering = false;
 
-        _elevatorDoorYOffset = 0f;
-        _elevatorY = 0f;
+
         _elevatorYstep = -0.1f;
-        updateElevatorPhysics();
 
-        Vec2 pos = _mineCart.cart.getPosition();
-        pos.x = -5f;
-        pos.y = 30f;
-        _mineCart.reposition(pos.x, pos.y);
-        repositionMinecart();
+        if (_elevatorState == ElevatorState.MovingUpOffscreen) {
+            _elevatorState = ElevatorState.MovingDown;
+        }
 
-        _mineCart.stop();
-        _physics.update();
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+
+        if (singleton.previousScene == singleton.level) { // coming from level
+
+            // TODO: make minecart move backward goal is to get into elevator
+            _mineCart.start(4f);
+
+            switch (_elevatorState) {
+
+                case StoppedAtTopTunnel:
+                    _elevatorY = _topTunnelY;
+                    break;
+
+                case StoppedAtMiddleTunnel:
+                    _elevatorY = _middleTunnelY - 0.25f;
+                    break;
+
+                case StoppedAtBottomTunnel:
+                    _elevatorY = _bottomTunnelY - 0.3f;
+                    break;
+            }
+
+            updateElevatorPhysics();
+            _physics.update();
+
+        } else {
+
+            _elevatorDoorYOffset = 0f;
+            _elevatorY = 30f;
+            Vec2 pos = _mineCart.cart.getPosition();
+            pos.x = -5f;
+            pos.y = 20f;
+            _mineCart.reposition(pos.x, pos.y);
+            repositionMinecart();
+            updateElevatorPhysics();
+
+            _mineCart.stop();
+            _physics.update();
+        }
 
         initFadeDeeperUpper();
     }
@@ -432,6 +450,16 @@ public class MineShaft extends Scene {
         if (!goNextScene && !_animDeeperOrUpper) {
             updateElevator();
         }
+
+
+        if (!_entering && _mineCart.speed > 0f) { // coming back to elevator
+            Vec2 pos = _mineCart.cart.getPosition();
+
+            if (pos.x < -5f) {
+                _mineCart.stop();
+            }
+        }
+
 
         _physics.update();
     }

@@ -23,17 +23,8 @@ public class MineRaiderRenderer implements Renderer {
 
 	private long frameStartTimeMS;
 
-	private Scene menu;
-	private Scene level;
-    private Scene shaft;
-	private Scene current;
-
-	
 	private final Context context;	
-	private Visuals visuals;			
-
-
-
+	private Visuals visuals;
 
 	// ctor
 	public MineRaiderRenderer(Context context) {
@@ -42,25 +33,6 @@ public class MineRaiderRenderer implements Renderer {
 		instance.renderer = this;
         instance.activity = (MineRaiderActivity)context;
 	}
-
-    public void showScene(ScenesEnum sceneTypeId) {
-        switch (sceneTypeId) {
-            case Shaft:
-                glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
-                current = shaft;
-                break;
-
-            case Level:
-                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-                current = level;
-                break;
-
-            case Menu:
-                current = menu;
-                break;
-        }
-        current.prepare();
-    }
 
 	private void limitFrameRate(int framesPerSecond) {
 		long elapsedFrameTimeMS = SystemClock.elapsedRealtime() - frameStartTimeMS;
@@ -107,22 +79,7 @@ public class MineRaiderRenderer implements Renderer {
 			return;
 		}
 
-        if (shaft == null) {
-            shaft = new MineShaft();
-        }
-
-		if (level == null) {
-			level = new Level();
-		}
-					
-		if (menu == null) {
-			menu = new Menu();
-		}
-
-		//current = loading;
-		current = menu;
-        //current = shaft;
-        //current = level;
+		ClassicSingleton.getInstance().createScenes();
 	}
 
 	@Override
@@ -139,32 +96,35 @@ public class MineRaiderRenderer implements Renderer {
 
         ParticleShader.pointSize = width * 0.1f;
 
-        current.prepare();
+		// ClassicSingleton.getInstance().setCurrentScene(loading);
+		ClassicSingleton.getInstance().setCurrentScene(ClassicSingleton.getInstance().menu);
+		// ClassicSingleton.getInstance().setCurrentScene(shaft);
+		// ClassicSingleton.getInstance().setCurrentScene(level);
 	}
 
 	@Override
 	public void onDrawFrame(GL10 glUnused) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
-		
-		current.update();
-		current.draw();
+
+		ClassicSingleton.getInstance().currentScene.update();
+		ClassicSingleton.getInstance().currentScene.draw();
 		
 		limitFrameRate(30);		
 	}
 			
 	public void handleTouchPress(float normalizedX, float normalizedY) {
 		//System.out.println("TouchPress: " + normalizedX + " " + normalizedY);
-		current.handleTouchPress(normalizedX, normalizedY);
+		ClassicSingleton.getInstance().currentScene.handleTouchPress(normalizedX, normalizedY);
 	}
 	
 	public void handleTouchDrag(float normalizedX, float normalizedY) {
 		//System.out.println("TouchDrag:" + normalizedX + " " + normalizedY);
-		current.handleTouchDrag(normalizedX, normalizedY);
+		ClassicSingleton.getInstance().currentScene.handleTouchDrag(normalizedX, normalizedY);
 	}
 	
 	public void handleTouchRelease(float normalizedX, float normalizedY) {
 		//System.out.println("TouchRelease:" + normalizedX + " " + normalizedY);
-		current.handleTouchRelease(normalizedX, normalizedY);
+		ClassicSingleton.getInstance().currentScene.handleTouchRelease(normalizedX, normalizedY);
 	}	
 }

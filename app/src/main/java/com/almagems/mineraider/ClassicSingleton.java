@@ -1,7 +1,12 @@
 package com.almagems.mineraider;
 
+import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 import com.almagems.mineraider.objects.MineCart;
+import com.almagems.mineraider.scenes.Level;
+import com.almagems.mineraider.scenes.Menu;
+import com.almagems.mineraider.scenes.MineShaft;
+import com.almagems.mineraider.scenes.Scene;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,6 +23,15 @@ public class ClassicSingleton {
     public int selectedHelmetIndex = BLUE_HELMET;
     public BatchDrawer batchDrawer = null;
 
+    // scenes
+    public Scene loading = null;
+    public Scene menu = null;
+    public Scene shaft = null;
+    public Scene level = null;
+
+    public Scene currentScene = null;
+    public Scene previousScene = null;
+
     public int levelNumber = 0;
 
 	protected ClassicSingleton() {
@@ -33,15 +47,50 @@ public class ClassicSingleton {
 		return instance;
 	}
 
+    public void setCurrentScene(Scene scene) {
+        previousScene = currentScene;
+        currentScene = scene;
+
+        currentScene.prepare();
+    }
+
+    public void showScene(ScenesEnum sceneTypeId) {
+        switch (sceneTypeId) {
+            case Shaft:
+                glClearColor(0.3f, 0.3f, 0.3f, 0.0f); // ???
+                setCurrentScene(shaft);
+                break;
+
+            case Level:
+                glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // ???
+                setCurrentScene(level);
+                break;
+
+            case Menu:
+                setCurrentScene(menu);
+                break;
+        }
+    }
+
+    public void createScenes() {
+        if (shaft == null) {
+            shaft = new MineShaft();
+        }
+
+        if (level == null) {
+            level = new Level();
+        }
+
+        if (menu == null) {
+            menu = new Menu();
+        }
+    }
+
     public void sendComboNotification() {
         hud.showCombo();
     }
 
     public void sendPerfectSwapNotification() { hud.showPerfectSwap(); }
-
-    public void showScene(ScenesEnum sceneTypeId) {
-        renderer.showScene(sceneTypeId);
-    }
 
     public int getScore() {
         return scoreCounter.getScore();

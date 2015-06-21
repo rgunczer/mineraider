@@ -265,7 +265,7 @@ public class Level extends Scene {
         final float y = -0.9f;
         if (normalizedY < y) {
             goNextScene = true;
-            nextSceneId = ScenesEnum.Menu;
+            nextSceneId = ScenesEnum.Shaft;
             super.initFadeOut();
         } else {
             swipeDir = SwipeDir.SwipeNone;

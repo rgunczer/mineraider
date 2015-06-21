@@ -1,5 +1,9 @@
 package com.almagems.mineraider;
 
+import static android.opengl.GLES20.*;
+import static android.opengl.Matrix.*;
+import static com.almagems.mineraider.Constants.*;
+
 import com.almagems.mineraider.EffectAnims.WahWah;
 import com.almagems.mineraider.EffectAnims.ZigZag;
 import com.almagems.mineraider.objects.EdgeDrawer;
@@ -8,11 +12,6 @@ import com.almagems.mineraider.objects.Quad;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Text;
-
-import static android.opengl.Matrix.*;
-
-import static android.opengl.GLES20.*;
-import static com.almagems.mineraider.Constants.*;
 
 
 public class HUD {

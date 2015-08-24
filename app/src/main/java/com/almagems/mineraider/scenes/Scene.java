@@ -11,9 +11,6 @@ public abstract class Scene {
 	protected float touchDownX;
 	protected float touchDownY;
 
-    protected Constants.ScenesEnum nextSceneId;
-    protected boolean goNextScene;
-
     protected Fade _fade = new Fade();
 
 	public static Visuals visuals;
@@ -42,23 +39,15 @@ public abstract class Scene {
             System.out.println("Prepare doing nothing already Initialized");
         }
 
-        goNextScene = false;
-        nextSceneId = Constants.ScenesEnum.None;
-
-        initFadeIn();
+        //initFadeIn();
     }
 
     protected void drawFade() {
-        if (!_fade.done) {
+        //if (!_fade.done) {
             visuals.bindNoTexture();
             _fade.update();
             _fade.draw();
-
-            if (_fade.done && goNextScene) {
-                ClassicSingleton singleton = ClassicSingleton.getInstance();
-                singleton.showScene(nextSceneId);
-            }
-        }
+        //}
     }
 
     // input

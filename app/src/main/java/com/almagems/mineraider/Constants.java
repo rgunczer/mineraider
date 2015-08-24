@@ -27,44 +27,5 @@ public class Constants {
 		
 	public static final String adUnitId = "ca-app-pub-1002179312870743/4200681514";
 
-    public static final int MAX_HELMET_TYPES = 4;
-
-    public static final Rectangle rectBlueHelmet = new Rectangle(0f, 0f, 256f, 256f);
-    public static final Rectangle rectGreenHelmet = new Rectangle(0f, 256f, 256f, 256f);
-    public static final Rectangle rectRedHelmet = new Rectangle(256f, 256f, 256f, 256f);
-    public static final Rectangle rectYellowHelmet = new Rectangle(256f, 0f, 256f, 256f);
-
-    public static final int RED_HELMET = 0;
-    public static final int GREEN_HELMET = 1;
-    public static final int BLUE_HELMET = 2;
-    public static final int YELLOW_HELMET = 3;
-
     public static final float MAX_TUNNEL_NUMBER = 32f;
-
-    public static enum ScenesEnum {
-        None,
-        Menu,
-        Shaft,
-        Level,
-        Loading,
-    }
-
-/*
-    public static enum HelmetTypes {
-        RedHelmet(0),
-        GreenHelmet(1),
-        YellowHelmet(2),
-        BlueHelmet(3);
-
-        private final int value;
-        private HelmetTypes(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-*/
-
 }

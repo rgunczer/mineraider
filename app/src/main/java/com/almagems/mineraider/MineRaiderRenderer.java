@@ -12,8 +12,6 @@ import android.os.SystemClock;
 import android.widget.Toast;
 
 import com.almagems.mineraider.scenes.Level;
-import com.almagems.mineraider.scenes.Menu;
-import com.almagems.mineraider.scenes.MineShaft;
 import com.almagems.mineraider.scenes.Scene;
 import com.almagems.mineraider.shaders.ParticleShader;
 
@@ -97,7 +95,7 @@ public class MineRaiderRenderer implements Renderer {
         ParticleShader.pointSize = width * 0.1f;
 
 		// ClassicSingleton.getInstance().setCurrentScene(loading);
-		ClassicSingleton.getInstance().setCurrentScene(ClassicSingleton.getInstance().menu);
+		ClassicSingleton.getInstance().setCurrentScene(ClassicSingleton.getInstance().level);
 		// ClassicSingleton.getInstance().setCurrentScene(shaft);
 		// ClassicSingleton.getInstance().setCurrentScene(level);
 	}

@@ -9,6 +9,7 @@ import com.almagems.mineraider.EffectAnims.ZigZag;
 import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.GemIkon;
 import com.almagems.mineraider.objects.Quad;
+import com.almagems.mineraider.scenes.Level;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Text;
@@ -79,7 +80,7 @@ public class HUD {
         scoreText.setSpacingScale(0.06f);
         scoreText.init("SCORE:" + cachedScore, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), fontScale);
 
-        scoreX = -0.8f;
+        scoreX = -0.96f;
         scoreY = -Visuals.aspectRatio + (scoreText.getTextHeight() / 3f);
         scoreText.pos.trans(scoreX, scoreY, 0f);
         scoreText.pos.rot(0f, 0f, 0f);
@@ -101,27 +102,12 @@ public class HUD {
 
         float scale = Visuals.aspectRatio * 0.1f;
 
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-        rect = rectRedHelmet;
-        switch (singleton.selectedHelmetIndex) {
-            case BLUE_HELMET:
-                rect = rectBlueHelmet;
-                break;
-
-            case YELLOW_HELMET:
-                rect = rectYellowHelmet;
-                break;
-
-            case GREEN_HELMET:
-                rect = rectGreenHelmet;
-                break;
-        }
-
+/*
         final boolean flipUCoordinate = false;
         quad.init(Visuals.getInstance().textureHelmets, new MyColor(1f, 1f, 1f, 1f), rect, flipUCoordinate);
-        quad.pos.trans(-0.92f, -Visuals.aspectRatio + 0.06f /*+ 0.1f bonus*/, 0f);
+        quad.pos.trans(-0.92f, -Visuals.aspectRatio + 0.06f, 0f);
         quad.pos.rot(0f, 0f, 0f);
-
+*/
         sc = 0.075f;
         quad.pos.scale(sc, sc, 1f);
 
@@ -288,9 +274,11 @@ public class HUD {
             gemsFromCartText.draw();
         }
 
-        quad.draw();
-        quadPauseButton.draw();
 
+        Level level = (Level)ClassicSingleton.getInstance().level;
+        if ( level.gameState == Level.GameState.Playing ) {
+            quadPauseButton.draw();
+        }
 /*
         MyColor color = new MyColor(1f, 1f, 0f, 1f);
 

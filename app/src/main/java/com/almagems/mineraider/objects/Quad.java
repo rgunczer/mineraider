@@ -147,6 +147,17 @@ public class Quad {
         // TODO: animator object should update the quad
     }
 
+    public void draw2() {
+        Visuals visuals = Visuals.getInstance();
+        visuals.calcMatricesForObject(pos, 0f, -6f);
+        visuals.textureShader.useProgram();
+        visuals.textureShader.setTexture(textureId);
+        visuals.textureShader.setUniforms(visuals.mvpMatrix);
+        visuals.textureShader.bindData(vertexArray);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
     public void draw() {
         Visuals visuals = Visuals.getInstance();
         visuals.calcMatricesForObject(pos);

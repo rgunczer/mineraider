@@ -76,20 +76,11 @@ public class Visuals {
 	public int textureWheel;
 	public int textureBeam;
 	public int textureCliff142;
-	public int textureMenu;
 	public int textureMenuItems;
 	public int texturePickAxe;
     public int textureFonts;
-    public int textureHelmets;
-    public int textureNextArrow;
-    public int textureMineEntranceBeam;
     public int textureEditorButtons;
-    public int textureMineInterior;
-    public int textureShaft;
-    public int textureElevator;
-    public int textureElevatorEnter;
     public int textureTunnels;
-    public int textureBackButton;
     public int textureHudPauseButton;
 
 
@@ -120,12 +111,7 @@ public class Visuals {
 	public Model rock7;
 	public Model rock8;
 	public Model pickAxe;
-    public Model mineEntranceBeam;
 	public Model mineInterior;
-    public Model shaft;
-    public Model elevator;
-    public Model elevatorButton;
-    public Model elevatorEnter;
 
 	// shaders
 	public TextureShader textureShader;
@@ -339,29 +325,8 @@ public class Visuals {
 		pickAxe = new Model(ml);
 
         ml = new ModelLoader();
-        ml.init(context, R.drawable.mine_entrance_beam, "MineEntranceBeam");
-        mineEntranceBeam = new Model(ml);
-
-        ml = new ModelLoader();
         ml.init(context, R.drawable.mine_interior, "MineInterior");
         mineInterior = new Model(ml);
-
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.shaft, "Shaft");
-        shaft = new Model(ml);
-
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.elevator, "Elevator");
-        elevator = new Model(ml);
-
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.elevator_button, "ElevatorButton");
-        elevatorButton = new Model(ml);
-
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.elevator_enter, "ElevatorEnter");
-        elevatorEnter = new Model(ml);
-
 	}	
 
     private int loadTexture(int resourceId) {
@@ -395,21 +360,11 @@ public class Visuals {
 		textureWheel = loadTexture(R.drawable.wheel_texture);
 		textureBeam = loadTexture(R.drawable.beam_texture);
 		textureCliff142 = loadTexture(R.drawable.cliffs0142);
-		textureMenu = loadTexture(R.drawable.main_menu_bg);
-		textureMenuItems = loadTexture(R.drawable.menu_items);
 		texturePickAxe = loadTexture(R.drawable.pickaxe_texture);
         textureFonts = loadTexture(R.drawable.fontsandroid);
-        textureHelmets = loadTexture(R.drawable.helmets_texture);
-        textureNextArrow = loadTexture(R.drawable.helmet_next_arrow_texture);
-        textureMineEntranceBeam = loadTexture(R.drawable.mine_entrance_beam_texture);
         textureEditorButtons = loadTexture(R.drawable.editor_buttons);
-        textureMineInterior = loadTexture(R.drawable.brick_messy_texture);
-        textureShaft = loadTexture(R.drawable.shaft_texture);
-        textureElevator = loadTexture(R.drawable.elevator_texture);
-        textureElevatorEnter = loadTexture(R.drawable.elevator_enter_texture);
-        textureTunnels = loadTexture(R.drawable.tunnels_texture);
-        textureBackButton = loadTexture(R.drawable.back_button_texture);
         textureHudPauseButton = loadTexture(R.drawable.hud_pause_button_texture);
+		textureMenuItems = loadTexture(R.drawable.menu_items);
 	}
 
 	public void bindNoTexture() {
@@ -418,7 +373,7 @@ public class Visuals {
 
 
     public void setProjectionMatrix2D() {
-        setProjectionMatrix2D((int)screenWidth, (int)screenHeight);
+        setProjectionMatrix2D((int) screenWidth, (int) screenHeight);
     }
 
 	private void setProjectionMatrix2D(int width, int height) {
@@ -519,6 +474,63 @@ public class Visuals {
 		invertM(invertedViewProjectionMatrix, 0, viewProjectionMatrix, 0);		
 	}
 
+	public void calcMatricesForObject(PositionInfo op, float tx, float ty) {
+        setIdentityM(modelMatrix, 0);
+
+        translateM(modelMatrix, 0, 0f, ty, 0f);
+
+        // rotation
+        if (Math.abs(op.rx) > Constants.EPSILON) {
+            rotateM(modelMatrix, 0, op.rx, 1f, 0f, 0f);
+        }
+
+        if (Math.abs(op.ry) > Constants.EPSILON) {
+            rotateM(modelMatrix, 0, op.ry, 0f, 1f, 0f);
+        }
+
+        if (Math.abs(op.rz) > Constants.EPSILON) {
+            rotateM(modelMatrix, 0, op.rz, 0f, 0, 1f);
+        }
+
+
+
+        // translation
+        translateM(modelMatrix, 0, op.tx, op.ty, op.tz);
+
+        translateM(modelMatrix, 0, 0f, -ty, 0f);
+
+//        rotateM(modelMatrix, 0, op.rx, 1f, 0f, 0f);
+//        rotateM(modelMatrix, 0, op.ry, 0f, 1f, 0f);
+//        rotateM(modelMatrix, 0, op.rz, 0f, 0f, 1f);
+
+        // scale
+        if ( (Math.abs(1f - op.sx) > Constants.EPSILON) ||
+                (Math.abs(1f - op.sy) > Constants.EPSILON) ||
+                (Math.abs(1f - op.sz) > Constants.EPSILON) ) {
+            scaleM(modelMatrix, 0, op.sx, op.sy, op.sz);
+        }
+
+        //scaleM(modelMatrix, 0, op.sx, op.sy, op.sz);
+
+        setIdentityM(mLightModelMatrix, 0);
+        translateM(mLightModelMatrix, 0, lightDir.x, lightDir.y, lightDir.z);
+
+        multiplyMV(mLightPosInWorldSpace, 0, mLightModelMatrix, 0, mLightPosInModelSpace, 0);
+        multiplyMV(mLightPosInEyeSpace, 0, viewMatrix, 0, mLightPosInWorldSpace, 0);
+
+        multiplyMM(mvpMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0);
+
+        multiplyMM(mvMatrix, 0, viewMatrix, 0, modelMatrix, 0);
+        //multiplyMM(mvMatrix, 0, modelMatrix, 0, viewMatrix, 0);
+
+        //multiplyMV()
+
+        multiplyMM(modelProjMatrix, 0, projectionMatrix, 0, modelMatrix, 0);
+
+        // calc matrix to transform normal based on the model matrix
+        invertM(normalMatrix, 0, modelMatrix, 0);
+        transposeM(normalMatrix, 0, normalMatrix, 0);
+    }
 
     public void calcMatricesForObject(PositionInfo op) {
 		setIdentityM(modelMatrix, 0);

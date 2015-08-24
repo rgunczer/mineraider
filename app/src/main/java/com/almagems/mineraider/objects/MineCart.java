@@ -29,7 +29,6 @@ public class MineCart {
 	public Body wheel2;
 
 	public float speed = 0f;
-    public ScenesEnum _sceneType = ScenesEnum.None;
 
 	WheelJoint wheelJoint1;
 	WheelJoint wheelJoint2;
@@ -190,36 +189,7 @@ public class MineCart {
 	}
 	
 	public void update() {
-        switch (_sceneType) {
-            case Level:
-                updateOnLevel();
-                break;
-
-            case Shaft:
-                updateOnShaft();
-                break;
-
-            case Menu:
-                updateOnMenu();
-                break;
-        }
-    }
-
-    private void updateOnMenu() {
-        Vec2 pos = cart.getPosition();
-
-        if (pos.x > 6.0f) {
-            wheelJoint1.setMotorSpeed(3.0f);
-            wheelJoint2.setMotorSpeed(3.0f);
-
-        } else if (pos.x < -20.0f) {
-            wheelJoint1.setMotorSpeed(-3.0f);
-            wheelJoint2.setMotorSpeed(-3.0f);
-        }
-    }
-
-    private void updateOnShaft() {
-
+		updateOnLevel();
     }
 
     public void reposition(float x, float y) {

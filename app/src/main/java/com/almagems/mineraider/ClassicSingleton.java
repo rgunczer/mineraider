@@ -4,8 +4,6 @@ import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 import com.almagems.mineraider.objects.MineCart;
 import com.almagems.mineraider.scenes.Level;
-import com.almagems.mineraider.scenes.Menu;
-import com.almagems.mineraider.scenes.MineShaft;
 import com.almagems.mineraider.scenes.Scene;
 
 import android.content.Context;
@@ -20,13 +18,10 @@ public class ClassicSingleton {
 	public MineCart cart2 = null;
     public ScoreCounter scoreCounter = null;
     public HUD hud;
-    public int selectedHelmetIndex = BLUE_HELMET;
     public BatchDrawer batchDrawer = null;
 
     // scenes
     public Scene loading = null;
-    public Scene menu = null;
-    public Scene shaft = null;
     public Scene level = null;
 
     public Scene currentScene = null;
@@ -54,35 +49,14 @@ public class ClassicSingleton {
         currentScene.prepare();
     }
 
-    public void showScene(ScenesEnum sceneTypeId) {
-        switch (sceneTypeId) {
-            case Shaft:
-                glClearColor(0.3f, 0.3f, 0.3f, 0.0f); // ???
-                setCurrentScene(shaft);
-                break;
-
-            case Level:
-                glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // ???
-                setCurrentScene(level);
-                break;
-
-            case Menu:
-                setCurrentScene(menu);
-                break;
-        }
+    public void showScene() {
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // ???
+        setCurrentScene(level);
     }
 
     public void createScenes() {
-        if (shaft == null) {
-            shaft = new MineShaft();
-        }
-
         if (level == null) {
             level = new Level();
-        }
-
-        if (menu == null) {
-            menu = new Menu();
         }
     }
 
@@ -107,16 +81,6 @@ public class ClassicSingleton {
         }
     }
 
-    public String helmetIndexToString(int index) {
-        switch (index) {
-            case RED_HELMET: return "RED";
-            case BLUE_HELMET: return "BLUE";
-            case GREEN_HELMET: return "GREEN";
-            case YELLOW_HELMET: return "YELLOW";
-        }
-        return "UNKNOWN";
-    }
-
     public void handleGemsFromCart(int[] gemTypesArray) {
         scoreCounter.handleGemsFromCart(gemTypesArray);
     }
@@ -136,15 +100,13 @@ public class ClassicSingleton {
         SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        String helmetColorName = helmetIndexToString(selectedHelmetIndex);
-
         // save score
-        editor.putInt(helmetColorName + "-SCORE", getScore());
+        editor.putInt("SCORE", getScore());
 
         // save score by gem types
         int[] arr = getScoreByGemTypes();
         for(int i = 0; i < arr.length; ++i) {
-            editor.putInt(helmetColorName + "-GEM" + i, arr[i]);
+            editor.putInt("GEM" + i, arr[i]);
         }
 
         editor.commit();
@@ -153,19 +115,17 @@ public class ClassicSingleton {
     public int loadPreferences(int helmetIndex) {
         System.out.println("Load Preferences... helmetIndex: " + helmetIndex);
 
-        String helmetColorName = helmetIndexToString(helmetIndex);
-        System.out.println("Helmet Color Name: " + helmetColorName);
         SharedPreferences sharedPrefs = activity.getPreferences(Context.MODE_PRIVATE);
 
         // load score
-        int score = sharedPrefs.getInt(helmetColorName + "-SCORE", 0);
+        int score = sharedPrefs.getInt("SCORE", 0);
         setScore(score);
         scoreCounter.dumpScore();
 
         // load score by gem types
         int[] arr = new int[MAX_GEM_TYPES];
         for(int i = 0; i < MAX_GEM_TYPES; ++i) {
-            arr[i] = sharedPrefs.getInt(helmetColorName + "-GEM" + i, 0);
+            arr[i] = sharedPrefs.getInt("GEM" + i, 0);
         }
         setScoreByGemTypes(arr);
         scoreCounter.dumpScoreByGemTypes();

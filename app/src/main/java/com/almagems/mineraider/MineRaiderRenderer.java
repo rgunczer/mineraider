@@ -11,6 +11,7 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
 import android.widget.Toast;
 
+import com.almagems.mineraider.audio.Audio;
 import com.almagems.mineraider.scenes.Level;
 import com.almagems.mineraider.scenes.Scene;
 import com.almagems.mineraider.shaders.ParticleShader;
@@ -27,9 +28,9 @@ public class MineRaiderRenderer implements Renderer {
 	// ctor
 	public MineRaiderRenderer(Context context) {
 		this.context = context;
-		ClassicSingleton instance = ClassicSingleton.getInstance();
-		instance.renderer = this;
-        instance.activity = (MineRaiderActivity)context;
+		ClassicSingleton singleton = ClassicSingleton.getInstance();
+		singleton.renderer = this;
+        singleton.activity = (MineRaiderActivity)context;
 	}
 
 	private void limitFrameRate(int framesPerSecond) {
@@ -59,7 +60,12 @@ public class MineRaiderRenderer implements Renderer {
 		//glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		glBlendFunc(GL_ONE, GL_ONE);
-				
+
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+
+        singleton.audio = new Audio();
+        singleton.audio.init(context);
+
 		visuals = Visuals.getInstance();
 		visuals.init(context);
         Scene.visuals = visuals;
@@ -77,7 +83,9 @@ public class MineRaiderRenderer implements Renderer {
 			return;
 		}
 
-		ClassicSingleton.getInstance().createScenes();
+
+        singleton.loadPreferences();
+		singleton.createScenes();
 	}
 
 	@Override

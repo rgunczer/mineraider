@@ -2,10 +2,13 @@ package com.almagems.mineraider.menu;
 
 import static android.opengl.GLES20.*;
 
+import com.almagems.mineraider.ClassicSingleton;
 import com.almagems.mineraider.EffectAnims.Fade;
 import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.util.Geometry;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
+import com.almagems.mineraider.util.Vector;
 
 import java.util.ArrayList;
 
@@ -139,6 +142,14 @@ public class Menu {
         menuImage.setRot(0f, 0f, 0f);
         menuImage.setScale((rect.w / Visuals.referenceScreenWidth) * sc, (rect.h / Visuals.referenceScreenWidth) * sc, 1.0f);
         menuGroup.add(menuImage);
+
+
+        // music volume control
+        menuGroup.musicVolumeControl = new MenuVolumeControl("Music");
+        menuGroup.musicVolumeControl.init(aspect * 0.35f);
+
+        menuGroup.soundVolumeControl = new MenuVolumeControl("Sound");
+        menuGroup.soundVolumeControl.init(-aspect * 0.06f);
 
         groups.add(menuGroup);
 
@@ -305,8 +316,47 @@ public class Menu {
             selectedMenuItem = currentGroup.handleTouchPress(normalizedX, normalizedY);
 
             if (selectedMenuItem != null) {
-                System.out.println("Selected Menu Option is: " + selectedMenuItem.menuOption.toString());
+                //System.out.println("Selected Menu Option is: " + selectedMenuItem.menuOption.toString());
                 selectedMenuItem.setAnim(menuItemAnim);
+                ClassicSingleton singleton = ClassicSingleton.getInstance();
+                singleton.audio.playSound();
+            } else {
+                updateVolumes(normalizedX, normalizedY);
+            }
+        }
+    }
+
+    public void handleTouchDrag(float normalizedX, float normalizedY) {
+        updateVolumes(normalizedX, normalizedY);
+    }
+
+    private void updateVolumes(float normalizedX, float normalizedY) {
+        float diff = 0.1f;
+        if (currentGroup.soundVolumeControl != null && currentGroup.musicVolumeControl != null) {
+            Vector pos = Geometry.convertNormalized2DPointToNormalizedDevicePoint2D(normalizedX, normalizedY, visuals.invertedViewProjectionMatrix);
+
+            if (pos.y > currentGroup.musicVolumeControl.pos.ty - diff  &&
+                pos.y < currentGroup.musicVolumeControl.pos.ty + diff) {
+                // -1.0f <=> 1.0f
+                float minValue = -1f;
+                float maxValue = 1f;
+                float norm = (normalizedX - minValue) / (maxValue - minValue);
+
+                //System.out.println("normalized is: " + normalizedX);
+                //System.out.println("norm is: " + norm);
+                ClassicSingleton.getInstance().audio.setMusicVolume(norm);
+            }
+
+            if (pos.y > currentGroup.soundVolumeControl.pos.ty - diff  &&
+                pos.y < currentGroup.soundVolumeControl.pos.ty + diff) {
+                // -1.0f <=> 1.0f
+                float minValue = -1f;
+                float maxValue = 1f;
+                float norm = (normalizedX - minValue) / (maxValue - minValue);
+
+                //System.out.println("normalized is: " + normalizedX);
+                //System.out.println("norm is: " + norm);
+                ClassicSingleton.getInstance().audio.setSoundVolume(norm);
             }
         }
     }

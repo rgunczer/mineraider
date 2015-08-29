@@ -330,7 +330,24 @@ public class Level extends Scene {
 	}
 	
 	@Override
-	public void handleTouchDrag(float normalizedX, float normalizedY) {			
+	public void handleTouchDrag(float normalizedX, float normalizedY) {
+
+        switch (gameState) {
+            case Menu:
+                handleTouchDragOnMenu(normalizedX, normalizedY);
+                break;
+
+            case Playing:
+                handleTouchDragOnPlaying(normalizedX, normalizedY);
+                break;
+        }
+    }
+
+    private void handleTouchDragOnMenu(float normalizedX, float normalizedY) {
+        menu.handleTouchDrag(normalizedX, normalizedY);
+    }
+
+    private void handleTouchDragOnPlaying(float normalizedX, float normalizedY) {
 		if (match3.firstSelected != null) {
 			final float minDiff = 0.15f; 
 			

@@ -33,7 +33,7 @@ public class MenuImage {
     }
 
     public void draw() {
-        System.out.println("MenuImage draw...");
+        //System.out.println("MenuImage draw...");
         quad.draw2();
     }
 }

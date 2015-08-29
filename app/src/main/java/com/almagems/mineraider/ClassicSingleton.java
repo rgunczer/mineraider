@@ -2,6 +2,8 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
+
+import com.almagems.mineraider.audio.Audio;
 import com.almagems.mineraider.objects.MineCart;
 import com.almagems.mineraider.scenes.Level;
 import com.almagems.mineraider.scenes.Scene;
@@ -10,6 +12,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class ClassicSingleton {
+    public Audio audio = null;
     private static ClassicSingleton instance = null;
     public static float adHeight;
 	public MineRaiderRenderer renderer = null;
@@ -101,7 +104,8 @@ public class ClassicSingleton {
         SharedPreferences.Editor editor = sharedPref.edit();
 
         // save score
-        editor.putInt("SCORE", getScore());
+        int score = getScore();
+        editor.putInt("SCORE", score);
 
         // save score by gem types
         int[] arr = getScoreByGemTypes();
@@ -109,11 +113,15 @@ public class ClassicSingleton {
             editor.putInt("GEM" + i, arr[i]);
         }
 
+        // save music and sound volume
+        editor.putFloat("MUSIC", audio.musicVolume);
+        editor.putFloat("SOUND", audio.soundVolume);
+
         editor.commit();
     }
 
-    public int loadPreferences(int helmetIndex) {
-        System.out.println("Load Preferences... helmetIndex: " + helmetIndex);
+    public int loadPreferences() {
+        System.out.println("Load preferences...");
 
         SharedPreferences sharedPrefs = activity.getPreferences(Context.MODE_PRIVATE);
 
@@ -129,6 +137,9 @@ public class ClassicSingleton {
         }
         setScoreByGemTypes(arr);
         scoreCounter.dumpScoreByGemTypes();
+
+        audio.musicVolume = sharedPrefs.getFloat("MUSIC", 0.5f);
+        audio.soundVolume = sharedPrefs.getFloat("SOUND", 0.5f);
 
         return score;
     }

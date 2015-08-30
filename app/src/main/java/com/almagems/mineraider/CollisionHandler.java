@@ -2,19 +2,19 @@ package com.almagems.mineraider;
 
 import org.jbox2d.callbacks.*;
 import org.jbox2d.collision.Manifold;
-import org.jbox2d.collision.WorldManifold;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import com.almagems.mineraider.particlesystem.ParticleManager;
+import com.almagems.mineraider.singletons.ClassicSingleton;
 
 public class CollisionHandler implements ContactListener {
 
 	@Override
 	public void beginContact(Contact arg0) {
 		ClassicSingleton singleton = ClassicSingleton.getInstance();
-		ParticleManager particleManager = ParticleManager.getInstance();
+
 				
 		Body bodyA = arg0.getFixtureA().getBody();
 		Body bodyB = arg0.getFixtureB().getBody();

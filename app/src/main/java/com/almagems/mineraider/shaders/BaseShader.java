@@ -4,11 +4,14 @@ import static android.opengl.GLES20.*;
 
 import android.content.Context;
 
-import com.almagems.mineraider.Visuals;
 import com.almagems.mineraider.util.ShaderHelper;
 import com.almagems.mineraider.util.TextResourceReader;
+import com.almagems.mineraider.visuals.Visuals;
 
 abstract class BaseShader {
+
+	protected Visuals visuals;
+
 	// uniform constants
 	protected static final String U_MATRIX = "u_MvpMatrix";
 	protected static final String U_TEXTURE_UNIT = "u_TextureUnit";
@@ -25,14 +28,14 @@ abstract class BaseShader {
 	protected final int program;
 	protected int uTextureUnitLocation;
 	
-	protected BaseShader(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) throws Exception {
-		program = buildProgram(context, vertexShaderResourceId, fragmentShaderResourceId);
+	protected BaseShader(Visuals visuals, int vertexShaderResourceId, int fragmentShaderResourceId) throws Exception {
+        this.visuals = visuals;
+		program = buildProgram(visuals.context, vertexShaderResourceId, fragmentShaderResourceId);
 	}
 	
 	private int buildProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) throws Exception {
-		int program = -1;
 		//try {			
-			program = ShaderHelper.buildProgram(TextResourceReader.readTextFileFromResource(context, vertexShaderResourceId),
+			int program = ShaderHelper.buildProgram(TextResourceReader.readTextFileFromResource(context, vertexShaderResourceId),
 													TextResourceReader.readTextFileFromResource(context, fragmentShaderResourceId));
 			return program;
 //		} catch (Exception ex) {

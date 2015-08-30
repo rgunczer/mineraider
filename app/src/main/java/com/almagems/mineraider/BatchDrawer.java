@@ -1,11 +1,13 @@
 package com.almagems.mineraider;
 
+import com.almagems.mineraider.Match3.Match3;
 import com.almagems.mineraider.anims.AnimationManager;
 import com.almagems.mineraider.anims.BaseAnimation;
 import com.almagems.mineraider.anims.FallAnimation;
 import com.almagems.mineraider.anims.FallGroupAnimation;
 import com.almagems.mineraider.anims.SwapAnimation;
 import com.almagems.mineraider.objects.Model;
+import com.almagems.mineraider.visuals.Visuals;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -35,13 +37,12 @@ public class BatchDrawer {
     private static final int MAX_POOL_GEMPOSITIONS = 630;
     private ArrayList<PositionInfo> pool = new ArrayList<PositionInfo>(MAX_POOL_GEMPOSITIONS);
 
-    private final Visuals visuals;
+    private Visuals visuals;
     private PositionInfo pos = new PositionInfo();
 
     // ctor
-    public BatchDrawer() {
-        visuals = Visuals.getInstance();
-
+    public BatchDrawer(Visuals visuals) {
+        this.visuals = visuals;
         for (int i = 0; i < MAX_POOL_GEMPOSITIONS; ++i) {
             pool.add( new PositionInfo() );
         }
@@ -203,7 +204,6 @@ public class BatchDrawer {
     }
 
     void drawGemsByType(ArrayList<PositionInfo> gems, int type) {
-
         int size = gems.size();
         if (size > 0) {
             PositionInfo pos;
@@ -217,16 +217,11 @@ public class BatchDrawer {
                 model.draw();
             }
         }
-
     }
 
     void drawGemsPlatesByType(ArrayList<PositionInfo> gems, int type) {
-
-
-
         int size = gems.size();
         if (size > 0) {
-
             visuals.colorShader.useProgram();
 
             float temp;

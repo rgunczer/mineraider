@@ -1,6 +1,6 @@
 package com.almagems.mineraider.menu;
 
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.objects.Quad;
 import com.almagems.mineraider.util.Rectangle;
 
@@ -12,11 +12,13 @@ public class MenuGameTitleAnim {
     private final float startZZ = 20f;
     private final float step = 1.25f;
     private float zz = startZZ;
+    private Visuals visuals;
 
-    public MenuGameTitleAnim() {
+    public MenuGameTitleAnim(Visuals visuals) {
+        this.visuals = visuals;
         reset();
-        imageMine = new Quad();
-        imageRaider = new Quad();
+        imageMine = new Quad(visuals);
+        imageRaider = new Quad(visuals);
     }
 
     public void reset() {
@@ -25,7 +27,6 @@ public class MenuGameTitleAnim {
 
     public void init(float sc) {
         boolean flipUTextureCoordinate = false;
-        Visuals visuals = Visuals.getInstance();
         float aspect = Visuals.aspectRatio;
         Rectangle rect;
         rect = new Rectangle(1097, 0+243, 591, 243);

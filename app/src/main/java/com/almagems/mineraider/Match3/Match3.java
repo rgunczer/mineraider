@@ -1,7 +1,9 @@
-package com.almagems.mineraider;
+package com.almagems.mineraider.Match3;
 
 import static com.almagems.mineraider.Constants.*;
 
+import com.almagems.mineraider.GemPosition;
+import com.almagems.mineraider.ScoreCounter;
 import com.almagems.mineraider.anims.AnimationManager;
 import com.almagems.mineraider.anims.BaseAnimation;
 import com.almagems.mineraider.anims.FallAnimation;
@@ -9,6 +11,7 @@ import com.almagems.mineraider.anims.FallGroupAnimation;
 import com.almagems.mineraider.anims.PopAnimation;
 import com.almagems.mineraider.anims.SwapAnimation;
 import com.almagems.mineraider.anims.SwapHintManager;
+import com.almagems.mineraider.singletons.ClassicSingleton;
 import com.almagems.mineraider.util.MyUtils;
 
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ public class Match3 {
         isAnimating = true;
         this.animManager = animManager;
         this.scoreCounter = scoreCounter;
-        swapHintManager = new SwapHintManager();
+        swapHintManager = new SwapHintManager(ClassicSingleton.getInstance().visuals);
         swapAnim = new SwapAnimation();
         pooledFallGroupAnim = new FallGroupAnimation();
         pooledPopAnimation = new PopAnimation();

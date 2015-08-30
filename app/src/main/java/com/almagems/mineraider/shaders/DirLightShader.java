@@ -6,9 +6,8 @@ import static com.almagems.mineraider.Constants.BYTES_PER_FLOAT;
 import android.content.Context;
 
 import com.almagems.mineraider.R;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.data.VertexArray;
-import com.almagems.mineraider.data.VertexBuffer;
 
 
 public class DirLightShader extends BaseShader {	
@@ -24,8 +23,8 @@ public class DirLightShader extends BaseShader {
 	private final int aTextureCoordinatesLocation;
 
 	
-	public DirLightShader(Context context) throws Exception {
-		super(context, R.raw.dir_light_vertex_shader, R.raw.dir_light_fragment_shader);
+	public DirLightShader(Visuals visuals) throws Exception {
+		super(visuals, R.raw.dir_light_vertex_shader, R.raw.dir_light_fragment_shader);
 		
 		// retrieve uniform locations for the shader program
 		uMVPMatrixLocation = glGetUniformLocation(program, "u_MVPMatrix");
@@ -42,7 +41,6 @@ public class DirLightShader extends BaseShader {
 	}
 		
 	public void setUniforms() {
-        Visuals visuals = Visuals.getInstance();
 		glUniform4f(uColorLocation, visuals.whiteColor.r, visuals.whiteColor.g, visuals.whiteColor.b, visuals.whiteColor.a);
 		glUniformMatrix4fv(uMVPMatrixLocation, 1, false, visuals.mvpMatrix, 0);
 		glUniformMatrix4fv(uMVMatrixLocation, 1, false, visuals.mvMatrix, 0);

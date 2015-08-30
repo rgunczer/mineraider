@@ -4,7 +4,7 @@ import static android.opengl.GLES20.*;
 
 import android.content.Context;
 import com.almagems.mineraider.R;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 
 
 public class PointLightShader extends BaseShader {
@@ -19,8 +19,8 @@ public class PointLightShader extends BaseShader {
 	private final int aNormalLocation;
 	private final int aTextureCoordinatesLocation;		
 	
-	public PointLightShader(Context context) throws Exception {
-		super(context, R.raw.point_light_vertex_shader, R.raw.point_light_fragment_shader);
+	public PointLightShader(Visuals visuals) throws Exception {
+		super(visuals, R.raw.point_light_vertex_shader, R.raw.point_light_fragment_shader);
 		
 		// retrieve uniform locations for the shader program
 		uModelViewLocation = glGetUniformLocation(program, "modelView");
@@ -36,7 +36,6 @@ public class PointLightShader extends BaseShader {
 	}
 	
 	public void setUniforms() {
-        Visuals visuals = Visuals.getInstance();
 		glUniformMatrix4fv(uModelViewLocation, 1, false, visuals.mvMatrix, 0);		
 		glUniformMatrix4fv(uProjectionLocation, 1, false, visuals.projectionMatrix, 0);		
 		

@@ -1,7 +1,8 @@
 package com.almagems.mineraider.menu;
 
-import com.almagems.mineraider.ClassicSingleton;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.singletons.ClassicSingleton;
+import com.almagems.mineraider.GUI.ProgressBarControl;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.util.Geometry;
 import com.almagems.mineraider.util.Vector;
 
@@ -20,15 +21,17 @@ public class MenuGroup {
     public ArrayList<MenuItem> items = new ArrayList<MenuItem>(10);
     public ArrayList<MenuImage> images = new ArrayList<MenuImage>(10);
 
-    public MenuVolumeControl musicVolumeControl = null;
-    public MenuVolumeControl soundVolumeControl = null;
+    public ProgressBarControl musicVolumeControl = null;
+    public ProgressBarControl soundVolumeControl = null;
 
     public String name;
-
+    public Visuals visuals;
     private MenuGameTitleAnim gameTitleAnim;
 
-    public MenuGroup() {
+    // ctor
+    public MenuGroup(Visuals visuals) {
         System.out.println("MenuGroup ctor...");
+        this.visuals = visuals;
     }
 
     public void init(String name) {
@@ -66,8 +69,8 @@ public class MenuGroup {
         }
 
         if (musicVolumeControl != null && soundVolumeControl != null) {
-            musicVolumeControl.volumeValue = ClassicSingleton.getInstance().audio.musicVolume;
-            soundVolumeControl.volumeValue = ClassicSingleton.getInstance().audio.soundVolume;
+            musicVolumeControl.value = ClassicSingleton.getInstance().audio.musicVolume;
+            soundVolumeControl.value = ClassicSingleton.getInstance().audio.soundVolume;
         }
     }
 
@@ -100,13 +103,10 @@ public class MenuGroup {
             glDisable(GL_DEPTH_TEST);
             glEnable(GL_BLEND);
 
-            Visuals visuals = Visuals.getInstance();
-
             visuals.setProjectionMatrix2D();
             visuals.updateViewProjMatrix();
             visuals.bindNoTexture();
-
-
+            visuals.colorShader.useProgram();
 
             musicVolumeControl.draw();
             soundVolumeControl.draw();
@@ -114,7 +114,6 @@ public class MenuGroup {
     }
 
     public MenuItem handleTouchPress(float normalizedX, float normalizedY) {
-        Visuals visuals = Visuals.getInstance();
         Vector pos = Geometry.convertNormalized2DPointToNormalizedDevicePoint2D(normalizedX, normalizedY, visuals.invertedViewProjectionMatrix);
 
         MenuItem item;

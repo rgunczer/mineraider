@@ -76,4 +76,12 @@ public class Audio {
         soundPool.stop(soundStreamId);
     }
 
+    public void pause() {
+        soundPool.pause(musicStreamId);
+    }
+
+    public void resume() {
+        soundPool.resume(musicStreamId);
+    }
+
 }

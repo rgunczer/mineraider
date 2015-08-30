@@ -2,7 +2,7 @@ package com.almagems.mineraider.util;
 
 import com.almagems.mineraider.EffectAnims.EffectAnim;
 import com.almagems.mineraider.PositionInfo;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 
 import static android.opengl.GLES20.*;
@@ -19,8 +19,8 @@ public class Text {
 
 
     // ctor
-    public Text() {
-        visuals = Visuals.getInstance();
+    public Text(Visuals visuals) {
+        this.visuals = visuals;
     }
 
     public void setSpacingScale(float scale) {

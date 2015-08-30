@@ -1,7 +1,5 @@
 package com.almagems.mineraider.util;
 
-import com.almagems.mineraider.Visuals;
-
 import static android.opengl.Matrix.*;
 
 public class Geometry {

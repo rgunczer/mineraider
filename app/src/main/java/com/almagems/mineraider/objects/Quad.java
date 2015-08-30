@@ -1,7 +1,7 @@
 package com.almagems.mineraider.objects;
 
 import com.almagems.mineraider.PositionInfo;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
@@ -14,9 +14,11 @@ public class Quad {
     public final PositionInfo pos;
     private VertexArray vertexArray;
     private int textureId;
+    private Visuals visuals;
 
     // ctor
-    public Quad() {
+    public Quad(Visuals visuals) {
+        this.visuals = visuals;
         pos = new PositionInfo();
     }
 
@@ -45,7 +47,7 @@ public class Quad {
         float w = rect.w;
         float h = rect.h;
 
-        Texture texture = Visuals.getInstance().getTextureObj(textureId);
+        Texture texture = visuals.getTextureObj(textureId);
         float tw = texture.width;
         float th = texture.height;
 
@@ -100,7 +102,7 @@ public class Quad {
         float w = rect.w;
         float h = rect.h;
 
-        Texture texture = Visuals.getInstance().getTextureObj(textureId);
+        Texture texture = visuals.getTextureObj(textureId);
         float tw = texture.width;
         float th = texture.height;
 
@@ -148,7 +150,6 @@ public class Quad {
     }
 
     public void draw2() {
-        Visuals visuals = Visuals.getInstance();
         visuals.calcMatricesForObject(pos, 0f, -6f);
         visuals.textureShader.useProgram();
         visuals.textureShader.setTexture(textureId);
@@ -159,7 +160,6 @@ public class Quad {
     }
 
     public void draw() {
-        Visuals visuals = Visuals.getInstance();
         visuals.calcMatricesForObject(pos);
         visuals.textureShader.useProgram();
         visuals.textureShader.setTexture(textureId);
@@ -170,7 +170,6 @@ public class Quad {
     }
 
     public void draw1() {
-        Visuals visuals = Visuals.getInstance();
         visuals.dirLightShader.setTexture(textureId);
         visuals.dirLightShader.bindData(vertexArray);
         visuals.calcMatricesForObject(pos);

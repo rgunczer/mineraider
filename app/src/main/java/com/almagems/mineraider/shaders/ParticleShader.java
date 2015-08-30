@@ -5,6 +5,7 @@ import static android.opengl.GLES20.*;
 import android.content.Context;
 
 import com.almagems.mineraider.R;
+import com.almagems.mineraider.visuals.Visuals;
 
 
 public class ParticleShader extends BaseShader {
@@ -23,8 +24,8 @@ public class ParticleShader extends BaseShader {
     public static float pointSize = 10f;
 
 	// ctor
-	public ParticleShader(Context context) throws Exception {
-		super(context, R.raw.particle_vertex_shader, R.raw.particle_fragment_shader);
+	public ParticleShader(Visuals visuals) throws Exception {
+		super(visuals, R.raw.particle_vertex_shader, R.raw.particle_fragment_shader);
 	
 		// retrieve uniform locations for the shader program
 		uMatrixLocation = glGetUniformLocation(program, U_MATRIX);

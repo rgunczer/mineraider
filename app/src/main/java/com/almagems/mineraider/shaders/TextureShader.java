@@ -9,8 +9,11 @@ import android.content.Context;
 import com.almagems.mineraider.R;
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.data.VertexBuffer;
+import com.almagems.mineraider.visuals.Visuals;
+
 
 public class TextureShader extends BaseShader {
+
 	// uniform locations
 	private final int uMatrixLocation;
 		
@@ -19,8 +22,8 @@ public class TextureShader extends BaseShader {
     private final int aColorLocation;
 	private final int aTextureCoordinatesLocation;
 	
-	public TextureShader(Context context) throws Exception {
-		super(context, R.raw.texture_vertex_shader, R.raw.texture_fragment_shader);
+	public TextureShader(Visuals visuals) throws Exception {
+		super(visuals, R.raw.texture_vertex_shader, R.raw.texture_fragment_shader);
 		
 		// retrieve uniform locations for the shader program
 		uMatrixLocation = glGetUniformLocation(program, U_MATRIX);

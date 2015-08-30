@@ -1,8 +1,6 @@
 package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
-import static android.opengl.Matrix.*;
-import static com.almagems.mineraider.Constants.*;
 
 import com.almagems.mineraider.EffectAnims.WahWah;
 import com.almagems.mineraider.EffectAnims.ZigZag;
@@ -10,6 +8,8 @@ import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.GemIkon;
 import com.almagems.mineraider.objects.Quad;
 import com.almagems.mineraider.scenes.Level;
+import com.almagems.mineraider.singletons.ClassicSingleton;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
 import com.almagems.mineraider.util.Text;
@@ -17,6 +17,8 @@ import com.almagems.mineraider.util.Text;
 
 public class HUD {
     private int cachedScore;
+
+    private Visuals visuals;
 
     private final Text scoreText;
     private final Text extraText;
@@ -48,12 +50,14 @@ public class HUD {
     private ZigZag effectZigZag;
 
     // ctor
-    public HUD() {
-        scoreText = new Text();
-        extraText = new Text();
-        gemsFromCartText = new Text();
+    public HUD(Visuals visuals) {
+        this.visuals = visuals;
+
+        scoreText = new Text(visuals);
+        extraText = new Text(visuals);
+        gemsFromCartText = new Text(visuals);
         ikon = new GemIkon();
-        quad = new Quad();
+        quad = new Quad(visuals);
         edgeDrawer = new EdgeDrawer(32);
 
         comboCounter = 0;
@@ -62,7 +66,7 @@ public class HUD {
         effectZigZag = new ZigZag();
         effectWahWahScore = new WahWah();
 
-        quadPauseButton = new Quad();
+        quadPauseButton = new Quad(visuals);
 
         _bonusPosX = 0f;
         _bonusCartGemsTextWidth = 0f;
@@ -91,8 +95,6 @@ public class HUD {
         extraText.pos.trans(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
 
         ikon.init();
-
-        Visuals visuals = Visuals.getInstance();
 
         Rectangle rect = new Rectangle(0f, 0f, 128f, 128f);
         quadPauseButton.init(visuals.textureHudPauseButton, new MyColor(1f, 1f, 1f), rect, false);
@@ -127,10 +129,6 @@ public class HUD {
         extraTextCooling = 0;
         scoreCooling = 0;
         bonusFromCartCooling = 0;
-    }
-
-    public void setLevelNumber(int number) {
-        // TODO: set level number here
     }
 
     public void showBonusCartGems(int numberOfGems) {
@@ -253,7 +251,6 @@ public class HUD {
     }
 
     public void draw() {
-        Visuals visuals = Visuals.getInstance();
         visuals.setProjectionMatrix2D();
         visuals.updateViewProjMatrix();
 
@@ -275,7 +272,7 @@ public class HUD {
         }
 
 
-        Level level = (Level)ClassicSingleton.getInstance().level;
+        Level level = (Level) ClassicSingleton.getInstance().level;
         if ( level.gameState == Level.GameState.Playing ) {
             quadPauseButton.draw();
         }

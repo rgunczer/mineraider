@@ -3,6 +3,7 @@ package com.almagems.mineraider;
 import static com.almagems.mineraider.Constants.*;
 
 import com.almagems.mineraider.anims.PopAnimation;
+import com.almagems.mineraider.singletons.ClassicSingleton;
 
 public class ScoreCounter {
 

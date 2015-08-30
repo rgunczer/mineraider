@@ -3,6 +3,7 @@ package com.almagems.mineraider.menu;
 import com.almagems.mineraider.objects.Quad;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
+import com.almagems.mineraider.visuals.Visuals;
 
 public class MenuItem {
     private String name;
@@ -10,9 +11,11 @@ public class MenuItem {
     public Menu.MenuOptions menuOption;
     private MenuItemAnim anim;
     public String tag;
+    private Visuals visuals;
 
-    public MenuItem() {
-        quad = new Quad();
+    public MenuItem(Visuals visuals) {
+        this.visuals = visuals;
+        quad = new Quad(visuals);
     }
 
     public Quad getQuad() {
@@ -51,7 +54,7 @@ public class MenuItem {
         this.name = name;
         this.menuOption = menuOption;
 
-        quad = new Quad();
+        quad = new Quad(visuals);
         quad.init(textureId, color, rect, flipUTextureCoordinates);
     }
 

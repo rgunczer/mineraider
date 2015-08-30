@@ -3,16 +3,23 @@ package com.almagems.mineraider.menu;
 import com.almagems.mineraider.objects.Quad;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
+import com.almagems.mineraider.visuals.Visuals;
 
 public class MenuImage {
 
+    private Visuals visuals;
     private String name;
     private Quad quad;
+
+    // ctor
+    public MenuImage(Visuals visuals) {
+        this.visuals = visuals;
+    }
 
     public void init(String name, int textureId, MyColor color, Rectangle rect, boolean flipUTextureCoordinates) {
         this.name = name;
 
-        quad = new Quad();
+        quad = new Quad(visuals);
         quad.init(textureId, color, rect, flipUTextureCoordinates);
     }
 

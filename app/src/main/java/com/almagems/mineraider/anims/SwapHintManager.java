@@ -2,7 +2,7 @@ package com.almagems.mineraider.anims;
 
 import java.util.ArrayList;
 
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.GemPosition;
 
 public class SwapHintManager {
@@ -13,8 +13,8 @@ public class SwapHintManager {
     private final Visuals visuals;
 
     // ctor
-    public SwapHintManager() {
-        visuals = Visuals.getInstance();
+    public SwapHintManager(Visuals visuals) {
+        this.visuals = visuals;
     }
 
     public void reset() {

@@ -4,6 +4,7 @@ import static android.opengl.GLES20.*;
 
 import com.almagems.mineraider.R;
 import com.almagems.mineraider.util.Vector;
+import com.almagems.mineraider.visuals.Visuals;
 
 import android.content.Context;
 
@@ -26,8 +27,8 @@ public class PixelLightShader extends BaseShader {
 	private final int aDiffuseMaterial;
 	
 	// ctor
-	public PixelLightShader(Context context) throws Exception {
-		super(context, R.raw.pixel_lighting_vertex_shader, R.raw.pixel_lighting_fragment_shader);
+	public PixelLightShader(Visuals visuals) throws Exception {
+		super(visuals, R.raw.pixel_lighting_vertex_shader, R.raw.pixel_lighting_fragment_shader);
 
 		// retrieve uniform locations for the shader program [vertex shader]
 		uProjection = glGetUniformLocation(program, "Projection");

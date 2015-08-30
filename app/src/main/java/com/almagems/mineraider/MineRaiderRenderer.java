@@ -11,24 +11,21 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
 import android.widget.Toast;
 
-import com.almagems.mineraider.audio.Audio;
-import com.almagems.mineraider.scenes.Level;
-import com.almagems.mineraider.scenes.Scene;
 import com.almagems.mineraider.shaders.ParticleShader;
+import com.almagems.mineraider.singletons.ClassicSingleton;
+import com.almagems.mineraider.visuals.Visuals;
 
-import static com.almagems.mineraider.Constants.*;
 
 public class MineRaiderRenderer implements Renderer { 
 
 	private long frameStartTimeMS;
-
-	private final Context context;	
-	private Visuals visuals;
+	private final Context context;
+    private ClassicSingleton singleton;
 
 	// ctor
 	public MineRaiderRenderer(Context context) {
 		this.context = context;
-		ClassicSingleton singleton = ClassicSingleton.getInstance();
+		singleton = ClassicSingleton.getInstance();
 		singleton.renderer = this;
         singleton.activity = (MineRaiderActivity)context;
 	}
@@ -47,8 +44,8 @@ public class MineRaiderRenderer implements Renderer {
 	@Override
 	public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
 		limitFrameRate(30);
-		//glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClearColor(1.0f, 0.3f, 0.3f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		//glClearColor(1.0f, 0.3f, 0.3f, 0.0f);
 		//glClearColor(0.1f, 0.1f, 0.1f, 0.0f);		
 		
 		glDisable(GL_CULL_FACE);
@@ -61,37 +58,28 @@ public class MineRaiderRenderer implements Renderer {
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		glBlendFunc(GL_ONE, GL_ONE);
 
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-
-        singleton.audio = new Audio();
-        singleton.audio.init(context);
-
-		visuals = Visuals.getInstance();
-		visuals.init(context);
-        Scene.visuals = visuals;
+        singleton.createVisuals();
 
 		try {		
-			visuals.loadAssets();
+			singleton.visuals.loadAssets();
 		} catch (final Exception ex) {
-
 			Activity activity = (Activity) context;
 			activity.runOnUiThread(new Runnable() {
 				public void run() {
-					Toast.makeText(context, "Error loading assets! " + ex.toString() , Toast.LENGTH_LONG).show();
+					Toast.makeText(context, "Error loading assets. " + ex.toString() , Toast.LENGTH_LONG).show();
 				}
 			});
 			return;
 		}
 
-
-        singleton.loadPreferences();
-		singleton.createScenes();
+        singleton.init();
 	}
 
 	@Override
 	public void onSurfaceChanged(GL10 glUnused, int width, int height) {
         float w = width;
         float h = height; // - ClassicSingleton.adHeight;
+
 		glViewport(0, 0, (int)w, (int)h);
         //glViewport(0, 0, 200, 400);
 
@@ -102,10 +90,7 @@ public class MineRaiderRenderer implements Renderer {
 
         ParticleShader.pointSize = width * 0.1f;
 
-		// ClassicSingleton.getInstance().setCurrentScene(loading);
-		ClassicSingleton.getInstance().setCurrentScene(ClassicSingleton.getInstance().level);
-		// ClassicSingleton.getInstance().setCurrentScene(shaft);
-		// ClassicSingleton.getInstance().setCurrentScene(level);
+		singleton.onSurfaceChanged(width, height);
 	}
 
 	@Override
@@ -113,24 +98,24 @@ public class MineRaiderRenderer implements Renderer {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
-		ClassicSingleton.getInstance().currentScene.update();
-		ClassicSingleton.getInstance().currentScene.draw();
+		singleton.update();
+		singleton.draw();
 		
 		limitFrameRate(30);		
 	}
 			
 	public void handleTouchPress(float normalizedX, float normalizedY) {
 		//System.out.println("TouchPress: " + normalizedX + " " + normalizedY);
-		ClassicSingleton.getInstance().currentScene.handleTouchPress(normalizedX, normalizedY);
+		singleton.handleTouchPress(normalizedX, normalizedY);
 	}
 	
 	public void handleTouchDrag(float normalizedX, float normalizedY) {
 		//System.out.println("TouchDrag:" + normalizedX + " " + normalizedY);
-		ClassicSingleton.getInstance().currentScene.handleTouchDrag(normalizedX, normalizedY);
+		singleton.handleTouchDrag(normalizedX, normalizedY);
 	}
 	
 	public void handleTouchRelease(float normalizedX, float normalizedY) {
 		//System.out.println("TouchRelease:" + normalizedX + " " + normalizedY);
-		ClassicSingleton.getInstance().currentScene.handleTouchRelease(normalizedX, normalizedY);
+		singleton.handleTouchRelease(normalizedX, normalizedY);
 	}	
 }

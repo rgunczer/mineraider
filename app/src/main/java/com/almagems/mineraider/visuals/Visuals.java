@@ -1,4 +1,4 @@
-package com.almagems.mineraider;
+package com.almagems.mineraider.visuals;
 
 import static android.opengl.GLES20.*;
 import static android.opengl.Matrix.*;
@@ -7,6 +7,9 @@ import static com.almagems.mineraider.Constants.*;
 import android.content.Context;
 import android.graphics.Color;
 
+import com.almagems.mineraider.Constants;
+import com.almagems.mineraider.PositionInfo;
+import com.almagems.mineraider.R;
 import com.almagems.mineraider.data.VertexBuffer;
 import com.almagems.mineraider.objects.Model;
 import com.almagems.mineraider.shaders.ColorShader;
@@ -30,9 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Visuals {	
-	private static Visuals instance = null;
-
+public class Visuals {
     public static float screenWidth;
     public static float screenHeight;
     public static float aspectRatio;
@@ -63,7 +64,8 @@ public class Visuals {
 	public final float[] normalMatrix = new float[16];
 	
 		
-	// textures	
+	// textures
+	public int textureLoading;
 	public int textureGems;
 	public int textureCart;
 	public int textureRailRoad;
@@ -80,9 +82,7 @@ public class Visuals {
 	public int texturePickAxe;
     public int textureFonts;
     public int textureEditorButtons;
-    public int textureTunnels;
     public int textureHudPauseButton;
-
 
 
     // models
@@ -135,18 +135,8 @@ public class Visuals {
 	private float[] mLightModelMatrix = new float[16];
 
     // ctor
-	private Visuals() {
-		System.out.println("Visuals ctor...");		
-	}	
-	
-	public static Visuals getInstance() {
-		if (instance == null) {
-			instance = new Visuals(); 
-		}
-		return instance;
-	}
-	
-	public void init(Context context) {
+	public Visuals(Context context) {
+        System.out.println("Visuals ctor...");
 		this.context = context;
 	}
 	
@@ -160,12 +150,12 @@ public class Visuals {
 	private void loadShaders() throws Exception {
 		System.out.println("loadShaders - BEGIN");
 					
-		textureShader = new TextureShader(context);
-		colorShader = new ColorShader(context);
-		dirLightShader = new DirLightShader(context);
-		particleShader = new ParticleShader(context);
-		normalColorShader = new NormalColorShader(context);
-		pointLightShader = new PointLightShader(context);
+		textureShader = new TextureShader(this);
+		colorShader = new ColorShader(this);
+		dirLightShader = new DirLightShader(this);
+		particleShader = new ParticleShader(this);
+		normalColorShader = new NormalColorShader(this);
+		pointLightShader = new PointLightShader(this);
 
 		System.out.println("loadShaders - END");
 	}
@@ -348,6 +338,7 @@ public class Visuals {
     }
 
 	public void loadTextures() {
+		textureLoading = loadTexture(R.drawable.almagems_android_loading);
 		textureGems = loadTexture(R.drawable.gems_textures);
 		textureCart = loadTexture(R.drawable.cart_texture);
 		textureRailRoad = loadTexture(R.drawable.railroad_texture);

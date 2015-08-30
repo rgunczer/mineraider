@@ -2,9 +2,10 @@ package com.almagems.mineraider.menu;
 
 import static android.opengl.GLES20.*;
 
-import com.almagems.mineraider.ClassicSingleton;
+import com.almagems.mineraider.singletons.ClassicSingleton;
 import com.almagems.mineraider.EffectAnims.Fade;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.GUI.ProgressBarControl;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.util.Geometry;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
@@ -19,7 +20,7 @@ import static android.opengl.GLES20.glBlendFunc;
 import static android.opengl.GLES20.glEnable;
 
 public class Menu {
-    public static Visuals visuals;
+    public Visuals visuals;
 
     public enum MenuOptions {
         None,
@@ -37,11 +38,11 @@ public class Menu {
     private ArrayList<MenuGroup> groups = new ArrayList<MenuGroup>(9);
     private MenuGroup currentGroup;
 
-    private final Fade fade = new Fade();
+    private Fade fade;
 
     public Menu(Visuals visuals) {
         System.out.println("Menu ctor...");
-        Menu.visuals = visuals;
+        this.visuals = visuals;
     }
 
     public MenuOptions getSelectedMenuOption() {
@@ -64,6 +65,8 @@ public class Menu {
         selectedMenuItem = null;
         selectedMenuOption = MenuOptions.None;
 
+        fade = new Fade(visuals);
+
         float sc;
         MenuGroup menuGroup;
         MenuItem menuItem;
@@ -74,14 +77,14 @@ public class Menu {
         sc = 1.76f;
 
         // main menu
-        menuGroup = new MenuGroup();
+        menuGroup = new MenuGroup(visuals);
         menuGroup.init("MainMenu");
 
-        MenuGameTitleAnim gameTitleAnim = new MenuGameTitleAnim();
+        MenuGameTitleAnim gameTitleAnim = new MenuGameTitleAnim(visuals);
         gameTitleAnim.init(sc);
         menuGroup.add(gameTitleAnim);
 
-        menuItem = new MenuItem();
+        menuItem = new MenuItem(visuals);
         rect = new Rectangle(447, 763+98, 277, 98);
         menuItem.init("Play", MenuOptions.Play, visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, aspect * 0.2f, 0f);
@@ -89,7 +92,7 @@ public class Menu {
         menuItem.setScale((rect.w / Visuals.referenceScreenWidth) * sc, (rect.h / Visuals.referenceScreenWidth) * sc, 1.0f);
         menuGroup.add(menuItem);
 
-        menuItem = new MenuItem();
+        menuItem = new MenuItem(visuals);
         rect = new Rectangle(0, 763+96, 447, 96);
         menuItem.init("Options", MenuOptions.Options, visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.05f, 0f);
@@ -97,7 +100,7 @@ public class Menu {
         menuItem.setScale((rect.w / Visuals.referenceScreenWidth) * sc, (rect.h / Visuals.referenceScreenWidth) * sc, 1.0f);
         menuGroup.add(menuItem);
 
-        menuItem = new MenuItem();
+        menuItem = new MenuItem(visuals);
         rect = new Rectangle(1625, 520+94, 301, 94);
         menuItem.init("Help", MenuOptions.Help, visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.3f, 0f);
@@ -111,12 +114,12 @@ public class Menu {
         currentGroup = menuGroup;
 
         // options
-        menuGroup = new MenuGroup();
+        menuGroup = new MenuGroup(visuals);
         menuGroup.init("Options");
 
 
         // back
-        menuItem = new MenuItem();
+        menuItem = new MenuItem(visuals);
         rect = new Rectangle(926, 520+94, 299, 94);
         menuItem.init("Back", MenuOptions.Back, visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
@@ -126,7 +129,7 @@ public class Menu {
         menuGroup.add(menuItem);
 
         // music
-        menuImage = new MenuImage();
+        menuImage = new MenuImage(visuals);
         rect = new Rectangle(724, 763+74, 207, 74);
         menuImage.init("music", visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.5f, 0f);
@@ -135,7 +138,7 @@ public class Menu {
         menuGroup.add(menuImage);
 
         // sound
-        menuImage = new MenuImage();
+        menuImage = new MenuImage(visuals);
         rect = new Rectangle(931, 763+75, 214, 75);
         menuImage.init("sound", visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.1f, 0f);
@@ -145,21 +148,28 @@ public class Menu {
 
 
         // music volume control
-        menuGroup.musicVolumeControl = new MenuVolumeControl("Music");
+        MyColor colorBody = new MyColor(143f/255f, 127f/255f, 96f/255f, 1f);
+        MyColor colorFrame = new MyColor(10f/255f, 12f/255f, 9f/255f, 1f);
+
+        float volumeControlHeight = 0.05f;
+        float volumeControlBorder = 0.02f;
+
+
+        menuGroup.musicVolumeControl = new ProgressBarControl(visuals, "Music", colorFrame, colorBody, volumeControlHeight, volumeControlBorder);
         menuGroup.musicVolumeControl.init(aspect * 0.35f);
 
-        menuGroup.soundVolumeControl = new MenuVolumeControl("Sound");
+        menuGroup.soundVolumeControl = new ProgressBarControl(visuals, "Sound", colorFrame, colorBody, volumeControlHeight, volumeControlBorder);
         menuGroup.soundVolumeControl.init(-aspect * 0.06f);
 
         groups.add(menuGroup);
 
 
         // Help
-        menuGroup = new MenuGroup();
+        menuGroup = new MenuGroup(visuals);
         menuGroup.name = "Help";
 
         // credits
-        menuItem = new MenuItem();
+        menuItem = new MenuItem(visuals);
         rect = new Rectangle(1225, 520+98, 400, 98);
         menuItem.init("Credits", MenuOptions.Back, visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, aspect * 0.2f, 0f);
@@ -169,7 +179,7 @@ public class Menu {
         menuGroup.add(menuItem);
 
         // about
-        menuItem = new MenuItem();
+        menuItem = new MenuItem(visuals);
         rect = new Rectangle(591, 520+96, 335, 96);
         menuItem.init("About", MenuOptions.Back, visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.1f, 0f);
@@ -179,7 +189,7 @@ public class Menu {
         menuGroup.add(menuItem);
 
         // back
-        menuItem = new MenuItem();
+        menuItem = new MenuItem(visuals);
         rect = new Rectangle(926, 520+94, 299, 94);
         menuItem.init("Back", MenuOptions.Back, visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
@@ -192,11 +202,11 @@ public class Menu {
 
 
         // credits
-        menuGroup = new MenuGroup();
+        menuGroup = new MenuGroup(visuals);
         menuGroup.name = "Credits";
 
         // credits image
-        menuImage = new MenuImage();
+        menuImage = new MenuImage(visuals);
         rect = new Rectangle(604, 0+387, 493, 387);
         menuImage.init("credits", visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.2f, 0f);
@@ -205,7 +215,7 @@ public class Menu {
         menuGroup.add(menuImage);
 
         // back
-        menuItem = new MenuItem();
+        menuItem = new MenuItem(visuals);
         rect = new Rectangle(926, 520+94, 299, 94);
         menuItem.init("Back", MenuOptions.Back, visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
@@ -218,11 +228,11 @@ public class Menu {
 
 
         // about
-        menuGroup = new MenuGroup();
+        menuGroup = new MenuGroup(visuals);
         menuGroup.name = "About";
 
         // about image
-        menuImage = new MenuImage();
+        menuImage = new MenuImage(visuals);
         rect = new Rectangle(0, 0+520, 604, 520);
         menuImage.init("about", visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.2f, 0f);
@@ -231,7 +241,7 @@ public class Menu {
         menuGroup.add(menuImage);
 
         // back
-        menuItem = new MenuItem();
+        menuItem = new MenuItem(visuals);
         rect = new Rectangle(926, 520+94, 299, 94);
         menuItem.init("Back", MenuOptions.Back, visuals.textureMenuItems, visuals.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);

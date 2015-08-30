@@ -6,12 +6,11 @@ import java.util.ArrayList;
 
 import android.graphics.Color;
 
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.util.Vector;
 
 
 public class ParticleManager {
-	private static ParticleManager instance = null;
 
     private final Visuals visuals;
 	private long globalStartTime;
@@ -26,17 +25,10 @@ public class ParticleManager {
 	private ParticleSystem particleSystem;
 	
 	// ctor
-	private ParticleManager() {
-        visuals = Visuals.getInstance();
+	public ParticleManager(Visuals visuals) {
+        this.visuals = visuals;
 	}
-		
-	public static ParticleManager getInstance() {
-		if (instance == null) {
-			instance = new ParticleManager(); 
-		}
-		return instance;
-	}	
-	
+
 	public void init() {
 		int color = Color.rgb(255, 255, 255);
 		

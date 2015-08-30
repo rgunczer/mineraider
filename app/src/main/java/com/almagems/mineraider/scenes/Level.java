@@ -1,9 +1,10 @@
 package com.almagems.mineraider.scenes;
 
+// opengl
 import static android.opengl.GLES20.*;
 import static android.opengl.Matrix.*;
-import static com.almagems.mineraider.Constants.*;
 
+// java
 import java.util.ArrayList;
 
 // box2d
@@ -13,30 +14,31 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
 
-import com.almagems.mineraider.ClassicSingleton;
+// mine
+import com.almagems.mineraider.singletons.ClassicSingleton;
+import com.almagems.mineraider.EffectAnims.Fade;
 import com.almagems.mineraider.GemPosition;
 import com.almagems.mineraider.HUD;
-import com.almagems.mineraider.Match3;
+import com.almagems.mineraider.Match3.Match3;
 import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.RockData;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.anims.AnimationManager;
 import com.almagems.mineraider.anims.PopAnimation;
+import com.almagems.mineraider.loading.Loading;
 import com.almagems.mineraider.menu.Menu;
 import com.almagems.mineraider.objects.EdgeDrawer;
 import com.almagems.mineraider.objects.MineCart;
 import com.almagems.mineraider.objects.Model;
-import com.almagems.mineraider.objects.Quad;
-import com.almagems.mineraider.particlesystem.ParticleManager;
 import com.almagems.mineraider.util.Geometry;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Ray;
-import com.almagems.mineraider.util.Rectangle;
-import com.almagems.mineraider.util.Vector;
+
+import static com.almagems.mineraider.Constants.*;
 
 
-public class Level extends Scene {
+public class Level {
 
 	private enum SwipeDir {
 		SwipeNone,
@@ -47,11 +49,24 @@ public class Level extends Scene {
 	}
 
     public enum GameState {
+		Loading,
         Menu,
         Playing,
     }
 
-    private final Menu menu;
+
+    protected float touchDownX;
+    protected float touchDownY;
+
+    protected Fade _fade;
+
+    private Visuals visuals;
+    protected boolean initialized = false;
+
+    protected ClassicSingleton singleton;
+
+    private Menu menu;
+    private Loading loading;
 
 	private SwipeDir swipeDir = SwipeDir.SwipeNone;
 
@@ -73,24 +88,35 @@ public class Level extends Scene {
 	public ArrayList<MineCart> mineCarts = new ArrayList<MineCart>();
 	
 	private AnimationManager animManager;
-	private ParticleManager particleManager;
 
 	private ArrayList<RockData> rocks = new ArrayList<RockData>();
 	
 	private PositionInfo _pos = new PositionInfo();
-	
+
+    // ctor
 	public Level() {
-        gameState = GameState.Menu;
+        gameState = GameState.Loading;
+    }
+
+    protected void initFadeOut() {
+        _fade.init(new MyColor(0f, 0f, 0f, 0f), new MyColor(0f, 0f, 0f, 1f));
+    }
+
+    protected void initFadeIn() {
+        _fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
+    }
+
+    public void init(ClassicSingleton singleton) {
+        this.singleton = singleton;
+        visuals = singleton.visuals;
 
 		physics = new Physics();
-
 		animManager = new AnimationManager();
-		match3 = new Match3(8, animManager, ClassicSingleton.getInstance().scoreCounter);
+		match3 = new Match3(8, animManager, singleton.scoreCounter);
 
 		initBoardGeometry();		
 
-		particleManager = ParticleManager.getInstance();
-		particleManager.init();
+		singleton.particleManager.init();
 				
 		//physics.addEdge(-13.5f, -21.5f,  13.5f, -21.5f); // bottom
 		physics.addEdge(-13.0f, -7.0f, -13.5f, 20.0f); // left
@@ -104,47 +130,56 @@ public class Level extends Scene {
 		// sin
 		physics.addBoxStatic(0.0f, -19.7f, 0f, 70.0f, 0.5f);
 
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-
-
 		float x = cartX; //-20f;
 		float y = cartY; //-15.7f;
 		MineCart mineCart;
 		
-		mineCart = new MineCart(physics, x, y);
+		mineCart = new MineCart(physics, x, y, visuals);
         mineCart.z = 1f;
 		mineCarts.add(mineCart);
 		singleton.cart1 = mineCart;
 
 		x = cartX2nd;
-		mineCart = new MineCart(physics, x, y);
+		mineCart = new MineCart(physics, x, y, visuals);
         mineCart.z = 1f;
 		mineCarts.add(mineCart);
 		singleton.cart2 = mineCart;
 
         PopAnimation.physics = physics;
 
-        menu = new Menu(Visuals.getInstance());
+        loading = new Loading(visuals);
+        menu = new Menu(visuals);
+
+        _fade = new Fade(visuals);
 	}
-	
-	@Override
+
 	public void surfaceChanged(int width, int height) {
 		visuals.setProjectionMatrix3D();
 
-        HUD hud = ClassicSingleton.getInstance().hud;
+        HUD hud = singleton.hud;
         hud.init();
-        hud.updateScore(ClassicSingleton.getInstance().getScore());
+        hud.updateScore(singleton.getScore());
 
+        loading.init();
         menu.init();
-	}
 
-    @Override
-    public void prepare() {
-        super.prepare();
+        initialized = true;
+
+
+
+
+
+
+
+
+
+
+
+        //initFadeIn();
+
 
         final float cartSpeed = -3f;
         MineCart cart;
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
 
         cart = singleton.cart1;
         cart.reposition(cartX, cartY);
@@ -161,36 +196,33 @@ public class Level extends Scene {
         match3.dumpBoardStat();
         match3.createInitialFallAnim();
 
-        // initialize hud with level number
-        singleton.hud.setLevelNumber(ClassicSingleton.getInstance().levelNumber);
-
         singleton.hud.reset();
     }
 
-	@Override
 	public void update() {
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-
         visuals.updateViewProjMatrix();
 
-        physics.update();
+        if (gameState == GameState.Loading) {
+            loading.update();
+            if (loading.done) {
+                gameState = GameState.Menu;
+                update();
+            }
+        } else {
+            physics.update();
+            match3.update();
 
-        match3.update();
+            singleton.hud.update();
+            singleton.hud.updateScore(singleton.scoreCounter.getScore());
 
-        singleton.hud.update();
-        singleton.hud.updateScore(singleton.scoreCounter.getScore());
-
-        switch (gameState) {
-            case Menu:
+            if (gameState == GameState.Menu) {
                 menu.update();
-				if ( menu.getSelectedMenuOption() == Menu.MenuOptions.Play ) {
+                if (menu.getSelectedMenuOption() == Menu.MenuOptions.Play) {
                     gameState = GameState.Playing;
-				}
-                break;
-
-            case Playing:
+                }
+            } else if (gameState == GameState.Playing) {
                 updateInPlaying();
-                break;
+            }
         }
     }
 
@@ -198,15 +230,26 @@ public class Level extends Scene {
 
     }
 
-	@Override
 	public void draw() {
-        drawCommon();
-        drawPlaying();
+        if (gameState == GameState.Loading) {
+            loading.draw();
+        } else {
+            drawCommon();
+            drawPlaying();
 
-		if (gameState == GameState.Menu) {
-            menu.draw();
-		}
+            if (gameState == GameState.Menu) {
+                menu.draw();
+            }
+        }
 	}
+
+    protected void drawFade() {
+        //if (!_fade.done) {
+        visuals.bindNoTexture();
+        _fade.update();
+        _fade.draw();
+        //}
+    }
 
     private void drawCommon() {
         visuals.setProjectionMatrix3D();
@@ -265,9 +308,8 @@ public class Level extends Scene {
 		//drawPickAxes();
 
 //        drawPhysics();
-		particleManager.draw();
-
-        ClassicSingleton.getInstance().hud.draw();
+		singleton.particleManager.draw();
+        singleton.hud.draw();
 
         //visuals.setProjectionMatrix2D();
         //super.drawFade();
@@ -276,16 +318,19 @@ public class Level extends Scene {
         visuals.setProjectionMatrix3D();
         visuals.updateViewProjMatrix();
 	}
-	
-	@Override
+
 	public void handleTouchPress(float normalizedX, float normalizedY) {
         switch (gameState) {
+            case Playing:
+                handleTouchPressOnPlaying(normalizedX, normalizedY);
+                break;
+
             case Menu:
                 menu.handleTouchPress(normalizedX, normalizedY);
                 break;
 
-            case Playing:
-                handleTouchPressOnPlaying(normalizedX, normalizedY);
+            case Loading:
+                gameState = GameState.Menu; // TODO: remove later
                 break;
         }
     }
@@ -328,8 +373,7 @@ public class Level extends Scene {
             }
         }
 	}
-	
-	@Override
+
 	public void handleTouchDrag(float normalizedX, float normalizedY) {
 
         switch (gameState) {
@@ -381,7 +425,6 @@ public class Level extends Scene {
 		}
 	}
 
-	@Override
 	public void handleTouchRelease(float normalizedX, float normalizedY) {
 		if (!match3.isAnimating) {
 			if (match3.firstSelected != null && swipeDir != SwipeDir.SwipeNone) {
@@ -686,7 +729,6 @@ public class Level extends Scene {
 	}
 
     void drawGems() {
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
         singleton.batchDrawer.begin();
         singleton.batchDrawer.add(match3);
         singleton.batchDrawer.add(animManager);
@@ -901,5 +943,6 @@ public class Level extends Scene {
 		for (int i = 0; i < size; ++i) {
 			mineCarts.get(i).draw();
 		}
-	}	
+	}
+
 }

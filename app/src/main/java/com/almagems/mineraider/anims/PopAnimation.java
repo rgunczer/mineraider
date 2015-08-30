@@ -9,6 +9,7 @@ import com.almagems.mineraider.Constants;
 import com.almagems.mineraider.GemPosition;
 import com.almagems.mineraider.Physics;
 import com.almagems.mineraider.particlesystem.ParticleManager;
+import com.almagems.mineraider.singletons.ClassicSingleton;
 
 public class PopAnimation extends BaseAnimation {
 	
@@ -209,12 +210,11 @@ public class PopAnimation extends BaseAnimation {
                 break;
 
             case Blow: {
-                ParticleManager particleManager = ParticleManager.getInstance();
                 int size = list.size();
                 GemPosition gp;
                 for(int i = 0; i < size; ++i) {
                     gp = list.get(i);
-                    particleManager.addParticleEmitterAt(gp.pos.tx, gp.pos.ty, gp.type);
+                    ClassicSingleton.getInstance().particleManager.addParticleEmitterAt(gp.pos.tx, gp.pos.ty, gp.type);
                 }
                 state = State.Pop;
             }

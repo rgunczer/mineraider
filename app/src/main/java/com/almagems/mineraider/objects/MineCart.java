@@ -15,10 +15,10 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.joints.WheelJoint;
 import org.jbox2d.dynamics.joints.WheelJointDef;
 
-import com.almagems.mineraider.ClassicSingleton;
+import com.almagems.mineraider.singletons.ClassicSingleton;
 import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Physics;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.util.MyColor;
 
 
@@ -49,9 +49,12 @@ public class MineCart {
 	int collisionStopTimer = 0;
 	
 	private PositionInfo _op = new PositionInfo();
-	
-	public MineCart(Physics physics, float x, float y) {
-        this.physics = physics;
+
+	private Visuals visuals;
+
+	public MineCart(Physics physics, float x, float y, Visuals visuals) {
+        this.visuals = visuals;
+		this.physics = physics;
 
 		--collisionGroupIndexCounter;
 		collisionGroupIndex = collisionGroupIndexCounter;
@@ -269,8 +272,6 @@ public class MineCart {
 	}
 	
 	private void drawCartFixture() {
-		Visuals visuals = Visuals.getInstance();
-		
 		Vec2 pos = cart.getPosition();
 		float angle = cart.getAngle();
 		float degree = (float) Math.toDegrees(angle);
@@ -322,7 +323,6 @@ public class MineCart {
     public void draw() {
         update();
 
-        Visuals visuals = Visuals.getInstance();
         _op.scale(1f, 1f, 1f);
 
         visuals.dirLightShader.setTexture(visuals.textureCart);
@@ -339,7 +339,6 @@ public class MineCart {
     }
 
 	private void drawCart() {
-        Visuals visuals = Visuals.getInstance();
         Vec2 pos = cart.getPosition();
         float degree = (float) Math.toDegrees(cart.getAngle());
 
@@ -351,7 +350,6 @@ public class MineCart {
     }
 
     private void drawWheels() {
-        Visuals visuals = Visuals.getInstance();
         Vec2 pos;
         float degree;
 

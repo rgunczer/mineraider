@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.almagems.mineraider.singletons.ClassicSingleton;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -59,52 +60,51 @@ public class MineRaiderActivity extends Activity {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				
-				if (event != null) {
-                    System.out.println("Touch Event: " + event.getX() + ", " + event.getY() );
+            if (event != null) {
+                System.out.println("Touch Event: " + event.getX() + ", " + event.getY() );
 
-					// convert touch coordinates into normalized device
-					// coordinates, keeping in mind that Android's Y coordinates are inverted
-					final float normalizedX = (event.getX() / (float) v.getWidth()) * 2 - 1;
-					final float normalizedY = -((event.getY() / (float)v.getHeight() ) * 2 - 1);
+                // convert touch coordinates into normalized device
+                // coordinates, keeping in mind that Android's Y coordinates are inverted
+                final float normalizedX = (event.getX() / (float) v.getWidth()) * 2 - 1;
+                final float normalizedY = -((event.getY() / (float)v.getHeight() ) * 2 - 1);
 
-					if (event.getAction() == MotionEvent.ACTION_DOWN) {
-						System.out.println("Action Down... " + normalizedX + ", " + normalizedY);
-						glSurfaceView.queueEvent(new Runnable() {
-							
-							@Override
-							public void run() {
-								renderer.handleTouchPress(normalizedX, normalizedY);								
-							}
-						});
-					} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-						//System.out.println("Action Move...");
-						glSurfaceView.queueEvent(new Runnable() {
-							
-							@Override
-							public void run() {
-								renderer.handleTouchDrag(normalizedX, normalizedY);								
-							}
-						});
-					} else if (event.getAction() == MotionEvent.ACTION_UP) {
-						//System.out.println("Action Up...");						
-						glSurfaceView.queueEvent(new Runnable() {
-							
-							@Override
-							public void run() {
-								renderer.handleTouchRelease(normalizedX, normalizedY);
-							}							
-						});
-					}
-					
-					return true;
-				} else {
-					return false;				
-				}
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    System.out.println("Action Down... " + normalizedX + ", " + normalizedY);
+                    glSurfaceView.queueEvent(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            renderer.handleTouchPress(normalizedX, normalizedY);
+                        }
+                    });
+                } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    //System.out.println("Action Move...");
+                    glSurfaceView.queueEvent(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            renderer.handleTouchDrag(normalizedX, normalizedY);
+                        }
+                    });
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    //System.out.println("Action Up...");
+                    glSurfaceView.queueEvent(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            renderer.handleTouchRelease(normalizedX, normalizedY);
+                        }
+                    });
+                }
+
+                return true;
+            } else {
+                return false;
+            }
 			}
 		});
 
-        //initAds();
+        initAds();
 	}
 	
 	private void initAds() {
@@ -174,12 +174,16 @@ public class MineRaiderActivity extends Activity {
 		if (adView != null) {
 			adView.pause();
 		}
-		super.onPause();		
+
+		super.onPause();
+
 		if (rendererSet) {
             glSurfaceView.onPause();
         }
 
-        ClassicSingleton.getInstance().savePreferences();
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+        singleton.savePreferences();
+        singleton.pauseAudio();
 	}
 	
 	@Override
@@ -187,11 +191,15 @@ public class MineRaiderActivity extends Activity {
 		if (adView != null) {
 			adView.resume();
 		}
-		super.onResume();		
+
+		super.onResume();
+
 		if (rendererSet) {
 			glSurfaceView.onResume();
 		}
-	}
 
+        ClassicSingleton singleton = ClassicSingleton.getInstance();
+        singleton.resumeAudio();
+	}
 
 }

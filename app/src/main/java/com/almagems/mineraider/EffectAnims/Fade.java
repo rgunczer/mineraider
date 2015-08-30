@@ -1,7 +1,7 @@
 package com.almagems.mineraider.EffectAnims;
 
 import com.almagems.mineraider.PositionInfo;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Rectangle;
@@ -24,8 +24,8 @@ public class Fade extends EffectAnim {
     public Rectangle rect;
 
     // ctor
-    public Fade() {
-        visuals = Visuals.getInstance();
+    public Fade(Visuals visuals) {
+        this.visuals = visuals;
     }
 
     public void init(MyColor from, MyColor to) { // do we need speed param!? for how fast the fading should occur

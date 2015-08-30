@@ -8,6 +8,7 @@ import android.content.Context;
 import com.almagems.mineraider.R;
 import com.almagems.mineraider.data.VertexArray;
 import com.almagems.mineraider.util.MyColor;
+import com.almagems.mineraider.visuals.Visuals;
 
 
 public class ColorShader extends BaseShader {
@@ -27,8 +28,8 @@ public class ColorShader extends BaseShader {
 	// attribute locations
 	private final int aPositionLocation;
 		
-	public ColorShader(Context context) throws Exception {
-		super(context, R.raw.color_vertex_shader, R.raw.color_fragment_shader);
+	public ColorShader(Visuals visuals) throws Exception {
+		super(visuals, R.raw.color_vertex_shader, R.raw.color_fragment_shader);
 		
 		// retrieve uniform locations for the shader program
 		uMatrixLocation = glGetUniformLocation(program, U_MATRIX);

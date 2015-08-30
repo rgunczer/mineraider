@@ -4,7 +4,7 @@ import static android.opengl.GLES20.*;
 import android.content.Context;
 
 import com.almagems.mineraider.R;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.util.MyColor;
 import com.almagems.mineraider.util.Vector;
 
@@ -21,8 +21,8 @@ public class NormalColorShader extends BaseShader {
 	private final int aPositionLocation;
 	private final int aNormalLocation;
 		
-	public NormalColorShader(Context context) throws Exception {
-		super(context, R.raw.normal_color_vertex_shader, R.raw.normal_color_fragment_shader);
+	public NormalColorShader(Visuals visuals) throws Exception {
+		super(visuals, R.raw.normal_color_vertex_shader, R.raw.normal_color_fragment_shader);
 		
 		// retrieve uniform locations for the shader program
 		uMatrixLocation = glGetUniformLocation(program, U_MATRIX);
@@ -38,7 +38,7 @@ public class NormalColorShader extends BaseShader {
 	
 	public void setUniforms(float[] matrix, MyColor color, MyColor lightColor, Vector lightDir) {
 		glUniformMatrix4fv(uMatrixLocation, 1, false, matrix, 0);
-		glUniformMatrix4fv(uNormalMatrixLocation, 1, false, Visuals.getInstance().normalMatrix, 0);
+		glUniformMatrix4fv(uNormalMatrixLocation, 1, false, visuals.normalMatrix, 0);
 		glUniform4f(uColorLocation, color.r, color.g, color.b, 1f);
 		glUniform3f(uLightColorLocation, lightColor.r, lightColor.g, lightColor.b);
 		glUniform3f(uLightDirectionLocation, lightDir.x, lightDir.y, lightDir.z);		

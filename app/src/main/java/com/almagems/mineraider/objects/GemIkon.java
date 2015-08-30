@@ -1,7 +1,7 @@
 package com.almagems.mineraider.objects;
 
 import com.almagems.mineraider.PositionInfo;
-import com.almagems.mineraider.Visuals;
+import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.data.VertexArray;
 
 public class GemIkon {

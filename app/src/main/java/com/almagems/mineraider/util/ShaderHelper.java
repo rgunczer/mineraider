@@ -8,15 +8,15 @@ public class ShaderHelper {
 
 	private static final String TAG = "ShaderHelper";
 	
-	public static int compileVertexShader(String shaderCode) throws Exception {
+	public static int compileVertexShader(String shaderCode) { // throws Exception {
 		return compileShader(GL_VERTEX_SHADER, shaderCode);
 	}
 	
-	public static int compileFragmentShader(String shaderCode) throws Exception {
+	public static int compileFragmentShader(String shaderCode) { //throws Exception {
 		return compileShader(GL_FRAGMENT_SHADER, shaderCode);
 	}
 	
-	private static int compileShader(int type, String shaderCode) throws Exception {
+	private static int compileShader(int type, String shaderCode) { //throws Exception {
 		final int shaderObjectId = glCreateShader(type);
 		if (shaderObjectId == 0) {
 			if (LoggerConfig.ON) {
@@ -39,7 +39,7 @@ public class ShaderHelper {
 			glDeleteShader(shaderObjectId);
 			if (LoggerConfig.ON) {
 				Log.w(TAG, "Compilation of shader failed!");
-				throw new Exception("Shader compilation failed!");				
+				//throw new Exception("Shader compilation failed!");
 			}
 			return 0;
 		}
@@ -87,7 +87,7 @@ public class ShaderHelper {
 		return validateStatus[0] != 0;
 	}
 	
-	public static int buildProgram(String vertexShaderSource, String fragmentShaderSource) throws Exception {
+	public static int buildProgram(String vertexShaderSource, String fragmentShaderSource) { // throws Exception {
 		int program;
 				
 		// compile the shaders

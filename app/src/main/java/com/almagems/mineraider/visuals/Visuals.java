@@ -139,19 +139,31 @@ public class Visuals {
         System.out.println("Visuals ctor...");
 		this.context = context;
 	}
-	
+
+/*
 	public void loadAssets() throws Exception {
 		loadModels();
 		loadShaders();
 		loadTextures();
-        initFontDesc();
+        loadFonts();
 	}	
-	
-	private void loadShaders() throws Exception {
+*/
+
+    public void loadStartupAssets() throws Exception {
+        System.out.println("Load startup Assets...");
+
+        // shader
+        textureShader = new TextureShader(this);
+        colorShader = new ColorShader(this);
+
+        // texture
+        textureLoading = loadTexture(R.drawable.almagems_android_loading);
+    }
+
+	public void loadShaders() { //throws Exception {
 		System.out.println("loadShaders - BEGIN");
-					
-		textureShader = new TextureShader(this);
-		colorShader = new ColorShader(this);
+
+
 		dirLightShader = new DirLightShader(this);
 		particleShader = new ParticleShader(this);
 		normalColorShader = new NormalColorShader(this);
@@ -160,37 +172,37 @@ public class Visuals {
 		System.out.println("loadShaders - END");
 	}
 	
-	private void loadModels() {	
-		ModelLoader ml;
+	public void loadModelsPart01() {
+        ModelLoader ml;
 
         //  gems
-		ml = new ModelLoader();			
-		ml.init(context, R.drawable.gem0, "Gem0");
-		gems[GEM_TYPE_0] = new Model(ml);
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem0, "Gem0");
+        gems[GEM_TYPE_0] = new Model(ml);
 
-		ml = new ModelLoader(); 
-		ml.init(context, R.drawable.gem1, "Gem1");
-		gems[GEM_TYPE_1] = new Model(ml);
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem1, "Gem1");
+        gems[GEM_TYPE_1] = new Model(ml);
 
-		ml = new ModelLoader(); 
-		ml.init(context, R.drawable.gem2, "Gem2");
-		gems[GEM_TYPE_2] = new Model(ml);
-		
-		ml = new ModelLoader(); 
-		ml.init(context, R.drawable.gem3, "Gem3");
-		gems[GEM_TYPE_3] = new Model(ml);
-		
-		ml = new ModelLoader(); 
-		ml.init(context, R.drawable.gem4, "Gem4");
-		gems[GEM_TYPE_4] = new Model(ml);
-		
-		ml = new ModelLoader(); 
-		ml.init(context, R.drawable.gem5, "Gem5");
-		gems[GEM_TYPE_5] = new Model(ml);
-		
-		ml = new ModelLoader(); 
-		ml.init(context, R.drawable.gem6, "Gem6");
-		gems[GEM_TYPE_6] = new Model(ml);
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem2, "Gem2");
+        gems[GEM_TYPE_2] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem3, "Gem3");
+        gems[GEM_TYPE_3] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem4, "Gem4");
+        gems[GEM_TYPE_4] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem5, "Gem5");
+        gems[GEM_TYPE_5] = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.gem6, "Gem6");
+        gems[GEM_TYPE_6] = new Model(ml);
 
         // plates
         ml = new ModelLoader();
@@ -220,60 +232,67 @@ public class Visuals {
         ml = new ModelLoader();
         ml.init(context, R.drawable.gem6_plate, "Gem6Plate");
         gemsPlates[GEM_TYPE_6] = new Model(ml);
+    }
 
+    public void loadModelsPart02() {
+        ModelLoader ml;
 
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.marker, "Marker");
-		marker = new Model(ml);
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.marker, "Marker");
+        marker = new Model(ml);
 
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.hint, "Hint");
-		hint = new Model(ml);
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.cart, "MineCart");
-		mineCart = new Model(ml);
-				
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.cart_wheel, "MineCartWheel");
-		mineCartWheel = new Model(ml);
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.railroad, "RailRoad");
-		railroad = new Model(ml);
-				
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.mine, "Mine");
-		mine = new Model(ml);
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.floor, "Floor");
-		floor = new Model(ml);
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.wall, "Wall");
-		wall = new Model(ml);
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.pillar, "Pillar");
-		pillar = new Model(ml);		
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.crate, "Crate");
-		crate = new Model(ml);
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.soil, "Soil");
-		soil = new Model(ml);
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.wheel, "Wheel");
-		wheel = new Model(ml);
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.hint, "Hint");
+        hint = new Model(ml);
 
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.beam, "Beam");
-		beam = new Model(ml);
-				
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.cart, "MineCart");
+        mineCart = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.cart_wheel, "MineCartWheel");
+        mineCartWheel = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.railroad, "RailRoad");
+        railroad = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.mine, "Mine");
+        mine = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.floor, "Floor");
+        floor = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.wall, "Wall");
+        wall = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.pillar, "Pillar");
+        pillar = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.crate, "Crate");
+        crate = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.soil, "Soil");
+        soil = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.wheel, "Wheel");
+        wheel = new Model(ml);
+
+        ml = new ModelLoader();
+        ml.init(context, R.drawable.beam, "Beam");
+        beam = new Model(ml);
+    }
+
+    public void loadModelsPart03() {
+        ModelLoader ml;
+
 		ml = new ModelLoader();
 		ml.init(context, R.drawable.rock0, "Rock0");
 		rock0 = new Model(ml);
@@ -337,24 +356,29 @@ public class Visuals {
         return null;
     }
 
-	public void loadTextures() {
-		textureLoading = loadTexture(R.drawable.almagems_android_loading);
-		textureGems = loadTexture(R.drawable.gems_textures);
-		textureCart = loadTexture(R.drawable.cart_texture);
-		textureRailRoad = loadTexture(R.drawable.railroad_texture);
-		textureParticle = loadTexture(R.drawable.smokeparticle);
-		textureFloor = loadTexture(R.drawable.floor_texture);
-		textureWall = loadTexture(R.drawable.wall_texture);
-		texturePillar = loadTexture(R.drawable.pillar_texture);
-		textureCrate = loadTexture(R.drawable.crate_texture);
-		textureSoil = loadTexture(R.drawable.soil_texture);
-		textureWheel = loadTexture(R.drawable.wheel_texture);
-		textureBeam = loadTexture(R.drawable.beam_texture);
-		textureCliff142 = loadTexture(R.drawable.cliffs0142);
+	public void loadTexturesPart01() {
+        textureGems = loadTexture(R.drawable.gems_textures);
+        textureCart = loadTexture(R.drawable.cart_texture);
+        textureRailRoad = loadTexture(R.drawable.railroad_texture);
+        textureParticle = loadTexture(R.drawable.smokeparticle);
+        textureFloor = loadTexture(R.drawable.floor_texture);
+        textureWall = loadTexture(R.drawable.wall_texture);
+    }
+
+    public void loadTexturesPart02() {
+        texturePillar = loadTexture(R.drawable.pillar_texture);
+        textureCrate = loadTexture(R.drawable.crate_texture);
+        textureSoil = loadTexture(R.drawable.soil_texture);
+        textureWheel = loadTexture(R.drawable.wheel_texture);
+        textureBeam = loadTexture(R.drawable.beam_texture);
+        textureCliff142 = loadTexture(R.drawable.cliffs0142);
+    }
+
+    public void loadTexturesPart03() {
 		texturePickAxe = loadTexture(R.drawable.pickaxe_texture);
         textureFonts = loadTexture(R.drawable.fontsandroid);
         textureEditorButtons = loadTexture(R.drawable.editor_buttons);
-        textureHudPauseButton = loadTexture(R.drawable.hud_pause_button_texture);
+        textureHudPauseButton = loadTexture(R.drawable.hud_pause_button);
 		textureMenuItems = loadTexture(R.drawable.menu_items);
 	}
 
@@ -623,7 +647,7 @@ public class Visuals {
 		return Color.rgb(255, 255, 255);		
 	}
 
-    private void initFontDesc() {
+    public void loadFonts() {
         // irrlicht font maker control points to text format:
         // rawFonts.add( new FontData('%char%', new Rectangle(%left%f, %bottom%f, %width%f, %height%f) ) );
         final ArrayList<FontData> rawFonts = new ArrayList<FontData>(100);

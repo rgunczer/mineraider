@@ -19,7 +19,7 @@ public class PointLightShader extends BaseShader {
 	private final int aNormalLocation;
 	private final int aTextureCoordinatesLocation;		
 	
-	public PointLightShader(Visuals visuals) throws Exception {
+	public PointLightShader(Visuals visuals) { // throws Exception {
 		super(visuals, R.raw.point_light_vertex_shader, R.raw.point_light_fragment_shader);
 		
 		// retrieve uniform locations for the shader program

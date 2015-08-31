@@ -26,8 +26,9 @@ public class MineRaiderRenderer implements Renderer {
 	public MineRaiderRenderer(Context context) {
 		this.context = context;
 		singleton = ClassicSingleton.getInstance();
+
+		singleton.activity = (MineRaiderActivity)context;
 		singleton.renderer = this;
-        singleton.activity = (MineRaiderActivity)context;
 	}
 
 	private void limitFrameRate(int framesPerSecond) {
@@ -60,8 +61,10 @@ public class MineRaiderRenderer implements Renderer {
 
         singleton.createVisuals();
 
+
 		try {		
-			singleton.visuals.loadAssets();
+			//singleton.visuals.loadAssets();
+            singleton.visuals.loadStartupAssets();
 		} catch (final Exception ex) {
 			Activity activity = (Activity) context;
 			activity.runOnUiThread(new Runnable() {
@@ -91,7 +94,7 @@ public class MineRaiderRenderer implements Renderer {
         ParticleShader.pointSize = width * 0.1f;
 
 		singleton.onSurfaceChanged(width, height);
-	}
+    }
 
 	@Override
 	public void onDrawFrame(GL10 glUnused) {

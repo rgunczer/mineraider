@@ -28,12 +28,12 @@ abstract class BaseShader {
 	protected final int program;
 	protected int uTextureUnitLocation;
 	
-	protected BaseShader(Visuals visuals, int vertexShaderResourceId, int fragmentShaderResourceId) throws Exception {
+	protected BaseShader(Visuals visuals, int vertexShaderResourceId, int fragmentShaderResourceId) { //throws Exception {
         this.visuals = visuals;
 		program = buildProgram(visuals.context, vertexShaderResourceId, fragmentShaderResourceId);
 	}
 	
-	private int buildProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) throws Exception {
+	private int buildProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) { //throws Exception {
 		//try {			
 			int program = ShaderHelper.buildProgram(TextResourceReader.readTextFileFromResource(context, vertexShaderResourceId),
 													TextResourceReader.readTextFileFromResource(context, fragmentShaderResourceId));

@@ -23,7 +23,7 @@ public class DirLightShader extends BaseShader {
 	private final int aTextureCoordinatesLocation;
 
 	
-	public DirLightShader(Visuals visuals) throws Exception {
+	public DirLightShader(Visuals visuals) { // throws Exception {
 		super(visuals, R.raw.dir_light_vertex_shader, R.raw.dir_light_fragment_shader);
 		
 		// retrieve uniform locations for the shader program

@@ -24,7 +24,7 @@ public class ParticleShader extends BaseShader {
     public static float pointSize = 10f;
 
 	// ctor
-	public ParticleShader(Visuals visuals) throws Exception {
+	public ParticleShader(Visuals visuals) { // throws Exception {
 		super(visuals, R.raw.particle_vertex_shader, R.raw.particle_fragment_shader);
 	
 		// retrieve uniform locations for the shader program

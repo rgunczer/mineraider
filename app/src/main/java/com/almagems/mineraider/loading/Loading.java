@@ -66,52 +66,51 @@ public class Loading {
         switch (loadingStepCounter) {
             case 0:
                 singleton.audio = new Audio();
-                singleton.audio.init(singleton.activity);
-                break;
-
-            case 1:
                 singleton.loadPreferences();
                 break;
 
-            case 2:
+            case 1:
+                singleton.visuals.loadTexturesPart01();
+                break;
 
+            case 2:
+                singleton.visuals.loadTexturesPart02();
                 break;
 
             case 3:
-
+                singleton.visuals.loadTexturesPart03();
                 break;
 
             case 4:
-
+                singleton.visuals.loadShaders();
                 break;
 
             case 5:
-
+                singleton.visuals.loadFonts();
                 break;
 
             case 6:
-
+                singleton.visuals.loadModelsPart01();
                 break;
 
             case 7:
-
+                singleton.visuals.loadModelsPart02();
                 break;
 
             case 8:
-
+                singleton.visuals.loadModelsPart03();
                 break;
 
             case 9:
-
+                singleton.level.createObjects();
                 break;
 
             case 10:
-
+                singleton.audio.init(singleton.activity);
                 break;
-
         }
 
-        SystemClock.sleep(500);
+        //SystemClock.sleep(500);
 
         // update loading progress based on loadingStepCounter
         progress.value = (float)loadingStepCounter / (float)maxLoadingStep;

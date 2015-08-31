@@ -28,7 +28,7 @@ public class ColorShader extends BaseShader {
 	// attribute locations
 	private final int aPositionLocation;
 		
-	public ColorShader(Visuals visuals) throws Exception {
+	public ColorShader(Visuals visuals) { //throws Exception {
 		super(visuals, R.raw.color_vertex_shader, R.raw.color_fragment_shader);
 		
 		// retrieve uniform locations for the shader program

@@ -16,7 +16,6 @@ import org.jbox2d.dynamics.Fixture;
 
 // mine
 import com.almagems.mineraider.singletons.ClassicSingleton;
-import com.almagems.mineraider.EffectAnims.Fade;
 import com.almagems.mineraider.GemPosition;
 import com.almagems.mineraider.HUD;
 import com.almagems.mineraider.Match3.Match3;
@@ -40,6 +39,12 @@ import static com.almagems.mineraider.Constants.*;
 
 public class Level {
 
+    public enum GameState {
+        Loading,
+        Menu,
+        Playing,
+    }
+
 	private enum SwipeDir {
 		SwipeNone,
 		SwipeLeft,
@@ -48,67 +53,53 @@ public class Level {
 		SwipeDown
 	}
 
-    public enum GameState {
-		Loading,
-        Menu,
-        Playing,
-    }
+    public GameState gameState;
 
+    private boolean initialized;
 
-    protected float touchDownX;
-    protected float touchDownY;
-
-    protected Fade _fade;
+    private float touchDownX;
+    private float touchDownY;
+    private SwipeDir swipeDir;
 
     private Visuals visuals;
-    protected boolean initialized = false;
-
-    protected ClassicSingleton singleton;
-
+    private ClassicSingleton singleton;
     private Menu menu;
     private Loading loading;
-
-	private SwipeDir swipeDir = SwipeDir.SwipeNone;
-
 	private Physics physics;
 	private Match3 match3;
 
-    public GameState gameState;
+    private final PositionInfo markerPos;
+	private float elapsedTimeSelMarkerAnim;
 
-	private float elapsed = 0f;
-
-    private final float cartX = -20f;
-    private final float cartX2nd = -30f;
-    private final float cartY = -15f;
-
-    private PositionInfo markerPos = new PositionInfo();
-
-	private boolean editorEnabled = false;
-	
-	public ArrayList<MineCart> mineCarts = new ArrayList<MineCart>();
-	
+	private boolean editorEnabled;
 	private AnimationManager animManager;
+	private final ArrayList<RockData> rocks;
+	private final PositionInfo pos;
 
-	private ArrayList<RockData> rocks = new ArrayList<RockData>();
-	
-	private PositionInfo _pos = new PositionInfo();
 
     // ctor
 	public Level() {
+        initialized = false;
+        swipeDir = SwipeDir.SwipeNone;
         gameState = GameState.Loading;
-    }
-
-    protected void initFadeOut() {
-        _fade.init(new MyColor(0f, 0f, 0f, 0f), new MyColor(0f, 0f, 0f, 1f));
-    }
-
-    protected void initFadeIn() {
-        _fade.init(new MyColor(0f, 0f, 0f, 1f), new MyColor(0f, 0f, 0f, 0f));
+        markerPos = new PositionInfo();
+        elapsedTimeSelMarkerAnim = 0f;
+        editorEnabled = false;
+        pos = new PositionInfo();
+        rocks = new ArrayList<RockData>();
     }
 
     public void init(ClassicSingleton singleton) {
         this.singleton = singleton;
         visuals = singleton.visuals;
+
+        loading = new Loading(visuals);
+    }
+
+    public void createObjects() {
+        if (initialized) {
+            return;
+        }
 
 		physics = new Physics();
 		animManager = new AnimationManager();
@@ -130,31 +121,29 @@ public class Level {
 		// sin
 		physics.addBoxStatic(0.0f, -19.7f, 0f, 70.0f, 0.5f);
 
-		float x = cartX; //-20f;
+        float cartX = -20f;
+        float cartX2nd = -30f;
+        float cartY = -15f;
+
+        float x = cartX; //-20f;
 		float y = cartY; //-15.7f;
 		MineCart mineCart;
 		
 		mineCart = new MineCart(physics, x, y, visuals);
         mineCart.z = 1f;
-		mineCarts.add(mineCart);
 		singleton.cart1 = mineCart;
 
 		x = cartX2nd;
 		mineCart = new MineCart(physics, x, y, visuals);
         mineCart.z = 1f;
-		mineCarts.add(mineCart);
 		singleton.cart2 = mineCart;
 
         PopAnimation.physics = physics;
 
-        loading = new Loading(visuals);
+
         menu = new Menu(visuals);
 
-        _fade = new Fade(visuals);
-	}
 
-	public void surfaceChanged(int width, int height) {
-		visuals.setProjectionMatrix3D();
 
         HUD hud = singleton.hud;
         hud.init();
@@ -164,16 +153,6 @@ public class Level {
         menu.init();
 
         initialized = true;
-
-
-
-
-
-
-
-
-
-
 
         //initFadeIn();
 
@@ -197,6 +176,12 @@ public class Level {
         match3.createInitialFallAnim();
 
         singleton.hud.reset();
+
+        visuals.setProjectionMatrix3D();
+	}
+
+	public void surfaceChanged(int width, int height) {
+        loading.init();
     }
 
 	public void update() {
@@ -242,14 +227,6 @@ public class Level {
             }
         }
 	}
-
-    protected void drawFade() {
-        //if (!_fade.done) {
-        visuals.bindNoTexture();
-        _fade.update();
-        _fade.draw();
-        //}
-    }
 
     private void drawCommon() {
         visuals.setProjectionMatrix3D();
@@ -713,8 +690,8 @@ public class Level {
 
 	void drawSelectionMarker() {				
 		if (match3.firstSelected != null) {
-			elapsed += 0.3f;
-			float d = (((float)Math.sin(elapsed) + 1.0f) / 2f) * 0.08f;
+			elapsedTimeSelMarkerAnim += 0.3f;
+			float d = (((float)Math.sin(elapsedTimeSelMarkerAnim) + 1.0f) / 2f) * 0.08f;
 			//System.out.println("d is: " + d);
 
 			markerPos.init(match3.firstSelected.pos);
@@ -745,11 +722,11 @@ public class Level {
         float tempZ;
 		for(int i = 0; i < 3; ++i) {
             tempZ = z;
-			_pos.trans(x, y, z);
-			_pos.rot(0f, 0f, 0f);
-			_pos.scale(1f, 1f, 1f);
+			pos.trans(x, y, z);
+			pos.rot(0f, 0f, 0f);
+			pos.scale(1f, 1f, 1f);
 
-			visuals.calcMatricesForObject(_pos);
+			visuals.calcMatricesForObject(pos);
 			visuals.dirLightShader.setUniforms();
 			visuals.railroad.draw();
 
@@ -759,11 +736,11 @@ public class Level {
 	}	
 	
 	void drawRock(Model rock, float x, float y, float z, float degree) {
-		_pos.trans(x, y, z);
-        _pos.rot(0f, 0f, degree); // ???
-        _pos.scale(1f, 1f, 1f);
+		pos.trans(x, y, z);
+        pos.rot(0f, 0f, degree); // ???
+        pos.scale(1f, 1f, 1f);
 		
-		visuals.calcMatricesForObject(_pos);
+		visuals.calcMatricesForObject(pos);
 		visuals.dirLightShader.setUniforms();
 		rock.bindData(visuals.dirLightShader);
 		rock.draw();		
@@ -772,11 +749,11 @@ public class Level {
 	void drawPickAxes() {
 		Model pickAxe = visuals.pickAxe;
 
-		_pos.trans(9f, -20f, 4.0f);
-        _pos.rot(90f, 30f, 50f);
-        _pos.scale(1f, 1f, 1f);
+		pos.trans(9f, -20f, 4.0f);
+        pos.rot(90f, 30f, 50f);
+        pos.scale(1f, 1f, 1f);
 
-		visuals.calcMatricesForObject(_pos);
+		visuals.calcMatricesForObject(pos);
 		visuals.dirLightShader.setUniforms();
 		pickAxe.bindData(visuals.dirLightShader);
 		pickAxe.draw();				
@@ -859,10 +836,10 @@ public class Level {
 	}
 	
 	void drawFloor() {
-        _pos.trans(0f, -20.5f, 0f);
-        _pos.rot(0f, 0f, 0f);
-        _pos.scale(1.0f, 1.0f, 1.0f);
-        visuals.calcMatricesForObject(_pos);
+        pos.trans(0f, -20.5f, 0f);
+        pos.rot(0f, 0f, 0f);
+        pos.scale(1.0f, 1.0f, 1.0f);
+        visuals.calcMatricesForObject(pos);
         visuals.dirLightShader.setUniforms();
         visuals.floor.bindData(visuals.dirLightShader);
         visuals.floor.bind();
@@ -871,10 +848,10 @@ public class Level {
     }
 
     void drawWall() {
-        _pos.trans(0f, -15f, -4f);
-        _pos.rot(0f, 0f, 0f);
-        _pos.scale(1f, 1f, 1f);
-        visuals.calcMatricesForObject(_pos);
+        pos.trans(0f, -15f, -4f);
+        pos.rot(0f, 0f, 0f);
+        pos.scale(1f, 1f, 1f);
+        visuals.calcMatricesForObject(pos);
         visuals.dirLightShader.setUniforms();
         visuals.wall.bindData(visuals.dirLightShader);
         visuals.wall.bind();
@@ -883,10 +860,10 @@ public class Level {
     }
 
     void drawSoil() {
-        _pos.trans(0f, 6f, -3.5f);
-        _pos.rot(0f, 0f, 0f);
-        _pos.scale(1.9f, 1.6f, 1.0f);
-		visuals.calcMatricesForObject(_pos);
+        pos.trans(0f, 6f, -3.5f);
+        pos.rot(0f, 0f, 0f);
+        pos.scale(1.9f, 1.6f, 1.0f);
+		visuals.calcMatricesForObject(pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.soil.bindData(visuals.dirLightShader);
 		visuals.soil.draw();
@@ -895,26 +872,26 @@ public class Level {
 	void drawCrates() {
         visuals.crate.bindData(visuals.dirLightShader);
 
-		_pos.trans(-12.5f, -18.6f, -2.0f);
-		_pos.rot(0.0f, -20.0f, 0.0f);
-		_pos.scale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_pos);
+		pos.trans(-12.5f, -18.6f, -2.0f);
+		pos.rot(0.0f, -20.0f, 0.0f);
+		pos.scale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.crate.draw();
 
-		_pos.trans(12.0f, -18.6f, -2.0f);
-		_pos.rot(0.0f, 2.0f, 0.0f);
-		_pos.scale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_pos);
+		pos.trans(12.0f, -18.6f, -2.0f);
+		pos.rot(0.0f, 2.0f, 0.0f);
+		pos.scale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.crate.draw();	
 	}
 
 	void drawBeam() {						
-		_pos.trans(0f, -16f, -2.5f);
-		_pos.rot(0f, 0f, 0f);
-		_pos.scale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_pos);
+		pos.trans(0f, -16f, -2.5f);
+		pos.rot(0f, 0f, 0f);
+		pos.scale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.beam.bindData(visuals.dirLightShader);
 		visuals.beam.draw();		
@@ -923,26 +900,24 @@ public class Level {
 	void drawPillars() {
         visuals.pillar.bindData(visuals.dirLightShader);
 
-		_pos.trans(-9.5f, -16f, -2.5f);
-		_pos.rot(0f, 0f, 0f);
-		_pos.scale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_pos);
+		pos.trans(-9.5f, -16f, -2.5f);
+		pos.rot(0f, 0f, 0f);
+		pos.scale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.pillar.draw();		
 
-		_pos.trans(9.5f, -16f, -2.5f);
-		_pos.rot(0f, 0f, 0f);
-		_pos.scale(1.0f, 1.0f, 1.0f);
-		visuals.calcMatricesForObject(_pos);
+		pos.trans(9.5f, -16f, -2.5f);
+		pos.rot(0f, 0f, 0f);
+		pos.scale(1.0f, 1.0f, 1.0f);
+		visuals.calcMatricesForObject(pos);
 		visuals.dirLightShader.setUniforms();
 		visuals.pillar.draw();				
 	}
 		
 	void drawMineCarts() {
-		int size = mineCarts.size();
-		for (int i = 0; i < size; ++i) {
-			mineCarts.get(i).draw();
-		}
+		singleton.cart1.draw();
+        singleton.cart2.draw();
 	}
 
 }

@@ -21,7 +21,7 @@ public class NormalColorShader extends BaseShader {
 	private final int aPositionLocation;
 	private final int aNormalLocation;
 		
-	public NormalColorShader(Visuals visuals) throws Exception {
+	public NormalColorShader(Visuals visuals) { //throws Exception {
 		super(visuals, R.raw.normal_color_vertex_shader, R.raw.normal_color_fragment_shader);
 		
 		// retrieve uniform locations for the shader program

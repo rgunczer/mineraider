@@ -190,10 +190,6 @@ public class MineCart {
 		collisionStop = true;
 		collisionStopTimer = 0;
 	}
-	
-	public void update() {
-		updateOnLevel();
-    }
 
     public void reposition(float x, float y) {
         Vec2 pos = new Vec2(x, y);
@@ -202,13 +198,13 @@ public class MineCart {
         wheel2.setTransform(pos, 0f);
     }
 
-    private void updateOnLevel() {
+	public void update() {
 		Vec2 pos = cart.getPosition();
 		
 		if (collisionStop) {
 			++collisionStopTimer; 
 			
-			if (collisionStopTimer > 100) {
+			if (collisionStopTimer > 200) {
 				wheelJoint1.setMotorSpeed(-3.0f);
 				wheelJoint2.setMotorSpeed(-3.0f);
 				collisionStop = false;
@@ -225,7 +221,7 @@ public class MineCart {
 			} else {
 				++stopTimeout;
 				
-				if (stopTimeout > 300) {
+				if (stopTimeout > 450) {
 					wheelJoint1.setMotorSpeed(-3.0f);
 					wheelJoint2.setMotorSpeed(-3.0f);
 					check = false;

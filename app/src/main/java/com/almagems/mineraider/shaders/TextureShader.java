@@ -22,7 +22,7 @@ public class TextureShader extends BaseShader {
     private final int aColorLocation;
 	private final int aTextureCoordinatesLocation;
 	
-	public TextureShader(Visuals visuals) throws Exception {
+	public TextureShader(Visuals visuals) { //throws Exception {
 		super(visuals, R.raw.texture_vertex_shader, R.raw.texture_fragment_shader);
 		
 		// retrieve uniform locations for the shader program

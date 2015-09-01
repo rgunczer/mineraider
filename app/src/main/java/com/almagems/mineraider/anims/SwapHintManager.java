@@ -1,9 +1,13 @@
 package com.almagems.mineraider.anims;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import com.almagems.mineraider.util.MyUtils;
 import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.GemPosition;
+
+import static com.almagems.mineraider.Constants.MAX_GEM_TYPES;
 
 public class SwapHintManager {
 
@@ -61,5 +65,13 @@ public class SwapHintManager {
             visuals.pointLightShader.setUniforms();
             visuals.hint.draw();
         }
+    }
+
+    public void selectOneHint() {
+        int index =  MyUtils.randInt(0, live.size() - 1);
+
+        SwapHint swapHint = live.get(index);
+        reset();
+        add(swapHint.first, swapHint.second);
     }
 }

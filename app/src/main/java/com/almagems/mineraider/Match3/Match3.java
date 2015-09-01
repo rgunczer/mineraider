@@ -18,6 +18,8 @@ import java.util.ArrayList;
 
 public class Match3 {
 
+    public int showHintCounterStartValue = 200;
+	public int showHintCounter = showHintCounterStartValue;
     public int boardSize;
 	public boolean isAnimating;
     private int[] gemTypesArray = new int[MAX_GEM_TYPES];
@@ -452,6 +454,7 @@ public class Match3 {
 		//System.out.println("Match3 calcHints...");
         if (swapHintManager.isEmpty()) {
             countHints();
+            swapHintManager.selectOneHint();
         } else {
             swapHintManager.reset();
         }
@@ -500,8 +503,16 @@ public class Match3 {
             animManager.update();
             if (animManager.isDone()) {
 				handleAnimCompleted();
+                showHintCounter = showHintCounterStartValue;
 			}
-		}
+		} else {
+            --showHintCounter;
+
+            if (showHintCounter < 0) {
+                showOrHideHints();
+                showHintCounter = showHintCounterStartValue / 2;
+            }
+        }
 	}
 	
 	private void handleAnimCompleted() {
@@ -538,6 +549,7 @@ public class Match3 {
 			boolean second = isMatch(firstSelected.boardX, firstSelected.boardY);
 				
 			if (first || second) {
+                showHintCounter = showHintCounterStartValue;
 				//System.out.println("Gems after swapping form a valid match...");
 				PopAnimation anim = getPopAnimation();
 				

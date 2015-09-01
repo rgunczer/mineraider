@@ -12,12 +12,21 @@ public class SwapHint {
     private boolean isHorizontal;
     private static float limit = 0.25f;
 
+    public GemPosition first;
+    public GemPosition second;
+
     // ctor
 	public SwapHint() {
         pos = new PositionInfo();
     }
 
+	public void init(SwapHint other) {
+		init(other.first, other.second);
+	}
+
     public void init(GemPosition first, GemPosition second) {
+        this.first = first;
+        this.second = second;
 		float x;
 		float y;
 		float z = first.pos.tz + 0.7f;

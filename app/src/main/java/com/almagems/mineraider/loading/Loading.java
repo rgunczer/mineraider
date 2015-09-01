@@ -34,10 +34,11 @@ public class Loading {
 
         MyColor colorBody = new MyColor(0.8f, 0.8f, 0.8f);
         MyColor colorFrame = new MyColor(0.2f, 0.2f, 0.2f);
-        float height = 0.03f;
+        float width = 1.0f;
+        float height = 0.02f;
         float border = 0.01f;
 
-        progress = new ProgressBarControl(visuals, "Loading", colorFrame, colorBody, height, border);
+        progress = new ProgressBarControl(visuals, "Loading", colorFrame, colorBody, width, height, border);
         quad = new Quad(visuals);
     }
 
@@ -58,10 +59,7 @@ public class Loading {
     }
 
     public void update() {
-        // step by step loading logic
         ClassicSingleton singleton = ClassicSingleton.getInstance();
-
-        traceLoadingStep();
 
         switch (loadingStepCounter) {
             case 0:
@@ -70,35 +68,35 @@ public class Loading {
                 break;
 
             case 1:
-                singleton.visuals.loadTexturesPart01();
+                visuals.loadTexturesPart01();
                 break;
 
             case 2:
-                singleton.visuals.loadTexturesPart02();
+                visuals.loadTexturesPart02();
                 break;
 
             case 3:
-                singleton.visuals.loadTexturesPart03();
+                visuals.loadTexturesPart03();
                 break;
 
             case 4:
-                singleton.visuals.loadShaders();
+                visuals.loadShaders();
                 break;
 
             case 5:
-                singleton.visuals.loadFonts();
+                visuals.loadFonts();
                 break;
 
             case 6:
-                singleton.visuals.loadModelsPart01();
+                visuals.loadModelsPart01();
                 break;
 
             case 7:
-                singleton.visuals.loadModelsPart02();
+                visuals.loadModelsPart02();
                 break;
 
             case 8:
-                singleton.visuals.loadModelsPart03();
+                visuals.loadModelsPart03();
                 break;
 
             case 9:
@@ -142,8 +140,6 @@ public class Loading {
         progress.draw();
     }
 
-    private void traceLoadingStep() {
-        System.out.println("Loading step: " + loadingStepCounter);
-    }
+
 
 }

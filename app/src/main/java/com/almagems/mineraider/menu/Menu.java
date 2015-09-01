@@ -151,14 +151,14 @@ public class Menu {
         MyColor colorBody = new MyColor(143f/255f, 127f/255f, 96f/255f, 1f);
         MyColor colorFrame = new MyColor(10f/255f, 12f/255f, 9f/255f, 1f);
 
+        float volumeControlWidth = 1.8f;
         float volumeControlHeight = 0.05f;
         float volumeControlBorder = 0.02f;
 
-
-        menuGroup.musicVolumeControl = new ProgressBarControl(visuals, "Music", colorFrame, colorBody, volumeControlHeight, volumeControlBorder);
+        menuGroup.musicVolumeControl = new ProgressBarControl(visuals, "Music", colorFrame, colorBody, volumeControlWidth, volumeControlHeight, volumeControlBorder);
         menuGroup.musicVolumeControl.init(aspect * 0.35f);
 
-        menuGroup.soundVolumeControl = new ProgressBarControl(visuals, "Sound", colorFrame, colorBody, volumeControlHeight, volumeControlBorder);
+        menuGroup.soundVolumeControl = new ProgressBarControl(visuals, "Sound", colorFrame, colorBody, volumeControlWidth, volumeControlHeight, volumeControlBorder);
         menuGroup.soundVolumeControl.init(-aspect * 0.06f);
 
         groups.add(menuGroup);

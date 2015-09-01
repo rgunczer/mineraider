@@ -313,14 +313,9 @@ public class Level {
     }
 
     private void handleTouchPressOnPlaying(float normalizedX, float normalizedY) {
-        // temp solution to be able to go back
-        final float y = -0.9f;
-        if (normalizedY < y) {
+        if (normalizedX > 0.86f && normalizedY < -0.86f ) {
             gameState = GameState.Menu;
             menu.reset();
-            //goNextScene = true;
-            //nextSceneId = ScenesEnum.Shaft;
-            //super.initFadeOut();
         } else {
             swipeDir = SwipeDir.SwipeNone;
             touchDownX = normalizedX;
@@ -330,11 +325,7 @@ public class Level {
                 Ray ray = Geometry.convertNormalized2DPointToRay(touchDownX, touchDownY, visuals.invertedViewProjectionMatrix);
                 GemPosition selectedGem = getSelectedGemFromRay(ray);
 
-                //doEditorStuff(selectedGem);
-
-                if (selectedGem == null) {
-                    match3.showOrHideHints();
-                } else {
+                if (selectedGem != null) {
                     if (match3.firstSelected == null) {
                         match3.firstSelected = selectedGem;
                     } else {

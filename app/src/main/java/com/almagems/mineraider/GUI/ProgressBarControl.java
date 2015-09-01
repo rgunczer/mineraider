@@ -11,6 +11,7 @@ import static android.opengl.GLES20.glDrawArrays;
 public class ProgressBarControl {
 
     private String name;
+    private float width;
     private float height;
     private float border;
     private VertexArray vertexArrayBody;
@@ -22,12 +23,19 @@ public class ProgressBarControl {
     private Visuals visuals;
 
     // ctor
-    public ProgressBarControl(Visuals visuals, String name, MyColor colorFrame, MyColor colorBody, float height, float border) {
+    public ProgressBarControl(Visuals visuals,
+                              String name,
+                              MyColor colorFrame,
+                              MyColor colorBody,
+                              float width,
+                              float height,
+                              float border) {
         //System.out.println("MenuVolumeControl ctor...");
         this.visuals = visuals;
         this.name = name;
         this.colorBody = colorBody;
         this.colorFrame = colorFrame;
+        this.width = width;
         this.height = height;
         this.border = border;
         value = 0f;
@@ -60,7 +68,7 @@ public class ProgressBarControl {
     }
 
     private void createVertexArrayFrame() {
-        final float x = -0.92f;
+        final float x = (-width / 2f) - border;  //-0.92f;
         final float y = height + border; //0.02f; //0.07f;
         float[] vertexData = {
             // x, y, z,
@@ -91,8 +99,10 @@ public class ProgressBarControl {
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // body
-        pos.trans(-0.9f, pos.ty, 0f);
-        pos.scale(18f * value, 1f, 1f);
+        //pos.trans(-0.9f, pos.ty, 0f);
+        //pos.scale(18f * value, 1f, 1f);
+        pos.trans(-width / 2f, pos.ty, 0f);
+        pos.scale(width * value * 10f, 1f, 1f);
         visuals.calcMatricesForObject(pos);
         visuals.colorShader.setUniforms(visuals.mvpMatrix, colorBody);
         visuals.colorShader.bindData(vertexArrayBody);

@@ -1,6 +1,7 @@
 package com.almagems.mineraider.objects;
 
 import java.util.Random;
+import static android.opengl.GLES20.*;
 
 import static com.almagems.mineraider.Constants.*;
 
@@ -24,172 +25,169 @@ import com.almagems.mineraider.util.MyColor;
 
 
 public class MineCart {
-	public Body cart;
-	public Body wheel1;
-	public Body wheel2;
+    public int id;
+    public Body cart;
+    public Body wheel1;
+    public Body wheel2;
 
-	public float speed = 0f;
+    private WheelJoint wheelJoint1;
+    private WheelJoint wheelJoint2;
 
-	WheelJoint wheelJoint1;
-	WheelJoint wheelJoint2;
-	
-	private static int collisionGroupIndexCounter = -1;
-	
-	private int collisionGroupIndex = -42; // negative value = don't collide!
-	
-	private boolean Stopped = false;
-	private boolean check = true;
-	private boolean collisionStop = false;
+    private static int collisionGroupIndexCounter = -1;
+    public static Physics physics;
+    public static Visuals visuals;
 
-    private Physics physics;
+    private float z = 0f;
+    private float r = 0.0f;
+    private float speed = 0f;
 
-    public float z = 0f;
-	float r = 0.0f;
-	int stopTimeout = 0;
-	int collisionStopTimer = 0;
-	
-	private PositionInfo _op = new PositionInfo();
+    private int counter = 0;
+    private int collisionGroupIndex = -42; // negative value = don't collide!
 
-	private Visuals visuals;
+    private boolean loaded = false;
+    private boolean stopped = false;
+    private boolean waitingForGems = false;
 
-	public MineCart(Physics physics, float x, float y, Visuals visuals) {
-        this.visuals = visuals;
-		this.physics = physics;
+    private PositionInfo op = new PositionInfo();
 
-		--collisionGroupIndexCounter;
-		collisionGroupIndex = collisionGroupIndexCounter;
-		
-		System.out.println("Collision Group Index: " + collisionGroupIndex);
-				
-		CreateCart(x, y);
-		wheel1 = CreateWheel(x - 2.0f, y - 2.2f);
-		wheel2 = CreateWheel(x + 2.0f, y - 2.2f);
-		CreateWheelJoint();		
-	}
-	
-	private void CreateWheelJoint() {
-		WheelJointDef wd = new WheelJointDef();
-		wd.bodyA = cart;
-		wd.bodyB = wheel1;
-		wd.localAnchorA.set(-1.6f, -2.2f);
-		wd.frequencyHz = 6;
-		wd.dampingRatio = 0.3f;
-		wd.maxMotorTorque = 1000;
-		wd.motorSpeed = 0f; //-6.0f;
-		wd.enableMotor = true;
-		wd.localAxisA.set(0f, 1f);
-		
-		wheelJoint1 = (WheelJoint)physics.world.createJoint(wd);
-		
-		wd.bodyB = wheel2;
-		wd.localAnchorA.set(1.6f, -2.2f);		
-		wheelJoint2 = (WheelJoint)physics.world.createJoint(wd);
-		
+
+    // ctor
+    public MineCart(float x, float y) {
+        z = 1.0f;
+        --collisionGroupIndexCounter;
+        collisionGroupIndex = collisionGroupIndexCounter;
+
+        System.out.println("Collision Group Index: " + collisionGroupIndex);
+
+        CreateCart(x, y);
+        wheel1 = CreateWheel(x - 2.0f, y - 2.2f);
+        wheel2 = CreateWheel(x + 2.0f, y - 2.2f);
+        CreateWheelJoint();
+    }
+
+    private void CreateWheelJoint() {
+        WheelJointDef wd = new WheelJointDef();
+        wd.bodyA = cart;
+        wd.bodyB = wheel1;
+        wd.localAnchorA.set(-1.6f, -2.2f);
+        wd.frequencyHz = 6;
+        wd.dampingRatio = 0.3f;
+        wd.maxMotorTorque = 1000;
+        wd.motorSpeed = 0f; //-6.0f;
+        wd.enableMotor = true;
+        wd.localAxisA.set(0f, 1f);
+
+        wheelJoint1 = (WheelJoint) physics.world.createJoint(wd);
+
+        wd.bodyB = wheel2;
+        wd.localAnchorA.set(1.6f, -2.2f);
+        wheelJoint2 = (WheelJoint) physics.world.createJoint(wd);
+
 //		Vec2 axis = new Vec2(0.0f, 0.9f);
-		
+
 //		wd = new WheelJointDef();	
 //		wd.dampingRatio = 0.9f;
 //		wd.motorSpeed = 0.0f;
 //		wd.maxMotorTorque = 0.0f;		
 //		wd.enableMotor = false;	
-				
+
 //		wd.initialize(cart, wheel1, wheel1.getPosition(), axis);
 //		wheelJoint1 = (WheelJoint)physics.world.createJoint(wd);		
 //	
 //		wd.initialize(cart, wheel2, wheel1.getPosition(), axis);
 //		wheelJoint2 = (WheelJoint)physics.world.createJoint(wd);
-	}
-	
-	private Body CreateWheel(float x, float y) {
-		CircleShape shape = new CircleShape();
-		shape.m_radius = 0.8f;
-		
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = shape;
-		fixtureDef.density = 1.0f;
-		fixtureDef.restitution = 0.2f;
-		fixtureDef.filter.groupIndex = collisionGroupIndex;
-		
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(x, y);
-
-		Body body = physics.world.createBody(bodyDef);
-		body.createFixture(fixtureDef);
-		return body;
-	}
-	
-	private void CreateCart(float x, float y) {		
-		PolygonShape shape = new PolygonShape();
-		Vec2[] vertices = new Vec2[4];
-		vertices[0] = new Vec2(-3.2f, -2.0f);
-		vertices[1] = new Vec2( 3.2f, -2.0f);
-		vertices[2] = new Vec2( 3.4f, -1.0f);
-		vertices[3] = new Vec2(-3.4f, -1.0f);
-		shape.set(vertices, vertices.length);
-		
-		FixtureDef fixture = new FixtureDef();
-		fixture.shape = shape;
-		fixture.density = 1.0f;
-		fixture.restitution = 0.1f;
-		fixture.filter.groupIndex = collisionGroupIndex;
-
-		
-		PolygonShape shape1 = new PolygonShape();
-		Vec2[] vertices1 = new Vec2[4];
-		vertices1[0] = new Vec2(-3.4f, -1.0f);
-		vertices1[1] = new Vec2(-3.0f, -1.0f);
-		vertices1[2] = new Vec2(-4.0f,  2.2f);
-		vertices1[3] = new Vec2(-3.6f,  2.0f);
-		shape1.set(vertices1, vertices1.length);
-		
-		FixtureDef fixture1 = new FixtureDef();
-		fixture1.shape = shape1;
-		fixture1.density = 1.0f;
-		fixture1.restitution = 0.1f;
-		fixture1.filter.groupIndex = collisionGroupIndex;
-
-		
-		PolygonShape shape2 = new PolygonShape();
-		Vec2[] vertices2 = new Vec2[4];
-		vertices2[0] = new Vec2( 3.4f, -1.0f);
-		vertices2[1] = new Vec2( 3.0f, -1.0f);
-		vertices2[2] = new Vec2( 4.0f,  2.2f);
-		vertices2[3] = new Vec2( 3.6f,  2.0f);
-		shape2.set(vertices2, vertices2.length);
-		
-		FixtureDef fixture2 = new FixtureDef();
-		fixture2.shape = shape2;
-		fixture2.density = 1.0f;
-		fixture2.restitution = 0.1f;
-		fixture2.filter.groupIndex = collisionGroupIndex;
-		
-		
-		
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(x, y);		
-
-		cart = physics.world.createBody(bodyDef);
-		cart.m_userData = this;
-		cart.createFixture(fixture);
-		cart.createFixture(fixture1);
-		cart.createFixture(fixture2);		
-	}
-
-    public void start(float xSpeed) {
-		speed = xSpeed;
-        wheelJoint1.setMotorSpeed(xSpeed);
-        wheelJoint2.setMotorSpeed(xSpeed);
     }
 
-	public void stop() {
-		speed = 0f;
-		wheelJoint1.setMotorSpeed(0f);
-		wheelJoint2.setMotorSpeed(0f);
-		collisionStop = true;
-		collisionStopTimer = 0;
-	}
+    private Body CreateWheel(float x, float y) {
+        CircleShape shape = new CircleShape();
+        shape.m_radius = 0.8f;
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 1.0f;
+        fixtureDef.restitution = 0.2f;
+        fixtureDef.filter.groupIndex = collisionGroupIndex;
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyType.DYNAMIC;
+        bodyDef.position.set(x, y);
+
+        Body body = physics.world.createBody(bodyDef);
+        body.createFixture(fixtureDef);
+        return body;
+    }
+
+    private void CreateCart(float x, float y) {
+        PolygonShape shape = new PolygonShape();
+        Vec2[] vertices = new Vec2[4];
+        vertices[0] = new Vec2(-3.2f, -2.0f);
+        vertices[1] = new Vec2(3.2f, -2.0f);
+        vertices[2] = new Vec2(3.4f, -0.2f);
+        vertices[3] = new Vec2(-3.4f, -0.2f);
+        shape.set(vertices, vertices.length);
+
+        FixtureDef fixture = new FixtureDef();
+        fixture.shape = shape;
+        fixture.density = 1.0f;
+        fixture.restitution = 0.1f;
+        fixture.filter.groupIndex = collisionGroupIndex;
+
+
+        PolygonShape shape1 = new PolygonShape();
+        Vec2[] vertices1 = new Vec2[4];
+        vertices1[0] = new Vec2(-3.4f, -1.0f);
+        vertices1[1] = new Vec2(-3.0f, -1.0f);
+        vertices1[2] = new Vec2(-4.0f, 2.2f);
+        vertices1[3] = new Vec2(-3.6f, 2.0f);
+        shape1.set(vertices1, vertices1.length);
+
+        FixtureDef fixture1 = new FixtureDef();
+        fixture1.shape = shape1;
+        fixture1.density = 1.0f;
+        fixture1.restitution = 0.1f;
+        fixture1.filter.groupIndex = collisionGroupIndex;
+
+
+        PolygonShape shape2 = new PolygonShape();
+        Vec2[] vertices2 = new Vec2[4];
+        vertices2[0] = new Vec2(3.4f, -1.0f);
+        vertices2[1] = new Vec2(3.0f, -1.0f);
+        vertices2[2] = new Vec2(4.0f, 2.2f);
+        vertices2[3] = new Vec2(3.6f, 2.0f);
+        shape2.set(vertices2, vertices2.length);
+
+        FixtureDef fixture2 = new FixtureDef();
+        fixture2.shape = shape2;
+        fixture2.density = 1.0f;
+        fixture2.restitution = 0.1f;
+        fixture2.filter.groupIndex = collisionGroupIndex;
+
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyType.DYNAMIC;
+        bodyDef.position.set(x, y);
+
+        cart = physics.world.createBody(bodyDef);
+        cart.m_userData = this;
+        cart.createFixture(fixture);
+        cart.createFixture(fixture1);
+        cart.createFixture(fixture2);
+    }
+
+    public void start(float xSpeed) {
+        speed = xSpeed;
+        wheelJoint1.setMotorSpeed(xSpeed);
+        wheelJoint2.setMotorSpeed(xSpeed);
+        stopped = false;
+    }
+
+    public void stop() {
+        speed = 0f;
+        wheelJoint1.setMotorSpeed(speed);
+        wheelJoint2.setMotorSpeed(speed);
+        stopped = true;
+        counter = 0;
+    }
 
     public void reposition(float x, float y) {
         Vec2 pos = new Vec2(x, y);
@@ -198,75 +196,92 @@ public class MineCart {
         wheel2.setTransform(pos, 0f);
     }
 
-	public void update() {
-		Vec2 pos = cart.getPosition();
-		
-		if (collisionStop) {
-			++collisionStopTimer; 
-			
-			if (collisionStopTimer > 200) {
-				wheelJoint1.setMotorSpeed(-3.0f);
-				wheelJoint2.setMotorSpeed(-3.0f);
-				collisionStop = false;
-			}
-		}		
-		
-		if (check) {		
-			if (!Stopped) {		
-				if (pos.x > -0.25f && pos.x < 0.25f) {
-					wheelJoint1.setMotorSpeed(0.0f);
-					wheelJoint2.setMotorSpeed(0.0f);
-					Stopped = true;
-				}
-			} else {
-				++stopTimeout;
-				
-				if (stopTimeout > 450) {
-					wheelJoint1.setMotorSpeed(-3.0f);
-					wheelJoint2.setMotorSpeed(-3.0f);
-					check = false;
-				}
-			}
-		} else {	
-			if (pos.x > 19.0f) {
-                // reposition the cart
-				Random rand = new Random();
-				pos.x = -19.0f - (rand.nextFloat() * 3f);
-				pos.y = -16.5f;
-                reposition(pos.x, pos.y);
-				check = true;
-				stopTimeout = 0;
-				Stopped = false;
+    public void update() {
+        Vec2 pos = cart.getPosition();
 
-                // now count how many gems were there (in the minecart)
-                physics.fragmentToRemove.clear();
-                Body body;
-                Vec2 fragmentPos;
-                boolean gemsFromCart = false;
-                int[] gemTypeFromCart = new int[MAX_GEM_TYPES];
-                Integer gemType;
-                int size = physics.fragments.size();
-                for(int i = 0; i < size; ++i) {
-                    body = physics.fragments.get(i);
-                    fragmentPos = body.getPosition();
+        //if (id == 1) {
+        //    System.out.println("Cart pos: " + pos.x);
+        //}
 
-                    if (fragmentPos.x > 15f) {
-                        gemsFromCart = true;
-                        gemType = (Integer)body.m_userData;
-                        ++gemTypeFromCart[gemType];
-                        physics.fragmentToRemove.add(body);
+        if (waitingForGems) {
+            ++counter;
+            if (counter > 400) {
+                restartCart();
+                loaded = true;
+                ClassicSingleton.getInstance().notifyOtherMinecartToStart();
+            }
+        } else {
+            if (!stopped) {
+                if (!loaded) {
+                    if (pos.x > -1.0f && pos.x < 0f) {
+                        stopCartAndWaitForGems();
                     }
                 }
 
-                if (gemsFromCart) {
-                    ClassicSingleton.getInstance().handleGemsFromCart(gemTypeFromCart);
+                if (pos.x > 19.0f) {
+                    repositionCart(pos);
                 }
+            }
+        }
+    }
 
-                physics.removeFragments();
-			}
-		}
-	}
-	
+    private void stopCartAndWaitForGems() {
+        waitingForGems = true;
+        stopped = true;
+        wheelJoint1.setMotorSpeed(0.0f);
+        wheelJoint2.setMotorSpeed(0.0f);
+    }
+
+    public void restartCart() {
+        wheelJoint1.setMotorSpeed(-3.0f);
+        wheelJoint2.setMotorSpeed(-3.0f);
+        stopped = false;
+        waitingForGems = false;
+        counter = 0;
+    }
+
+    private void repositionCart(Vec2 pos) {
+        Random rand = new Random();
+        pos.x = -19.0f - (rand.nextFloat() * 3f);
+        pos.y = -16.5f;
+        reposition(pos.x, pos.y);
+        loaded = false;
+        stopped = false;
+        waitingForGems = false;
+        counter = 0;
+
+        countMineCartLoad();
+    }
+
+    // now count how many gems were there (in the minecart)
+    private void countMineCartLoad() {
+        physics.fragmentToRemove.clear();
+        Body body;
+        Vec2 fragmentPos;
+        boolean gemsFromCart = false;
+        int[] gemTypeFromCart = new int[MAX_GEM_TYPES];
+        Integer gemType;
+        int size = physics.fragments.size();
+        for(int i = 0; i < size; ++i) {
+            body = physics.fragments.get(i);
+            fragmentPos = body.getPosition();
+
+            if (fragmentPos.x > 15f) {
+                gemsFromCart = true;
+                gemType = (Integer)body.m_userData;
+                ++gemTypeFromCart[gemType];
+                physics.fragmentToRemove.add(body);
+            }
+        }
+
+        if (gemsFromCart) {
+            ClassicSingleton.getInstance().handleGemsFromCart(gemTypeFromCart);
+        }
+
+        physics.removeFragments();
+    }
+
+// drawing
 	private void drawCartFixture() {
 		Vec2 pos = cart.getPosition();
 		float angle = cart.getAngle();
@@ -317,20 +332,20 @@ public class MineCart {
 	}
 
     public void draw() {
-        update();
+		update();
 
-        _op.scale(1f, 1f, 1f);
+        op.scale(1f, 1f, 1f);
 
-        visuals.dirLightShader.setTexture(visuals.textureCart);
-        visuals.mineCart.bindData(visuals.dirLightShader);
+		visuals.dirLightShader.setTexture(visuals.textureCart);
+		visuals.mineCart.bindData(visuals.dirLightShader);
         drawCart();
 
-        visuals.dirLightShader.setTexture(visuals.textureWheel);
+		visuals.dirLightShader.setTexture(visuals.textureWheel);
         visuals.wheel.bindData(visuals.dirLightShader);
-        drawWheels();
+		drawWheels();
 
         //glDisable(GL_DEPTH_TEST);
-        //drawCartFixture();
+		//drawCartFixture();
         //glEnable(GL_DEPTH_TEST);
     }
 
@@ -338,9 +353,9 @@ public class MineCart {
         Vec2 pos = cart.getPosition();
         float degree = (float) Math.toDegrees(cart.getAngle());
 
-        _op.trans(pos.x, pos.y, z); //-0.75f);
-        _op.rot(0f, 0f, degree);
-        visuals.calcMatricesForObject(_op);
+        op.trans(pos.x, pos.y, z); //-0.75f);
+        op.rot(0f, 0f, degree);
+        visuals.calcMatricesForObject(op);
         visuals.dirLightShader.setUniforms();
         visuals.mineCart.draw();
     }
@@ -353,10 +368,10 @@ public class MineCart {
 		pos = wheel1.getPosition();
 		degree = (float)Math.toDegrees( wheel1.getAngle() );
 
-		_op.trans(pos.x, pos.y, z); //-0.75f);// 2f);
-		_op.rot(0f, 0f, degree);
+		op.trans(pos.x, pos.y, z); //-0.75f);// 2f);
+		op.rot(0f, 0f, degree);
 
-        visuals.calcMatricesForObject(_op);
+        visuals.calcMatricesForObject(op);
 		visuals.dirLightShader.setUniforms();
 		visuals.wheel.draw();
 
@@ -368,10 +383,10 @@ public class MineCart {
 		pos = wheel2.getPosition();
 		degree = (float)Math.toDegrees( wheel2.getAngle() );
 
-        _op.trans(pos.x, pos.y, z); // 0f-0.75f);
-		_op.rot(0f, 0f, degree);
+        op.trans(pos.x, pos.y, z); // 0f-0.75f);
+		op.rot(0f, 0f, degree);
 
-        visuals.calcMatricesForObject(_op);
+        visuals.calcMatricesForObject(op);
 		visuals.dirLightShader.setUniforms();
 		visuals.wheel.draw();
 

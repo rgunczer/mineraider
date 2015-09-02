@@ -127,15 +127,17 @@ public class Level {
 
         float x = cartX; //-20f;
 		float y = cartY; //-15.7f;
+        MineCart.physics = physics;
+        MineCart.visuals = visuals;
 		MineCart mineCart;
 		
-		mineCart = new MineCart(physics, x, y, visuals);
-        mineCart.z = 1f;
+		mineCart = new MineCart(x, y);
+        mineCart.id = 1;
 		singleton.cart1 = mineCart;
 
 		x = cartX2nd;
-		mineCart = new MineCart(physics, x, y, visuals);
-        mineCart.z = 1f;
+		mineCart = new MineCart(x, y);
+        mineCart.id = 2;
 		singleton.cart2 = mineCart;
 
         PopAnimation.physics = physics;

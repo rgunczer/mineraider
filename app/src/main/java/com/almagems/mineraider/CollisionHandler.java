@@ -15,14 +15,10 @@ public class CollisionHandler implements ContactListener {
 	public void beginContact(Contact arg0) {
 		ClassicSingleton singleton = ClassicSingleton.getInstance();
 
-				
 		Body bodyA = arg0.getFixtureA().getBody();
 		Body bodyB = arg0.getFixtureB().getBody();
 
 
-
-
-		
 		if ( ( (bodyA.m_userData == singleton.cart1) && 
 			   (bodyB.m_userData == singleton.cart2) ) ||
 			   

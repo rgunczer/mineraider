@@ -16,6 +16,8 @@ import com.almagems.mineraider.visuals.Visuals;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.jbox2d.common.Vec2;
+
 
 public class ClassicSingleton {
 
@@ -181,6 +183,18 @@ public class ClassicSingleton {
 
     public void handleTouchRelease(float normalizedX, float normalizedY) {
         level.handleTouchRelease(normalizedX, normalizedY);
+    }
+
+    public void notifyOtherMinecartToStart() {
+        Vec2 pos1 = cart1.cart.getPosition();
+        Vec2 pos2 = cart2.cart.getPosition();
+
+        if (pos1.x < pos2.x) {
+            cart1.restartCart();
+        } else {
+            cart2.restartCart();
+        }
+
     }
 
 }

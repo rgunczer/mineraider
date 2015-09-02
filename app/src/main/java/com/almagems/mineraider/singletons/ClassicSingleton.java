@@ -189,12 +189,16 @@ public class ClassicSingleton {
         Vec2 pos1 = cart1.cart.getPosition();
         Vec2 pos2 = cart2.cart.getPosition();
 
+        cart1.restartCart();
+        cart2.restartCart();
+
+        /*
         if (pos1.x < pos2.x) {
             cart1.restartCart();
         } else {
             cart2.restartCart();
         }
-
+*/
     }
 
 }

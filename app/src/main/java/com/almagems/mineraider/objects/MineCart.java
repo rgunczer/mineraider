@@ -19,12 +19,23 @@ import org.jbox2d.dynamics.joints.WheelJointDef;
 import com.almagems.mineraider.singletons.ClassicSingleton;
 import com.almagems.mineraider.PositionInfo;
 import com.almagems.mineraider.Physics;
+import com.almagems.mineraider.util.MyUtils;
 import com.almagems.mineraider.visuals.Visuals;
 import com.almagems.mineraider.util.MyColor;
 
 
 
 public class MineCart {
+
+    private enum CartState {
+        Entering,
+        StoppedHitOtherCart,
+        Restarting,
+        WaitingForGems,
+        Leaving
+    };
+
+    public CartState cartState;
     public int id;
     public Body cart;
     public Body wheel1;
@@ -38,21 +49,17 @@ public class MineCart {
     public static Visuals visuals;
 
     private float z = 0f;
-    private float r = 0.0f;
     private float speed = 0f;
 
     private int counter = 0;
     private int collisionGroupIndex = -42; // negative value = don't collide!
-
-    private boolean loaded = false;
-    private boolean stopped = false;
-    private boolean waitingForGems = false;
 
     private PositionInfo op = new PositionInfo();
 
 
     // ctor
     public MineCart(float x, float y) {
+        cartState = CartState.Entering;
         z = 1.0f;
         --collisionGroupIndexCounter;
         collisionGroupIndex = collisionGroupIndexCounter;
@@ -178,14 +185,13 @@ public class MineCart {
         speed = xSpeed;
         wheelJoint1.setMotorSpeed(xSpeed);
         wheelJoint2.setMotorSpeed(xSpeed);
-        stopped = false;
+        counter = 0;
     }
 
     public void stop() {
         speed = 0f;
         wheelJoint1.setMotorSpeed(speed);
         wheelJoint2.setMotorSpeed(speed);
-        stopped = true;
         counter = 0;
     }
 
@@ -196,61 +202,66 @@ public class MineCart {
         wheel2.setTransform(pos, 0f);
     }
 
-    public void update() {
-        Vec2 pos = cart.getPosition();
-
-        //if (id == 1) {
-        //    System.out.println("Cart pos: " + pos.x);
-        //}
-
-        if (waitingForGems) {
-            ++counter;
-            if (counter > 400) {
-                restartCart();
-                loaded = true;
-                ClassicSingleton.getInstance().notifyOtherMinecartToStart();
-            }
-        } else {
-            if (!stopped) {
-                if (!loaded) {
-                    if (pos.x > -1.0f && pos.x < 0f) {
-                        stopCartAndWaitForGems();
-                    }
-                }
-
-                if (pos.x > 19.0f) {
-                    repositionCart(pos);
-                }
-            }
+    public void restartCart() {
+        if (cartState == CartState.StoppedHitOtherCart) {
+            cartState = CartState.Restarting;
+            counter = MyUtils.randInt(20, 75);
         }
     }
 
-    private void stopCartAndWaitForGems() {
-        waitingForGems = true;
-        stopped = true;
-        wheelJoint1.setMotorSpeed(0.0f);
-        wheelJoint2.setMotorSpeed(0.0f);
+    public void stopHitOtherCart() {
+        cartState = CartState.StoppedHitOtherCart;
+        stop();
     }
 
-    public void restartCart() {
-        wheelJoint1.setMotorSpeed(-3.0f);
-        wheelJoint2.setMotorSpeed(-3.0f);
-        stopped = false;
-        waitingForGems = false;
-        counter = 0;
+    public void update() {
+        Vec2 pos = cart.getPosition();
+
+        switch (cartState) {
+            case Entering:
+                if (pos.x > -1.0f && pos.x < 0f) {
+                    stop();
+                    cartState = CartState.WaitingForGems;
+                }
+                break;
+
+            case Restarting:
+                --counter;
+                if (counter < 0) {
+                    cartState = CartState.Entering;
+                    start(-3f);
+                }
+                break;
+
+            case StoppedHitOtherCart:
+
+                break;
+
+            case WaitingForGems:
+                ++counter;
+                if (counter > 400) {
+                    cartState = CartState.Leaving;
+                    start(-3f);
+                    ClassicSingleton.getInstance().notifyOtherMinecartToStart();
+                }
+                break;
+
+            case Leaving:
+                if (pos.x > 19.0f) {
+                    cartState = CartState.Entering;
+                    moveToStart(pos);
+                    countMineCartLoad();
+                    start(-3f);
+                }
+                break;
+        }
     }
 
-    private void repositionCart(Vec2 pos) {
+    private void moveToStart(Vec2 pos) {
         Random rand = new Random();
         pos.x = -19.0f - (rand.nextFloat() * 3f);
         pos.y = -16.5f;
         reposition(pos.x, pos.y);
-        loaded = false;
-        stopped = false;
-        waitingForGems = false;
-        counter = 0;
-
-        countMineCartLoad();
     }
 
     // now count how many gems were there (in the minecart)

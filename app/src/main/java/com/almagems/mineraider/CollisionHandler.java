@@ -27,14 +27,14 @@ public class CollisionHandler implements ContactListener {
 			
 			
 		//	System.out.println("begin contact...");
-		
+
 			Vec2 pos1 = singleton.cart1.cart.getPosition();
 			Vec2 pos2 = singleton.cart2.cart.getPosition();
 			
 			if (pos1.x < pos2.x) {
-				singleton.cart1.stop();
+				singleton.cart1.stopHitOtherCart();
 			} else {
-				singleton.cart2.stop();
+				singleton.cart2.stopHitOtherCart();
 			}
 
             /*

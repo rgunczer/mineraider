@@ -1,32 +1,18 @@
 package com.almagems.mineraider;
 
-import static android.opengl.GLES20.*;
-
-import com.almagems.mineraider.EffectAnims.WahWah;
-import com.almagems.mineraider.EffectAnims.ZigZag;
-import com.almagems.mineraider.objects.EdgeDrawer;
-import com.almagems.mineraider.objects.GemIkon;
-import com.almagems.mineraider.objects.Quad;
-import com.almagems.mineraider.scenes.Level;
-import com.almagems.mineraider.singletons.ClassicSingleton;
-import com.almagems.mineraider.visuals.Visuals;
-import com.almagems.mineraider.util.MyColor;
-import com.almagems.mineraider.util.Rectangle;
-import com.almagems.mineraider.util.Text;
-
 
 public class HUD {
-    private int cachedScore;
+    public static Graphics graphics;
 
-    private Visuals visuals;
+    private int cachedScore;
 
     private final Text scoreText;
     private final Text extraText;
     private final Text gemsFromCartText;
-    private final GemIkon ikon;
     private final Quad quad;
     private final Quad quadPauseButton;
-    private final EdgeDrawer edgeDrawer;
+
+    private int _centerCounter;
 
     private float scoreX;
     private float scoreY;
@@ -41,7 +27,6 @@ public class HUD {
     private float _bonusDiff;
     private float _bonusTargetPosX;
 
-    private int _centerCounter;
     private int scoreCooling;
     private int bonusFromCartCooling;
 
@@ -50,15 +35,12 @@ public class HUD {
     private ZigZag effectZigZag;
 
     // ctor
-    public HUD(Visuals visuals) {
-        this.visuals = visuals;
+    public HUD() {
+        scoreText = new Text();
+        extraText = new Text();
+        gemsFromCartText = new Text();
 
-        scoreText = new Text(visuals);
-        extraText = new Text(visuals);
-        gemsFromCartText = new Text(visuals);
-        ikon = new GemIkon();
-        quad = new Quad(visuals);
-        edgeDrawer = new EdgeDrawer(32);
+        quad = new Quad();
 
         comboCounter = 0;
         comboScale = 1.0f;
@@ -66,7 +48,7 @@ public class HUD {
         effectZigZag = new ZigZag();
         effectWahWahScore = new WahWah();
 
-        quadPauseButton = new Quad(visuals);
+        quadPauseButton = new Quad();
 
         _bonusPosX = 0f;
         _bonusCartGemsTextWidth = 0f;
@@ -85,7 +67,7 @@ public class HUD {
         scoreText.init("SCORE:" + cachedScore, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), fontScale);
 
         scoreX = -0.96f;
-        scoreY = -Visuals.aspectRatio + (scoreText.getTextHeight() / 3f);
+        scoreY = -Graphics.aspectRatio + (scoreText.getTextHeight() / 3f);
         scoreText.pos.trans(scoreX, scoreY, 0f);
         scoreText.pos.rot(0f, 0f, 0f);
         scoreText.pos.scale(1f, 1f, 1f);
@@ -94,15 +76,13 @@ public class HUD {
         extraText.init("WATCH FOR MINECARTS", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), comboScale);
         extraText.pos.trans(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
 
-        ikon.init();
-
         Rectangle rect = new Rectangle(0f, 0f, 128f, 128f);
-        quadPauseButton.init(visuals.textureHudPauseButton, new MyColor(1f, 1f, 1f), rect, false);
-        quadPauseButton.pos.trans(0.94f, -Visuals.aspectRatio + 0.06f, 0f);
+        quadPauseButton.init(graphics.textureHudPauseButton, new MyColor(1f, 1f, 1f), rect, false);
+        quadPauseButton.pos.trans(0.94f, -Graphics.aspectRatio + 0.06f, 0f);
         float sc = 0.055f;
         quadPauseButton.pos.scale(sc, sc, 1f);
 
-        float scale = Visuals.aspectRatio * 0.1f;
+        float scale = Graphics.aspectRatio * 0.1f;
 
 /*
         final boolean flipUCoordinate = false;
@@ -177,8 +157,28 @@ public class HUD {
         extraText.addAnimEffect(effectWahWah);
     }
 
-    public void showMatch4() {
+    public void showMatch4InARowBonus() {
+        extraText.init("FOUR IN A ROW", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), perfectSwapScale);
+        float textWidth = extraText.getTextWidth() * 1.75f;
+        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
+        extraText.pos.rot(0f, 0f, 0f);
+        extraText.pos.scale(1.75f, 2f, 1f);
 
+        extraTextCooling = 45;
+        effectWahWah.wahScale = 0.9f;
+        extraText.addAnimEffect(effectZigZag);
+    }
+
+    public void showMatch4InAColBonus() {
+        extraText.init("FOUR IN A COLUMN", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), perfectSwapScale);
+        float textWidth = extraText.getTextWidth() * 1.75f;
+        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
+        extraText.pos.rot(0f, 0f, 0f);
+        extraText.pos.scale(1.75f, 2f, 1f);
+
+        extraTextCooling = 45;
+        effectWahWah.wahScale = 0.9f;
+        extraText.addAnimEffect(effectZigZag);
     }
 
     public void updateScore(int score) {
@@ -187,13 +187,12 @@ public class HUD {
             String str = "SCORE:" + score;
             scoreText.init(str, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), fontScale);
             cachedScore = score;
-            effectWahWahScore.wahScale = 0.06f;
+            effectWahWahScore.wahScale = 0.2f;
             scoreText.addAnimEffect(effectWahWahScore);
         }
     }
 
     public void update() {
-        ikon.update();
         scoreText.update();
         extraText.update();
         gemsFromCartText.update();
@@ -208,6 +207,8 @@ public class HUD {
                 extraText.removeAnimEffect();
             }
         }
+
+        //System.out.println("Score cooling: " + scoreCooling);
 
         if (scoreCooling > 0) {
             --scoreCooling;
@@ -251,17 +252,9 @@ public class HUD {
     }
 
     public void draw() {
-        visuals.setProjectionMatrix2D();
-        visuals.updateViewProjMatrix();
+        graphics.textureShader.useProgram();
 
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_BLEND);
-        glDisable(GL_DEPTH_TEST);
-
-        visuals.textureShader.useProgram();
-
-        //ikon.draw();
-        visuals.textureShader.setTexture(visuals.textureFonts);
+        graphics.textureShader.setTexture(graphics.textureFonts);
         scoreText.draw();
         if (extraTextCooling > 0) {
             extraText.draw();
@@ -272,27 +265,11 @@ public class HUD {
         }
 
 
-        Level level = (Level) ClassicSingleton.getInstance().level;
-        if ( level.gameState == Level.GameState.Playing ) {
+        Game game = Engine.getInstance().game;
+        if ( game.gameState == Game.GameState.Playing ) {
             quadPauseButton.draw();
         }
-/*
-        MyColor color = new MyColor(1f, 1f, 0f, 1f);
 
-        edgeDrawer.begin();
-        edgeDrawer.addLine(	-1f, 0f, 0f,
-                             1f, 0f, 0f);
-
-        edgeDrawer.addLine( 0f, -1f, 0f,
-                            0f,  1f, 0f);
-
-        setIdentityM(visuals.modelMatrix, 0);
-        multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
-
-        visuals.colorShader.useProgram();
-        visuals.colorShader.setUniforms(visuals.mvpMatrix, color);
-        edgeDrawer.bindData(visuals.colorShader);
-        edgeDrawer.draw();
-*/
+        //visuals.drawAxes();
     }
 }

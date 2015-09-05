@@ -2,8 +2,6 @@ package com.almagems.mineraider;
 
 import static com.almagems.mineraider.Constants.*;
 
-import com.almagems.mineraider.anims.PopAnimation;
-import com.almagems.mineraider.singletons.ClassicSingleton;
 
 public class ScoreCounter {
 
@@ -15,11 +13,12 @@ public class ScoreCounter {
     private static final int bonusForCombo = 1;
 
     private int score;
-
+    private final Game game;
     public int[] scoreByGemTypes = new int[MAX_GEM_TYPES];
 
     // ctor
-    public ScoreCounter() {
+    public ScoreCounter(Game game) {
+        this.game = game;
         reset();
     }
 
@@ -28,9 +27,10 @@ public class ScoreCounter {
         for (int i = 0; i < MAX_GEM_TYPES; ++i) {
             numberOfGems += gemTypes[i];
         }
-        ClassicSingleton.getInstance().sendGemsFromCartNotification(numberOfGems);
+
+        game.hud.showBonusCartGems(numberOfGems);
         score += numberOfGems;
-        ClassicSingleton.getInstance().hud.updateScore(score);
+        game.hud.updateScore(score);
     }
 
     public void reset() {
@@ -40,7 +40,7 @@ public class ScoreCounter {
     public void addScore(PopAnimation anim) {
         System.out.println("Add Score is:" + anim.count());
         score += anim.count(); // * 3;
-        calcBonusForScore(anim.count());
+        calcBonusForScore(anim);
 
         GemPosition gp;
         int size = anim.count();
@@ -53,15 +53,16 @@ public class ScoreCounter {
 
     public void addBonusForCombo() {
         score += bonusForCombo;
-        ClassicSingleton.getInstance().sendComboNotification();
+        game.hud.showCombo();
     }
 
     public void addBonusForPerfectSwap() {
         score += bonusForPerfectSwap;
-        ClassicSingleton.getInstance().sendPerfectSwapNotification();
+        game.hud.showPerfectSwap();
     }
 
-    private void calcBonusForScore(int count) {
+    private void calcBonusForScore(PopAnimation anim) {
+        int count = anim.count();
         System.out.println("calcBonusForScore... [" + score + "]");
         switch (count) {
             case 3:
@@ -69,9 +70,26 @@ public class ScoreCounter {
                 System.out.println("Plain match3, you can do better!");
                 break;
 
-            case 4:
+            case 4: {
                 System.out.println("Great match4, let's do more like this!");
+
+                int x = anim.getAt(0).boardX;
+                int y = anim.getAt(0).boardY;
+
+                if ( anim.getAt(1).boardY == y &&
+                        anim.getAt(2).boardY == y &&
+                        anim.getAt(3).boardY == y ) {
+                    game.hud.showMatch4InARowBonus();
+                } else if ( anim.getAt(1).boardX == x &&
+                     anim.getAt(2).boardX == x &&
+                     anim.getAt(3).boardX == x ) {
+                    game.hud.showMatch4InAColBonus();
+                } else {
+                    System.out.println("Something is wrong! Match4 without same column or same row");
+                }
+
                 score += bonusFor4Match;
+            }
                 break;
 
             case 5:
@@ -118,5 +136,12 @@ public class ScoreCounter {
         }
         System.out.println("-------------");
     }
+
+    public void setScoreByGemTypes(int[] arr) {
+        for (int i = 0; i < arr.length; ++i) {
+            scoreByGemTypes[i] = arr[i];
+        }
+    }
+
 
 }

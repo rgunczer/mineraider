@@ -6,35 +6,34 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.contacts.Contact;
 
-import com.almagems.mineraider.particlesystem.ParticleManager;
-import com.almagems.mineraider.singletons.ClassicSingleton;
-
 public class CollisionHandler implements ContactListener {
+
+    private Game game;
+
+    public CollisionHandler(Game game) {
+        this.game = game;
+    }
 
 	@Override
 	public void beginContact(Contact arg0) {
-		ClassicSingleton singleton = ClassicSingleton.getInstance();
-
 		Body bodyA = arg0.getFixtureA().getBody();
 		Body bodyB = arg0.getFixtureB().getBody();
 
-
-		if ( ( (bodyA.m_userData == singleton.cart1) && 
-			   (bodyB.m_userData == singleton.cart2) ) ||
+		if ( ( (bodyA.m_userData == game.cart1) &&
+			   (bodyB.m_userData == game.cart2) ) ||
 			   
-			   (bodyB.m_userData == singleton.cart1) && 
-			   (bodyA.m_userData == singleton.cart2) ) {		
-			
-			
+			   (bodyB.m_userData == game.cart1) &&
+			   (bodyA.m_userData == game.cart2) ) {
+
 		//	System.out.println("begin contact...");
 
-			Vec2 pos1 = singleton.cart1.cart.getPosition();
-			Vec2 pos2 = singleton.cart2.cart.getPosition();
+			Vec2 pos1 = game.cart1.body.getPosition();
+			Vec2 pos2 = game.cart2.body.getPosition();
 			
 			if (pos1.x < pos2.x) {
-				singleton.cart1.stopHitOtherCart();
+				game.cart1.onHitOtherCart();
 			} else {
-				singleton.cart2.stopHitOtherCart();
+				game.cart2.onHitOtherCart();
 			}
 
             /*

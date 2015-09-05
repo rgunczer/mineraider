@@ -7,7 +7,6 @@ import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.collision.shapes.EdgeShape;
-import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.dynamics.FixtureDef;
 
 import static com.almagems.mineraider.Constants.*;
@@ -33,12 +32,13 @@ public class Physics {
 	public ArrayList<Body> edges = new ArrayList<Body>();
     public ArrayList<Body> fragmentToRemove = new ArrayList<Body>(100);
 
-	public CollisionHandler collisionHandler = new CollisionHandler();
+	public final CollisionHandler collisionHandler;
 	
 	public World world;
 
-	public Physics() {
-		//Vec2 gravity = new Vec2(0.0f, -32.0f);
+	public Physics(Game game) {
+		collisionHandler = new CollisionHandler(game);
+
         Vec2 gravity = new Vec2(0.0f, -48.0f);
 		world = new World(gravity);
 		world.setSleepingAllowed(true);

@@ -1,31 +1,16 @@
 package com.almagems.mineraider;
 
-import com.almagems.mineraider.Match3.Match3;
-import com.almagems.mineraider.anims.AnimationManager;
-import com.almagems.mineraider.anims.BaseAnimation;
-import com.almagems.mineraider.anims.FallAnimation;
-import com.almagems.mineraider.anims.FallGroupAnimation;
-import com.almagems.mineraider.anims.SwapAnimation;
-import com.almagems.mineraider.objects.Model;
-import com.almagems.mineraider.visuals.Visuals;
-
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 
 import java.util.ArrayList;
 
 import static android.opengl.GLES20.*;
-import static com.almagems.mineraider.Constants.GEM_FRAGMENT_SIZE;
-import static com.almagems.mineraider.Constants.GEM_TYPE_0;
-import static com.almagems.mineraider.Constants.GEM_TYPE_1;
-import static com.almagems.mineraider.Constants.GEM_TYPE_2;
-import static com.almagems.mineraider.Constants.GEM_TYPE_3;
-import static com.almagems.mineraider.Constants.GEM_TYPE_4;
-import static com.almagems.mineraider.Constants.GEM_TYPE_5;
-import static com.almagems.mineraider.Constants.GEM_TYPE_6;
-import static com.almagems.mineraider.Constants.GEM_TYPE_NONE;
+import static com.almagems.mineraider.Constants.*;
 
 public class BatchDrawer {
+    public static Graphics graphics;
+
     public ArrayList<PositionInfo> gemsType0 = new ArrayList<PositionInfo>(90);
     public ArrayList<PositionInfo> gemsType1 = new ArrayList<PositionInfo>(90);
     public ArrayList<PositionInfo> gemsType2 = new ArrayList<PositionInfo>(90);
@@ -34,15 +19,12 @@ public class BatchDrawer {
     public ArrayList<PositionInfo> gemsType5 = new ArrayList<PositionInfo>(90);
     public ArrayList<PositionInfo> gemsType6 = new ArrayList<PositionInfo>(90);
 
-    private static final int MAX_POOL_GEMPOSITIONS = 630;
+    private static final int MAX_POOL_GEMPOSITIONS = 400;
     private ArrayList<PositionInfo> pool = new ArrayList<PositionInfo>(MAX_POOL_GEMPOSITIONS);
 
-    private Visuals visuals;
-    private PositionInfo pos = new PositionInfo();
 
     // ctor
-    public BatchDrawer(Visuals visuals) {
-        this.visuals = visuals;
+    public BatchDrawer() {
         for (int i = 0; i < MAX_POOL_GEMPOSITIONS; ++i) {
             pool.add( new PositionInfo() );
         }
@@ -207,13 +189,13 @@ public class BatchDrawer {
         int size = gems.size();
         if (size > 0) {
             PositionInfo pos;
-            Model model = visuals.gems[type];
-            model.bindData(visuals.pointLightShader);
+            Model model = graphics.gems[type];
+            model.bindData(graphics.pointLightShader);
 
             for (int i = 0; i < size; ++i) {
                 pos = gems.get(i);
-                visuals.calcMatricesForObject(pos);
-                visuals.pointLightShader.setUniforms();
+                graphics.calcMatricesForObject(pos);
+                graphics.pointLightShader.setUniforms();
                 model.draw();
             }
         }
@@ -222,24 +204,24 @@ public class BatchDrawer {
     void drawGemsPlatesByType(ArrayList<PositionInfo> gems, int type) {
         int size = gems.size();
         if (size > 0) {
-            visuals.colorShader.useProgram();
+            graphics.colorShader.useProgram();
 
             float temp;
             PositionInfo pos;
-            Model model = visuals.gemsPlates[type];
-            model.bindData(visuals.colorShader);
+            Model model = graphics.gemsPlates[type];
+            model.bindData(graphics.colorShader);
 
             for (int i = 0; i < size; ++i) {
                 pos = gems.get(i);
                 temp = pos.tz;
                 pos.tz -= 0.11f;
-                visuals.calcMatricesForObject(pos);
-                visuals.colorShader.setUniforms(visuals.mvpMatrix, visuals.blackColor);
+                graphics.calcMatricesForObject(pos);
+                graphics.colorShader.setUniforms(graphics.mvpMatrix, graphics.blackColor);
                 model.draw();
                 pos.tz = temp;
             }
 
-            visuals.pointLightShader.useProgram();
+            graphics.pointLightShader.useProgram();
         }
 
     }

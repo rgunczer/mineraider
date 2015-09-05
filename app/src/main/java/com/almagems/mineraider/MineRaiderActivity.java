@@ -18,7 +18,6 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.almagems.mineraider.singletons.ClassicSingleton;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -161,7 +160,7 @@ public class MineRaiderActivity extends Activity {
                 if (height > 0) {
                     // now the height is gotten, you can do things you want
                     System.out.println("Here the ad size is: " + height);
-                    ClassicSingleton.adHeight = height;
+                    Engine.adHeight = height;
                 }
             }
         });
@@ -181,9 +180,9 @@ public class MineRaiderActivity extends Activity {
             glSurfaceView.onPause();
         }
 
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-        singleton.savePreferences();
-        singleton.pauseAudio();
+        Engine engine = Engine.getInstance();
+        engine.savePreferences();
+        engine.pauseAudio();
 	}
 	
 	@Override
@@ -198,8 +197,8 @@ public class MineRaiderActivity extends Activity {
 			glSurfaceView.onResume();
 		}
 
-        ClassicSingleton singleton = ClassicSingleton.getInstance();
-        singleton.resumeAudio();
+        Engine engine = Engine.getInstance();
+        engine.resumeAudio();
 	}
 
 }

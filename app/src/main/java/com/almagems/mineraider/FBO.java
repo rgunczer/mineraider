@@ -1,5 +1,7 @@
 package com.almagems.mineraider;
 
+import android.text.method.HideReturnsTransformationMethod;
+
 import com.almagems.mineraider.Graphics;
 
 import static android.opengl.GLES20.*;
@@ -14,7 +16,21 @@ public class FBO {
     private int m_DepthBuffer;
     private int m_FrameBuffer;
 
+    private int width;
+    private int height;
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     public void create(int w, int h) {
+        width = w;
+        height = h;
+
         int[] temp = new int[1];
 
         // Create the color buffer
@@ -34,7 +50,7 @@ public class FBO {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
 
         // Create and Attach the texture to the FBO
-        m_TextureId = Graphics.createTexture(w, h);
+        m_TextureId = Graphics.createTexture(w, h); // <-- CALL CREATE TEXTURE HERE!!!
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_TextureId, 0);
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {

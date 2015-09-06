@@ -20,20 +20,20 @@ public class MenuGameTitleAnim {
         zz = startZZ;
     }
 
-    public void init(float sc) {
+    public void init(float sc, Texture textureObj) {
         boolean flipUTextureCoordinate = false;
         float aspect = Graphics.aspectRatio;
         Rectangle rect;
-        rect = new Rectangle(1097, 0+243, 591, 243);
+        rect = textureObj.getFrame("menu_game_title_mine.png");
         imageMine.init(graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
-        imageMine.pos.trans(0f, aspect * 0.6f, 0f);
+        imageMine.pos.trans(0f, aspect * 0.56f, 0f);
         imageMine.pos.rot(0f, 0f, 0f);
         imageMine.pos.scale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
 
 
-        rect = new Rectangle(0, 520+243, 591, 243);
+        rect = textureObj.getFrame("menu_game_title_raider.png");
         imageRaider.init(graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
-        imageRaider.pos.trans(0f, aspect * 0.6f, 0f);
+        imageRaider.pos.trans(0f, aspect * 0.56f, 0f);
         imageRaider.pos.rot(0f, 0f, 0f);
         imageRaider.pos.scale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
     }

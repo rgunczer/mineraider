@@ -24,6 +24,7 @@ public class Game extends Scene {
     public enum GameState {
         Loading,
         Menu,
+        Stats,
         Playing,
     }
 
@@ -31,10 +32,14 @@ public class Game extends Scene {
 
     private boolean initialized;
 
-    private Graphics graphics;
-    private Engine engine;
+    // overlays
     private Menu menu;
     private Loading loading;
+    private Stats stats;
+
+
+    private Graphics graphics;
+    private Engine engine;
 	private Physics physics;
 	private Match3 match3;
     private Quad background;
@@ -68,12 +73,18 @@ public class Game extends Scene {
     public void init(Engine engine) {
         this.engine = engine;
         graphics = engine.graphics;
+
+        Overlay.graphics = graphics;
         Quad.graphics = graphics;
-        Loading.graphics = graphics;
         ProgressBarControl.graphics = graphics;
-        Menu.graphics = graphics;
         Text.graphics = graphics;
         HUD.graphics = graphics;
+        MenuItem.graphics = graphics;
+        MenuImage.graphics = graphics;
+        MenuGameTitleAnim.graphics = graphics;
+        MenuGroup.graphics = graphics;
+        EffectAnim.graphics = graphics;
+
 
         background = new Quad();
         loading = new Loading();
@@ -128,6 +139,7 @@ public class Game extends Scene {
         PopAnimation.physics = physics;
 
         menu = new Menu();
+        stats = new Stats();
 
         hud = new HUD();
         hud.init();
@@ -156,7 +168,7 @@ public class Game extends Scene {
     public void renderToFBO() {
         graphics.fbo.bind();
 
-        glViewport(0, 0, (int) graphics.screenWidth, (int) graphics.screenHeight);
+        glViewport(0, 0, graphics.fbo.getWidth(), graphics.fbo.getHeight());
 
         // regular render
         glClearColor(0f, 0f, 0f, 0f);
@@ -206,6 +218,7 @@ public class Game extends Scene {
 
         background.initWithFBOTexture(graphics.fbo.getTextureId());
 
+        glViewport(0, 0, (int) Graphics.screenWidth, (int) Graphics.screenHeight);
         glClearColor(0f, 0f, 0f, 1f);
     }
 
@@ -232,13 +245,31 @@ public class Game extends Scene {
             hud.update();
             hud.updateScore(scoreCounter.getScore());
 
-            if (gameState == GameState.Menu) {
-                menu.update();
-                if (menu.getSelectedMenuOption() == Menu.MenuOptions.Play) {
-                    gameState = GameState.Playing;
-                }
-            } else if (gameState == GameState.Playing) {
-                updateInPlaying();
+            switch (gameState) {
+                case Menu:
+                    menu.update();
+                    switch (menu.getSelectedMenuOption()) {
+                        case Play:
+                            gameState = GameState.Playing;
+                            break;
+
+                        case Stats:
+                            gameState = GameState.Stats;
+                            menu.resetSelectedMenuOption();
+                            stats.init();
+                            break;
+                    }
+                    break;
+
+                case Stats:
+                    stats.update();
+                    if (stats.done) {
+                        gameState = GameState.Menu;
+                    }
+                    break;
+
+                case Playing:
+                    updateInPlaying();
             }
         }
     }
@@ -327,6 +358,8 @@ public class Game extends Scene {
 
             if (gameState == GameState.Menu) {
                 menu.draw();
+            } else if (gameState == GameState.Stats) {
+                stats.draw();
             } else {
                 graphics.setProjectionMatrix3D();
                 graphics.updateViewProjMatrix();
@@ -370,6 +403,10 @@ public class Game extends Scene {
 
             case Menu:
                 menu.handleTouchPress(normalizedX, normalizedY);
+                break;
+
+            case Stats:
+                stats.handleTouchPress(normalizedX, normalizedY);
                 break;
 
             case Loading:

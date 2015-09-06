@@ -9,19 +9,18 @@ import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
 
-public class Loading {
+public class Loading extends Overlay {
 
     private int loadingStepCounter = 0;
     private int maxLoadingStep = 13;
     public boolean done = false;
     private final Quad quad;
     private final ProgressBarControl progress;
-    public static Graphics graphics;
 
     // ctor
     public Loading() {
-        MyColor colorBody = new MyColor(0.8f, 0.3f, 0.2f);
-        MyColor colorFrame = new MyColor(0.2f, 0.2f, 0.2f);
+        MyColor colorBody = new MyColor(0.9f, 0.0f, 0.0f);
+        MyColor colorFrame = new MyColor(0.1f, 0.1f, 0.1f);
         float width = 1.0f;
         float height = 0.02f;
         float border = 0.01f;

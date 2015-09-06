@@ -342,6 +342,13 @@ public class Graphics {
         return texture.id;
     }
 
+    private int loadTextureAndJson(int textureResourceId, int jsonResourceId) {
+        Texture texture = TextureHelper.loadTexture(context, textureResourceId);
+        texture.loadFrames(context, jsonResourceId);
+        textures.add(texture);
+        return texture.id;
+    }
+
     public Texture getTextureObj(int textureId) {
         Texture texture;
         int size = textures.size();
@@ -377,7 +384,7 @@ public class Graphics {
         textureFonts = loadTexture(R.drawable.fontsandroid);
         textureEditorButtons = loadTexture(R.drawable.editor_buttons);
         textureHudPauseButton = loadTexture(R.drawable.hud_pause_button);
-		textureMenuItems = loadTexture(R.drawable.menu_items);
+		textureMenuItems = loadTextureAndJson(R.drawable.menu_items, R.raw.data);
 	}
 
 	public void bindNoTexture() {
@@ -844,7 +851,15 @@ public class Graphics {
 
         ParticleShader.pointSize = (float)width * 0.12f;
 
-        fbo.create(width, height);
+        if (width > 1080) {
+            fbo.create(width / 2, height / 2); // on really big displays avoid creating a full screen texture
+        } else {
+            fbo.create(width, height);
+        }
     }
+
+
+
+
 
 }

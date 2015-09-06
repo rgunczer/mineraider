@@ -3,9 +3,8 @@ package com.almagems.mineraider;
 import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.MyUtils.LERP;
 
-public class Fade extends EffectAnim {
 
-    private final Graphics graphics;
+public class Fade extends EffectAnim {
 
     private VertexArray vertexArray;
     private MyColor colorFrom;
@@ -14,15 +13,14 @@ public class Fade extends EffectAnim {
     private float t;
     private float dt = 0.05f; // speed
     public boolean done = false;
-    public int tag = 0;
     public Rectangle rect;
 
     // ctor
-    public Fade(Graphics graphics) {
-        this.graphics = graphics;
+    public Fade() {
+        System.out.println("Fade ctor...");
     }
 
-    public void init(MyColor from, MyColor to) { // do we need speed param!? for how fast the fading should occur
+    public void init(MyColor from, MyColor to) { // need of a speed param!? for how fast the fading should occur
         this.colorFrom = from;
         this.colorTo = to;
         colorCurrent = new MyColor(from);

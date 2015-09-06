@@ -4,14 +4,13 @@ import java.util.ArrayList;
 
 import static android.opengl.GLES20.*;
 
-public class Menu {
-
-    public static Graphics graphics;
+public class Menu extends Overlay {
 
     public enum MenuOptions {
         None,
         Play,
         Options,
+        Stats,
         Help,
         Back
     }
@@ -46,12 +45,7 @@ public class Menu {
         selectedMenuItem = null;
         selectedMenuOption = MenuOptions.None;
 
-        MenuItem.graphics = graphics;
-        MenuImage.graphics = graphics;
-        MenuGameTitleAnim.graphics = graphics;
-        MenuGroup.graphics = graphics;
-
-        fade = new Fade(graphics);
+        fade = new Fade();
 
         float sc;
         MenuGroup menuGroup;
@@ -61,35 +55,48 @@ public class Menu {
         Rectangle rect;
         float aspect = Graphics.aspectRatio;
         sc = 1.76f;
+        float itemY = aspect * 0.18f;
+        float itemYStep = 0.4f;
+
+        Texture textureObj = graphics.getTextureObj(graphics.textureMenuItems);
 
         // main menu
         menuGroup = new MenuGroup();
         menuGroup.init("MainMenu");
 
         MenuGameTitleAnim gameTitleAnim = new MenuGameTitleAnim();
-        gameTitleAnim.init(sc);
+        gameTitleAnim.init(sc, textureObj);
         menuGroup.add(gameTitleAnim);
 
         menuItem = new MenuItem();
-        rect = new Rectangle(447, 763+98, 277, 98);
+        rect = textureObj.getFrame("menu_item_play.png");
         menuItem.init("Play", MenuOptions.Play, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
-        menuItem.setTrans(0f, aspect * 0.2f, 0f);
+        menuItem.setTrans(0f, itemY - (0f * itemYStep) , 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
         menuGroup.add(menuItem);
 
         menuItem = new MenuItem();
-        rect = new Rectangle(0, 763+96, 447, 96);
+        rect = textureObj.getFrame("menu_item_options.png");
         menuItem.init("Options", MenuOptions.Options, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
-        menuItem.setTrans(0f, -aspect * 0.05f, 0f);
+        menuItem.setTrans(0f, itemY - (1f * itemYStep), 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
         menuGroup.add(menuItem);
 
         menuItem = new MenuItem();
-        rect = new Rectangle(1625, 520+94, 301, 94);
+        rect = textureObj.getFrame("menu_item_stats.png");
+        menuItem.init("Stats", MenuOptions.Stats, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.setTrans(0f, itemY - (2f * itemYStep), 0f);
+        menuItem.setRot(0f, 0f, 0f);
+        menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
+        menuItem.tag = "Stats";
+        menuGroup.add(menuItem);
+
+        menuItem = new MenuItem();
+        rect = textureObj.getFrame("menu_item_help.png");
         menuItem.init("Help", MenuOptions.Help, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
-        menuItem.setTrans(0f, -aspect * 0.3f, 0f);
+        menuItem.setTrans(0f, itemY - (3f * itemYStep), 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
         menuItem.tag = "Help";
@@ -106,7 +113,7 @@ public class Menu {
 
         // back
         menuItem = new MenuItem();
-        rect = new Rectangle(926, 520+94, 299, 94);
+        rect = textureObj.getFrame("menu_item_back.png");
         menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
         menuItem.setRot(0f, 0f, 0f);
@@ -116,7 +123,7 @@ public class Menu {
 
         // music
         menuImage = new MenuImage();
-        rect = new Rectangle(724, 763+74, 207, 74);
+        rect = textureObj.getFrame("menu_title_music.png");
         menuImage.init("music", graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.5f, 0f);
         menuImage.setRot(0f, 0f, 0f);
@@ -125,7 +132,7 @@ public class Menu {
 
         // sound
         menuImage = new MenuImage();
-        rect = new Rectangle(931, 763+75, 214, 75);
+        rect = textureObj.getFrame("menu_title_sound.png");
         menuImage.init("sound", graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.1f, 0f);
         menuImage.setRot(0f, 0f, 0f);
@@ -156,7 +163,7 @@ public class Menu {
 
         // credits
         menuItem = new MenuItem();
-        rect = new Rectangle(1225, 520+98, 400, 98);
+        rect = textureObj.getFrame("menu_item_credits.png");
         menuItem.init("Credits", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, aspect * 0.2f, 0f);
         menuItem.setRot(0f, 0f, 0f);
@@ -166,7 +173,7 @@ public class Menu {
 
         // about
         menuItem = new MenuItem();
-        rect = new Rectangle(591, 520+96, 335, 96);
+        rect = textureObj.getFrame("menu_item_about.png");
         menuItem.init("About", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.1f, 0f);
         menuItem.setRot(0f, 0f, 0f);
@@ -176,7 +183,7 @@ public class Menu {
 
         // back
         menuItem = new MenuItem();
-        rect = new Rectangle(926, 520+94, 299, 94);
+        rect = textureObj.getFrame("menu_item_back.png");
         menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
         menuItem.setRot(0f, 0f, 0f);
@@ -193,7 +200,7 @@ public class Menu {
 
         // credits image
         menuImage = new MenuImage();
-        rect = new Rectangle(604, 0+387, 493, 387);
+        rect = textureObj.getFrame("menu_credits.png");
         menuImage.init("credits", graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.2f, 0f);
         menuImage.setRot(0f, 0f, 0f);
@@ -202,7 +209,7 @@ public class Menu {
 
         // back
         menuItem = new MenuItem();
-        rect = new Rectangle(926, 520+94, 299, 94);
+        rect = textureObj.getFrame("menu_item_back.png");
         menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
         menuItem.setRot(0f, 0f, 0f);
@@ -219,7 +226,7 @@ public class Menu {
 
         // about image
         menuImage = new MenuImage();
-        rect = new Rectangle(0, 0+520, 604, 520);
+        rect = textureObj.getFrame("menu_about_text.png");
         menuImage.init("about", graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.2f, 0f);
         menuImage.setRot(0f, 0f, 0f);
@@ -228,9 +235,9 @@ public class Menu {
 
         // back
         menuItem = new MenuItem();
-        rect = new Rectangle(926, 520+94, 299, 94);
+        rect = textureObj.getFrame("menu_item_back.png");
         menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
-        menuItem.setTrans(0f, -aspect * 0.4f, 0f);
+        menuItem.setTrans(0f, -aspect * 0.5f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
         menuItem.tag = "Help";
@@ -279,8 +286,6 @@ public class Menu {
             }
         }
     }
-
-
 
     public void draw() {
         //System.out.println("Menu draw...");
@@ -349,6 +354,10 @@ public class Menu {
     public void reset() {
         currentGroup.reset();
         selectedMenuItem = null;
+        selectedMenuOption = MenuOptions.None;
+    }
+
+    public void resetSelectedMenuOption() {
         selectedMenuOption = MenuOptions.None;
     }
 }

@@ -1,8 +1,8 @@
 package com.almagems.mineraider;
 
-import com.almagems.mineraider.PositionInfo;
-
 public abstract class EffectAnim {
+
+    public static Graphics graphics;
 
     public PositionInfo posOrigin = new PositionInfo();
     public PositionInfo pos;

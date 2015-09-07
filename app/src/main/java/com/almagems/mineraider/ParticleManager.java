@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import android.graphics.Color;
 
 
-public class ParticleManager {
+public final class ParticleManager {
 
     public static Graphics graphics;
 	private long globalStartTime;

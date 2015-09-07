@@ -1,7 +1,7 @@
 package com.almagems.mineraider;
 
 
-public class Constants {
+public final class Constants {
     public static final int BYTES_PER_SHORT = 2;
 	public static final int BYTES_PER_FLOAT = 4;
 	public static final int MAX_GEM_TYPES = 7;

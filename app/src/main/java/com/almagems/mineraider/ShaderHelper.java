@@ -4,7 +4,7 @@ import static android.opengl.GLES20.*;
 
 import android.util.Log;
 
-public class ShaderHelper {
+public final class ShaderHelper {
 
 	private static final String TAG = "ShaderHelper";
 	

@@ -14,7 +14,7 @@ import static com.almagems.mineraider.Constants.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Physics {
+public final class Physics {
 
     private final PolygonShape polygonShape = new PolygonShape();
     private final Random random = new Random();

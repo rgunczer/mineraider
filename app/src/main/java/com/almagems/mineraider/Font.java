@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class Font {
+public final class Font {
 
     // ctor
     public Font() {

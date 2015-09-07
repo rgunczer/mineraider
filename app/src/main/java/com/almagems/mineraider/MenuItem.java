@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class MenuItem {
+public final class MenuItem {
     private String name;
     private Quad quad;
     public Menu.MenuOptions menuOption;

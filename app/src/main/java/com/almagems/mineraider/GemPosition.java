@@ -3,7 +3,7 @@ package com.almagems.mineraider;
 import static com.almagems.mineraider.Constants.*;
 
 
-public class GemPosition {
+public final class GemPosition {
 
     public enum GemExtras {
         Nothing,

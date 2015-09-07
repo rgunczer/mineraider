@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class SwapHint {
+public final class SwapHint {
 	public final PositionInfo pos;
 	
 	private float animStep = 0.0f;

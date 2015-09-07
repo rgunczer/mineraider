@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class SwapAnimation extends BaseAnimation {
+public final class SwapAnimation extends BaseAnimation {
 	public final GemPosition firstAnim;
 	public final GemPosition secondAnim;
 

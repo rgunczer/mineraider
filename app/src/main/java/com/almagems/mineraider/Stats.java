@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 
-public class Stats extends Overlay {
+public final class Stats extends Overlay {
 
     private final MenuItemAnim menuItemAnim;
     private final MenuItem backButton;

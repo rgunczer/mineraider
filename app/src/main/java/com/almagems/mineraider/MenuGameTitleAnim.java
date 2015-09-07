@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class MenuGameTitleAnim {
+public final class MenuGameTitleAnim {
 
     private final Quad imageMine;
     private final Quad imageRaider;

@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class RockData {
+public final class RockData {
 	public int rockId;
 
     public float x;

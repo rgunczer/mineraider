@@ -4,7 +4,7 @@ import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 
 
-public class ColorShader extends BaseShader {
+public final class ColorShader extends BaseShader {
     private static final int POSITION_COMPONENT_COUNT = 3;
     private static final int COLOR_COMPONENT_COUNT = 4;
     private static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;

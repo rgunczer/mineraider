@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class Plane {
+public final class Plane {
     public final Vector point;
     public final Vector normal;
 

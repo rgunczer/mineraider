@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 
-public class ModelLoader {
+public final class ModelLoader {
 	
 	public ArrayList<Vertex> vertices = new ArrayList<Vertex>();
 	private ArrayList<Vector> verts = new ArrayList<Vector>();

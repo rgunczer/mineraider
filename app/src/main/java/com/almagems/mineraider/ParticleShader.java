@@ -3,7 +3,7 @@ package com.almagems.mineraider;
 import static android.opengl.GLES20.*;
 
 
-public class ParticleShader extends BaseShader {
+public final class ParticleShader extends BaseShader {
 
 	// uniform locations
 	private final int uMatrixLocation;

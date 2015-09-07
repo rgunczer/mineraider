@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Graphics {
+public final class Graphics {
 
     public static float screenWidth;
     public static float screenHeight;
@@ -75,9 +75,7 @@ public class Graphics {
 	public Model marker;
 	public Model hint;
 	public Model mineCart;
-	public Model mineCartWheel;
-	public Model railroad;	
-	public Model mine;
+	public Model railroad;
 	public Model floor;
 	public Model wall;
 	public Model pillar;
@@ -95,7 +93,6 @@ public class Graphics {
 	public Model rock7;
 	public Model rock8;
 	public Model pickAxe;
-	public Model mineInterior;
 
 	// shaders
 	public TextureShader textureShader;
@@ -160,7 +157,6 @@ public class Graphics {
 
 	public void loadShaders() { //throws Exception {
 		System.out.println("loadShaders - BEGIN");
-
 
 		dirLightShader = new DirLightShader();
 		particleShader = new ParticleShader();
@@ -248,16 +244,8 @@ public class Graphics {
         mineCart = new Model(ml);
 
         ml = new ModelLoader();
-        ml.init(context, R.drawable.cart_wheel, "MineCartWheel");
-        mineCartWheel = new Model(ml);
-
-        ml = new ModelLoader();
         ml.init(context, R.drawable.railroad, "RailRoad");
         railroad = new Model(ml);
-
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.mine, "Mine");
-        mine = new Model(ml);
 
         ml = new ModelLoader();
         ml.init(context, R.drawable.floor, "Floor");
@@ -330,11 +318,7 @@ public class Graphics {
 		ml = new ModelLoader();
 		ml.init(context, R.drawable.pickaxe, "PickAxe");
 		pickAxe = new Model(ml);
-
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.mine_interior, "MineInterior");
-        mineInterior = new Model(ml);
-	}	
+	}
 
     private int loadTexture(int resourceId) {
         Texture texture = TextureHelper.loadTexture(context, resourceId);
@@ -390,7 +374,6 @@ public class Graphics {
 	public void bindNoTexture() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-
 
     public void setProjectionMatrix2D() {
         setProjectionMatrix2D((int) screenWidth, (int) screenHeight);
@@ -638,7 +621,7 @@ public class Graphics {
         return vb;
     }
 
-	public int colorFromGemType(int type) {		
+	public int colorFromGemType(int type) {
 		switch (type) {
 			case GEM_TYPE_0: return Color.rgb(255, 6, 0);	
 			case GEM_TYPE_1: return Color.rgb(255, 35, 99);						
@@ -858,8 +841,46 @@ public class Graphics {
         }
     }
 
+    public void releaseUnusedAssets() {
+        int[] arr = new int[]{
+                textureRailRoad,
+                textureFloor,
+                textureWall,
+                texturePillar,
+                textureCrate,
+                textureSoil,
+                textureBeam,
+                textureCliff142,
+                texturePickAxe,
+                textureEditorButtons
+        };
 
+        for (int i = 0; i < arr.length; ++i) {
+            Texture texture = getTextureObj( arr[i] );
+            if (texture != null) {
+                textures.remove(texture);
+            }
+        }
 
+        glDeleteTextures(arr.length, arr, 0);
 
+        railroad = null;
+        floor = null;
+        wall = null;
+        pillar = null;
+        crate = null;
+        soil = null;
+        beam = null;
+        rock0 = null;
+        rock1 = null;
+        rock2 = null;
+        rock3 = null;
+        rock4 = null;
+        rock5 = null;
+        rock6 = null;
+        rock7 = null;
+        rock8 = null;
+        pickAxe = null;
+    }
 
 }

@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class MenuImage {
+public final class MenuImage {
 
     public static Graphics graphics;
     private String name;

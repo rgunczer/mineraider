@@ -4,7 +4,7 @@ import static com.almagems.mineraider.Constants.*;
 
 import java.util.ArrayList;
 
-public class Match3 {
+public final class Match3 {
 
     public int showHintCounterStartValue = 200;
 	public int showHintCounter = showHintCounterStartValue;

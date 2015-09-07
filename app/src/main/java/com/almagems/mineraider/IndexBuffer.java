@@ -9,7 +9,7 @@ import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 
 
-public class IndexBuffer {
+public final class IndexBuffer {
 
     public final int bufferId;
 

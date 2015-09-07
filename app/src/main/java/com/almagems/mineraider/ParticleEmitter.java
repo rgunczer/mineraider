@@ -4,7 +4,7 @@ import java.util.Random;
 
 import static android.opengl.Matrix.*;
 
-public class ParticleEmitter {
+public final class ParticleEmitter {
 	public Vector position;
 	public int color;
 	private final float angleVariance;

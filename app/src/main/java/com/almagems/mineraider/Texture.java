@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Texture {
+public final class Texture {
     public int id;
     public float width;
     public float height;

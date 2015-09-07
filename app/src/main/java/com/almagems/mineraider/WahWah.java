@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class WahWah extends EffectAnim {
+public final class WahWah extends EffectAnim {
 
     private float elapsed;
     private float d;

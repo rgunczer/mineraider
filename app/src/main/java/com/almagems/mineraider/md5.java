@@ -3,7 +3,7 @@ package com.almagems.mineraider;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class md5 {
+public final class md5 {
 
 	
 	public static String md5(String s) {

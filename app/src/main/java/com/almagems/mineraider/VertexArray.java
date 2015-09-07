@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class VertexArray {
+public final class VertexArray {
 
 	private final FloatBuffer floatBuffer;
 	

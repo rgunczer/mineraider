@@ -3,7 +3,7 @@ package com.almagems.mineraider;
 import static android.opengl.GLES20.*;
 
 
-public class PointLightShader extends BaseShader {
+public final class PointLightShader extends BaseShader {
 	
 	// uniform locations	
 	private final int uModelViewLocation;	

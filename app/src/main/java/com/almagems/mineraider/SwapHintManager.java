@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 import java.util.ArrayList;
 
-public class SwapHintManager {
+public final class SwapHintManager {
 
     private ArrayList<SwapHint> pool = new ArrayList<SwapHint>();
     private ArrayList<SwapHint> live = new ArrayList<SwapHint>();

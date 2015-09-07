@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 import static android.opengl.Matrix.*;
 
-public class Geometry {
+public final class Geometry {
 
     public static Vector intersectionPoint(Ray ray, Plane plane) {
         Vector rayToPlaneVector = vectorBetween(ray.point, plane.point);

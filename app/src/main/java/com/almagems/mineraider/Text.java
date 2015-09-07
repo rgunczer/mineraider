@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 
-public class Text {
+public final class Text {
 
     public static Graphics graphics;
     private VertexArray vertexArray;

@@ -9,10 +9,10 @@ import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
 
-public class Loading extends Overlay {
+public final class Loading extends Overlay {
 
     private int loadingStepCounter = 0;
-    private int maxLoadingStep = 13;
+    private int maxLoadingStep = 14;
     public boolean done = false;
     private final Quad quad;
     private final ProgressBarControl progress;
@@ -103,6 +103,10 @@ public class Loading extends Overlay {
 
             case 13:
                 engine.loadPreferences();
+                break;
+
+            case 14:
+                engine.graphics.releaseUnusedAssets();
                 break;
         }
 

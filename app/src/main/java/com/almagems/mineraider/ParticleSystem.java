@@ -6,7 +6,7 @@ import static android.opengl.GLES20.*;
 import android.graphics.Color;
 
 
-public class ParticleSystem {
+public final class ParticleSystem {
 	private static final int POSITION_COMPONENT_COUNT = 3;
 	private static final int COLOR_COMPONENT_COUNT = 3;
 	private static final int VECTOR_COMPONENT_COUNT = 3;

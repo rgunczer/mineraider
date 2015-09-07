@@ -1,7 +1,7 @@
 package com.almagems.mineraider;
 
 
-public class HUD {
+public final class HUD {
     public static Graphics graphics;
 
     private int cachedScore;

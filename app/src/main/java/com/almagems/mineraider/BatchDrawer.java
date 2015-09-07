@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 
-public class BatchDrawer {
+public final class BatchDrawer {
     public static Graphics graphics;
 
     public ArrayList<PositionInfo> gemsType0 = new ArrayList<PositionInfo>(90);

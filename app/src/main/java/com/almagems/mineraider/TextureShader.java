@@ -5,7 +5,7 @@ import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 
 
-public class TextureShader extends BaseShader {
+public final class TextureShader extends BaseShader {
 
 	// uniform locations
 	private final int uMatrixLocation;

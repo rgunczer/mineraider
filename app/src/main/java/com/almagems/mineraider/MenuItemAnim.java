@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class MenuItemAnim {
+public final class MenuItemAnim {
     public MenuItem menuItem;
     private final float menuAnimSpeed = 0.025f;
     private float menuAnimStartValue;

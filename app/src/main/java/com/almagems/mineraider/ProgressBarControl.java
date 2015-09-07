@@ -3,7 +3,7 @@ package com.almagems.mineraider;
 import static android.opengl.GLES20.GL_TRIANGLES;
 import static android.opengl.GLES20.glDrawArrays;
 
-public class ProgressBarControl {
+public final class ProgressBarControl {
 
     private String name;
     private float width;

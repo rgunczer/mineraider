@@ -4,7 +4,7 @@ import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.BYTES_PER_FLOAT;
 
 
-public class DirLightShader extends BaseShader {	
+public final class DirLightShader extends BaseShader {
 	// uniform locations
 	private final int uMVPMatrixLocation;
 	private final int uMVMatrixLocation;

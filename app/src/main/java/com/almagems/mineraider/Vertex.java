@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class Vertex {
+public final class Vertex {
 
 	// vertex
 	public float x;

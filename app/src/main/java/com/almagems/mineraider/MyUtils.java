@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 import java.util.Random;
 
-public class MyUtils {
+public final class MyUtils {
 
 	public static int randInt(int min, int max) {
 

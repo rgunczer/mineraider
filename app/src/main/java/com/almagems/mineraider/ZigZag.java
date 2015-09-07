@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 import java.util.Random;
 
-public class ZigZag extends EffectAnim {
+public final class ZigZag extends EffectAnim {
 
     private Random rand = new Random();
     private float dx = 0.01f;

@@ -17,7 +17,7 @@ import org.jbox2d.dynamics.joints.WheelJoint;
 import org.jbox2d.dynamics.joints.WheelJointDef;
 
 
-public class MineCart {
+public final class MineCart {
 
     private enum CartState {
         Entering,
@@ -378,6 +378,7 @@ public class MineCart {
         graphics.calcMatricesForObject(op);
 		graphics.dirLightShader.setUniforms();
 		graphics.wheel.draw();
+
 
 		// wheel 2
 		pos = wheel2.getPosition();

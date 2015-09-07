@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class PositionInfo {
+public final class PositionInfo {
 	
 	public float tx; // translation along x axis
 	public float ty; // translation along y axis

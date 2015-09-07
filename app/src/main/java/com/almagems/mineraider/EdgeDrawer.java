@@ -4,7 +4,7 @@ import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 
 
-public class EdgeDrawer {
+public final class EdgeDrawer {
 	private static final int POSITION_COMPONENT_COUNT = 3;	
 	private static final int TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT;	
 	private static final int STRIDE = TOTAL_COMPONENT_COUNT * BYTES_PER_FLOAT;

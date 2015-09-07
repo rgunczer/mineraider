@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 
-public class Engine {
+public final class Engine {
 
     private static Engine instance;
     public static float adHeight;

@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 
-public class Quad {
+public final class Quad {
     public final PositionInfo pos;
     private VertexArray vertexArray;
     private int textureId;

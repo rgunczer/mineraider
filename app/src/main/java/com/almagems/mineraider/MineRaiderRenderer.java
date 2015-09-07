@@ -10,7 +10,7 @@ import android.os.SystemClock;
 import android.widget.Toast;
 
 
-public class MineRaiderRenderer implements Renderer {
+public final class MineRaiderRenderer implements Renderer {
 
 	private long frameStartTimeMS;
 	private final Context context;

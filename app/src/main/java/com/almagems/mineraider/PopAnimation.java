@@ -5,7 +5,7 @@ import static com.almagems.mineraider.Constants.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PopAnimation extends BaseAnimation {
+public final class PopAnimation extends BaseAnimation {
 
     private Random rand = new Random();
 

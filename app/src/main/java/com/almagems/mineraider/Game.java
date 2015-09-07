@@ -19,7 +19,7 @@ import org.jbox2d.dynamics.Fixture;
 import static com.almagems.mineraider.Constants.*;
 
 
-public class Game extends Scene {
+public final class Game extends Scene {
 
     public enum GameState {
         Loading,
@@ -446,7 +446,6 @@ public class Game extends Scene {
 	}
 
 	public void handleTouchDrag(float normalizedX, float normalizedY) {
-
         switch (gameState) {
             case Menu:
                 handleTouchDragOnMenu(normalizedX, normalizedY);
@@ -617,7 +616,7 @@ public class Game extends Scene {
 		}
 	}	
 
-	private GemPosition getSelectedGemFromRay(Ray ray) {		
+	private GemPosition getSelectedGemFromRay(Ray ray) {
 		for(int y = 0; y < match3.boardSize; ++y) {
 			for (int x = 0; x < match3.boardSize; ++x) {
 				GemPosition gp = match3.board[x][y];				
@@ -651,7 +650,7 @@ public class Game extends Scene {
 		}			
 	}
 
-    void drawPhysics() {
+    private void drawPhysics() {
         glDisable(GL_DEPTH_TEST);
         drawPhysicsStatics();
         drawPhysicsGemsFixtures();
@@ -782,7 +781,7 @@ public class Game extends Scene {
 		}
 	}
 
-	void drawRailRoad() {
+	private void drawRailRoad() {
         graphics.railroad.bindData(graphics.dirLightShader);
 
 		float x = -10f;
@@ -804,7 +803,7 @@ public class Game extends Scene {
 		}		
 	}	
 	
-	void drawRock(Model rock, float x, float y, float z, float degree) {
+	private void drawRock(Model rock, float x, float y, float z, float degree) {
 		pos.trans(x, y, z);
         pos.rot(0f, 0f, degree); // ???
         pos.scale(1f, 1f, 1f);
@@ -815,7 +814,7 @@ public class Game extends Scene {
 		rock.draw();		
 	}
 
-	void drawPickAxes() {
+	private void drawPickAxes() {
 		Model pickAxe = graphics.pickAxe;
 
 		pos.trans(9f, -20f, 4.0f);
@@ -828,7 +827,7 @@ public class Game extends Scene {
 		pickAxe.draw();				
 	}
 			
-	void drawRocks() {
+	private void drawRocks() {
         // rock types
 //		float y = -15f;
 //		float z = 0f;
@@ -904,7 +903,7 @@ public class Game extends Scene {
 		drawRock(graphics.rock5, -11.5f, 0.0f, -4.75f, 8.0f);
 	}
 	
-	void drawFloor() {
+	private void drawFloor() {
         pos.trans(0f, -20.5f, 0f);
         pos.rot(0f, 0f, 0f);
         pos.scale(1.0f, 1.0f, 1.0f);
@@ -916,7 +915,7 @@ public class Game extends Scene {
         graphics.floor.unbind();
     }
 
-    void drawWall() {
+    private void drawWall() {
         pos.trans(0f, -15f, -4f);
         pos.rot(0f, 0f, 0f);
         pos.scale(1f, 1f, 1f);
@@ -928,7 +927,7 @@ public class Game extends Scene {
         graphics.wall.unbind();
     }
 
-    void drawSoil() {
+    private void drawSoil() {
         pos.trans(0f, 6f, -3.5f);
         pos.rot(0f, 0f, 0f);
         pos.scale(1.9f, 1.6f, 1.0f);
@@ -938,7 +937,7 @@ public class Game extends Scene {
 		graphics.soil.draw();
 	}
 	
-	void drawCrates() {
+	private void drawCrates() {
         graphics.crate.bindData(graphics.dirLightShader);
 
 		pos.trans(-12.5f, -18.6f, -2.0f);
@@ -956,7 +955,7 @@ public class Game extends Scene {
 		graphics.crate.draw();
 	}
 
-	void drawBeam() {						
+	private void drawBeam() {
 		pos.trans(0f, -16f, -2.5f);
 		pos.rot(0f, 0f, 0f);
 		pos.scale(1.0f, 1.0f, 1.0f);
@@ -966,7 +965,7 @@ public class Game extends Scene {
 		graphics.beam.draw();
 	}
 	
-	void drawPillars() {
+	private void drawPillars() {
         graphics.pillar.bindData(graphics.dirLightShader);
 
 		pos.trans(-9.5f, -16f, -2.5f);

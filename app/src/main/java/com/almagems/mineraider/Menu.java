@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import static android.opengl.GLES20.*;
 
-public class Menu extends Overlay {
+public final class Menu extends Overlay {
 
     public enum MenuOptions {
         None,

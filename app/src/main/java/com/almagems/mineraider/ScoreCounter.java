@@ -3,7 +3,7 @@ package com.almagems.mineraider;
 import static com.almagems.mineraider.Constants.*;
 
 
-public class ScoreCounter {
+public final class ScoreCounter {
 
     private static final int bonusForPerfectSwap = 20; // valid match in both place
     private static final int bonusFor4Match = 3;

@@ -1,7 +1,7 @@
 package com.almagems.mineraider;
 
 
-public class Scene {
+public abstract class Scene {
 
     protected enum SwipeDir {
         SwipeNone,

@@ -1,8 +1,7 @@
 package com.almagems.mineraider;
 
-import com.almagems.mineraider.GemPosition;
 
-public class FallAnimation {
+public final class FallAnimation {
 	public final GemPosition animGemFrom;
 	public final GemPosition animGemTo;
 

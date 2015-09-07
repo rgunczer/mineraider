@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class MatrixHelper 
+public final class MatrixHelper
 {
 
 	public static void perspectiveM(float[] m, float yFovInDegrees, float aspect,float n, float f)

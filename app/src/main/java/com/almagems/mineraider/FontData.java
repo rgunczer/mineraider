@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class FontData {
+public final class FontData {
     public char ch;
     public Rectangle rect;
 

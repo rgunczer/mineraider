@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class Sphere {
+public final class Sphere {
     public final Vector center;
     public final float radius;
 

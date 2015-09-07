@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class Rectangle {
+public final class Rectangle {
     public float x;
     public float y;
     public float w;

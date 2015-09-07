@@ -5,7 +5,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 
 
-public class Audio {
+public final class Audio {
 
     SoundPool soundPool;
     int soundIds[] = new int [10];

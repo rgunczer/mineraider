@@ -8,7 +8,7 @@ import java.nio.FloatBuffer;
 
 import static com.almagems.mineraider.Constants.*;
 
-public class VertexBuffer {
+public final class VertexBuffer {
 
 	public final int bufferId;
 	

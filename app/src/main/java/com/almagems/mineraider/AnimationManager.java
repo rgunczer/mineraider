@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class AnimationManager {
+public final class AnimationManager {
 
 	public BaseAnimation running;
 	public BaseAnimation finished;

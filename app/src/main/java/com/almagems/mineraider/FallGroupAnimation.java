@@ -3,7 +3,7 @@ package com.almagems.mineraider;
 import java.util.ArrayList;
 
 
-public class FallGroupAnimation extends BaseAnimation {
+public final class FallGroupAnimation extends BaseAnimation {
 
     private ArrayList<FallAnimation> pool = new ArrayList<FallAnimation>();
 	private ArrayList<FallAnimation> list = new ArrayList<FallAnimation>();

@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class MatchPosition {
+public final class MatchPosition {
 	public int x;
 	public int y;
 	public boolean match;

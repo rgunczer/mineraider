@@ -8,7 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 //import android.util.Log;
 
-public class TextureHelper {
+public final class TextureHelper {
 
 	//private static final String TAG = "TextureHelper";
 	

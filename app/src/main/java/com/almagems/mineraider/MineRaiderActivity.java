@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
+import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -23,7 +24,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 
-public class MineRaiderActivity extends Activity {
+public final class MineRaiderActivity extends Activity {
 	private AdView adView;
 	private GLSurfaceView glSurfaceView;
 	private boolean rendererSet = false;
@@ -36,6 +37,7 @@ public class MineRaiderActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		glSurfaceView = new GLSurfaceView(this);
+		glSurfaceView.getHolder().setFormat(PixelFormat.RGB_565);
 		setContentView(glSurfaceView);
 		//setContentView(R.layout.activity_hello_world);
 		//glSurfaceView = (GLSurfaceView)findViewById(R.id.glSurfaceView);

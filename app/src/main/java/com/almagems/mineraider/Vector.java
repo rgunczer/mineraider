@@ -3,7 +3,7 @@ package com.almagems.mineraider;
 import android.util.FloatMath;
 
 	
-public class Vector {
+public final class Vector {
 	public float x, y, z;
 	
 	// ctor

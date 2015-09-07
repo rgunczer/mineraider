@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class TexturedQuad {
+public final class TexturedQuad {
     public char ch;
 
     public float w;

@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class Ray {
+public final class Ray {
     public final Vector point;
     public final Vector vector;
 

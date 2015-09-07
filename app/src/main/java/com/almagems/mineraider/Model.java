@@ -4,7 +4,7 @@ import static android.opengl.GLES20.*;
 
 import static com.almagems.mineraider.Constants.*;
 
-public class Model {
+public final class Model {
 
 	private static final int POSITION_COMPONENT_COUNT = 3;              // x, y, z
 	private static final int NORMAL_COMPONENT_COUNT = 3;                // nx, ny, nz

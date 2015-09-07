@@ -1,6 +1,6 @@
 package com.almagems.mineraider;
 
-public class MyColor {
+public final class MyColor {
 	public float r, g, b, a;
 
     // ctor

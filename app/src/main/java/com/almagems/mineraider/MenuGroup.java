@@ -2,15 +2,10 @@ package com.almagems.mineraider;
 
 import java.util.ArrayList;
 
-import static android.opengl.GLES20.GL_BLEND;
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
-import static android.opengl.GLES20.GL_SRC_ALPHA;
-import static android.opengl.GLES20.glBlendFunc;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
+import static android.opengl.GLES20.*;
 
-public class MenuGroup {
+
+public final class MenuGroup {
 
     public ArrayList<MenuItem> items = new ArrayList<MenuItem>(10);
     public ArrayList<MenuImage> images = new ArrayList<MenuImage>(10);

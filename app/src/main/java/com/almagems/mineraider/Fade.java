@@ -4,7 +4,7 @@ import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.MyUtils.LERP;
 
 
-public class Fade extends EffectAnim {
+public final class Fade extends EffectAnim {
 
     private VertexArray vertexArray;
     private MyColor colorFrom;

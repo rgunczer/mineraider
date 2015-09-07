@@ -1,12 +1,9 @@
 package com.almagems.mineraider;
 
-import android.text.method.HideReturnsTransformationMethod;
-
-import com.almagems.mineraider.Graphics;
-
 import static android.opengl.GLES20.*;
 
-public class FBO {
+
+public final class FBO {
 
     // FBO vars
     private int m_TextureId;

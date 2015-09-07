@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 
-public class PixelLightShader extends BaseShader {
+public final class PixelLightShader extends BaseShader {
 
 	// uniform locations [vertex shader]
 	private final int uProjection;

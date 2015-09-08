@@ -134,7 +134,7 @@ public final class Stats extends Overlay {
         glEnable(GL_BLEND);
         glDisable(GL_DEPTH_TEST);
 
-        graphics.textureShader.setTexture(graphics.textureFonts);
+        graphics.textureShader.setTexture(Graphics.textureFonts);
         text[0].draw();
         text[1].draw();
         text[2].draw();
@@ -147,7 +147,7 @@ public final class Stats extends Overlay {
         fade.draw();
 
         graphics.textureShader.useProgram();
-        graphics.textureShader.setTexture(graphics.textureMenuItems);
+        graphics.textureShader.setTexture(Graphics.textureMenuItems);
         backButton.draw();
     }
 

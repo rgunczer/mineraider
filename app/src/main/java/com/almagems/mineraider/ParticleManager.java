@@ -104,7 +104,7 @@ public final class ParticleManager {
         remove.clear();
 
 		graphics.particleShader.useProgram();
-		graphics.particleShader.setTexture(graphics.textureParticle);
+		graphics.particleShader.setTexture(Graphics.textureParticle);
 		graphics.particleShader.setUniforms(graphics.viewProjectionMatrix, currentTime);
 		particleSystem.bindData(graphics.particleShader);
 		

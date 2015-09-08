@@ -8,11 +8,7 @@ import org.jbox2d.dynamics.contacts.Contact;
 
 public final class CollisionHandler implements ContactListener {
 
-    private Game game;
-
-    public CollisionHandler(Game game) {
-        this.game = game;
-    }
+    public static Game game;
 
 	@Override
 	public void beginContact(Contact arg0) {

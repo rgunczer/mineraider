@@ -297,7 +297,7 @@ public final class Menu extends Overlay {
         fade.draw();
 
         graphics.textureShader.useProgram();
-        graphics.textureShader.setTexture(graphics.textureMenuItems);
+        graphics.textureShader.setTexture(Graphics.textureMenuItems);
         currentGroup.draw();
     }
 

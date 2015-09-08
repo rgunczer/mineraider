@@ -12,13 +12,13 @@ public final class Engine {
     public static float adHeight;
 
     // android
-    public MineRaiderRenderer renderer;
-    public MineRaiderActivity activity;
+    public static MineRaiderRenderer renderer;
+    public static MineRaiderActivity activity;
 
     //
-    public Graphics graphics;
-    public Audio audio;
-    public Game game;
+    public static Graphics graphics;
+    public static Audio audio;
+    public static Game game;
 
 
     // ctor
@@ -49,7 +49,7 @@ public final class Engine {
     }
 
     public void initGameObject() {
-        game.init(this);
+        game.init();
     }
 
     public void savePreferences() {

@@ -39,8 +39,6 @@ public final class Game extends Scene {
 
 
     private Graphics graphics;
-    private Engine engine;
-	private Physics physics;
 	private Match3 match3;
     private Quad background;
     public HUD hud;
@@ -70,9 +68,10 @@ public final class Game extends Scene {
         rocks = new ArrayList<RockData>();
     }
 
-    public void init(Engine engine) {
-        this.engine = engine;
-        graphics = engine.graphics;
+    public void init() {
+        graphics = Engine.graphics;
+
+        CollisionHandler.game = this;
 
         Overlay.graphics = graphics;
         Quad.graphics = graphics;
@@ -84,7 +83,6 @@ public final class Game extends Scene {
         MenuGameTitleAnim.graphics = graphics;
         MenuGroup.graphics = graphics;
         EffectAnim.graphics = graphics;
-
 
         background = new Quad();
         loading = new Loading();
@@ -99,23 +97,22 @@ public final class Game extends Scene {
 
         scoreCounter = new ScoreCounter(this);
 
-		physics = new Physics(this);
 		animManager = new AnimationManager();
 		match3 = new Match3(8, animManager, scoreCounter);
 
 		initBoardGeometry();		
 
 		//physics.addEdge(-13.5f, -21.5f,  13.5f, -21.5f); // bottom
-		physics.addEdge(-13.0f, -7.0f, -13.5f, 20.0f); // left
-		physics.addEdge(13.0f, -7.0f, 13.5f, 20.0f); // right
+		Physics.addEdge(-13.0f, -7.0f, -13.5f, 20.0f); // left
+		Physics.addEdge(13.0f, -7.0f, 13.5f, 20.0f); // right
 		
-		physics.addBoxStatic(8.0f, -5.9f, 24.8f, 12.0f, 0.8f);
-		physics.addBoxStatic(-7.8f, -5.9f, -25.0f, 12.0f, 0.8f);
-		physics.addBoxStatic(3.1f, -8.8f, 0f, 1.4f, 1.4f);
-		physics.addBoxStatic(-3.0f, -8.8f, 0f, 1.4f, 1.4f);
+		Physics.addBoxStatic(8.0f, -5.9f, 24.8f, 12.0f, 0.8f);
+		Physics.addBoxStatic(-7.8f, -5.9f, -25.0f, 12.0f, 0.8f);
+		Physics.addBoxStatic(3.1f, -8.8f, 0f, 1.4f, 1.4f);
+		Physics.addBoxStatic(-3.0f, -8.8f, 0f, 1.4f, 1.4f);
 		
 		// sin
-		physics.addBoxStatic(0.0f, -19.7f, 0f, 70.0f, 0.5f);
+		Physics.addBoxStatic(0.0f, -19.7f, 0f, 70.0f, 0.5f);
 
         float cartX = -20f;
         float cartX2nd = -30f;
@@ -123,7 +120,6 @@ public final class Game extends Scene {
 
         float x = cartX; //-20f;
 		float y = cartY; //-15.7f;
-        MineCart.physics = physics;
         MineCart.graphics = graphics;
 		MineCart mineCart;
 		
@@ -135,8 +131,6 @@ public final class Game extends Scene {
 		mineCart = new MineCart(x, y);
         mineCart.id = 2;
 		cart2 = mineCart;
-
-        PopAnimation.physics = physics;
 
         menu = new Menu();
         stats = new Stats();
@@ -157,7 +151,7 @@ public final class Game extends Scene {
         cart2.reposition(cartX2nd, cartY);
         cart2.start(cartSpeed);
 
-        physics.clear();
+        Physics.clear();
         animManager.clear();
 
         match3.placeInitialGems();
@@ -236,7 +230,7 @@ public final class Game extends Scene {
                 update();
             }
         } else {
-            physics.update();
+            Physics.update();
             match3.update();
 
             cart1.update();
@@ -297,11 +291,11 @@ public final class Game extends Scene {
             glEnable(GL_DEPTH_TEST);
 
             // draw gems
-            graphics.dirLightShader.setTexture(graphics.textureGems);
+            graphics.dirLightShader.setTexture(Graphics.textureGems);
             graphics.batchDrawer.begin();
             graphics.batchDrawer.add(match3);
             graphics.batchDrawer.add(animManager);
-            graphics.batchDrawer.add(physics);
+            graphics.batchDrawer.addPhysics();
             graphics.batchDrawer.drawAll();
 
             if (match3.firstSelected != null) {
@@ -331,12 +325,12 @@ public final class Game extends Scene {
 //            cart1.draw();
 //            cart2.draw();
 
-            graphics.dirLightShader.setTexture(graphics.textureCart);
+            graphics.dirLightShader.setTexture(Graphics.textureCart);
             graphics.mineCart.bindData(graphics.dirLightShader);
             cart1.drawCart();
             cart2.drawCart();
 
-            graphics.dirLightShader.setTexture(graphics.textureWheel);
+            graphics.dirLightShader.setTexture(Graphics.textureWheel);
             graphics.wheel.bindData(graphics.dirLightShader);
             cart1.drawWheels();
             cart2.drawWheels();
@@ -370,28 +364,28 @@ public final class Game extends Scene {
     private void drawBackgroundAndDecoration() {
         graphics.dirLightShader.useProgram();
 
-        graphics.dirLightShader.setTexture(graphics.textureFloor);
+        graphics.dirLightShader.setTexture(Graphics.textureFloor);
         drawFloor();
 
-        graphics.dirLightShader.setTexture(graphics.textureWall);
+        graphics.dirLightShader.setTexture(Graphics.textureWall);
         drawWall();
 
-        graphics.dirLightShader.setTexture(graphics.textureSoil);
+        graphics.dirLightShader.setTexture(Graphics.textureSoil);
         drawSoil();
 
-        graphics.dirLightShader.setTexture(graphics.textureCliff142);
+        graphics.dirLightShader.setTexture(Graphics.textureCliff142);
         drawRocks();
 
-        graphics.dirLightShader.setTexture(graphics.texturePillar);
+        graphics.dirLightShader.setTexture(Graphics.texturePillar);
         drawPillars();
 
-        graphics.dirLightShader.setTexture(graphics.textureBeam);
+        graphics.dirLightShader.setTexture(Graphics.textureBeam);
         drawBeam();
 
-        graphics.dirLightShader.setTexture(graphics.textureRailRoad);
+        graphics.dirLightShader.setTexture(Graphics.textureRailRoad);
         drawRailRoad();
 
-        graphics.dirLightShader.setTexture(graphics.textureCrate);
+        graphics.dirLightShader.setTexture(Graphics.textureCrate);
         drawCrates();
     }
 
@@ -663,7 +657,7 @@ public final class Game extends Scene {
 		EdgeDrawer edgeDrawer = new EdgeDrawer(10);		
 		edgeDrawer.begin();
 		
-		for(Body body : physics.edges) {
+		for(Body body : Physics.edges) {
 			Fixture fixture = body.getFixtureList();
 			while(fixture != null) {
 				EdgeShape edge = (EdgeShape)fixture.getShape();
@@ -694,9 +688,9 @@ public final class Game extends Scene {
         Fixture fixture;
         PolygonShape polygon;
         EdgeDrawer edgeDrawer = new EdgeDrawer(100);
-        int size = physics.statics.size();
+        int size = Physics.statics.size();
         for(int i = 0; i < size; ++i) {
-            body = physics.statics.get(i);
+            body = Physics.statics.get(i);
             pos = body.getPosition();
             angle = body.getAngle();
             degree = (float) Math.toDegrees(angle);
@@ -734,7 +728,7 @@ public final class Game extends Scene {
         graphics.colorShader.useProgram();
 
 		EdgeDrawer edgeDrawer = new EdgeDrawer(30);
-		int size = physics.fragments.size();
+		int size = Physics.fragments.size();
 		Body body;
         Vec2 pos;
         float degree;
@@ -744,7 +738,7 @@ public final class Game extends Scene {
         Vec2 v0;
         Vec2 v1;
 		for(int i = 0; i < size; ++i) {
-			body = physics.fragments.get(i);
+			body = Physics.fragments.get(i);
 			pos = body.getPosition();
 			angle = body.getAngle();
 			degree = (float)Math.toDegrees(angle);

@@ -254,7 +254,7 @@ public final class HUD {
     public void draw() {
         graphics.textureShader.useProgram();
 
-        graphics.textureShader.setTexture(graphics.textureFonts);
+        graphics.textureShader.setTexture(Graphics.textureFonts);
         scoreText.draw();
         if (extraTextCooling > 0) {
             extraText.draw();

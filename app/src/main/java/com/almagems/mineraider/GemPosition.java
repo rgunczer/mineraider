@@ -58,7 +58,7 @@ public final class GemPosition {
 		pos.rot(0f, 0f, 0f);
 		pos.scale(sx, sy, sz);
 		
-		final float radius = 1.5f;
+		final float radius = 1.65f;
 		this.boundingSphere = new Sphere(tx, ty, tz, radius);		
 	}
 }

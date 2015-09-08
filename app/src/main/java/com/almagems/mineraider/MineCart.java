@@ -260,7 +260,7 @@ public final class MineCart {
 
     // now count how many gems were there (in the minecart)
     private void countMineCartLoad() {
-        physics.fragmentToRemove.clear();
+        physics.fragmentToPool.clear();
         Body body;
         Vec2 fragmentPos;
         boolean gemsFromCart = false;
@@ -275,7 +275,7 @@ public final class MineCart {
                 gemsFromCart = true;
                 gemType = (Integer)body.m_userData;
                 ++gemTypeFromCart[gemType];
-                physics.fragmentToRemove.add(body);
+                physics.fragmentToPool.add(body);
             }
         }
 
@@ -283,7 +283,7 @@ public final class MineCart {
             Engine.getInstance().game.scoreCounter.handleGemsFromCart(gemTypeFromCart);
         }
 
-        physics.removeFragments();
+        physics.sortFragmentsFromPool();
     }
 
 // drawing
@@ -338,11 +338,11 @@ public final class MineCart {
     public void draw() {
         op.scale(1f, 1f, 1f);
 
-        graphics.dirLightShader.setTexture(graphics.textureCart);
+        graphics.dirLightShader.setTexture(Graphics.textureCart);
         graphics.mineCart.bindData(graphics.dirLightShader);
         drawCart();
 
-		graphics.dirLightShader.setTexture(graphics.textureWheel);
+		graphics.dirLightShader.setTexture(Graphics.textureWheel);
         graphics.wheel.bindData(graphics.dirLightShader);
 		drawWheels();
 

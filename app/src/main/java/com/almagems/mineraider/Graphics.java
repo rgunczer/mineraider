@@ -20,15 +20,15 @@ public final class Graphics {
     public static final float referenceScreenWidth = 1080f;
     public static float scaleFactor;
 
-	public Context context;
+	public static Context context;
 
     public final ParticleManager particleManager;
     public final BatchDrawer batchDrawer;
     public final FBO fbo;
 
     // custom
-	public MyColor whiteColor = new  MyColor(1f, 1f, 1f);
-    public MyColor blackColor = new  MyColor(0f, 0f, 0f);
+	public static MyColor whiteColor = new MyColor(1f, 1f, 1f);
+    public static MyColor blackColor = new MyColor(0f, 0f, 0f);
 
     public Map<String, TexturedQuad> fonts = new HashMap<String, TexturedQuad>();
     private ArrayList<Texture> textures = new ArrayList<Texture>(20);
@@ -49,24 +49,24 @@ public final class Graphics {
 	
 		
 	// textures
-	public int textureLoading;
-	public int textureGems;
-	public int textureCart;
-	public int textureRailRoad;
-	public int textureParticle;
-	public int textureFloor;
-	public int textureWall;
-	public int texturePillar;
-	public int textureCrate;
-	public int textureSoil;
-	public int textureWheel;
-	public int textureBeam;
-	public int textureCliff142;
-	public int textureMenuItems;
-	public int texturePickAxe;
-    public int textureFonts;
-    public int textureEditorButtons;
-    public int textureHudPauseButton;
+	public static int textureLoading;
+	public static int textureGems;
+	public static int textureCart;
+	public static int textureRailRoad;
+	public static int textureParticle;
+	public static int textureFloor;
+	public static int textureWall;
+	public static int texturePillar;
+	public static int textureCrate;
+	public static int textureSoil;
+	public static int textureWheel;
+	public static int textureBeam;
+	public static int textureCliff142;
+	public static int textureMenuItems;
+	public static int texturePickAxe;
+    public static int textureFonts;
+    public static int textureEditorButtons;
+    public static int textureHudPauseButton;
 
 
     // models

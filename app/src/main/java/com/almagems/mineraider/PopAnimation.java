@@ -7,7 +7,7 @@ import java.util.Random;
 
 public final class PopAnimation extends BaseAnimation {
 
-    private Random rand = new Random();
+    private static Random rand = new Random();
 
 	public enum State {
         Blow,
@@ -16,7 +16,6 @@ public final class PopAnimation extends BaseAnimation {
 	}
 
     private int[] gemTypesCounter = new int[MAX_GEM_TYPES];
-    public static Physics physics;
 
     private ArrayList<GemPosition> pool = new ArrayList<GemPosition>();
 	private ArrayList<GemPosition> list = new ArrayList<GemPosition>();
@@ -109,31 +108,31 @@ public final class PopAnimation extends BaseAnimation {
 
 		switch(gemType) {
             case GEM_TYPE_0:
-                physics.addFragmentGem0(x1, y1);
+                Physics.addFragmentGem0(x1, y1);
                 break;
 
             case GEM_TYPE_1:
-                physics.addFragmentGem1(x1, y1);
+                Physics.addFragmentGem1(x1, y1);
                 break;
 
             case GEM_TYPE_2:
-                physics.addFragmentGem2(x1, y1);
+                Physics.addFragmentGem2(x1, y1);
                 break;
 
             case GEM_TYPE_3:
-                physics.addFragmentGem3(x1, y1);
+                Physics.addFragmentGem3(x1, y1);
                 break;
 
             case GEM_TYPE_4:
-                physics.addFragmentGem4(x1, y1);
+                Physics.addFragmentGem4(x1, y1);
                 break;
 
             case GEM_TYPE_5:
-                physics.addFragmentGem5(x1, y1);
+                Physics.addFragmentGem5(x1, y1);
                 break;
 
             case GEM_TYPE_6:
-                physics.addFragmentGem6(x1, y1);
+                Physics.addFragmentGem6(x1, y1);
                 break;
 		}
 	}	

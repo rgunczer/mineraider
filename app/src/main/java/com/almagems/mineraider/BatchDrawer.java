@@ -114,16 +114,16 @@ public final class BatchDrawer {
         }
     }
 
-    public void add(Physics physics) {
+    public void addPhysics() {
         int gemType;
         PositionInfo position;
         Body body;
         Vec2 pos;
         float degree;
         float d = GEM_FRAGMENT_SIZE;
-        int size = physics.fragments.size();
+        int size = Physics.fragments.size();
         for(int i = 0; i < size; ++i) {
-            body = physics.fragments.get(i);
+            body = Physics.fragments.get(i);
             pos = body.getPosition();
             degree = (float) Math.toDegrees( body.getAngle() );
             gemType = (Integer)body.m_userData;

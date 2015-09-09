@@ -1,29 +1,30 @@
 package com.almagems.mineraider;
 
-import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.MyUtils.LERP;
 
 
 public final class Fade extends EffectAnim {
-
-    private VertexArray vertexArray;
-    private MyColor colorFrom;
-    private MyColor colorTo;
-    public MyColor colorCurrent;
+    private final Color colorFrom;
+    private final Color colorTo;
+    public final Color colorCurrent;
     private float t;
     private float dt = 0.05f; // speed
     public boolean done = false;
-    public Rectangle rect;
+    private final ColoredQuad coloredQuad;
 
     // ctor
     public Fade() {
         System.out.println("Fade ctor...");
+        colorFrom = new Color();
+        colorTo = new Color();
+        colorCurrent = new Color(colorFrom);
+        coloredQuad = new ColoredQuad();
     }
 
-    public void init(MyColor from, MyColor to) { // need of a speed param!? for how fast the fading should occur
-        this.colorFrom = from;
-        this.colorTo = to;
-        colorCurrent = new MyColor(from);
+    public void init(Color from, Color to) {
+        colorFrom.init(from);
+        colorTo.init(to);
+        colorCurrent.init(from);
         t = 0.0f;
         done = false;
         pos = posOrigin;
@@ -32,55 +33,18 @@ public final class Fade extends EffectAnim {
         pos.rot(0f, 0f, 0f);
         pos.scale(1f, 1f, 1f);
 
-        createVertexArray();
+        coloredQuad.init(colorFrom, 1f, Graphics.aspectRatio);
     }
 
-    public void init(MyColor from, MyColor to, Rectangle rect) {
-        this.colorFrom = from;
-        this.colorTo = to;
-        colorCurrent = new MyColor(from);
+    public void init(Color from, Color to, Rectangle rect) {
+        colorFrom.init(from);
+        colorTo.init(to);
+        colorCurrent.init(from);
         t = 0.0f;
         done = false;
         pos = posOrigin;
-        this.rect = rect;
 
-        createVertexArray(rect);
-    }
-
-    private void createVertexArray(Rectangle rect) {
-        // suppose fullscreen
-        final float x = rect.x;
-        final float y = rect.y;
-        final float w = rect.w;
-        final float h = rect.h;
-        float[] vertexData = {
-                // x, y, z,
-                -w+x, -h+y, 0f,
-                 w+x, -h+y, 0f,
-                 w+x,  h+y, 0f,
-
-                -w+x, -h+y, 0f,
-                 w+x,  h+y, 0f,
-                -w+x,  h+y, 0f
-        };
-        vertexArray = new VertexArray(vertexData);
-    }
-
-    private void createVertexArray() {
-        // suppose fullscreen
-        final float x = 1f;
-        final float y = Graphics.aspectRatio;
-        float[] vertexData = {
-            // x, y, z,
-            -x, -y, 0f,
-             x, -y, 0f,
-             x,  y, 0f,
-
-            -x, -y, 0f,
-             x,  y, 0f,
-            -x,  y, 0f
-        };
-        vertexArray = new VertexArray(vertexData);
+        coloredQuad.init(colorFrom, 1f, Graphics.aspectRatio);
     }
 
     @Override
@@ -99,19 +63,14 @@ public final class Fade extends EffectAnim {
             colorCurrent.g = LERP(colorFrom.g, colorTo.g, t);
             colorCurrent.b = LERP(colorFrom.b, colorTo.b, t);
             colorCurrent.a = LERP(colorFrom.a, colorTo.a, t);
+
+            coloredQuad.color.init(colorCurrent);
             //System.out.println("Fade update... " + t + ", " + colorCurrent.toString());
         }
     }
 
     public void draw() {
-        // blending must be enabled!
-        // use color shader!? (no textures)
-        graphics.calcMatricesForObject(pos);
-        graphics.colorShader.useProgram();
-        graphics.colorShader.setUniforms(graphics.mvpMatrix, colorCurrent);
-        graphics.colorShader.bindData(vertexArray);
-
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        //System.out.println("Fade draw...");
+        coloredQuad.draw();
     }
+
 }

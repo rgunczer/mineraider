@@ -35,7 +35,7 @@ public final class PointLightShader extends BaseShader {
 		glUniformMatrix4fv(uModelViewLocation, 1, false, graphics.mvMatrix, 0);
 		glUniformMatrix4fv(uProjectionLocation, 1, false, graphics.projectionMatrix, 0);
 		
-		glUniform4f(uColorLocation, graphics.whiteColor.r, graphics.whiteColor.g, graphics.whiteColor.b, graphics.whiteColor.a);
+		glUniform4f(uColorLocation, Color.WHITE.r, Color.WHITE.g, Color.WHITE.b, Color.WHITE.a);
         //glUniform4f(uColorLocation, 0f, 0f, 0f, 1f);
 	}	
 	

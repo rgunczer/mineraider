@@ -35,7 +35,7 @@ public final class DirLightShader extends BaseShader {
 	}
 		
 	public void setUniforms() {
-		glUniform4f(uColorLocation, graphics.whiteColor.r, graphics.whiteColor.g, graphics.whiteColor.b, graphics.whiteColor.a);
+		glUniform4f(uColorLocation, Color.WHITE.r, Color.WHITE.g, Color.WHITE.b, Color.WHITE.a);
 		glUniformMatrix4fv(uMVPMatrixLocation, 1, false, graphics.mvpMatrix, 0);
 		glUniformMatrix4fv(uMVMatrixLocation, 1, false, graphics.mvMatrix, 0);
 		glUniform3f(uLightPosLocation, 	graphics.mLightPosInEyeSpace[0],

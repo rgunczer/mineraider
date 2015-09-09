@@ -44,7 +44,7 @@ public final class MenuItem {
         this.anim.init(this);
     }
 
-    public void init(String name, Menu.MenuOptions menuOption, int textureId, MyColor color, Rectangle rect, boolean flipUTextureCoordinates) {
+    public void init(String name, Menu.MenuOptions menuOption, int textureId, Color color, Rectangle rect, boolean flipUTextureCoordinates) {
         this.name = name;
         this.menuOption = menuOption;
 

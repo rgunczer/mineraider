@@ -1,6 +1,8 @@
 package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
+import static com.almagems.mineraider.Constants.*;
+
 
 public final class Stats extends Overlay {
 
@@ -14,6 +16,7 @@ public final class Stats extends Overlay {
 
     private final Text[] text;
 
+    private final ColoredQuad[] coloredQuadGemType = new ColoredQuad[MAX_GEM_TYPES];
 
     public Stats(){
         System.out.println("Stats ctor...");
@@ -29,6 +32,28 @@ public final class Stats extends Overlay {
         text[4] = new Text();
         text[5] = new Text();
         text[6] = new Text();
+
+
+        coloredQuadGemType[0] = new ColoredQuad();
+        coloredQuadGemType[0].pos.ty = 1.0f;
+
+        coloredQuadGemType[1] = new ColoredQuad();
+        coloredQuadGemType[1].pos.ty = 0.75f;
+
+        coloredQuadGemType[2] = new ColoredQuad();
+        coloredQuadGemType[2].pos.ty = 0.5f;
+
+        coloredQuadGemType[3] = new ColoredQuad();
+        coloredQuadGemType[3].pos.ty = 0.25f;
+
+        coloredQuadGemType[4] = new ColoredQuad();
+        coloredQuadGemType[4].pos.ty = 0.0f;
+
+        coloredQuadGemType[5] = new ColoredQuad();
+        coloredQuadGemType[5].pos.ty = -0.25f;
+
+        coloredQuadGemType[6] = new ColoredQuad();
+        coloredQuadGemType[6].pos.ty = -0.5f;
     }
 
     public void init() {
@@ -42,12 +67,12 @@ public final class Stats extends Overlay {
 
         Rectangle rect;
         rect = textureObj.getFrame("menu_item_back.png");
-        backButton.init("Back", Menu.MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        backButton.init("Back", Menu.MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         backButton.setTrans(0f, -aspect * 0.6f, 0f);
         backButton.setRot(0f, 0f, 0f);
         backButton.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
 
-        fade.init(new MyColor(0f, 0f, 0f, 0.4f), new MyColor(0f, 0f, 0f, 0.4f));
+        fade.init(new Color(0f, 0f, 0f, 0.4f), new Color(0f, 0f, 0f, 0.4f));
 
         scoreCounter = Engine.getInstance().game.scoreCounter;
 
@@ -67,9 +92,41 @@ public final class Stats extends Overlay {
 
         System.out.println("Min : " + min + ", max: " + max);
 
+        float wmax = 0.75f;
+        float wmin = 0.2f;
+        float w ;
+        float h = 0.05f;
+        w =  ((float)arr[0] / (float)max) * wmax;
+        coloredQuadGemType[0].init(new Color(194, 150, 76, 255),  w, h);
+        coloredQuadGemType[0].pos.tx = w - 0.8f;
+
+        w =  ((float)arr[1] / (float)max) * wmax;
+        coloredQuadGemType[1].init(new Color(197, 94, 124, 255),  w, h);
+        coloredQuadGemType[1].pos.tx = w - 0.8f;
+
+        w =  ((float)arr[2] / (float)max) * wmax;
+        coloredQuadGemType[2].init(new Color(193, 102, 193, 255), w, h);
+        coloredQuadGemType[2].pos.tx = w - 0.8f;
+
+        w =  ((float)arr[3] / (float)max) * wmax;
+        coloredQuadGemType[3].init(new Color(172, 152, 158, 255), w, h);
+        coloredQuadGemType[3].pos.tx = w - 0.8f;
+
+        w =  ((float)arr[4] / (float)max) * wmax;
+        coloredQuadGemType[4].init(new Color(26, 61, 186, 255),   w, h);
+        coloredQuadGemType[4].pos.tx = w - 0.8f;
+
+        w =  ((float)arr[5] / (float)max) * wmax;
+        coloredQuadGemType[5].init(new Color(196, 123, 99, 255),  w, h);
+        coloredQuadGemType[5].pos.tx = w - 0.8f;
+
+        w =  ((float)arr[6] / (float)max) * wmax;
+        coloredQuadGemType[6].init(new Color(188, 38, 38, 255),   w, h);
+        coloredQuadGemType[6].pos.tx = w - 0.8f;
+
         // setup texts
         float textWidth;
-        MyColor textColor = new MyColor(1f, 1f, 1f);
+        Color textColor = new Color(1f, 1f, 1f);
 
         text[0].init("Gem Type 0: " + arr[0] , textColor, textColor, 0.9f);
         textWidth = text[0].getTextWidth();
@@ -112,10 +169,6 @@ public final class Stats extends Overlay {
         text[6].pos.trans(-textWidth / 2f, -0.4f, 0f);
         text[6].pos.rot(0f, 0f, 0f);
         text[6].pos.scale(1f, 1f, 1f);
-
-
-
-
     }
 
     public void update() {
@@ -145,6 +198,9 @@ public final class Stats extends Overlay {
 
         graphics.bindNoTexture();
         fade.draw();
+        for(int i = 0; i < MAX_GEM_TYPES; ++i) {
+            coloredQuadGemType[i].draw();
+        }
 
         graphics.textureShader.useProgram();
         graphics.textureShader.setTexture(Graphics.textureMenuItems);

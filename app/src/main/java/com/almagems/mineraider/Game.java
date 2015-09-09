@@ -15,7 +15,6 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
 
 // mine
-
 import static com.almagems.mineraider.Constants.*;
 
 
@@ -73,6 +72,7 @@ public final class Game extends Scene {
 
         CollisionHandler.game = this;
 
+        ColoredQuad.graphics = graphics;
         Overlay.graphics = graphics;
         Quad.graphics = graphics;
         ProgressBarControl.graphics = graphics;
@@ -179,7 +179,7 @@ public final class Game extends Scene {
             graphics.bindNoTexture();
             glDisable(GL_TEXTURE_2D);
 
-            MyColor color = new MyColor(0f, 0f, 0f);
+            Color color = new Color(0f, 0f, 0f);
             EdgeDrawer edgeDrawer = new EdgeDrawer(10);
             edgeDrawer.begin();
 
@@ -653,7 +653,7 @@ public final class Game extends Scene {
     }
 
 	private void drawPhysicsEdges() {
-		MyColor color = new MyColor(1.0f, 1.0f, 1.0f);
+		Color color = new Color(1.0f, 1.0f, 1.0f);
 		EdgeDrawer edgeDrawer = new EdgeDrawer(10);		
 		edgeDrawer.begin();
 		
@@ -715,7 +715,7 @@ public final class Game extends Scene {
                     rotateM(graphics.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);
                     multiplyMM(graphics.mvpMatrix, 0, graphics.viewProjectionMatrix, 0, graphics.modelMatrix, 0);
 
-                    graphics.colorShader.setUniforms(graphics.mvpMatrix, graphics.whiteColor);
+                    graphics.colorShader.setUniforms(graphics.mvpMatrix, Color.WHITE);
                     edgeDrawer.bindData(graphics.colorShader);
                     edgeDrawer.draw();
                 }
@@ -766,7 +766,7 @@ public final class Game extends Scene {
                 rotateM(graphics.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);
                 multiplyMM(graphics.mvpMatrix, 0, graphics.viewProjectionMatrix, 0, graphics.modelMatrix, 0);
 
-                graphics.colorShader.setUniforms(graphics.mvpMatrix, graphics.whiteColor);
+                graphics.colorShader.setUniforms(graphics.mvpMatrix, Color.WHITE);
                 edgeDrawer.bindData(graphics.colorShader);
                 edgeDrawer.draw();
 

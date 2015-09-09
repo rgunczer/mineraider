@@ -5,7 +5,6 @@ import static android.opengl.Matrix.*;
 import static com.almagems.mineraider.Constants.*;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,10 +24,6 @@ public final class Graphics {
     public final ParticleManager particleManager;
     public final BatchDrawer batchDrawer;
     public final FBO fbo;
-
-    // custom
-	public static MyColor whiteColor = new MyColor(1f, 1f, 1f);
-    public static MyColor blackColor = new MyColor(0f, 0f, 0f);
 
     public Map<String, TexturedQuad> fonts = new HashMap<String, TexturedQuad>();
     private ArrayList<Texture> textures = new ArrayList<Texture>(20);
@@ -108,7 +103,7 @@ public final class Graphics {
 	public final Vector lightDir = new Vector(0.0f, 6.0f, 12.0f);
 	//public final Vector lightDir = new Vector(-1.0f, 3.0f, 1.0f);
 	public final Vector lightNorm = lightDir.normalize(lightDir);	
-	public final MyColor lightColor = new MyColor(1.0f, 1.0f, 1.0f);
+	public final Color lightColor = new Color(1.0f, 1.0f, 1.0f);
 
 	private final float[] mLightPosInModelSpace = new float[] { 0.0f, 0.0f, 0.0f, 1.0f };
 	private final float[] mLightPosInWorldSpace = new float[4];
@@ -623,16 +618,16 @@ public final class Graphics {
 
 	public int colorFromGemType(int type) {
 		switch (type) {
-			case GEM_TYPE_0: return Color.rgb(255, 6, 0);	
-			case GEM_TYPE_1: return Color.rgb(255, 35, 99);						
-			case GEM_TYPE_2: return Color.rgb(0, 101, 30);			
-			case GEM_TYPE_3: return Color.rgb(0, 0, 169);
-			case GEM_TYPE_4: return Color.rgb(255, 79, 0);
-			case GEM_TYPE_5: return Color.rgb(255, 255, 0);
-			case GEM_TYPE_6: return Color.rgb(255, 222, 247);
+			case GEM_TYPE_0: return android.graphics.Color.rgb(255, 6, 0);
+			case GEM_TYPE_1: return android.graphics.Color.rgb(255, 35, 99);
+			case GEM_TYPE_2: return android.graphics.Color.rgb(0, 101, 30);
+			case GEM_TYPE_3: return android.graphics.Color.rgb(0, 0, 169);
+			case GEM_TYPE_4: return android.graphics.Color.rgb(255, 79, 0);
+			case GEM_TYPE_5: return android.graphics.Color.rgb(255, 255, 0);
+			case GEM_TYPE_6: return android.graphics.Color.rgb(255, 222, 247);
 			default: break;
 		}
-		return Color.rgb(255, 255, 255);		
+		return android.graphics.Color.rgb(255, 255, 255);
 	}
 
     public void loadFonts() {
@@ -801,7 +796,7 @@ public final class Graphics {
 
     public void drawAxes() {
         EdgeDrawer edgeDrawer = new EdgeDrawer(2);
-        MyColor color = new MyColor(1f, 1f, 0f, 1f);
+        Color color = new Color(1f, 1f, 0f, 1f);
 
         float x = 1f;
         float y = Graphics.aspectRatio; //1f;

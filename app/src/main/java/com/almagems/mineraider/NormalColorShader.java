@@ -30,7 +30,7 @@ public final class NormalColorShader extends BaseShader {
 		aNormalLocation = glGetAttribLocation(program, "a_Normal");		
 	}
 	
-	public void setUniforms(float[] matrix, MyColor color, MyColor lightColor, Vector lightDir) {
+	public void setUniforms(float[] matrix, Color color, Color lightColor, Vector lightDir) {
 		glUniformMatrix4fv(uMatrixLocation, 1, false, matrix, 0);
 		glUniformMatrix4fv(uNormalMatrixLocation, 1, false, graphics.normalMatrix, 0);
 		glUniform4f(uColorLocation, color.r, color.g, color.b, 1f);

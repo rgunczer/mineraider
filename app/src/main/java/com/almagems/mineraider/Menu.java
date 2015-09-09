@@ -70,7 +70,7 @@ public final class Menu extends Overlay {
 
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_play.png");
-        menuItem.init("Play", MenuOptions.Play, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.init("Play", MenuOptions.Play, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, itemY - (0f * itemYStep) , 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -78,7 +78,7 @@ public final class Menu extends Overlay {
 
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_options.png");
-        menuItem.init("Options", MenuOptions.Options, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.init("Options", MenuOptions.Options, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, itemY - (1f * itemYStep), 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -86,7 +86,7 @@ public final class Menu extends Overlay {
 
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_stats.png");
-        menuItem.init("Stats", MenuOptions.Stats, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.init("Stats", MenuOptions.Stats, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, itemY - (2f * itemYStep), 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -95,7 +95,7 @@ public final class Menu extends Overlay {
 
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_help.png");
-        menuItem.init("Help", MenuOptions.Help, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.init("Help", MenuOptions.Help, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, itemY - (3f * itemYStep), 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -114,7 +114,7 @@ public final class Menu extends Overlay {
         // back
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_back.png");
-        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -124,7 +124,7 @@ public final class Menu extends Overlay {
         // music
         menuImage = new MenuImage();
         rect = textureObj.getFrame("menu_title_music.png");
-        menuImage.init("music", graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuImage.init("music", graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.5f, 0f);
         menuImage.setRot(0f, 0f, 0f);
         menuImage.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -133,7 +133,7 @@ public final class Menu extends Overlay {
         // sound
         menuImage = new MenuImage();
         rect = textureObj.getFrame("menu_title_sound.png");
-        menuImage.init("sound", graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuImage.init("sound", graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.1f, 0f);
         menuImage.setRot(0f, 0f, 0f);
         menuImage.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -141,8 +141,8 @@ public final class Menu extends Overlay {
 
 
         // music volume control
-        MyColor colorBody = new MyColor(143f/255f, 127f/255f, 96f/255f, 1f);
-        MyColor colorFrame = new MyColor(10f/255f, 12f/255f, 9f/255f, 1f);
+        Color colorBody = new Color(143f/255f, 127f/255f, 96f/255f, 1f);
+        Color colorFrame = new Color(10f/255f, 12f/255f, 9f/255f, 1f);
 
         float volumeControlWidth = 1.8f;
         float volumeControlHeight = 0.05f;
@@ -164,7 +164,7 @@ public final class Menu extends Overlay {
         // credits
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_credits.png");
-        menuItem.init("Credits", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.init("Credits", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, aspect * 0.2f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -174,7 +174,7 @@ public final class Menu extends Overlay {
         // about
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_about.png");
-        menuItem.init("About", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.init("About", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.1f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -184,7 +184,7 @@ public final class Menu extends Overlay {
         // back
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_back.png");
-        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -201,7 +201,7 @@ public final class Menu extends Overlay {
         // credits image
         menuImage = new MenuImage();
         rect = textureObj.getFrame("menu_credits.png");
-        menuImage.init("credits", graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuImage.init("credits", graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.2f, 0f);
         menuImage.setRot(0f, 0f, 0f);
         menuImage.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -210,7 +210,7 @@ public final class Menu extends Overlay {
         // back
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_back.png");
-        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -227,7 +227,7 @@ public final class Menu extends Overlay {
         // about image
         menuImage = new MenuImage();
         rect = textureObj.getFrame("menu_about_text.png");
-        menuImage.init("about", graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuImage.init("about", graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.2f, 0f);
         menuImage.setRot(0f, 0f, 0f);
         menuImage.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -236,7 +236,7 @@ public final class Menu extends Overlay {
         // back
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_back.png");
-        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.5f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -246,7 +246,7 @@ public final class Menu extends Overlay {
         groups.add(menuGroup);
 
         // fade
-        fade.init(new MyColor(0f, 0f, 0f, 0.4f), new MyColor(0f, 0f, 0f, 0.4f));
+        fade.init(new Color(0f, 0f, 0f, 0.4f), new Color(0f, 0f, 0f, 0.4f));
     }
 
     public void update() {

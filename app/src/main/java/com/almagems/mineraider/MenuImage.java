@@ -7,7 +7,7 @@ public final class MenuImage {
     private Quad quad;
 
 
-    public void init(String name, int textureId, MyColor color, Rectangle rect, boolean flipUTextureCoordinates) {
+    public void init(String name, int textureId, Color color, Rectangle rect, boolean flipUTextureCoordinates) {
         this.name = name;
 
         quad = new Quad();

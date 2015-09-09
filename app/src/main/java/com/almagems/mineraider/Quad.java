@@ -106,7 +106,7 @@ public final class Quad {
         float ty0 = 1f;
         float ty1 = 0f;
 
-        MyColor color = graphics.whiteColor;
+        Color color = Color.WHITE;
 
         float[] vertexData = {
                 // x, y, z, 	// r g b a                              u, v,
@@ -121,7 +121,7 @@ public final class Quad {
         vertexArray = new VertexArray(vertexData);
     }
 
-    public void init(int textureId, MyColor color, Rectangle rect, boolean flipUTextureCoordinate) {
+    public void init(int textureId, Color color, Rectangle rect, boolean flipUTextureCoordinate) {
         this.textureId = textureId;
 
         pos.trans(0f, 0f, 0f);

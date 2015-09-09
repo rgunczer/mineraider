@@ -64,7 +64,7 @@ public final class HUD {
     public void init() {
         fontScale = 0.9f;
         scoreText.setSpacingScale(0.06f);
-        scoreText.init("SCORE:" + cachedScore, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), fontScale);
+        scoreText.init("SCORE:" + cachedScore, new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), fontScale);
 
         scoreX = -0.96f;
         scoreY = -Graphics.aspectRatio + (scoreText.getTextHeight() / 3f);
@@ -73,11 +73,11 @@ public final class HUD {
         scoreText.pos.scale(1f, 1f, 1f);
 
         extraText.setSpacingScale(0.065f);
-        extraText.init("WATCH FOR MINECARTS", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), comboScale);
+        extraText.init("WATCH FOR MINECARTS", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), comboScale);
         extraText.pos.trans(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
 
         Rectangle rect = new Rectangle(0f, 0f, 128f, 128f);
-        quadPauseButton.init(graphics.textureHudPauseButton, new MyColor(1f, 1f, 1f), rect, false);
+        quadPauseButton.init(graphics.textureHudPauseButton, new Color(1f, 1f, 1f), rect, false);
         quadPauseButton.pos.trans(0.94f, -Graphics.aspectRatio + 0.06f, 0f);
         float sc = 0.055f;
         quadPauseButton.pos.scale(sc, sc, 1f);
@@ -112,7 +112,7 @@ public final class HUD {
     }
 
     public void showBonusCartGems(int numberOfGems) {
-        gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 1f, 1f, 1f), 0.75f);
+        gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", new Color(1f, 1f, 0f, 1f), new Color(1f, 1f, 1f, 1f), 0.75f);
         _bonusCartGemsTextWidth = gemsFromCartText.getTextWidth();
 
         _bonusTargetPosX = -_bonusCartGemsTextWidth / 2f;
@@ -132,7 +132,7 @@ public final class HUD {
     public void showCombo() {
         ++comboCounter;
 
-        extraText.init("COMBOx" + comboCounter, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), comboScale);
+        extraText.init("COMBOx" + comboCounter, new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), comboScale);
         float textWidth = extraText.getTextWidth();
         extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
         extraText.pos.rot(0f, 0f, 0f);
@@ -146,7 +146,7 @@ public final class HUD {
     }
 
     public void showPerfectSwap() {
-        extraText.init("PERFECT SWAP", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), perfectSwapScale);
+        extraText.init("PERFECT SWAP", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
         float textWidth = extraText.getTextWidth();
         extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
         extraText.pos.rot(0f, 0f, 0f);
@@ -158,7 +158,7 @@ public final class HUD {
     }
 
     public void showMatch4InARowBonus() {
-        extraText.init("FOUR IN A ROW", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), perfectSwapScale);
+        extraText.init("FOUR IN A ROW", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
         float textWidth = extraText.getTextWidth() * 1.75f;
         extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
         extraText.pos.rot(0f, 0f, 0f);
@@ -170,7 +170,7 @@ public final class HUD {
     }
 
     public void showMatch4InAColBonus() {
-        extraText.init("FOUR IN A COLUMN", new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), perfectSwapScale);
+        extraText.init("FOUR IN A COLUMN", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
         float textWidth = extraText.getTextWidth() * 1.75f;
         extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
         extraText.pos.rot(0f, 0f, 0f);
@@ -185,7 +185,7 @@ public final class HUD {
         if (score != cachedScore) {
             scoreCooling = 30;
             String str = "SCORE:" + score;
-            scoreText.init(str, new MyColor(1f, 1f, 0f, 1f), new MyColor(1f, 0f, 0f, 1f), fontScale);
+            scoreText.init(str, new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), fontScale);
             cachedScore = score;
             effectWahWahScore.wahScale = 0.2f;
             scoreText.addAnimEffect(effectWahWahScore);

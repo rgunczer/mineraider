@@ -216,7 +216,7 @@ public final class BatchDrawer {
                 temp = pos.tz;
                 pos.tz -= 0.11f;
                 graphics.calcMatricesForObject(pos);
-                graphics.colorShader.setUniforms(graphics.mvpMatrix, graphics.blackColor);
+                graphics.colorShader.setUniforms(graphics.mvpMatrix, Color.BLACK);
                 model.draw();
                 pos.tz = temp;
             }

@@ -32,7 +32,7 @@ public final class ColorShader extends BaseShader {
 		aPositionLocation = glGetAttribLocation(program, A_POSITION);
 	}
 	
-	public void setUniforms(float[] matrix, MyColor color) {
+	public void setUniforms(float[] matrix, Color color) {
 		glUniformMatrix4fv(uMatrixLocation, 1, false, matrix, 0);
 		glUniform4f(uColorLocation, color.r, color.g, color.b, color.a);
 	}

@@ -16,7 +16,7 @@ public final class Text {
         fontSpacingScale = scale;
     }
 
-    public void init(String text, MyColor colorUp, MyColor colorDown, float fontScale) {
+    public void init(String text, Color colorUp, Color colorDown, float fontScale) {
         this.fontScale = fontScale;
         this.text = text;
 
@@ -46,7 +46,7 @@ public final class Text {
         return y * 2f;
     }
 
-    private float[] getCharArray(String ch, int charIndex, MyColor colorUp, MyColor colorDown) {
+    private float[] getCharArray(String ch, int charIndex, Color colorUp, Color colorDown) {
         TexturedQuad fontQuad = graphics.fonts.get(ch);
         float x, y;
         float tx0 = fontQuad.tx_lo_left.x;

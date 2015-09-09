@@ -19,8 +19,8 @@ public final class Loading extends Overlay {
 
     // ctor
     public Loading() {
-        MyColor colorBody = new MyColor(0.9f, 0.0f, 0.0f);
-        MyColor colorFrame = new MyColor(0.1f, 0.1f, 0.1f);
+        Color colorBody = new Color(0.9f, 0.0f, 0.0f);
+        Color colorFrame = new Color(0.1f, 0.1f, 0.1f);
         float width = 1.0f;
         float height = 0.02f;
         float border = 0.01f;
@@ -32,7 +32,7 @@ public final class Loading extends Overlay {
     public void init() {
         // quad (Logo)
         Rectangle rect = new Rectangle(0f, 0f, 512f, 256f);
-        quad.init(graphics.textureLoading, graphics.whiteColor, rect, false);
+        quad.init(graphics.textureLoading, Color.WHITE, rect, false);
 
         float sc = 0.75f;
         quad.pos.trans(0f, 0f, 0f);

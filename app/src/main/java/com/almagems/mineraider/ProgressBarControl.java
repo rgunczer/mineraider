@@ -1,7 +1,7 @@
 package com.almagems.mineraider;
 
-import static android.opengl.GLES20.GL_TRIANGLES;
-import static android.opengl.GLES20.glDrawArrays;
+import static android.opengl.GLES20.*;
+
 
 public final class ProgressBarControl {
 
@@ -12,15 +12,15 @@ public final class ProgressBarControl {
     private VertexArray vertexArrayBody;
     private VertexArray vertexArrayFrame;
     public PositionInfo pos;
-    private MyColor colorFrame;
-    private MyColor colorBody;
+    private Color colorFrame;
+    private Color colorBody;
     public float value = 0.0f;
     public static Graphics graphics;
 
     // ctor
     public ProgressBarControl(String name,
-                              MyColor colorFrame,
-                              MyColor colorBody,
+                              Color colorFrame,
+                              Color colorBody,
                               float width,
                               float height,
                               float border) {

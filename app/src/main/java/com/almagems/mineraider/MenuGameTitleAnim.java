@@ -25,14 +25,14 @@ public final class MenuGameTitleAnim {
         float aspect = Graphics.aspectRatio;
         Rectangle rect;
         rect = textureObj.getFrame("menu_game_title_mine.png");
-        imageMine.init(graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        imageMine.init(graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         imageMine.pos.trans(0f, aspect * 0.56f, 0f);
         imageMine.pos.rot(0f, 0f, 0f);
         imageMine.pos.scale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
 
 
         rect = textureObj.getFrame("menu_game_title_raider.png");
-        imageRaider.init(graphics.textureMenuItems, graphics.whiteColor, rect, flipUTextureCoordinate);
+        imageRaider.init(graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         imageRaider.pos.trans(0f, aspect * 0.56f, 0f);
         imageRaider.pos.rot(0f, 0f, 0f);
         imageRaider.pos.scale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);

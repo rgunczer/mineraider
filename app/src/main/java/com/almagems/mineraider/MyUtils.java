@@ -21,7 +21,7 @@ public final class MyUtils {
 		return Math.min(max, Math.max(min, value));
 	}
 
-    public static float LERP(float fromValue, float toValue, float progress) {        
+    public static float lerp(float fromValue, float toValue, float progress) {        
         return fromValue + (toValue - fromValue) * progress;
 
     }

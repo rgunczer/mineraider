@@ -16,6 +16,17 @@ public final class PositionInfo {
 						
 	// ctor
 	public PositionInfo() {
+		tx = 0f;
+		ty = 0f;
+		tz = 0f;
+		
+		rx = 0f;
+		ry = 0f;
+		rz = 0f;
+		
+		sz = 1f;
+		sy = 1f;
+		sz = 1f;
 	}
 	
 	// cctor

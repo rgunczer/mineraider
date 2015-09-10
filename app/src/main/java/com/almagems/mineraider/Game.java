@@ -226,6 +226,7 @@ public final class Game extends Scene {
         if (gameState == GameState.Loading) {
             loading.update();
             if (loading.done) {
+                menu.reset();
                 gameState = GameState.Menu;
                 update();
             }
@@ -258,6 +259,7 @@ public final class Game extends Scene {
                 case Stats:
                     stats.update();
                     if (stats.done) {
+                        menu.resetBackground();
                         gameState = GameState.Menu;
                     }
                     break;

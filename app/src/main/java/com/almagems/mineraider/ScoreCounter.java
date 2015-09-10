@@ -1,5 +1,9 @@
 package com.almagems.mineraider;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import static com.almagems.mineraider.Constants.*;
 
 
@@ -14,11 +18,30 @@ public final class ScoreCounter {
 
     private int score;
     private final Game game;
-    public int[] scoreByGemTypes = new int[MAX_GEM_TYPES];
+    public final ArrayList<ScoreByGemType> scoreByGemTypes;
 
     // ctor
     public ScoreCounter(Game game) {
         this.game = game;
+        scoreByGemTypes = new ArrayList<ScoreByGemType>(MAX_GEM_TYPES);
+        ScoreByGemType score;
+        for(int i = 0; i < MAX_GEM_TYPES; ++i) {
+            score = new ScoreByGemType();
+            score.type = i;
+            score.value = 0;
+
+            switch (i) {
+                case 0: score.color = new Color(194, 150, 76, 255); break;
+                case 1: score.color = new Color(197, 94, 124, 255); break;
+                case 2: score.color = new Color(193, 102, 193, 255); break;
+                case 3: score.color = new Color(172, 152, 158, 255); break;
+                case 4: score.color = new Color(26, 61, 186, 255); break;
+                case 5: score.color = new Color(196, 123, 99, 255); break;
+                case 6: score.color = new Color(188, 38, 38, 255); break;
+            }
+
+            scoreByGemTypes.add(score);
+        }
         reset();
     }
 
@@ -33,6 +56,36 @@ public final class ScoreCounter {
         game.hud.updateScore(score);
     }
 
+    private void sortScoresByGemTypes() {
+        Collections.sort(scoreByGemTypes, new Comparator<ScoreByGemType>() {
+            @Override
+            public int compare(ScoreByGemType lhs, ScoreByGemType rhs) {
+                if (lhs.value < rhs.value) {
+                    return 1;
+                } else if (lhs.value == rhs.value) {
+                    return 0;
+                } else if (lhs.value > rhs.value) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+    }
+
+    public int[] getScoreByGemTypesAsIntArray() {
+        sortScoresByGemTypes();
+
+        int[] arr = new int[MAX_GEM_TYPES];
+
+        ScoreByGemType scoreByGemType;
+        for (int i = 0; i < MAX_GEM_TYPES; ++i) {
+            scoreByGemType = scoreByGemTypes.get(i);
+            arr[i] = scoreByGemType.value;
+        }
+        return arr;
+    }
+
     public void reset() {
         score = 0;
     }
@@ -42,11 +95,13 @@ public final class ScoreCounter {
         score += anim.count(); // * 3;
         calcBonusForScore(anim);
 
+        ScoreByGemType scoreByGemType;
         GemPosition gp;
         int size = anim.count();
         for(int i = 0; i < size; ++i) {
             gp = anim.getAt(i);
-            ++scoreByGemTypes[ gp.type ];
+            scoreByGemType = scoreByGemTypes.get(gp.type);
+            ++scoreByGemType.value;
         }
         dumpScoreByGemTypes();
     }
@@ -130,17 +185,74 @@ public final class ScoreCounter {
 
     public void dumpScoreByGemTypes() {
         System.out.println("Score by Gem Types");
-        int size = scoreByGemTypes.length;
-        for (int i = 0; i < size; ++i) {
-            System.out.println("GemType" + i + ": " + scoreByGemTypes[i]);
+        ScoreByGemType scoreByGemType;
+        for (int i = 0; i < MAX_GEM_TYPES; ++i) {
+            scoreByGemType = scoreByGemTypes.get(i);
+            System.out.println("GemType" + scoreByGemType.type + ": " + scoreByGemType.value);
         }
         System.out.println("-------------");
     }
 
     public void setScoreByGemTypes(int[] arr) {
+/*
+        ScoreByGemType scoreByGemType;
         for (int i = 0; i < arr.length; ++i) {
-            scoreByGemTypes[i] = arr[i];
+            scoreByGemType = scoreByGemTypes.get(i);
+            scoreByGemType.value = arr[i];
         }
+*/
+        ScoreByGemType scoreByGemType;
+        int i;
+
+        i = 0;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 0;
+
+        i = 1;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 0;
+
+        i = 2;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 0;
+
+        i = 3;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 0;
+
+        i = 4;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 0;
+
+        i = 5;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 0;
+
+        i = 6;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 0;
+
+
+    }
+
+    public int getComboCount() {
+        return 42;
+    }
+
+    public int getHintsShownCount() {
+        return 12;
+    }
+
+    public int getLongestComboNumber() {
+        return 90;
+    }
+
+    public int getCollectedCount() {
+        return 1002;
+    }
+
+    public int getWastedCount() {
+        return 345;
     }
 
 

@@ -6,10 +6,10 @@ import static com.almagems.mineraider.Constants.*;
 
 public final class Stats extends Overlay {
 
-    private final float deltaY;
+    private float deltaY;
 
-    private final float touchDownX;
-    private final float touchDownY;
+    private float touchDownX;
+    private float touchDownY;
 
     private final MenuItemAnim menuItemAnim;
     private final MenuItem backButton;
@@ -29,8 +29,8 @@ public final class Stats extends Overlay {
     private final Text[] textsMatchTypesCols;
     private final Text[][] textsMatchTypesValues;
 
-    final int matchTypesMaxRows;
-    final int matchTypesMaxCols;
+    private final int matchTypesMaxRows;
+    private final int matchTypesMaxCols;
 
     // extras section
     private final Text textMaxComboCount;
@@ -47,6 +47,9 @@ public final class Stats extends Overlay {
         System.out.println("Stats ctor...");
 
         deltaY = 0f;
+
+        matchTypesMaxRows = 6;
+        matchTypesMaxCols = 3;
 
         // general
         backButton = new MenuItem();
@@ -110,6 +113,14 @@ public final class Stats extends Overlay {
             }
         }
 
+        // extras section
+        textMaxComboCount = new Text();
+        textHintShownCount = new Text();
+        textLongestComboCount = new Text();
+
+        // collected wasted section
+        textBalanceCollected = new Text();
+        textBalanceWasted = new Text();
     }
 
     public void init() {        
@@ -131,95 +142,106 @@ public final class Stats extends Overlay {
         background.init(new Color(0f, 0f, 0f, 0.4f), new Color(0f, 0f, 0f, 0.6f));
         
         /// stat sections
-        createAndInitGemByTypesSection();
-        createAndInitMatchTypesSection();
-        createAndInitExtrasSection();
-        createAndInitBalanceSection();
+        initGemByTypesSection();
+        initMatchTypesSection();
+        initExtrasSection();
+        initBalanceSection();
     }
 
-    private void createAndInitGemByTypesSection() {
-        System.out.println("createAndInitGemByTypesSection...");
+    private void initGemByTypesSection() {
+        System.out.println("initGemByTypesSection...");
 
         // calc min - max among collected gems        
-        int[] realGems = scoreCounter.scoreByGemTypes;
+        int[] realGems = scoreCounter.getScoreByGemTypesAsIntArray();
         int min = calcMin(realGems);
         int max = calcMax(realGems);
         System.out.println("Min : " + min + ", max: " + max);
 
-        // adjust
-        int range = max - min;
-        int delta = min + (range / 2);
         int[] altGems = realGems.clone();
-        int len = altGems.length;
-        for(int i = 0; i < len; ++i) {
-            altGems[i] -= delta;
+
+        // adjust
+        if (min != max) {
+            int range = max - min;
+            int delta = min - (range / 2);
+            int len = altGems.length;
+            for (int i = 0; i < len; ++i) {
+                altGems[i] -= delta;
+            }
         }
 
         // at this point values in array are between 0 and (max-min) value
         // recalc max and min values
         min = calcMin(altGems);
         max = calcMax(altGems);
-        
+
+        if (min == 0 && max == 0) {
+            max = 10;
+            int len = altGems.length;
+            for (int i = 0; i < len; ++i) {
+                altGems[i] = 1;
+            }
+        }
+
         // calc bars width
         final float wmax = 0.75f;
         final float h = 0.05f;
-        final float xminus = 0.8;
+        final float xminus = 0.8f;
         float w;
         w = ((float)altGems[0] / (float)max) * wmax;
-        barsGemTypes[0].init(new Color(194, 150, 76, 255),  w, h);
+        barsGemTypes[0].init(scoreCounter.scoreByGemTypes.get(0).color,  w, h);
         barsGemTypes[0].pos.tx = w - xminus;
 
         w = ((float)altGems[1] / (float)max) * wmax;
-        barsGemTypes[1].init(new Color(197, 94, 124, 255),  w, h);
+        barsGemTypes[1].init(scoreCounter.scoreByGemTypes.get(1).color,  w, h);
         barsGemTypes[1].pos.tx = w - xminus;
 
         w = ((float)altGems[2] / (float)max) * wmax;
-        barsGemTypes[2].init(new Color(193, 102, 193, 255), w, h);
+        barsGemTypes[2].init(scoreCounter.scoreByGemTypes.get(2).color, w, h);
         barsGemTypes[2].pos.tx = w - xminus;
 
         w = ((float)altGems[3] / (float)max) * wmax;
-        barsGemTypes[3].init(new Color(172, 152, 158, 255), w, h);
+        barsGemTypes[3].init(scoreCounter.scoreByGemTypes.get(3).color, w, h);
         barsGemTypes[3].pos.tx = w - xminus;
 
         w = ((float)altGems[4] / (float)max) * wmax;
-        barsGemTypes[4].init(new Color(26, 61, 186, 255),   w, h);
+        barsGemTypes[4].init(scoreCounter.scoreByGemTypes.get(4).color,   w, h);
         barsGemTypes[4].pos.tx = w - xminus;
 
         w = ((float)altGems[5] / (float)max) * wmax;
-        barsGemTypes[5].init(new Color(196, 123, 99, 255),  w, h);
+        barsGemTypes[5].init(scoreCounter.scoreByGemTypes.get(5).color,  w, h);
         barsGemTypes[5].pos.tx = w - xminus;
 
         w = ((float)altGems[6] / (float)max) * wmax;
-        barsGemTypes[6].init(new Color(188, 38, 38, 255),   w, h);
+        barsGemTypes[6].init(scoreCounter.scoreByGemTypes.get(6).color,   w, h);
         barsGemTypes[6].pos.tx = w - xminus;
 
         // setup texts
         final float fontScale = 0.9f;
         final Color textColor = new Color(Color.WHITE);        
 
-        textsGemTypes[0].init("Type 0: " + realGems[0], textColor, textColor, fontScale);
-        textsGemTypes[0].pos.tx = -text[0].getTextWidth() / 2f;
+        textsGemTypes[0].init("" + realGems[0], textColor, textColor, fontScale);
+        textsGemTypes[0].pos.tx = barsGemTypes[0].pos.tx - textsGemTypes[0].getTextWidth() / 2f;
 
-        textsGemTypes[1].init("Type 1: " + realGems[1], textColor, textColor, fontScale);
-        textsGemTypes[1].pos.tx = -text[1].getTextWidth() / 2f;
+        textsGemTypes[1].init("" + realGems[1], textColor, textColor, fontScale);
+        textsGemTypes[1].pos.tx = barsGemTypes[1].pos.tx - textsGemTypes[1].getTextWidth() / 2f;
 
-        textsGemTypes[2].init("Type 2: " + realGems[2], textColor, textColor, fontScale);
-        textsGemTypes[2].pos.tx = -text[2].getTextWidth() / 2f;
+        textsGemTypes[2].init("" + realGems[2], textColor, textColor, fontScale);
+        textsGemTypes[2].pos.tx = barsGemTypes[2].pos.tx - textsGemTypes[2].getTextWidth() / 2f;
 
-        textsGemTypes[3].init("Type 3: " + realGems[3], textColor, textColor, fontScale);
-        textsGemTypes[3].pos.tx = -text[3].getTextWidth() / 2f;
+        textsGemTypes[3].init("" + realGems[3], textColor, textColor, fontScale);
+        textsGemTypes[3].pos.tx = barsGemTypes[3].pos.tx - textsGemTypes[3].getTextWidth() / 2f;
 
-        textsGemTypes[4].init("Type 4: " + realGems[4], textColor, textColor, fontScale);
-        textsGemTypes[4].pos.tx = -text[4].getTextWidth() / 2f;
+        textsGemTypes[4].init("" + realGems[4], textColor, textColor, fontScale);
+        textsGemTypes[4].pos.tx = barsGemTypes[4].pos.tx - textsGemTypes[4].getTextWidth() / 2f;
 
-        textsGemTypes[5].init("Type 5: " + realGems[5], textColor, textColor, fontScale);
-        textsGemTypes[5].pos.tx = -text[5].getTextWidth() / 2f;
+        textsGemTypes[5].init("" + realGems[5], textColor, textColor, fontScale);
+        textsGemTypes[5].pos.tx = barsGemTypes[5].pos.tx - textsGemTypes[5].getTextWidth() / 2f;
 
-        textsGemTypes[6].init("Type 6: " + realGems[6], textColor, textColor, fontScale);
-        textsGemTypes[6].pos.tx = -text[6].getTextWidth() / 2f;
+        textsGemTypes[6].init("" + realGems[6], textColor, textColor, fontScale);
+        textsGemTypes[6].pos.tx = barsGemTypes[6].pos.tx - textsGemTypes[6].getTextWidth() / 2f;
     }
 
-    private void createAndInitMatchTypesSection() {
+    private void initMatchTypesSection() {
         System.out.println("createAndInitMatchTypesSection...");
 
         // 3 columns: type | horizontal | vertical
@@ -241,7 +263,7 @@ public final class Stats extends Overlay {
 
         for(int row = 0; row < matchTypesMaxRows; ++row) {
             for(int col = 0; col < matchTypesMaxCols; ++col) {
-                textsMatchTypesValues[row][col].init( MyUtils.randInt(100, 1000), textColor, textColor, fontScale );
+                textsMatchTypesValues[row][col].init("" + MyUtils.randInt(100, 1000), textColor, textColor, fontScale );
             }
         }
 
@@ -297,16 +319,13 @@ public final class Stats extends Overlay {
         }
     }
 
-    private void createAndInitExtrasSection() {
-        System.out.println("createAndInitExtrasSection...");
+    private void initExtrasSection() {
+        System.out.println("initExtrasSection...");
 
         final float fontScale = 0.9f;
         final Color textColor = new Color(Color.WHITE);
 
-        // plain text and a number at the end (simple)    
-        textMaxComboCount = new Text();
-        textHintShownCount = new Text();
-        textLongestComboCount = new Text();
+        // plain text and a number at the end (simple)
 
         textMaxComboCount.init("Combo Count: " + scoreCounter.getComboCount(), textColor, textColor, fontScale);
         textHintShownCount.init("Hint Shown: " + scoreCounter.getHintsShownCount(), textColor, textColor, fontScale);
@@ -314,20 +333,17 @@ public final class Stats extends Overlay {
 
     }
         
-    private void createAndInitBalanceSection() {
-        System.out.println("createAndInitBalanceSection...");
+    private void initBalanceSection() {
+        System.out.println("initBalanceSection...");
 
         final float fontScale = 0.9f;
         final Color textColor = new Color(Color.WHITE);
 
         // two numbers text
         // and images to depict a libra
-    
-        textBalanceCollected = new Text();
-        textBalanceWasted = new Text();
 
-        textBalanceCollected.init(scoreCounter.getCollectedCount(), textColor, textColor, fontScale);
-        textBalanceWasted.init(scoreCounter.getWastedCount(), textColor, textColor, fontScale);
+        textBalanceCollected.init("" + scoreCounter.getCollectedCount(), textColor, textColor, fontScale);
+        textBalanceWasted.init("" + scoreCounter.getWastedCount(), textColor, textColor, fontScale);
     }
 
     public void update() {
@@ -356,9 +372,9 @@ public final class Stats extends Overlay {
 
 // draw sections
         drawGemTypesSection();
-        drawMatchTypesSection();
-        drawExtrasSection();
-        drawBalanceSection();
+        //drawMatchTypesSection();
+        //drawExtrasSection();
+        //drawBalanceSection();
 
 // draw back button
         graphics.textureShader.useProgram();
@@ -385,14 +401,17 @@ public final class Stats extends Overlay {
     }
 
     private void drawGemTypesSection() {
+
         // draw bars
+        graphics.colorShader.useProgram();
         glDisable(GL_BLEND);
         for(int i = 0; i < MAX_GEM_TYPES; ++i) {
-            barsGemTypes[i].draw();
+            barsGemTypes[i].drawBatch();
         }
 
         // draw texts
         glEnable(GL_BLEND);
+        graphics.textureShader.useProgram();
         graphics.textureShader.setTexture(Graphics.textureFonts);
         for(int i = 0; i < MAX_GEM_TYPES; ++i) {
             textsGemTypes[i].draw();

@@ -52,4 +52,12 @@ public final class ColoredQuad {
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
+    public void drawBatch() {
+        graphics.calcMatricesForObject(pos);
+        graphics.colorShader.setUniforms(graphics.mvpMatrix, color);
+        graphics.colorShader.bindData(vertexArray);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
 }

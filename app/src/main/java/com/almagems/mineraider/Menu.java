@@ -23,7 +23,7 @@ public final class Menu extends Overlay {
     private ArrayList<MenuGroup> groups = new ArrayList<MenuGroup>(9);
     private MenuGroup currentGroup;
 
-    private Fade fade;
+    private final Fade background;
 
     public MenuOptions getSelectedMenuOption() {
         return selectedMenuOption;
@@ -41,11 +41,14 @@ public final class Menu extends Overlay {
         return null;
     }
 
+    // ctor
+    public Menu() {
+        background = new Fade();
+    }
+
     public void init() {
         selectedMenuItem = null;
         selectedMenuOption = MenuOptions.None;
-
-        fade = new Fade();
 
         float sc;
         MenuGroup menuGroup;
@@ -246,10 +249,11 @@ public final class Menu extends Overlay {
         groups.add(menuGroup);
 
         // fade
-        fade.init(new Color(0f, 0f, 0f, 0.4f), new Color(0f, 0f, 0f, 0.4f));
+        background.init(new Color(0f, 0f, 0f, 0.3f), new Color(0f, 0f, 0f, 0.6f));
     }
 
     public void update() {
+        background.update();
         currentGroup.update();
 
         if (selectedMenuItem != null) {
@@ -294,7 +298,7 @@ public final class Menu extends Overlay {
         glDisable(GL_DEPTH_TEST);
 
         graphics.bindNoTexture();
-        fade.draw();
+        background.draw();
 
         graphics.textureShader.useProgram();
         graphics.textureShader.setTexture(Graphics.textureMenuItems);
@@ -349,6 +353,10 @@ public final class Menu extends Overlay {
                 Engine.getInstance().audio.setSoundVolume(norm);
             }
         }
+    }
+
+    public void resetBackground() {
+        background.reset();
     }
 
     public void reset() {

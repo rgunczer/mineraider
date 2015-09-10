@@ -1,7 +1,5 @@
 package com.almagems.mineraider;
 
-import static com.almagems.mineraider.MyUtils.LERP;
-
 
 public final class Fade extends EffectAnim {
     private final Color colorFrom;
@@ -19,6 +17,12 @@ public final class Fade extends EffectAnim {
         colorTo = new Color();
         colorCurrent = new Color(colorFrom);
         coloredQuad = new ColoredQuad();
+    }
+
+    public void reset() {
+        colorCurrent.init(colorFrom);
+        done = false;
+        t = 0f;
     }
 
     public void init(Color from, Color to) {
@@ -59,10 +63,10 @@ public final class Fade extends EffectAnim {
                 t = 1f;
                 done = true;
             }
-            colorCurrent.r = LERP(colorFrom.r, colorTo.r, t);
-            colorCurrent.g = LERP(colorFrom.g, colorTo.g, t);
-            colorCurrent.b = LERP(colorFrom.b, colorTo.b, t);
-            colorCurrent.a = LERP(colorFrom.a, colorTo.a, t);
+            colorCurrent.r = MyUtils.lerp(colorFrom.r, colorTo.r, t);
+            colorCurrent.g = MyUtils.lerp(colorFrom.g, colorTo.g, t);
+            colorCurrent.b = MyUtils.lerp(colorFrom.b, colorTo.b, t);
+            colorCurrent.a = MyUtils.lerp(colorFrom.a, colorTo.a, t);
 
             coloredQuad.color.init(colorCurrent);
             //System.out.println("Fade update... " + t + ", " + colorCurrent.toString());

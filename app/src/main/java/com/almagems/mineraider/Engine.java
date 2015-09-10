@@ -63,7 +63,7 @@ public final class Engine {
         editor.putInt("SCORE", score);
 
         // save score by gem types
-        int[] arr = game.scoreCounter.scoreByGemTypes;
+        int[] arr = game.scoreCounter.getScoreByGemTypesAsIntArray();
         for(int i = 0; i < arr.length; ++i) {
             editor.putInt("GEM" + i, arr[i]);
         }

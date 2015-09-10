@@ -24,7 +24,7 @@ public final class PositionInfo {
 		ry = 0f;
 		rz = 0f;
 		
-		sz = 1f;
+		sx = 1f;
 		sy = 1f;
 		sz = 1f;
 	}

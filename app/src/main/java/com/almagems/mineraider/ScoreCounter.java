@@ -101,6 +101,11 @@ public final class ScoreCounter {
         for(int i = 0; i < size; ++i) {
             gp = anim.getAt(i);
             scoreByGemType = scoreByGemTypes.get(gp.type);
+            
+            if (scoreByGemType.type != gp.type) {
+                System.out.println("Wrong Type!!!");
+            }
+            
             ++scoreByGemType.value;
         }
         dumpScoreByGemTypes();

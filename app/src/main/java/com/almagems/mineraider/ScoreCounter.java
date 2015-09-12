@@ -17,27 +17,28 @@ public final class ScoreCounter {
     private static final int bonusForCombo = 1;
 
     private int score;
-    private final Game game;
+    public static Game game;
     public final ArrayList<ScoreByGemType> scoreByGemTypes;
 
+
     // ctor
-    public ScoreCounter(Game game) {
-        this.game = game;
-        scoreByGemTypes = new ArrayList<ScoreByGemType>(MAX_GEM_TYPES);
+    public ScoreCounter() {
         ScoreByGemType score;
+        scoreByGemTypes = new ArrayList<ScoreByGemType>(MAX_GEM_TYPES);
+
         for(int i = 0; i < MAX_GEM_TYPES; ++i) {
             score = new ScoreByGemType();
             score.type = i;
             score.value = 0;
 
             switch (i) {
-                case 0: score.color = new Color(194, 150, 76, 255); break;
+                case 0: score.color = new Color(188, 38, 38, 255); break;
                 case 1: score.color = new Color(197, 94, 124, 255); break;
-                case 2: score.color = new Color(193, 102, 193, 255); break;
-                case 3: score.color = new Color(172, 152, 158, 255); break;
-                case 4: score.color = new Color(26, 61, 186, 255); break;
+                case 2: score.color = new Color(194, 150, 76, 255); break;
+                case 3: score.color = new Color(26, 61, 186, 255); break;
+                case 4: score.color = new Color(193, 102, 193, 255); break;
                 case 5: score.color = new Color(196, 123, 99, 255); break;
-                case 6: score.color = new Color(188, 38, 38, 255); break;
+                case 6: score.color = new Color(172, 152, 158, 255); break;
             }
 
             scoreByGemTypes.add(score);
@@ -45,14 +46,9 @@ public final class ScoreCounter {
         reset();
     }
 
-    public void handleGemsFromCart(int[] gemTypes) {
-        int numberOfGems = 0;
-        for (int i = 0; i < MAX_GEM_TYPES; ++i) {
-            numberOfGems += gemTypes[i];
-        }
-
-        game.hud.showBonusCartGems(numberOfGems);
-        score += numberOfGems;
+    public void handleGemsFromCart(int number) {
+        score += number;
+        game.hud.showBonusCartGems(number);
         game.hud.updateScore(score);
     }
 
@@ -60,39 +56,42 @@ public final class ScoreCounter {
         Collections.sort(scoreByGemTypes, new Comparator<ScoreByGemType>() {
             @Override
             public int compare(ScoreByGemType lhs, ScoreByGemType rhs) {
-                if (lhs.value < rhs.value) {
-                    return 1;
-                } else if (lhs.value == rhs.value) {
-                    return 0;
-                } else if (lhs.value > rhs.value) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+            if (lhs.value < rhs.value) {
+                return 1;
+            } else if (lhs.value == rhs.value) {
+                return 0;
+            } else if (lhs.value > rhs.value) {
+                return -1;
+            } else {
+                return 0;
+            }
             }
         });
     }
 
-    public int[] getScoreByGemTypesAsIntArray() {
+    public ArrayList<ScoreByGemType> getScoreByGemTypesAsIntArray() {
         sortScoresByGemTypes();
-
-        int[] arr = new int[MAX_GEM_TYPES];
-
-        ScoreByGemType scoreByGemType;
-        for (int i = 0; i < MAX_GEM_TYPES; ++i) {
-            scoreByGemType = scoreByGemTypes.get(i);
-            arr[i] = scoreByGemType.value;
-        }
-        return arr;
+        return scoreByGemTypes;
     }
 
     public void reset() {
         score = 0;
     }
 
+
+    public ScoreByGemType getScoreByGemType(int type) {
+        ScoreByGemType scoreByGemType;
+        for(int i = 0; i < MAX_GEM_TYPES; ++i) {
+            scoreByGemType = scoreByGemTypes.get(i);
+            if (scoreByGemType.type == type) {
+                return scoreByGemType;
+            }
+        }
+        return null;
+    }
+
     public void addScore(PopAnimation anim) {
-        System.out.println("Add Score is:" + anim.count());
-        score += anim.count(); // * 3;
+        score += anim.count();
         calcBonusForScore(anim);
 
         ScoreByGemType scoreByGemType;
@@ -100,7 +99,7 @@ public final class ScoreCounter {
         int size = anim.count();
         for(int i = 0; i < size; ++i) {
             gp = anim.getAt(i);
-            scoreByGemType = scoreByGemTypes.get(gp.type);
+            scoreByGemType = getScoreByGemType(gp.type);
             
             if (scoreByGemType.type != gp.type) {
                 System.out.println("Wrong Type!!!");
@@ -199,16 +198,47 @@ public final class ScoreCounter {
     }
 
     public void setScoreByGemTypes(int[] arr) {
-/*
-        ScoreByGemType scoreByGemType;
-        for (int i = 0; i < arr.length; ++i) {
-            scoreByGemType = scoreByGemTypes.get(i);
-            scoreByGemType.value = arr[i];
-        }
-*/
         ScoreByGemType scoreByGemType;
         int i;
 
+        for (i = 0; i < arr.length; ++i) {
+            scoreByGemType = scoreByGemTypes.get(i);
+            scoreByGemType.value = arr[i];
+        }
+
+
+
+/*
+        i = 0;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 12343;
+
+        i = 1;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 12345;
+
+        i = 2;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 12500;
+
+        i = 3;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 12090;
+
+        i = 4;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 12101;
+
+        i = 5;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 12940;
+
+        i = 6;
+        scoreByGemType = scoreByGemTypes.get(i);
+        scoreByGemType.value = 12267;
+*/
+
+/*
         i = 0;
         scoreByGemType = scoreByGemTypes.get(i);
         scoreByGemType.value = 0;
@@ -236,8 +266,7 @@ public final class ScoreCounter {
         i = 6;
         scoreByGemType = scoreByGemTypes.get(i);
         scoreByGemType.value = 0;
-
-
+*/
     }
 
     public int getComboCount() {

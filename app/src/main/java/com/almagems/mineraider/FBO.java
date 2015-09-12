@@ -34,7 +34,7 @@ public final class FBO {
         glGenRenderbuffers(1, temp, 0);
         m_ColorBuffer = temp[0];
         glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB, w, h);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, w, h);
 
         // Create the dept buffer
         glGenRenderbuffers(1, temp, 0); m_DepthBuffer = temp[0];
@@ -50,9 +50,29 @@ public final class FBO {
         m_TextureId = Graphics.createTexture(w, h); // <-- CALL CREATE TEXTURE HERE!!!
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_TextureId, 0);
 
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+        if (status != GL_FRAMEBUFFER_COMPLETE) {
             System.out.println("ERROR Creating FBO...");
-            // die here!
+
+            switch (status) {
+                case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+                    System.out.println("GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
+                    break;
+
+                case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+                    System.out.println("GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT");
+                    break;
+
+                case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+                    System.out.println("GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS");
+                    break;
+
+                case GL_FRAMEBUFFER_UNSUPPORTED:
+                    System.out.println("GL_FRAMEBUFFER_UNSUPPORTED");
+                    break;
+            }
+
         }
 
         glBindTexture(GL_TEXTURE_2D, 0);

@@ -1,5 +1,9 @@
 package com.almagems.mineraider;
 
+import static android.opengl.GLES20.*;
+import static com.almagems.mineraider.Constants.*;
+
+
 public final class StatSectionMatchTypes extends StatSectionBase {
 	
     private final Text[] textsMatchTypesRows;

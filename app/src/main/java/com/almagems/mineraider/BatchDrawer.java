@@ -67,6 +67,21 @@ public final class BatchDrawer {
         gemsType6.clear();
     }
 
+    public void add(ArrayList<GemPosition> gems) {
+        GemPosition gp;
+        int len = gems.size();
+        for (int i = 0; i < len; ++i) {
+            gp = gems.get(i);
+            sortItem(gp.pos, gp.type, gp.visible);
+        }
+    }
+
+    public void add(GemPosition gp) {
+        PositionInfo pos = getFromPool();
+        pos.init(gp.pos);
+        sortItem(pos, gp.type, gp.visible);
+    }
+
     public void add(Match3 match3) {
         PositionInfo pos;
         GemPosition gp;

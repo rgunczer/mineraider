@@ -63,9 +63,11 @@ public final class Engine {
         editor.putInt("SCORE", score);
 
         // save score by gem types
-        int[] arr = game.scoreCounter.getScoreByGemTypesAsIntArray();
-        for(int i = 0; i < arr.length; ++i) {
-            editor.putInt("GEM" + i, arr[i]);
+        ScoreByGemType scoreByGemType;
+        int len = game.scoreCounter.scoreByGemTypes.size();
+        for(int i = 0; i < len; ++i) {
+            scoreByGemType = game.scoreCounter.getScoreByGemType(i);
+            editor.putInt("GEM" + scoreByGemType.type, scoreByGemType.value);
         }
 
         // save music and sound volume
@@ -93,8 +95,11 @@ public final class Engine {
         game.scoreCounter.setScoreByGemTypes(arr);
         game.scoreCounter.dumpScoreByGemTypes();
 
-        audio.musicVolume = sharedPrefs.getFloat("MUSIC", 0.5f);
-        audio.soundVolume = sharedPrefs.getFloat("SOUND", 0.5f);
+        float musicVolume = sharedPrefs.getFloat("MUSIC", 0.5f);
+        float soundVolume = sharedPrefs.getFloat("SOUND", 0.5f);
+
+        audio.setMusicVolume(musicVolume);
+        audio.setSoundVolume(soundVolume);
 
         return score;
     }

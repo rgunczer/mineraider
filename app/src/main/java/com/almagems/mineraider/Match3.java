@@ -597,10 +597,7 @@ public final class Match3 {
 			//System.out.println("COMBO(S)!!!");
 			addAnimToManager(anim);
             scoreCounter.addScore(anim);
-
-            for(int i = 0; i < anim.getNumberOfDifferentGemTypes(); ++i) {
-                scoreCounter.addBonusForCombo();
-            }
+            scoreCounter.addBonusForCombo();
 		}
 	}
 	

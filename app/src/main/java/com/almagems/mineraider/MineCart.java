@@ -260,30 +260,26 @@ public final class MineCart {
 
     // now count how many gems were there (in the minecart)
     private void countMineCartLoad() {
-        physics.fragmentToPool.clear();
         Body body;
         Vec2 fragmentPos;
-        boolean gemsFromCart = false;
-        int[] gemTypeFromCart = new int[MAX_GEM_TYPES];
-        Integer gemType;
-        int size = physics.fragments.size();
+        int size = Physics.fragments.size();
+        int count = 0;
+        Physics.fragmentToPool.clear();
         for(int i = 0; i < size; ++i) {
-            body = physics.fragments.get(i);
+            body = Physics.fragments.get(i);
             fragmentPos = body.getPosition();
 
             if (fragmentPos.x > 15f) {
-                gemsFromCart = true;
-                gemType = (Integer)body.m_userData;
-                ++gemTypeFromCart[gemType];
-                physics.fragmentToPool.add(body);
+                ++count;
+                Physics.fragmentToPool.add(body);
             }
         }
 
-        if (gemsFromCart) {
-            Engine.getInstance().game.scoreCounter.handleGemsFromCart(gemTypeFromCart);
+        if (count > 0) {
+            Engine.getInstance().game.scoreCounter.handleGemsFromCart(count);
         }
 
-        physics.sortFragmentsFromPool();
+        Physics.sortFragmentsFromPool();
     }
 
 // drawing

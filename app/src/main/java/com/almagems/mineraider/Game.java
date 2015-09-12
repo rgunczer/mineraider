@@ -71,7 +71,9 @@ public final class Game extends Scene {
         graphics = Engine.graphics;
 
         CollisionHandler.game = this;
+        ScoreCounter.game = this;
 
+        StatSectionBase.graphics = graphics;
         ColoredQuad.graphics = graphics;
         Overlay.graphics = graphics;
         Quad.graphics = graphics;
@@ -95,8 +97,7 @@ public final class Game extends Scene {
 
         initialized = true;
 
-        scoreCounter = new ScoreCounter(this);
-
+        scoreCounter = new ScoreCounter();
 		animManager = new AnimationManager();
 		match3 = new Match3(8, animManager, scoreCounter);
 
@@ -160,9 +161,8 @@ public final class Game extends Scene {
 	}
 
     public void renderToFBO() {
-        graphics.fbo.bind();
-
-        glViewport(0, 0, graphics.fbo.getWidth(), graphics.fbo.getHeight());
+        graphics.fboBackground.bind();
+        glViewport(0, 0, graphics.fboBackground.getWidth(), graphics.fboBackground.getHeight());
 
         // regular render
         glClearColor(0f, 0f, 0f, 0f);
@@ -208,9 +208,8 @@ public final class Game extends Scene {
             drawBackgroundAndDecoration();
         }
 
-        graphics.fbo.unbind();
-
-        background.initWithFBOTexture(graphics.fbo.getTextureId());
+        graphics.fboBackground.unbind();
+        background.initWithFBOTexture(graphics.fboBackground.getTextureId());
 
         glViewport(0, 0, (int) Graphics.screenWidth, (int) Graphics.screenHeight);
         glClearColor(0f, 0f, 0f, 1f);
@@ -282,6 +281,7 @@ public final class Game extends Scene {
             graphics.setProjectionMatrix2D();
             graphics.updateViewProjMatrix();
 
+            glDisable(GL_BLEND);
             glDepthMask(false);
             background.draw();
             glDepthMask(true);
@@ -412,9 +412,14 @@ public final class Game extends Scene {
     }
 
     private void handleTouchPressOnPlaying(float normalizedX, float normalizedY) {
-        if (normalizedX > 0.86f && normalizedY < -0.86f ) {
-            gameState = GameState.Menu;
-            menu.reset();
+        if (normalizedY < -0.86f ) {
+            if (normalizedX > 0.86f) {
+                gameState = GameState.Menu;
+                menu.reset();
+            } else if (normalizedX < -0.65f) {
+                //gameState = GameState.Stats;
+                //menu.reset();
+            }
         } else {
             swipeDir = SwipeDir.SwipeNone;
             touchDownX = normalizedX;

@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 public abstract class BaseAnimation {
 
-    public boolean isDone;
+    public boolean done;
 
 	public abstract void update();
 }

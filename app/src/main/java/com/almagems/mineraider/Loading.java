@@ -12,7 +12,7 @@ import static android.opengl.GLES20.glEnable;
 public final class Loading extends Overlay {
 
     private int loadingStepCounter = 0;
-    private int maxLoadingStep = 14;
+    private int maxLoadingStep = 15;
     public boolean done = false;
     private final Quad quad;
     private final ProgressBarControl progress;
@@ -50,7 +50,7 @@ public final class Loading extends Overlay {
 
         switch (loadingStepCounter) {
             case 0:
-                engine.audio = new Audio();
+                Engine.audio = new Audio();
                 break;
 
             case 1:
@@ -86,19 +86,19 @@ public final class Loading extends Overlay {
                 break;
 
             case 9:
-                engine.game.createObjects();
+                Engine.game.createObjects();
                 break;
 
             case 10:
-                engine.audio.init(engine.activity);
+                Engine.game.renderToFBO();
                 break;
 
             case 11:
-                engine.game.renderToFBO();
+
                 break;
 
             case 12:
-                engine.graphics.particleManager.init();
+                graphics.particleManager.init();
                 break;
 
             case 13:
@@ -106,7 +106,11 @@ public final class Loading extends Overlay {
                 break;
 
             case 14:
-                engine.graphics.releaseUnusedAssets();
+                Engine.audio.init(Engine.activity);
+                break;
+
+            case 15:
+                graphics.releaseUnusedAssets();
                 break;
         }
 

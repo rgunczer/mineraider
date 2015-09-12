@@ -8,6 +8,7 @@ public final class Quad {
     private int textureId;
     public static Graphics graphics;
 
+
     // ctor
     public Quad() {
         pos = new PositionInfo();
@@ -19,7 +20,6 @@ public final class Quad {
 
         if ( y > (pos.ty - h) && y < (pos.ty + h) &&
              x > (pos.tx - w) && x < (pos.tx + w) ) {
-            System.out.println("Here....");
             return true;
         }
 
@@ -85,6 +85,62 @@ public final class Quad {
                     -1f, -1f, 0f,   0f, 0f, 1f,     tx1, ty1,
                      1f,  1f, 0f,   0f, 0f, 1f,     tx0, ty0,
                     -1f,  1f, 0f,   0f, 0f, 1f,     tx1, ty0
+            };
+            vertexArray = new VertexArray(vertexData);
+        }
+    }
+
+    public void initWithFBOTexture(FBO fbo, Rectangle rect) {
+        final boolean flipUTextureCoordinate = false;
+        final Color color = new Color(Color.WHITE);
+        this.textureId = fbo.getTextureId();
+
+        pos.trans(0f, 0f, 0f);
+        pos.rot(0f, 0f, 0f);
+        pos.scale(1f, 1f, 1f);
+
+        float x = rect.x;
+        float y = rect.y;
+        float w = rect.w;
+        float h = rect.h;
+
+        float tw = fbo.getWidth();
+        float th = fbo.getHeight();
+
+        TexturedQuad pFont = new TexturedQuad();
+        // x								// y
+        pFont.tx_lo_left.x = x / tw;        pFont.tx_lo_left.y = (th - (y - h)) / th;  // 0
+        pFont.tx_lo_right.x = (x + w) / tw; pFont.tx_lo_right.y = (th - (y - h)) / th; // 1
+        pFont.tx_up_right.x = (x + w) / tw; pFont.tx_up_right.y = (th - y) / th;       // 2
+        pFont.tx_up_left.x = x / tw;        pFont.tx_up_left.y =  (th - y) / th;       // 3
+
+        float tx0 = pFont.tx_lo_left.x;
+        float tx1 = pFont.tx_up_right.x;
+        float ty0 = pFont.tx_lo_left.y;
+        float ty1 = pFont.tx_up_right.y;
+
+        if (!flipUTextureCoordinate) {
+            float[] vertexData = {
+                    // x, y, z, 		// r g b a                              u, v,
+                    -1f, -1f, 0.0f,     color.r, color.g, color.b, color.a,     tx0, ty1,
+                    1f, -1f, 0.0f,     color.r, color.g, color.b, color.a,     tx1, ty1,
+                    1f,  1f, 0.0f,     color.r, color.g, color.b, color.a,     tx1, ty0,
+
+                    -1f, -1f, 0.0f,     color.r, color.g, color.b, color.a,     tx0, ty1,
+                    1f,  1f, 0.0f,     color.r, color.g, color.b, color.a,     tx1, ty0,
+                    -1f,  1f, 0.0f,     color.r, color.g, color.b, color.a,     tx0, ty0
+            };
+            vertexArray = new VertexArray(vertexData);
+        } else {
+            float[] vertexData = {
+                    // x, y, z, 		// r g b a                            u, v,
+                    -1f, -1f, 0.0f, color.r, color.g, color.b, color.a, tx1, ty1,
+                    1f, -1f, 0.0f, color.r, color.g, color.b, color.a, tx0, ty1,
+                    1f, 1f, 0.0f, color.r, color.g, color.b, color.a, tx0, ty0,
+
+                    -1f, -1f, 0.0f, color.r, color.g, color.b, color.a, tx1, ty1,
+                    1f, 1f, 0.0f, color.r, color.g, color.b, color.a, tx0, ty0,
+                    -1f, 1f, 0.0f, color.r, color.g, color.b, color.a, tx1, ty0
             };
             vertexArray = new VertexArray(vertexData);
         }

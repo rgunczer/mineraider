@@ -49,22 +49,24 @@ public final class Stats extends Overlay {
 
         float sc = 1.76f;
         float aspect = Graphics.aspectRatio;
-        boolean flipUTextureCoordinate = false;
-        Texture textureObj = graphics.getTextureObj(graphics.textureMenuItems);
+        final boolean flipUTextureCoordinate = false;
+        Texture textureObj = graphics.getTextureObj(Graphics.textureMenuItems);
 
         Rectangle rect = textureObj.getFrame("menu_item_back.png");
-        backButton.init("Back", Menu.MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
-        backButton.setTrans(0f, -aspect * 0.6f, 0f);
+        backButton.init("Back", Menu.MenuOptions.Back, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        backButton.setTrans(0f, -aspect * 0.8f, 0f);
         backButton.setRot(0f, 0f, 0f);
         backButton.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
 
         background.init(new Color(0f, 0f, 0f, 0.4f), new Color(0f, 0f, 0f, 0.6f));
         
         // stat sections
-        statSectionGemTypes.init(scoreCounter);
-        statSectionMatchTypes.init(scoreCounter);
-        statSectionExtras.init(scoreCounter);
-        statSectionBalance.init(scoreCounter);
+        StatSectionBase.scoreCounter = scoreCounter;
+
+        statSectionGemTypes.init();
+        statSectionMatchTypes.init();
+        statSectionExtras.init();
+        statSectionBalance.init();
     }
 
     public void update() {
@@ -95,9 +97,9 @@ public final class Stats extends Overlay {
 
 // draw sections
         statSectionGemTypes.draw();
-        statSectionMatchTypes.draw();
-        statSectionExtras.draw();
-        statSectionBalance.draw();
+        //statSectionMatchTypes.draw();
+        //statSectionExtras.draw();
+        //statSectionBalance.draw();
 
 // draw back button
         graphics.textureShader.useProgram();

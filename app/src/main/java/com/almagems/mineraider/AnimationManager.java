@@ -17,7 +17,7 @@ public final class AnimationManager {
 		if (running != null) {
 			running.update();
 			
-			if (running.isDone) {
+			if (running.done) {
 				finished = running;
 				running = null;
 			}

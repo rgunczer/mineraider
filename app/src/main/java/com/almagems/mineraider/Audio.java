@@ -22,7 +22,9 @@ public final class Audio {
     public void setMusicVolume(float value) {
         if (value != musicVolume) {
             musicVolume = value;
-            soundPool.setVolume(musicStreamId, musicVolume, musicVolume);
+            if (musicStreamId != 0) {
+                soundPool.setVolume(musicStreamId, musicVolume, musicVolume);
+            }
 
             if (musicStreamId == 0) {
                 playMusic();
@@ -58,6 +60,10 @@ public final class Audio {
     }
 
     public void playMusic() {
+        if (soundIds[0] == 0) {
+            return;
+        }
+
         int loopMode = -1; // (0 = no loop, -1 = loop forever)
         musicStreamId = soundPool.play(soundIds[0], musicVolume, musicVolume, 1, loopMode, 1.0f);
         System.out.println("Music stream id is: " + musicStreamId);

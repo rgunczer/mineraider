@@ -1,5 +1,9 @@
 package com.almagems.mineraider;
 
+import static android.opengl.GLES20.*;
+import static com.almagems.mineraider.Constants.*;
+
+
 public final class StatSectionExtras extends StatSectionBase {
 
     private final Text textMaxComboCount;

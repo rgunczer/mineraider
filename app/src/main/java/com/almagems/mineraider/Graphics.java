@@ -23,7 +23,7 @@ public final class Graphics {
 
     public final ParticleManager particleManager;
     public final BatchDrawer batchDrawer;
-    public final FBO fbo;
+    public final FBO fboBackground;
 
     public Map<String, TexturedQuad> fonts = new HashMap<String, TexturedQuad>();
     private ArrayList<Texture> textures = new ArrayList<Texture>(20);
@@ -114,7 +114,7 @@ public final class Graphics {
 	public Graphics(Context context) {
         System.out.println("Visuals ctor...");
 		this.context = context;
-        fbo = new FBO();
+        fboBackground = new FBO();
 
         BatchDrawer.graphics = this;
         batchDrawer = new BatchDrawer();
@@ -789,8 +789,8 @@ public final class Graphics {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, null);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, null);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, null);
+        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, null);
         return temp[0];
     }
 
@@ -830,9 +830,9 @@ public final class Graphics {
         ParticleShader.pointSize = (float)width * 0.12f;
 
         if (width > 1080) {
-            fbo.create(width / 2, height / 2); // on really big displays avoid creating a full screen texture
+            fboBackground.create(width / 2, height / 2); // on really big displays avoid creating a full screen texture
         } else {
-            fbo.create(width, height);
+            fboBackground.create(width, height);
         }
     }
 

@@ -64,7 +64,7 @@ public final class SwapAnimation extends BaseAnimation {
 			}
 		} else {
 			//System.out.println("Unable to animate not in the same row or column!");
-			isDone = true;
+			done = true;
 		}			
 
 		// calc prevDiff
@@ -82,7 +82,7 @@ public final class SwapAnimation extends BaseAnimation {
 			prevDiff2 = Math.abs(firstAnim.pos.tx - secondAnim.pos.tx);
 		}
 		
-		isDone = false;
+		done = false;
 	}
 	
 	@Override
@@ -110,7 +110,7 @@ public final class SwapAnimation extends BaseAnimation {
 			}
 
 			if (don1 && don2) {
-				isDone = true;
+				done = true;
 			}
 		} else {
 			firstAnim.pos.trans(firstAnim.pos.tx + firstAnimStepAndDir, firstAnim.pos.ty, firstAnim.pos.tz);
@@ -135,7 +135,7 @@ public final class SwapAnimation extends BaseAnimation {
 			}
 
 			if (don1 && don2) {
-				isDone = true;
+				done = true;
 			}			
 		}
 	}

@@ -9,7 +9,7 @@ public final class FallGroupAnimation extends BaseAnimation {
 	private ArrayList<FallAnimation> list = new ArrayList<FallAnimation>();
 
 	public FallGroupAnimation() {
-        isDone = false;
+        done = false;
 	}
 
     public void add(GemPosition from, GemPosition to) {
@@ -31,7 +31,7 @@ public final class FallGroupAnimation extends BaseAnimation {
     }
 
     public void reset() {
-        isDone = false;
+        done = false;
         FallAnimation fall;
         int size = list.size();
         for (int i = 0; i < size; ++i) {
@@ -55,7 +55,7 @@ public final class FallGroupAnimation extends BaseAnimation {
 	
 	@Override
 	public void update() {
-		isDone = true;
+		done = true;
 		FallAnimation fall;
 		int size = list.size();
 		for (int i = 0; i < size; ++i) {
@@ -63,7 +63,7 @@ public final class FallGroupAnimation extends BaseAnimation {
 			fall.update();
 			
 			if (!fall.isDone) {
-                isDone = false;
+                done = false;
             }
 		}
 	}

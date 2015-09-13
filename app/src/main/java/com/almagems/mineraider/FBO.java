@@ -72,7 +72,6 @@ public final class FBO {
                     System.out.println("GL_FRAMEBUFFER_UNSUPPORTED");
                     break;
             }
-
         }
 
         glBindTexture(GL_TEXTURE_2D, 0);

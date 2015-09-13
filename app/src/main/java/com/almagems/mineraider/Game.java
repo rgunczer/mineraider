@@ -251,6 +251,7 @@ public final class Game extends Scene {
                             gameState = GameState.Stats;
                             menu.resetSelectedMenuOption();
                             stats.init();
+                            stats.update();
                             break;
                     }
                     break;
@@ -294,11 +295,11 @@ public final class Game extends Scene {
 
             // draw gems
             graphics.dirLightShader.setTexture(Graphics.textureGems);
-            graphics.batchDrawer.begin();
-            graphics.batchDrawer.add(match3);
-            graphics.batchDrawer.add(animManager);
-            graphics.batchDrawer.addPhysics();
-            graphics.batchDrawer.drawAll();
+            graphics.batchGemDrawer.begin();
+            graphics.batchGemDrawer.add(match3);
+            graphics.batchGemDrawer.add(animManager);
+            graphics.batchGemDrawer.addPhysics();
+            graphics.batchGemDrawer.drawAll();
 
             if (match3.firstSelected != null) {
                 elapsedTimeSelMarkerAnim += 0.3f;
@@ -455,6 +456,10 @@ public final class Game extends Scene {
             case Playing:
                 handleTouchDragOnPlaying(normalizedX, normalizedY);
                 break;
+
+            case Stats:
+                stats.handleTouchDrag(normalizedX, normalizedY);
+                break;
         }
     }
 
@@ -497,6 +502,18 @@ public final class Game extends Scene {
 	}
 
 	public void handleTouchRelease(float normalizedX, float normalizedY) {
+        switch (gameState) {
+            case Playing:
+                handleTouchReleseOnPlaying(normalizedX, normalizedY);
+                break;
+
+            case Stats:
+                stats.handleTouchRelease(normalizedX, normalizedY);
+                break;
+        }
+    }
+
+    private void handleTouchReleseOnPlaying(float normalizedX, float normalizedY) {
 		if (!match3.isAnimating) {
 			if (match3.firstSelected != null && swipeDir != SwipeDir.SwipeNone) {
 				int x = match3.firstSelected.boardX;

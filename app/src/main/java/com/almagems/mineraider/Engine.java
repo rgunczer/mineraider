@@ -70,6 +70,26 @@ public final class Engine {
             editor.putInt("GEM" + scoreByGemType.type, scoreByGemType.value);
         }
 
+        // save match types
+        editor.putInt("MATCH3H", game.scoreCounter.match3CountHorizontal);
+        editor.putInt("MATCH3V", game.scoreCounter.match3CountVertical);
+
+        editor.putInt("MATCH4H", game.scoreCounter.match4CountHorizontal);
+        editor.putInt("MATCH4V", game.scoreCounter.match4CountVertical);
+
+        editor.putInt("MATCH5H", game.scoreCounter.match5CountHorizontal);
+        editor.putInt("MATCH5V", game.scoreCounter.match5CountVertical);
+
+        // extras
+        editor.putInt("HINTS", game.scoreCounter.hintCounter);
+        editor.putInt("SWAPS", game.scoreCounter.perfectSwapCounter);
+        editor.putInt("COMBOS", game.scoreCounter.highestComboCounter);
+        editor.putInt("MATCHES", game.scoreCounter.sharedMatchesCounter);
+
+        // collected vs wasted
+        editor.putInt("COLLECTED", game.scoreCounter.collectedGems);
+        editor.putInt("WASTED", game.scoreCounter.wastedGems);
+
         // save music and sound volume
         editor.putFloat("MUSIC", audio.musicVolume);
         editor.putFloat("SOUND", audio.soundVolume);
@@ -79,15 +99,14 @@ public final class Engine {
 
     public int loadPreferences() {
         System.out.println("Load preferences...");
-
         SharedPreferences sharedPrefs = activity.getPreferences(Context.MODE_PRIVATE);
 
-        // load score
+        // score
         int score = sharedPrefs.getInt("SCORE", 0);
         game.scoreCounter.setScore(score);
         game.scoreCounter.dumpScore();
 
-        // load score by gem types
+        // gem types
         int[] arr = new int[MAX_GEM_TYPES];
         for(int i = 0; i < MAX_GEM_TYPES; ++i) {
             arr[i] = sharedPrefs.getInt("GEM" + i, 0);
@@ -95,11 +114,29 @@ public final class Engine {
         game.scoreCounter.setScoreByGemTypes(arr);
         game.scoreCounter.dumpScoreByGemTypes();
 
-        float musicVolume = sharedPrefs.getFloat("MUSIC", 0.5f);
-        float soundVolume = sharedPrefs.getFloat("SOUND", 0.5f);
+        // match types
+        game.scoreCounter.match3CountHorizontal = sharedPrefs.getInt("MATCH3H", 0);
+        game.scoreCounter.match3CountVertical =  sharedPrefs.getInt("MATCH3V", 0);
 
-        audio.setMusicVolume(musicVolume);
-        audio.setSoundVolume(soundVolume);
+        game.scoreCounter.match4CountHorizontal = sharedPrefs.getInt("MATCH4H", 0);
+        game.scoreCounter.match4CountVertical = sharedPrefs.getInt("MATCH4V", 0);
+
+        game.scoreCounter.match5CountHorizontal = sharedPrefs.getInt("MATCH5H", 0);
+        game.scoreCounter.match5CountVertical = sharedPrefs.getInt("MATCH5V", 0);
+
+        // extras
+        game.scoreCounter.hintCounter = sharedPrefs.getInt("HINTS", 0);
+        game.scoreCounter.perfectSwapCounter = sharedPrefs.getInt("SWAPS", 0);
+        game.scoreCounter.highestComboCounter = sharedPrefs.getInt("COMBOS", 0);
+        game.scoreCounter.sharedMatchesCounter = sharedPrefs.getInt("MATCHES", 0);
+
+        // collected vs wasted
+        game.scoreCounter.collectedGems = sharedPrefs.getInt("COLLECTED", 0);
+        game.scoreCounter.wastedGems = sharedPrefs.getInt("WASTED", 0);
+
+        // audio
+        audio.musicVolume = sharedPrefs.getFloat("MUSIC", 0.5f);
+        audio.soundVolume = sharedPrefs.getFloat("SOUND", 0.5f);
 
         return score;
     }

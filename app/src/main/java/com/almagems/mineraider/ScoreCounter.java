@@ -9,6 +9,21 @@ import static com.almagems.mineraider.Constants.*;
 
 public final class ScoreCounter {
 
+    public static Game game;
+
+    private enum MatchType {
+        Complex,
+
+        Horizontal3,
+        Vertical3,
+
+        Horizontal4,
+        Vertical4,
+
+        Horizontal5,
+        Vertical5
+    }
+
     private static final int bonusForPerfectSwap = 20; // valid match in both place
     private static final int bonusFor4Match = 3;
     private static final int bonusFor5Match = 5;
@@ -17,9 +32,26 @@ public final class ScoreCounter {
     private static final int bonusForCombo = 1;
 
     private int score;
-    public static Game game;
-    public final ArrayList<ScoreByGemType> scoreByGemTypes;
 
+    public final ArrayList<ScoreByGemType> scoreByGemTypes;
+    public int match3CountHorizontal;
+    public int match3CountVertical;
+
+    public int match4CountHorizontal;
+    public int match4CountVertical;
+
+    public int match5CountHorizontal;
+    public int match5CountVertical;
+
+    // collected vs wasted
+    public int collectedGems;
+    public int wastedGems;
+
+    // extras
+    public int hintCounter;
+    public int perfectSwapCounter;
+    public int highestComboCounter;
+    public int sharedMatchesCounter;
 
     // ctor
     public ScoreCounter() {
@@ -50,21 +82,22 @@ public final class ScoreCounter {
         score += number;
         game.hud.showBonusCartGems(number);
         game.hud.updateScore(score);
+        collectedGems += number;
     }
 
     private void sortScoresByGemTypes() {
         Collections.sort(scoreByGemTypes, new Comparator<ScoreByGemType>() {
             @Override
             public int compare(ScoreByGemType lhs, ScoreByGemType rhs) {
-            if (lhs.value < rhs.value) {
-                return 1;
-            } else if (lhs.value == rhs.value) {
-                return 0;
-            } else if (lhs.value > rhs.value) {
-                return -1;
-            } else {
-                return 0;
-            }
+                if (lhs.value < rhs.value) {
+                    return 1;
+                } else if (lhs.value == rhs.value) {
+                    return 0;
+                } else if (lhs.value > rhs.value) {
+                    return -1;
+                } else {
+                    return 0;
+                }
             }
         });
     }
@@ -76,8 +109,24 @@ public final class ScoreCounter {
 
     public void reset() {
         score = 0;
-    }
 
+        match3CountHorizontal = 0;
+        match3CountVertical = 0;
+
+        match4CountHorizontal = 0;
+        match4CountVertical = 0;
+
+        match5CountHorizontal = 0;
+        match5CountVertical = 0;
+
+        hintCounter = 0;
+        perfectSwapCounter = 0;
+        highestComboCounter = 0;
+        sharedMatchesCounter = 0;
+
+        collectedGems = 0;
+        wastedGems = 0;
+    }
 
     public ScoreByGemType getScoreByGemType(int type) {
         ScoreByGemType scoreByGemType;
@@ -90,6 +139,63 @@ public final class ScoreCounter {
         return null;
     }
 
+    private boolean isVertical(ArrayList<GemPosition> list) {
+        int x = list.get(0).boardX;
+
+        for (int i = 1; i < list.size(); ++i) {
+            if (x != list.get(i).boardX) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isHorizontal(ArrayList<GemPosition> list) {
+        int y = list.get(0).boardY;
+
+        for (int i = 1; i < list.size(); ++i) {
+            if (y != list.get(i).boardY) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private MatchType determinaMatchType(ArrayList<GemPosition> list) {
+        switch (list.size()) {
+            case 3:
+                if (isHorizontal(list)) {
+                    return MatchType.Horizontal3;
+                } else if (isVertical(list)) {
+                    return MatchType.Vertical3;
+                }
+            break;
+
+            case 4:
+                if (isHorizontal(list)) {
+                    return MatchType.Horizontal4;
+                } else if (isVertical(list)) {
+                    return MatchType.Vertical4;
+                }
+                break;
+
+            case 5:
+                if (isHorizontal(list)) {
+                    return MatchType.Horizontal5;
+                } else if (isVertical(list)) {
+                    return MatchType.Vertical5;
+                }
+                break;
+        }
+        return MatchType.Complex;
+    }
+
+    public void addScoreCombo(PopAnimation anim) {
+        score += anim.count();
+    }
+
     public void addScore(PopAnimation anim) {
         score += anim.count();
         calcBonusForScore(anim);
@@ -97,26 +203,92 @@ public final class ScoreCounter {
         ScoreByGemType scoreByGemType;
         GemPosition gp;
         int size = anim.count();
-        for(int i = 0; i < size; ++i) {
+        for (int i = 0; i < size; ++i) {
             gp = anim.getAt(i);
             scoreByGemType = getScoreByGemType(gp.type);
-            
-            if (scoreByGemType.type != gp.type) {
-                System.out.println("Wrong Type!!!");
-            }
-            
             ++scoreByGemType.value;
         }
         dumpScoreByGemTypes();
+
+        calcMatchTypes(anim.list);
+    }
+
+    private void calcMatchTypes(ArrayList<GemPosition> list) {
+        MatchType matchType = determinaMatchType(list);
+        switch (matchType) {
+            case Horizontal3:
+                game.hud.showMessage("MATCH3 HORIZONTAL");
+                ++match3CountHorizontal;
+                break;
+
+            case Vertical3:
+                game.hud.showMessage("MATCH3 VERTICAL");
+                ++match3CountVertical;
+                break;
+
+            case Horizontal4:
+                game.hud.showMessage("MATCH4 HORIZONTAL");
+                ++match4CountHorizontal;
+                break;
+
+            case Vertical4:
+                game.hud.showMessage("MATCH4 VERTICAL");
+                ++match4CountVertical;
+                break;
+
+            case Horizontal5:
+                game.hud.showMessage("MATCH5 HORIZONTAL");
+                ++match5CountHorizontal;
+                break;
+
+            case Vertical5:
+                game.hud.showMessage("MATCH5 VERTICAL");
+                ++match5CountVertical;
+                break;
+
+            case Complex:
+                game.hud.showMessage("MATCH COMPLEX");
+                handleComplexMatch(list);
+                break;
+        }
+    }
+
+    private void handleComplexMatch(ArrayList<GemPosition> list) {
+
+        if (list.size() == 6) {
+            ArrayList<GemPosition> listA = new ArrayList<GemPosition>(12);
+            ArrayList<GemPosition> listB = new ArrayList<GemPosition>(12);
+
+            GemPosition gp = list.get(0);
+            listA.add(gp);
+            for(int i = 1; i < list.size(); ++i) {
+                gp = list.get(i);
+                if (gp.type == listA.get(0).type) {
+                    listA.add(gp);
+                } else {
+                    listB.add(gp);
+                }
+            }
+
+            if (listA.size() > 0 && listB.size() > 0) {
+                calcMatchTypes(listA);
+                calcMatchTypes(listB);
+            }
+        }
     }
 
     public void addBonusForCombo() {
         score += bonusForCombo;
-        game.hud.showCombo();
+        int comboCounter = game.hud.showCombo();
+
+        if (comboCounter > highestComboCounter) {
+            highestComboCounter  = comboCounter;
+        }
     }
 
     public void addBonusForPerfectSwap() {
         score += bonusForPerfectSwap;
+        ++perfectSwapCounter;
         game.hud.showPerfectSwap();
     }
 
@@ -173,10 +345,6 @@ public final class ScoreCounter {
         }
     }
 
-    public String toString() {
-        return "Score is: [" + this.score + "]";
-    }
-
     public int getScore() {
         return score;
     }
@@ -199,95 +367,39 @@ public final class ScoreCounter {
 
     public void setScoreByGemTypes(int[] arr) {
         ScoreByGemType scoreByGemType;
-        int i;
-
-        for (i = 0; i < arr.length; ++i) {
+        for (int i = 0; i < arr.length; ++i) {
             scoreByGemType = scoreByGemTypes.get(i);
             scoreByGemType.value = arr[i];
         }
-
-
-
-/*
-        i = 0;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 12343;
-
-        i = 1;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 12345;
-
-        i = 2;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 12500;
-
-        i = 3;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 12090;
-
-        i = 4;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 12101;
-
-        i = 5;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 12940;
-
-        i = 6;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 12267;
-*/
-
-/*
-        i = 0;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 0;
-
-        i = 1;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 0;
-
-        i = 2;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 0;
-
-        i = 3;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 0;
-
-        i = 4;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 0;
-
-        i = 5;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 0;
-
-        i = 6;
-        scoreByGemType = scoreByGemTypes.get(i);
-        scoreByGemType.value = 0;
-*/
     }
 
-    public int getComboCount() {
-        return 42;
+    public int getSharedMatchCount() {
+        return sharedMatchesCounter;
     }
 
-    public int getHintsShownCount() {
-        return 12;
+    public int getHighestComboCount() {
+        return highestComboCounter;
     }
 
-    public int getLongestComboNumber() {
-        return 90;
+    public int getPerfectSwapCount() {
+        return perfectSwapCounter;
+    }
+
+    public int getHintCount() {
+        return hintCounter;
     }
 
     public int getCollectedCount() {
-        return 1002;
+        return collectedGems;
     }
 
     public int getWastedCount() {
-        return 345;
+        return wastedGems;
     }
 
+    @Override
+    public String toString() {
+        return "Score is: [" + this.score + "]";
+    }
 
 }

@@ -10,7 +10,7 @@ public final class StatSectionGemTypes extends StatSectionBase {
 
     public static final Quad gemImages = new Quad();
 
-    private final BatchDrawer batchDrawer;
+    private final BatchGemDrawer batchGemDrawer;
 
     private final Text[] textsGemTypes;
     private final ColoredQuad[] barsGemTypes;
@@ -23,7 +23,8 @@ public final class StatSectionGemTypes extends StatSectionBase {
 
     	scoreCounter = null;
 
-        batchDrawer = new BatchDrawer();
+        final int maxItemCountPerGemType = 1;
+        batchGemDrawer = new BatchGemDrawer(maxItemCountPerGemType);
         positionsY = new float[MAX_GEM_TYPES];
         textsGemTypes = new Text[MAX_GEM_TYPES];
         barsGemTypes = new ColoredQuad[MAX_GEM_TYPES];
@@ -165,14 +166,27 @@ public final class StatSectionGemTypes extends StatSectionBase {
             gp.type = scoreCounter.scoreByGemTypes.get(i).type;
             gp.pos.tx = -0.8f;
             gp.pos.ty = positionsY[i];
+            gp.posYorigin = gp.pos.ty;
             gp.pos.scale(0.075f, 0.075f, 1f);
             list.add(gp);
         }
+
+        for (int i = 0; i < MAX_GEM_TYPES; ++i) {
+            barsGemTypes[i].posYorigin = barsGemTypes[i].pos.ty;
+            textsGemTypes[i].posYorigin = textsGemTypes[i].pos.ty;
+        }
+
+        textTitle.posYorigin = textTitle.pos.ty;
     }
 
     public void update(float offsetY) {
-    	// TODO: calc scrolling offset and update positions
-    	
+        for (int i = 0; i < MAX_GEM_TYPES; ++i) {
+            barsGemTypes[i].pos.ty = barsGemTypes[i].posYorigin + offsetY;
+            textsGemTypes[i].pos.ty = textsGemTypes[i].posYorigin + offsetY;
+            list.get(i).pos.ty = list.get(i).posYorigin + offsetY;
+        }
+
+        textTitle.pos.ty = textTitle.posYorigin + offsetY;
     }
 
     public void draw() {
@@ -206,9 +220,9 @@ public final class StatSectionGemTypes extends StatSectionBase {
         // draw gems
         graphics.dirLightShader.useProgram();
         graphics.dirLightShader.setTexture(Graphics.textureGems);
-        batchDrawer.begin();
-        batchDrawer.add(list);
-        batchDrawer.drawAll();
+        batchGemDrawer.begin();
+        batchGemDrawer.add(list);
+        batchGemDrawer.drawAll();
 
 
         // draw bars

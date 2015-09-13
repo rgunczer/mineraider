@@ -58,7 +58,7 @@ public final class HUD {
         scoreCooling = 0;
         bonusFromCartCooling = 0;
 
-        perfectSwapScale = 0.75f;
+        perfectSwapScale = 1.2f;
     }
 
     public void init() {
@@ -111,6 +111,20 @@ public final class HUD {
         bonusFromCartCooling = 0;
     }
 
+    public void showMessage(String message) {
+        extraText.init(message, new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), comboScale);
+        float textWidth = extraText.getTextWidth();
+        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
+        extraText.pos.rot(0f, 0f, 0f);
+        extraText.pos.scale(1f, 1f, 1f);
+
+        extraTextCooling = 125;
+        comboScale += 0.05f;
+
+        //extraText.addAnimEffect(effectWahWah);
+        extraText.addAnimEffect(effectZigZag);
+    }
+
     public void showBonusCartGems(int numberOfGems) {
         gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", new Color(1f, 1f, 0f, 1f), new Color(1f, 1f, 1f, 1f), 0.75f);
         _bonusCartGemsTextWidth = gemsFromCartText.getTextWidth();
@@ -129,7 +143,7 @@ public final class HUD {
         _bonusDiff = -100f;
     }
 
-    public void showCombo() {
+    public int showCombo() {
         ++comboCounter;
 
         extraText.init("COMBOx" + comboCounter, new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), comboScale);
@@ -143,6 +157,8 @@ public final class HUD {
 
         //extraText.addAnimEffect(effectWahWah);
         extraText.addAnimEffect(effectZigZag);
+
+        return comboCounter;
     }
 
     public void showPerfectSwap() {
@@ -150,10 +166,10 @@ public final class HUD {
         float textWidth = extraText.getTextWidth();
         extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
         extraText.pos.rot(0f, 0f, 0f);
-        extraText.pos.scale(1f, 1f, 1f);
+        extraText.pos.scale(2f, 2f, 1f);
 
-        extraTextCooling = 25;
-        effectWahWah.wahScale = 0.6f;
+        extraTextCooling = 30;
+        effectWahWah.wahScale = 1.0f;
         extraText.addAnimEffect(effectWahWah);
     }
 

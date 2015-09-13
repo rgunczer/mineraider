@@ -13,6 +13,8 @@ public final class GemPosition {
         RadialExplosive         // dynamite in position #
     }
 
+	public float posYorigin;
+
     public int boardX;
 	public int boardY;
 

@@ -22,7 +22,7 @@ public final class Graphics {
 	public static Context context;
 
     public final ParticleManager particleManager;
-    public final BatchDrawer batchDrawer;
+    public final BatchGemDrawer batchGemDrawer;
     public final FBO fboBackground;
 
     public Map<String, TexturedQuad> fonts = new HashMap<String, TexturedQuad>();
@@ -113,11 +113,12 @@ public final class Graphics {
     // ctor
 	public Graphics(Context context) {
         System.out.println("Visuals ctor...");
-		this.context = context;
+		Graphics.context = context;
         fboBackground = new FBO();
 
-        BatchDrawer.graphics = this;
-        batchDrawer = new BatchDrawer();
+        BatchGemDrawer.graphics = this;
+        final int maxItemCountPerGemType = 40;
+        batchGemDrawer = new BatchGemDrawer(maxItemCountPerGemType);
         ParticleManager.graphics = this;
         particleManager = new ParticleManager();
 	}
@@ -783,8 +784,6 @@ public final class Graphics {
 
 //        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 //        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

@@ -8,26 +8,36 @@ import java.util.ArrayList;
 import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 
-public final class BatchDrawer {
+public final class BatchGemDrawer {
     public static Graphics graphics;
 
-    public ArrayList<PositionInfo> gemsType0 = new ArrayList<PositionInfo>(90);
-    public ArrayList<PositionInfo> gemsType1 = new ArrayList<PositionInfo>(90);
-    public ArrayList<PositionInfo> gemsType2 = new ArrayList<PositionInfo>(90);
-    public ArrayList<PositionInfo> gemsType3 = new ArrayList<PositionInfo>(90);
-    public ArrayList<PositionInfo> gemsType4 = new ArrayList<PositionInfo>(90);
-    public ArrayList<PositionInfo> gemsType5 = new ArrayList<PositionInfo>(90);
-    public ArrayList<PositionInfo> gemsType6 = new ArrayList<PositionInfo>(90);
+    public final ArrayList<PositionInfo> gemsType0;
+    public final ArrayList<PositionInfo> gemsType1;
+    public final ArrayList<PositionInfo> gemsType2;
+    public final ArrayList<PositionInfo> gemsType3;
+    public final ArrayList<PositionInfo> gemsType4;
+    public final ArrayList<PositionInfo> gemsType5;
+    public final ArrayList<PositionInfo> gemsType6;
 
-    private static final int MAX_POOL_GEMPOSITIONS = 400;
-    private ArrayList<PositionInfo> pool = new ArrayList<PositionInfo>(MAX_POOL_GEMPOSITIONS);
+    private final ArrayList<PositionInfo> pool;
 
 
     // ctor
-    public BatchDrawer() {
-        for (int i = 0; i < MAX_POOL_GEMPOSITIONS; ++i) {
+    public BatchGemDrawer(int maxItemCountPerGemType) {
+        int maxPoolSize = maxItemCountPerGemType * MAX_GEM_TYPES;
+        pool = new ArrayList<PositionInfo>(maxPoolSize);
+
+        for (int i = 0; i < maxPoolSize; ++i) {
             pool.add( new PositionInfo() );
         }
+
+        gemsType0 = new ArrayList<PositionInfo>(maxItemCountPerGemType);
+        gemsType1 = new ArrayList<PositionInfo>(maxItemCountPerGemType);
+        gemsType2 = new ArrayList<PositionInfo>(maxItemCountPerGemType);
+        gemsType3 = new ArrayList<PositionInfo>(maxItemCountPerGemType);
+        gemsType4 = new ArrayList<PositionInfo>(maxItemCountPerGemType);
+        gemsType5 = new ArrayList<PositionInfo>(maxItemCountPerGemType);
+        gemsType6 = new ArrayList<PositionInfo>(maxItemCountPerGemType);
     }
 
     private PositionInfo getFromPool() {

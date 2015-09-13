@@ -22,6 +22,7 @@ public final class Match3 {
     private final FallGroupAnimation pooledFallGroupAnim;
     private final PopAnimation pooledPopAnimation;
     public final ScoreCounter scoreCounter;
+    private boolean dirtyHint;
 
     // ctor
 	public Match3(int boardSize, AnimationManager animManager, ScoreCounter scoreCounter) {
@@ -34,6 +35,7 @@ public final class Match3 {
         pooledFallGroupAnim = new FallGroupAnimation();
         pooledPopAnimation = new PopAnimation();
         gemsList = new ArrayList<GemPosition>(boardSize * boardSize); // multiply by 2 for buffer board
+        dirtyHint = false;
         createBoards();
     }
 
@@ -443,6 +445,10 @@ public final class Match3 {
         if (swapHintManager.isEmpty()) {
             countHints();
             swapHintManager.selectOneHint();
+            if (!dirtyHint) {
+                ++Engine.game.scoreCounter.hintCounter;
+                dirtyHint = true;
+            }
         } else {
             swapHintManager.reset();
         }
@@ -519,6 +525,7 @@ public final class Match3 {
 			popAnimFinished((PopAnimation)finishedAnim);
 		}
 		animManager.finished = null;
+        dirtyHint = false;
 	}
 	
 	private void swapAnimFinished(SwapAnimation swapAnim) {
@@ -596,7 +603,7 @@ public final class Match3 {
 		if (!anim.isEmpty()) {
 			//System.out.println("COMBO(S)!!!");
 			addAnimToManager(anim);
-            scoreCounter.addScore(anim);
+            scoreCounter.addScoreCombo(anim);
             scoreCounter.addBonusForCombo();
 		}
 	}

@@ -4,6 +4,7 @@ import static android.opengl.GLES20.*;
 
 public final class Text {
 
+    public float posYorigin;
     public static Graphics graphics;
     private VertexArray vertexArray;
     private String text;

@@ -20,7 +20,7 @@ public final class PopAnimation extends BaseAnimation {
     private State state = State.Pop;
 
     private ArrayList<GemPosition> pool = new ArrayList<GemPosition>();
-	private ArrayList<GemPosition> list = new ArrayList<GemPosition>();
+	public ArrayList<GemPosition> list = new ArrayList<GemPosition>();
 
 
 	// ctor

@@ -513,14 +513,20 @@ public final class Physics {
 		Body body;
 		Vec2 pos;
 		int size = fragments.size();
+        int wastedCounter = 0;
 		for (int i = 0; i < size; ++i) {
 			body = fragments.get(i);
 			pos = body.getPosition();
 
 			if (pos.y < -18.7f && pos.x < 15f) {
 				fragmentToPool.add(body);
+                ++wastedCounter;
 			}
 		}
+
+        if (wastedCounter > 0) {
+            Engine.game.scoreCounter.wastedGems += wastedCounter;
+        }
 	}
 
 	public static void sortFragmentsFromPool() {

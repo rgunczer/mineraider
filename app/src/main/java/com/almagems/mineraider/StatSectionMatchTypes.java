@@ -1,144 +1,111 @@
 package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
-import static com.almagems.mineraider.Constants.*;
 
 
 public final class StatSectionMatchTypes extends StatSectionBase {
 	
-    private final Text[] textsMatchTypesRows;
-    private final Text[] textsMatchTypesCols;
-    private final Text[][] textsMatchTypesValues;
+    private final Text[][] texts;
 
-    private final int matchTypesMaxRows;
-    private final int matchTypesMaxCols;
+    private final int maxRows;
+    private final int maxCols;
 
 
 	// ctor
 	public StatSectionMatchTypes() {
 		System.out.println("StatSectionMatchTypes ctor...");
         
-        matchTypesMaxRows = 6;
-        matchTypesMaxCols = 3;
+        maxRows = 4;
+        maxCols = 3;
+        texts = new Text[maxRows][maxCols];
 
-        textsMatchTypesCols = new Text[matchTypesMaxCols]; // type, horizontal, vertical
-        textsMatchTypesRows = new Text[matchTypesMaxRows]; // 3, 4, 5, 6, 7, 8    
-        textsMatchTypesValues = new Text[matchTypesMaxRows][matchTypesMaxCols];
-
-        for (int i = 0; i < matchTypesMaxCols; ++i) {
-            textsMatchTypesCols[i] = new Text();
-        }
-
-        for (int i = 0; i < matchTypesMaxRows; ++i) {
-            textsMatchTypesRows[i] = new Text();
-        }
-
-        for (int row = 0; row < matchTypesMaxRows; ++row) {
-            for (int col = 0; col < matchTypesMaxCols; ++col) {
-                textsMatchTypesValues[row][col] = new Text();
+        for (int row = 0; row < maxRows; ++row) {
+            for (int col = 0; col < maxCols; ++col) {
+                texts[row][col] = new Text();
             }
         }		
 	}
 
 	public void init() {
         // 3 columns: type | horizontal | vertical
-        // rows 3, 4, 5, 6, 7, 8
+        // rows 3, 4, 5
 
         final float fontScale = 0.9f;
         final Color textColor = new Color(Color.WHITE);
 
-        textsMatchTypesCols[0].init("TYPE", textColor, textColor, fontScale);
-        textsMatchTypesCols[1].init("HORIZONTAL", textColor, textColor, fontScale);
-        textsMatchTypesCols[2].init("VERTICAL", textColor, textColor, fontScale);
+        final float[] x = new float[] { -0.75f, -0.4f,  0.3f };
 
-        textsMatchTypesRows[0].init("3", textColor, textColor, fontScale);
-        textsMatchTypesRows[1].init("4", textColor, textColor, fontScale);
-        textsMatchTypesRows[2].init("5", textColor, textColor, fontScale);
-        textsMatchTypesRows[3].init("6", textColor, textColor, fontScale);
-        textsMatchTypesRows[4].init("7", textColor, textColor, fontScale);
-        textsMatchTypesRows[5].init("8", textColor, textColor, fontScale);
-
-        for(int row = 0; row < matchTypesMaxRows; ++row) {
-            for(int col = 0; col < matchTypesMaxCols; ++col) {
-                textsMatchTypesValues[row][col].init("" + MyUtils.randInt(100, 1000), textColor, textColor, fontScale );
-            }
-        }
-
-        // setup positions
-        float x[] = new float[] { -0.8f, -0.4f, 0.0f, 0.4f };
-        final float yStart = 1f;
+        final float yStart = -1.2f;
         final float yStep = -0.25f;
-        float y = yStart;
 
-        textsMatchTypesCols[0].pos.tx = x[1];
-        textsMatchTypesCols[0].pos.ty = y;
+        // title
+        textTitle.init("MATCH TYPES", new Color(1f, 1f, 0f), new Color(1f, 1f, 1f), 1.6f);
+        textTitle.pos.tx = -textTitle.getTextWidth() / 2.0f;
+        textTitle.pos.ty = yStart;
 
-        textsMatchTypesCols[1].pos.tx = x[2];
-        textsMatchTypesCols[1].pos.ty = y;
+        float y = yStart - 0.275f;
 
-        textsMatchTypesCols[2].pos.tx = x[3];
-        textsMatchTypesCols[2].pos.ty = y;
-
-        y = yStart;
-        textsMatchTypesRows[0].pos.tx = x[0];
-        textsMatchTypesRows[0].pos.ty = y;
-
-        y += yStep;
-        textsMatchTypesRows[1].pos.tx = x[0];
-        textsMatchTypesRows[1].pos.ty = y;
-
-        y += yStep;
-        textsMatchTypesRows[2].pos.tx = x[0];
-        textsMatchTypesRows[2].pos.ty = y;
-
-        y += yStep;
-        textsMatchTypesRows[3].pos.tx = x[0];
-        textsMatchTypesRows[3].pos.ty = y;
-
-        y += yStep;
-        textsMatchTypesRows[4].pos.tx = x[0];
-        textsMatchTypesRows[4].pos.ty = y;
-
-        y += yStep;
-        textsMatchTypesRows[5].pos.tx = x[0];
-        textsMatchTypesRows[5].pos.ty = y;
-
-        float xpos;
-        float ypos = yStart + yStep;
-
-        for(int row = 0; row < matchTypesMaxRows; ++row) {
-            xpos = x[1];
-            for(int col = 0; col < matchTypesMaxCols; ++col) {
-                textsMatchTypesValues[row][col].pos.tx = xpos;
-                textsMatchTypesValues[row][col].pos.ty = ypos;
+        // grid
+        for(int row = 0; row < maxRows; ++row) {
+            for(int col = 0; col < maxCols; ++col) {
+                texts[row][col].init("" + MyUtils.randInt(100, 1000), textColor, textColor, fontScale);
+                texts[row][col].pos.tx = x[col];
+                texts[row][col].pos.ty = y;
             }
-            ypos += yStep;
+            y += yStep;
         }
-	}
+
+        texts[0][0].init("TYPE", textColor, textColor, fontScale);
+        texts[0][1].init("HORIZONTAL", textColor, textColor, fontScale);
+        texts[0][2].init("VERTICAL", textColor, textColor, fontScale);
+
+        texts[1][0].init("3", textColor, textColor, fontScale);
+        texts[2][0].init("4", textColor, textColor, fontScale);
+        texts[3][0].init("5", textColor, textColor, fontScale);
+
+        // values
+        texts[1][1].init("" + scoreCounter.match3CountHorizontal, textColor, textColor, fontScale);
+        texts[1][2].init("" + scoreCounter.match3CountVertical, textColor, textColor, fontScale);
+
+        texts[2][1].init("" + scoreCounter.match4CountHorizontal, textColor, textColor, fontScale);
+        texts[2][2].init("" + scoreCounter.match4CountVertical, textColor, textColor, fontScale);
+
+        texts[3][1].init("" + scoreCounter.match5CountHorizontal , textColor, textColor, fontScale);
+        texts[3][2].init("" + scoreCounter.match5CountVertical , textColor, textColor, fontScale);
+
+
+        // pos y origin
+        textTitle.posYorigin = textTitle.pos.ty;
+
+        for(int row = 0; row < maxRows; ++row) {
+            for (int col = 0; col < maxCols; ++col) {
+                texts[row][col].posYorigin = texts[row][col].pos.ty;
+            }
+        }
+    }
 
 	public void update(float offsetY) {
-
+        for(int row = 0; row < maxRows; ++row) {
+            for (int col = 0; col < maxCols; ++col) {
+                texts[row][col].pos.ty = texts[row][col].posYorigin + offsetY;
+            }
+        }
+        textTitle.pos.ty = textTitle.posYorigin + offsetY;
 	}
 
 	public void draw() {
+        glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
+        //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         graphics.textureShader.setTexture(Graphics.textureFonts);
+        graphics.textureShader.useProgram();
 
-        // draw cols
-        for (int i = 0; i < matchTypesMaxCols; ++i) {
-            textsMatchTypesCols[i].draw();
-        }
-        
-        // draw rows
-        for (int i = 0; i < matchTypesMaxRows; ++i) {
-            textsMatchTypesRows[0].draw();        
-        }
-
-        // draw data
-        for(int row = 0; row < matchTypesMaxRows; ++row) {
-            for(int col = 0; col < matchTypesMaxCols; ++col) {
-                textsMatchTypesValues[row][col].draw();
+        for(int row = 0; row < maxRows; ++row) {
+            for(int col = 0; col < maxCols; ++col) {
+                texts[row][col].draw();
             }
         }
+        textTitle.draw();
 	}
 }

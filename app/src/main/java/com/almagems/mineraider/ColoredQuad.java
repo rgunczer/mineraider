@@ -9,6 +9,7 @@ public final class ColoredQuad {
     public final Color color = new Color();
     public final PositionInfo pos = new PositionInfo();
 
+    public float posYorigin;
 
     // ctor
     public ColoredQuad() {

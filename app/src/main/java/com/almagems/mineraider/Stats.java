@@ -11,6 +11,7 @@ public final class Stats extends Overlay {
 
 // private
     private float offsetY;
+    private float prevOffsetY;
 
     private MenuItem selectedMenuItem;    
 
@@ -97,9 +98,9 @@ public final class Stats extends Overlay {
 
 // draw sections
         statSectionGemTypes.draw();
-        //statSectionMatchTypes.draw();
-        //statSectionExtras.draw();
-        //statSectionBalance.draw();
+        statSectionMatchTypes.draw();
+        statSectionExtras.draw();
+        statSectionBalance.draw();
 
 // draw back button
         graphics.textureShader.useProgram();
@@ -121,7 +122,24 @@ public final class Stats extends Overlay {
     }
 
     public void handleTouchDrag(float normalizedX, float normalizedY) {
-        offsetY = (touchDownY - normalizedY) * 2f;
+        offsetY = prevOffsetY + (touchDownY - normalizedY) * -2f;
+        keepOffsetInRange();
     }
-    
+
+    public void handleTouchRelease(float normalizedX, float normalizedY) {
+        prevOffsetY = offsetY;
+    }
+
+    private void keepOffsetInRange() {
+        System.out.println("Prev offset: " + offsetY);
+
+        if (offsetY < -0.25f) {
+            offsetY = -0.25f;
+        }
+
+        if (offsetY > 4.3f) {
+            offsetY = 4.3f;
+        }
+    }
+
 }

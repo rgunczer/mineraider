@@ -91,7 +91,7 @@ public final class MenuGroup {
             //visuals.setProjectionMatrix2D();
             //visuals.updateViewProjMatrix();
             graphics.bindNoTexture();
-            graphics.colorShader.useProgram();
+            graphics.singleColorShader.useProgram();
 
             musicVolumeControl.draw();
             soundVolumeControl.draw();

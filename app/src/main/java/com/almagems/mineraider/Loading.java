@@ -140,7 +140,7 @@ public final class Loading extends Overlay {
         glDisable(GL_BLEND);
 
         graphics.bindNoTexture();
-        graphics.colorShader.useProgram();
+        graphics.singleColorShader.useProgram();
         progress.draw();
     }
 

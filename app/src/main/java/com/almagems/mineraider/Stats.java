@@ -17,7 +17,9 @@ public final class Stats extends Overlay {
 
     private final MenuItemAnim menuItemAnim;
     private final MenuItem backButton;
-    private final Fade background;    
+    private final Fade background;
+    private final Fade top;
+    private final Fade bottom;
     
     private final StatSectionGemTypes statSectionGemTypes;
     private final StatSectionMatchTypes statSectionMatchTypes; 
@@ -35,6 +37,8 @@ public final class Stats extends Overlay {
         backButton = new MenuItem();
         menuItemAnim = new MenuItemAnim();
         background = new Fade();
+        top = new Fade();
+        bottom = new Fade();
 
         // sections
         statSectionGemTypes = new StatSectionGemTypes();
@@ -46,7 +50,7 @@ public final class Stats extends Overlay {
     public void init() {
         done = false;
         selectedMenuItem = null;
-        ScoreCounter scoreCounter = Engine.getInstance().game.scoreCounter;
+        ScoreCounter scoreCounter = Engine.game.scoreCounter;
 
         float sc = 1.76f;
         float aspect = Graphics.aspectRatio;
@@ -60,7 +64,15 @@ public final class Stats extends Overlay {
         backButton.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
 
         background.init(new Color(0f, 0f, 0f, 0.4f), new Color(0f, 0f, 0f, 0.6f));
-        
+
+        float h = 0.6f;
+
+        top.init2(new Color(0f, 0f, 0f, 1.0f), new Color(0f, 0f, 0f, 0.0f), h);
+        top.coloredQuad.pos.ty = Graphics.aspectRatio - h;
+
+        bottom.init2(new Color(0f, 0f, 0f, 0.0f), new Color(0f, 0f, 0f, 1.0f), h);
+        bottom.coloredQuad.pos.ty = -Graphics.aspectRatio + h;
+
         // stat sections
         StatSectionBase.scoreCounter = scoreCounter;
 
@@ -101,6 +113,14 @@ public final class Stats extends Overlay {
         statSectionMatchTypes.draw();
         statSectionExtras.draw();
         statSectionBalance.draw();
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
+
+        graphics.bindNoTexture();
+        top.draw();
+        bottom.draw();
 
 // draw back button
         graphics.textureShader.useProgram();

@@ -87,8 +87,8 @@ public final class ProgressBarControl {
         pos.trans(0f, pos.ty, 0f);
         pos.scale(1f, 1f, 1f);
         graphics.calcMatricesForObject(pos);
-        graphics.colorShader.setUniforms(graphics.mvpMatrix, colorFrame);
-        graphics.colorShader.bindData(vertexArrayFrame);
+        graphics.singleColorShader.setUniforms(graphics.mvpMatrix, colorFrame);
+        graphics.singleColorShader.bindData(vertexArrayFrame);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // body
@@ -97,8 +97,8 @@ public final class ProgressBarControl {
         pos.trans(-width / 2f, pos.ty, 0f);
         pos.scale(width * value * 10f, 1f, 1f);
         graphics.calcMatricesForObject(pos);
-        graphics.colorShader.setUniforms(graphics.mvpMatrix, colorBody);
-        graphics.colorShader.bindData(vertexArrayBody);
+        graphics.singleColorShader.setUniforms(graphics.mvpMatrix, colorBody);
+        graphics.singleColorShader.bindData(vertexArrayBody);
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 

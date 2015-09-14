@@ -8,7 +8,9 @@ public final class Fade extends EffectAnim {
     private float t;
     private float dt = 0.05f; // speed
     public boolean done = false;
-    private final ColoredQuad coloredQuad;
+    public final SingleColoredQuad singleColoredQuad;
+    public final ColoredQuad coloredQuad;
+    private boolean useSingleColoredQuad;
 
     // ctor
     public Fade() {
@@ -16,6 +18,7 @@ public final class Fade extends EffectAnim {
         colorFrom = new Color();
         colorTo = new Color();
         colorCurrent = new Color(colorFrom);
+        singleColoredQuad = new SingleColoredQuad();
         coloredQuad = new ColoredQuad();
     }
 
@@ -25,7 +28,22 @@ public final class Fade extends EffectAnim {
         t = 0f;
     }
 
+    public void init2(Color colorTop, Color colorBottom, float h) {
+        useSingleColoredQuad = false;
+        t = 0.0f;
+        done = false;
+        pos = posOrigin;
+
+        pos.trans(0f, 0f, 0f);
+        pos.rot(0f, 0f, 0f);
+        pos.scale(1f, 1f, 1f);
+
+        coloredQuad.init(1f, h, colorTop, colorBottom);
+    }
+
     public void init(Color from, Color to) {
+        useSingleColoredQuad = true;
+
         colorFrom.init(from);
         colorTo.init(to);
         colorCurrent.init(from);
@@ -37,10 +55,12 @@ public final class Fade extends EffectAnim {
         pos.rot(0f, 0f, 0f);
         pos.scale(1f, 1f, 1f);
 
-        coloredQuad.init(colorFrom, 1f, Graphics.aspectRatio);
+        singleColoredQuad.init(colorFrom, 1f, Graphics.aspectRatio);
     }
 
     public void init(Color from, Color to, Rectangle rect) {
+        useSingleColoredQuad = true;
+
         colorFrom.init(from);
         colorTo.init(to);
         colorCurrent.init(from);
@@ -48,7 +68,7 @@ public final class Fade extends EffectAnim {
         done = false;
         pos = posOrigin;
 
-        coloredQuad.init(colorFrom, 1f, Graphics.aspectRatio);
+        singleColoredQuad.init(colorFrom, 1f, Graphics.aspectRatio);
     }
 
     @Override
@@ -57,24 +77,30 @@ public final class Fade extends EffectAnim {
 
     @Override
     public void update() {
-        if (!done) {
-            t += dt;
-            if (t > 1f) {
-                t = 1f;
-                done = true;
-            }
-            colorCurrent.r = MyUtils.lerp(colorFrom.r, colorTo.r, t);
-            colorCurrent.g = MyUtils.lerp(colorFrom.g, colorTo.g, t);
-            colorCurrent.b = MyUtils.lerp(colorFrom.b, colorTo.b, t);
-            colorCurrent.a = MyUtils.lerp(colorFrom.a, colorTo.a, t);
+        if (useSingleColoredQuad) {
+            if (!done) {
+                t += dt;
+                if (t > 1f) {
+                    t = 1f;
+                    done = true;
+                }
+                colorCurrent.r = MyUtils.lerp(colorFrom.r, colorTo.r, t);
+                colorCurrent.g = MyUtils.lerp(colorFrom.g, colorTo.g, t);
+                colorCurrent.b = MyUtils.lerp(colorFrom.b, colorTo.b, t);
+                colorCurrent.a = MyUtils.lerp(colorFrom.a, colorTo.a, t);
 
-            coloredQuad.color.init(colorCurrent);
-            //System.out.println("Fade update... " + t + ", " + colorCurrent.toString());
+                singleColoredQuad.color.init(colorCurrent);
+                //System.out.println("Fade update... " + t + ", " + colorCurrent.toString());
+            }
         }
     }
 
     public void draw() {
-        coloredQuad.draw();
+        if (useSingleColoredQuad) {
+            singleColoredQuad.draw();
+        } else {
+            coloredQuad.draw();
+        }
     }
 
 }

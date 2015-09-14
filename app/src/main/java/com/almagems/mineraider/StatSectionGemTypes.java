@@ -13,7 +13,7 @@ public final class StatSectionGemTypes extends StatSectionBase {
     private final BatchGemDrawer batchGemDrawer;
 
     private final Text[] textsGemTypes;
-    private final ColoredQuad[] barsGemTypes;
+    private final SingleColoredQuad[] barsGemTypes;
     private final float[] positionsY;
     private final ArrayList<GemPosition> list;
 
@@ -27,10 +27,10 @@ public final class StatSectionGemTypes extends StatSectionBase {
         batchGemDrawer = new BatchGemDrawer(maxItemCountPerGemType);
         positionsY = new float[MAX_GEM_TYPES];
         textsGemTypes = new Text[MAX_GEM_TYPES];
-        barsGemTypes = new ColoredQuad[MAX_GEM_TYPES];
+        barsGemTypes = new SingleColoredQuad[MAX_GEM_TYPES];
 
         for (int i = 0; i < MAX_GEM_TYPES; ++i) {
-            barsGemTypes[i] = new ColoredQuad();
+            barsGemTypes[i] = new SingleColoredQuad();
             textsGemTypes[i] = new Text();
         }
 
@@ -226,7 +226,7 @@ public final class StatSectionGemTypes extends StatSectionBase {
 
 
         // draw bars
-        graphics.colorShader.useProgram();
+        graphics.singleColorShader.useProgram();
         glDisable(GL_BLEND);
         for(int i = 0; i < MAX_GEM_TYPES; ++i) {
             barsGemTypes[i].drawBatch();

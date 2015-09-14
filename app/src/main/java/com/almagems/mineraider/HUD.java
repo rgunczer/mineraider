@@ -77,7 +77,7 @@ public final class HUD {
         extraText.pos.trans(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
 
         Rectangle rect = new Rectangle(0f, 0f, 128f, 128f);
-        quadPauseButton.init(graphics.textureHudPauseButton, new Color(1f, 1f, 1f), rect, false);
+        quadPauseButton.init(Graphics.textureHudPauseButton, new Color(1f, 1f, 1f), rect, false);
         quadPauseButton.pos.trans(0.94f, -Graphics.aspectRatio + 0.06f, 0f);
         float sc = 0.055f;
         quadPauseButton.pos.scale(sc, sc, 1f);

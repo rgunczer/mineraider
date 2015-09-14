@@ -59,7 +59,7 @@ public final class Model {
 		glDrawArrays(GL_TRIANGLES, startVertex, numVertices);
 	}
 	
-	public void bindData(ColorShader colorProgram) {
+	public void bindData(SingleColorShader colorProgram) {
 		vertexArray.setVertexAttribPointer(
                 0,
 				colorProgram.getPositionAttributeLocation(), 

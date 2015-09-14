@@ -3,8 +3,6 @@ package com.almagems.mineraider;
 import java.util.Random;
 import static android.opengl.GLES20.*;
 
-import static com.almagems.mineraider.Constants.*;
-
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -323,9 +321,9 @@ public final class MineCart {
 //			rotateM(visuals.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);													
 //			multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
 			
-			graphics.colorShader.useProgram();
-			graphics.colorShader.setUniforms(graphics.mvpMatrix, new Color(1f, 1f, 1f) );
-			edgeDrawer.bindData(graphics.colorShader);
+			graphics.singleColorShader.useProgram();
+			graphics.singleColorShader.setUniforms(graphics.mvpMatrix, new Color(1f, 1f, 1f) );
+			edgeDrawer.bindData(graphics.singleColorShader);
 			edgeDrawer.draw();
 			fixture = fixture.getNext();
 		}

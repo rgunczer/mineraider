@@ -42,7 +42,7 @@ public final class EdgeDrawer {
 		vertexArray.updateBuffer(particles, start, 2 * TOTAL_COMPONENT_COUNT);
 	}
 	
-	public void bindData(ColorShader colorProgram) {
+	public void bindData(SingleColorShader colorProgram) {
 		int dataOffset = 0;
 		vertexArray.setVertexAttribPointer(	dataOffset, 
 											colorProgram.getPositionAttributeLocation(), 

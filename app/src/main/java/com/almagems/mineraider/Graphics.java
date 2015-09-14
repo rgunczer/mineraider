@@ -91,7 +91,8 @@ public final class Graphics {
 
 	// shaders
 	public TextureShader textureShader;
-	public ColorShader colorShader;
+	public SingleColorShader singleColorShader;
+    public ColorShader colorShader;
 	public DirLightShader dirLightShader;
 	public ParticleShader particleShader;
 	public PixelLightShader pixelLightingShader;
@@ -145,7 +146,7 @@ public final class Graphics {
         // shader
         BaseShader.graphics = this;
         textureShader = new TextureShader();
-        colorShader = new ColorShader();
+        singleColorShader = new SingleColorShader();
 
         // texture
         textureLoading = loadTexture(R.drawable.almagems_android_loading);
@@ -158,6 +159,7 @@ public final class Graphics {
 		particleShader = new ParticleShader();
 		normalColorShader = new NormalColorShader();
 		pointLightShader = new PointLightShader();
+        colorShader = new ColorShader();
 
 		System.out.println("loadShaders - END");
 	}
@@ -808,9 +810,9 @@ public final class Graphics {
         setIdentityM(modelMatrix, 0);
         multiplyMM(mvpMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0);
 
-        colorShader.useProgram();
-        colorShader.setUniforms(mvpMatrix, color);
-        edgeDrawer.bindData(colorShader);
+        singleColorShader.useProgram();
+        singleColorShader.setUniforms(mvpMatrix, color);
+        edgeDrawer.bindData(singleColorShader);
         edgeDrawer.draw();
     }
 

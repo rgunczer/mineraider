@@ -229,19 +229,19 @@ public final class BatchGemDrawer {
     void drawGemsPlatesByType(ArrayList<PositionInfo> gems, int type) {
         int size = gems.size();
         if (size > 0) {
-            graphics.colorShader.useProgram();
+            graphics.singleColorShader.useProgram();
 
             float temp;
             PositionInfo pos;
             Model model = graphics.gemsPlates[type];
-            model.bindData(graphics.colorShader);
+            model.bindData(graphics.singleColorShader);
 
             for (int i = 0; i < size; ++i) {
                 pos = gems.get(i);
                 temp = pos.tz;
                 pos.tz -= 0.11f;
                 graphics.calcMatricesForObject(pos);
-                graphics.colorShader.setUniforms(graphics.mvpMatrix, Color.BLACK);
+                graphics.singleColorShader.setUniforms(graphics.mvpMatrix, Color.BLACK);
                 model.draw();
                 pos.tz = temp;
             }

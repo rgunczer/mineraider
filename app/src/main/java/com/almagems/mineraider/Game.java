@@ -74,6 +74,7 @@ public final class Game extends Scene {
         ScoreCounter.game = this;
 
         StatSectionBase.graphics = graphics;
+        SingleColoredQuad.graphics = graphics;
         ColoredQuad.graphics = graphics;
         Overlay.graphics = graphics;
         Quad.graphics = graphics;
@@ -192,9 +193,9 @@ public final class Game extends Scene {
             setIdentityM(graphics.modelMatrix, 0);
             multiplyMM(graphics.mvpMatrix, 0, graphics.viewProjectionMatrix, 0, graphics.modelMatrix, 0);
 
-            graphics.colorShader.useProgram();
-            graphics.colorShader.setUniforms(graphics.mvpMatrix, color);
-            edgeDrawer.bindData(graphics.colorShader);
+            graphics.singleColorShader.useProgram();
+            graphics.singleColorShader.setUniforms(graphics.mvpMatrix, color);
+            edgeDrawer.bindData(graphics.singleColorShader);
             edgeDrawer.draw();
         }
 
@@ -696,14 +697,14 @@ public final class Game extends Scene {
 		setIdentityM(graphics.modelMatrix, 0);
 		multiplyMM(graphics.mvpMatrix, 0, graphics.viewProjectionMatrix, 0, graphics.modelMatrix, 0);
 		
-		graphics.colorShader.useProgram();
-		graphics.colorShader.setUniforms(graphics.mvpMatrix, color);
-		edgeDrawer.bindData(graphics.colorShader);
+		graphics.singleColorShader.useProgram();
+		graphics.singleColorShader.setUniforms(graphics.mvpMatrix, color);
+		edgeDrawer.bindData(graphics.singleColorShader);
 		edgeDrawer.draw();
 	}
 
     private void drawPhysicsStatics() {
-        graphics.colorShader.useProgram();
+        graphics.singleColorShader.useProgram();
 
         Body body;
         Vec2 pos;
@@ -739,8 +740,8 @@ public final class Game extends Scene {
                     rotateM(graphics.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);
                     multiplyMM(graphics.mvpMatrix, 0, graphics.viewProjectionMatrix, 0, graphics.modelMatrix, 0);
 
-                    graphics.colorShader.setUniforms(graphics.mvpMatrix, Color.WHITE);
-                    edgeDrawer.bindData(graphics.colorShader);
+                    graphics.singleColorShader.setUniforms(graphics.mvpMatrix, Color.WHITE);
+                    edgeDrawer.bindData(graphics.singleColorShader);
                     edgeDrawer.draw();
                 }
                 fixture = fixture.getNext();
@@ -749,7 +750,7 @@ public final class Game extends Scene {
     }
 
 	private void drawPhysicsGemsFixtures() {
-        graphics.colorShader.useProgram();
+        graphics.singleColorShader.useProgram();
 
 		EdgeDrawer edgeDrawer = new EdgeDrawer(30);
 		int size = Physics.fragments.size();
@@ -790,8 +791,8 @@ public final class Game extends Scene {
                 rotateM(graphics.modelMatrix, 0, degree, 0.0f, 0.0f, 1.0f);
                 multiplyMM(graphics.mvpMatrix, 0, graphics.viewProjectionMatrix, 0, graphics.modelMatrix, 0);
 
-                graphics.colorShader.setUniforms(graphics.mvpMatrix, Color.WHITE);
-                edgeDrawer.bindData(graphics.colorShader);
+                graphics.singleColorShader.setUniforms(graphics.mvpMatrix, Color.WHITE);
+                edgeDrawer.bindData(graphics.singleColorShader);
                 edgeDrawer.draw();
 
                 fixture = fixture.getNext();

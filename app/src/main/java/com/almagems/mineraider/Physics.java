@@ -546,8 +546,7 @@ public final class Physics {
 		world.destroyBody(body);
 	}
 
-	private static void poolObject(Body body) {
-		body.setActive(false);
+	private static void poolObject(Body body) {		
 		int gemType = (Integer) body.m_userData;
 		ArrayList<Body> pool = fragmentsPool.get(gemType);
 		pool.add(body);

@@ -37,25 +37,20 @@ public final class MineRaiderActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		glSurfaceView = new GLSurfaceView(this);
-		glSurfaceView.getHolder().setFormat(PixelFormat.RGB_565);
+		//glSurfaceView.getHolder().setFormat(PixelFormat.RGB_565);
+		glSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
 		setContentView(glSurfaceView);
 		//setContentView(R.layout.activity_hello_world);
 		//glSurfaceView = (GLSurfaceView)findViewById(R.id.glSurfaceView);
 		glSurfaceView.setPreserveEGLContextOnPause(true);
 				
-		final ActivityManager activityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);		
-		final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();		
-		final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;		
+		final ActivityManager activityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+		final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
 		final MineRaiderRenderer renderer = new MineRaiderRenderer(this);
 		
-		if (supportsEs2) {
-			glSurfaceView.setEGLContextClientVersion(2);
-			glSurfaceView.setRenderer(renderer);
-			rendererSet = true;
-		} else {
-			Toast.makeText(this, "Unable to continue. This device does not support OpenGL ES 2.0", Toast.LENGTH_LONG).show();
-			return;
-		}
+		glSurfaceView.setEGLContextClientVersion(2);
+		glSurfaceView.setRenderer(renderer);
+		rendererSet = true;
 
 		glSurfaceView.setOnTouchListener(new OnTouchListener() {
 			

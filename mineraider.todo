@@ -1,0 +1,19 @@
+todo:
+	encrypt - decrypt saved data
+	fix activity lifecycle issue
+	create libra image for stat screen
+
+experiment with:
+ 	- more anim on wasted gems like fall down after impact (super mario)
+ 	- Physics setBodyPosAndRot add random linearVelocity and AngularVelocity simple falling down is boring
+ 	- Particle System use more often different emitters colors etc.
+ 	- Stat scrolling
+
+find few more sound effects
+	- select menu
+	- match 
+	- message
+	- impact gem vs cart
+	- impact gem vs floor
+	- gem collected -> money sound?
+	- cart vs cart hit

@@ -29,12 +29,12 @@ public final class StatSectionBalance extends StatSectionBase {
 
         y -= 0.9f;
 
-        textBalanceCollected.init("" + scoreCounter.getCollectedCount(), textColor, textColor, fontScale);
+        textBalanceCollected.init("" + scoreCounter.collectedGems, textColor, textColor, fontScale);
         textBalanceCollected.pos.tx = -0.5f;
         textBalanceCollected.pos.ty = y;
         textBalanceCollected.posYorigin = textBalanceCollected.pos.ty;
 
-        textBalanceWasted.init("" + scoreCounter.getWastedCount(), textColor, textColor, fontScale);
+        textBalanceWasted.init("" + scoreCounter.wastedGems, textColor, textColor, fontScale);
         textBalanceWasted.pos.tx = 0.5f;
         textBalanceWasted.pos.ty = y;
         textBalanceWasted.posYorigin = textBalanceWasted.pos.ty;

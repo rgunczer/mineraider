@@ -142,6 +142,8 @@ public final class Game extends Scene {
         hud.reset();
         hud.updateScore(scoreCounter.getScore());
 
+        ScoreCounter.hud = hud;
+
         loading.init();
         menu.init();
 

@@ -16,6 +16,7 @@ public final class StatSectionGemTypes extends StatSectionBase {
     private final SingleColoredQuad[] barsGemTypes;
     private final float[] positionsY;
     private final ArrayList<GemPosition> list;
+    private final ArrayList<Color> gemColors;
 
     // ctor
     public StatSectionGemTypes() {    	
@@ -35,9 +36,10 @@ public final class StatSectionGemTypes extends StatSectionBase {
         }
 
         list = new ArrayList<GemPosition>(MAX_GEM_TYPES);
+        gemColors = new ArrayList<Color>(MAX_GEM_TYPES);
     }
 
-    public void init() {
+    public void init() {        
         float y = 0.75f;
         float step = -0.25f;
         for(int i = 0; i < MAX_GEM_TYPES; ++i) {
@@ -109,6 +111,16 @@ public final class StatSectionGemTypes extends StatSectionBase {
             }
         }
 
+        // set gem type colors
+        Color color;
+        color = new Color(188,  38,  38, 255); gemColors.add(color);
+        color = new Color(197,  94, 124, 255); gemColors.add(color);
+        color = new Color(194, 150,  76, 255); gemColors.add(color);
+        color = new Color( 26,  61, 186, 255); gemColors.add(color);
+        color = new Color(193, 102, 193, 255); gemColors.add(color);
+        color = new Color(196, 123,  99, 255); gemColors.add(color);
+        color = new Color(172, 152, 158, 255); gemColors.add(color);
+
         // bars
         final float xpos = -0.6f;
         final float wmax = 0.65f;
@@ -117,31 +129,31 @@ public final class StatSectionGemTypes extends StatSectionBase {
         float w;
 
         w = ((float)gems.get(0).value / (float)max) * wmax;
-        barsGemTypes[0].init(scoreCounter.scoreByGemTypes.get(0).color, w, h);
+        barsGemTypes[0].init(gemColors.get(scoreCounter.scoreByGemTypes.get(0).type), w, h);
         barsGemTypes[0].pos.tx = w - xminus;
 
         w = ((float)gems.get(1).value / (float)max) * wmax;
-        barsGemTypes[1].init(scoreCounter.scoreByGemTypes.get(1).color, w, h);
+        barsGemTypes[1].init(gemColors.get(scoreCounter.scoreByGemTypes.get(1).type), w, h);
         barsGemTypes[1].pos.tx = w - xminus;
 
         w = ((float)gems.get(2).value / (float)max) * wmax;
-        barsGemTypes[2].init(scoreCounter.scoreByGemTypes.get(2).color, w, h);
+        barsGemTypes[2].init(gemColors.get(scoreCounter.scoreByGemTypes.get(2).type), w, h);
         barsGemTypes[2].pos.tx = w - xminus;
 
         w = ((float)gems.get(3).value / (float)max) * wmax;
-        barsGemTypes[3].init(scoreCounter.scoreByGemTypes.get(3).color, w, h);
+        barsGemTypes[3].init(gemColors.get(scoreCounter.scoreByGemTypes.get(3).type), w, h);
         barsGemTypes[3].pos.tx = w - xminus;
 
         w = ((float)gems.get(4).value / (float)max) * wmax;
-        barsGemTypes[4].init(scoreCounter.scoreByGemTypes.get(4).color, w, h);
+        barsGemTypes[4].init(gemColors.get(scoreCounter.scoreByGemTypes.get(4).type), w, h);
         barsGemTypes[4].pos.tx = w - xminus;
 
         w = ((float)gems.get(5).value / (float)max) * wmax;
-        barsGemTypes[5].init(scoreCounter.scoreByGemTypes.get(5).color, w, h);
+        barsGemTypes[5].init(gemColors.get(scoreCounter.scoreByGemTypes.get(5).type), w, h);
         barsGemTypes[5].pos.tx = w - xminus;
 
         w = ((float)gems.get(6).value / (float)max) * wmax;
-        barsGemTypes[6].init(scoreCounter.scoreByGemTypes.get(6).color, w, h);
+        barsGemTypes[6].init(gemColors.get(scoreCounter.scoreByGemTypes.get(6).type), w, h);
         barsGemTypes[6].pos.tx = w - xminus;
 
         // title
@@ -176,7 +188,7 @@ public final class StatSectionGemTypes extends StatSectionBase {
             textsGemTypes[i].posYorigin = textsGemTypes[i].pos.ty;
         }
 
-        textTitle.posYorigin = textTitle.pos.ty;
+        textTitle.posYorigin = textTitle.pos.ty;        
     }
 
     public void update(float offsetY) {

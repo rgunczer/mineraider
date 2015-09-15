@@ -59,15 +59,15 @@ public final class Engine {
         SharedPreferences.Editor editor = sharedPref.edit();
 
         // save score
-        int score = game.scoreCounter.getScore();
+        int score = game.scoreCounter.score;
         editor.putInt("SCORE", score);
 
         // save score by gem types
-        ScoreByGemType scoreByGemType;
+        ScoreByGemType scoreObj;
         int len = game.scoreCounter.scoreByGemTypes.size();
         for(int i = 0; i < len; ++i) {
-            scoreByGemType = game.scoreCounter.getScoreByGemType(i);
-            editor.putInt("GEM" + scoreByGemType.type, scoreByGemType.value);
+            scoreObj = game.scoreCounter.getScoreObjForGemType(i);
+            editor.putInt("GEM" + scoreObj.type, scoreObj.value);
         }
 
         // save match types
@@ -97,14 +97,12 @@ public final class Engine {
         editor.commit();
     }
 
-    public int loadPreferences() {
+    public static void loadPreferences() {
         System.out.println("Load preferences...");
         SharedPreferences sharedPrefs = activity.getPreferences(Context.MODE_PRIVATE);
 
         // score
-        int score = sharedPrefs.getInt("SCORE", 0);
-        game.scoreCounter.setScore(score);
-        game.scoreCounter.dumpScore();
+        game.scoreCounter.score = sharedPrefs.getInt("SCORE", 0);
 
         // gem types
         int[] arr = new int[MAX_GEM_TYPES];
@@ -112,7 +110,6 @@ public final class Engine {
             arr[i] = sharedPrefs.getInt("GEM" + i, 0);
         }
         game.scoreCounter.setScoreByGemTypes(arr);
-        game.scoreCounter.dumpScoreByGemTypes();
 
         // match types
         game.scoreCounter.match3CountHorizontal = sharedPrefs.getInt("MATCH3H", 0);
@@ -138,7 +135,7 @@ public final class Engine {
         audio.musicVolume = sharedPrefs.getFloat("MUSIC", 0.5f);
         audio.soundVolume = sharedPrefs.getFloat("SOUND", 0.5f);
 
-        return score;
+        game.scoreCounter.dump();
     }
 
     public void pauseAudio() {

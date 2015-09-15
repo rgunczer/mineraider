@@ -32,7 +32,7 @@ public final class Loading extends Overlay {
     public void init() {
         // quad (Logo)
         Rectangle rect = new Rectangle(0f, 0f, 512f, 256f);
-        quad.init(graphics.textureLoading, Color.WHITE, rect, false);
+        quad.init(Graphics.textureLoading, Color.WHITE, rect, false);
 
         float sc = 0.75f;
         quad.pos.trans(0f, 0f, 0f);
@@ -46,75 +46,25 @@ public final class Loading extends Overlay {
     }
 
     public void update() {
-        Engine engine = Engine.getInstance();
 
         switch (loadingStepCounter) {
-            case 0:
-                Engine.audio = new Audio();
-                break;
-
-            case 1:
-                graphics.loadTexturesPart01();
-                break;
-
-            case 2:
-                graphics.loadTexturesPart02();
-                break;
-
-            case 3:
-                graphics.loadTexturesPart03();
-                break;
-
-            case 4:
-                graphics.loadShaders();
-                break;
-
-            case 5:
-                graphics.loadFonts();
-                break;
-
-            case 6:
-                graphics.loadModelsPart01();
-                break;
-
-            case 7:
-                graphics.loadModelsPart02();
-                break;
-
-            case 8:
-                graphics.loadModelsPart03();
-                break;
-
-            case 9:
-                Engine.game.createObjects();
-                break;
-
-            case 10:
-                Engine.game.renderToFBO();
-                break;
-
-            case 11:
-
-                break;
-
-            case 12:
-                graphics.particleManager.init();
-                break;
-
-            case 13:
-                engine.loadPreferences();
-                break;
-
-            case 14:
-                Engine.audio.init(Engine.activity);
-                break;
-
-            case 15:
-                graphics.releaseUnusedAssets();
-                break;
+            case 0:  Engine.audio = new Audio(); break;
+            case 1:  graphics.loadTexturesPart01(); break;
+            case 2:  graphics.loadTexturesPart02(); break;
+            case 3:  graphics.loadTexturesPart03(); break;
+            case 4:  graphics.loadShaders(); break;
+            case 5:  graphics.loadFonts(); break;
+            case 6:  graphics.loadModelsPart01(); break;
+            case 7:  graphics.loadModelsPart02(); break;
+            case 8:  graphics.loadModelsPart03(); break;
+            case 9:  Engine.game.createObjects(); break;
+            case 10: Engine.game.renderToFBO(); break;
+            case 11: break;
+            case 12: graphics.particleManager.init(); break;
+            case 13: Engine.loadPreferences(); break;
+            case 14: Engine.audio.init(Engine.activity); break;
+            case 15: graphics.releaseUnusedAssets(); break;
         }
-
-        //SystemClock.sleep(500);
 
         // update loading progress based on loadingStepCounter
         progress.value = (float)loadingStepCounter / (float)maxLoadingStep;

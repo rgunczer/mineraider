@@ -71,7 +71,6 @@ public final class Game extends Scene {
         graphics = Engine.graphics;
 
         CollisionHandler.game = this;
-        ScoreCounter.game = this;
 
         StatSectionBase.graphics = graphics;
         SingleColoredQuad.graphics = graphics;
@@ -140,7 +139,7 @@ public final class Game extends Scene {
         hud = new HUD();
         hud.init();
         hud.reset();
-        hud.updateScore(scoreCounter.getScore());
+        hud.updateScore(scoreCounter.score);
 
         ScoreCounter.hud = hud;
 
@@ -240,7 +239,7 @@ public final class Game extends Scene {
             cart2.update();
 
             hud.update();
-            hud.updateScore(scoreCounter.getScore());
+            hud.updateScore(scoreCounter.score);
 
             switch (gameState) {
                 case Menu:

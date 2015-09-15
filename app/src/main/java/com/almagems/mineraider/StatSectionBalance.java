@@ -1,13 +1,13 @@
 package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
-import static com.almagems.mineraider.Constants.*;
 
 
 public final class StatSectionBalance extends StatSectionBase {
 
     private final Text textBalanceCollected;
     private final Text textBalanceWasted;
+
 
     // ctor
 	public StatSectionBalance() {
@@ -17,8 +17,6 @@ public final class StatSectionBalance extends StatSectionBase {
 
 	public void init() {
         final float fontScale = 0.9f;
-        final Color textColor = new Color(Color.WHITE);
-
         float y = -4.0f;
 
         // title
@@ -29,12 +27,12 @@ public final class StatSectionBalance extends StatSectionBase {
 
         y -= 0.9f;
 
-        textBalanceCollected.init("" + scoreCounter.collectedGems, textColor, textColor, fontScale);
+        textBalanceCollected.init("" + scoreCounter.collectedGems, Color.GRAY, Color.WHITE, fontScale);
         textBalanceCollected.pos.tx = -0.5f;
         textBalanceCollected.pos.ty = y;
         textBalanceCollected.posYorigin = textBalanceCollected.pos.ty;
 
-        textBalanceWasted.init("" + scoreCounter.wastedGems, textColor, textColor, fontScale);
+        textBalanceWasted.init("" + scoreCounter.wastedGems, Color.GRAY, Color.WHITE, fontScale);
         textBalanceWasted.pos.tx = 0.5f;
         textBalanceWasted.pos.ty = y;
         textBalanceWasted.posYorigin = textBalanceWasted.pos.ty;

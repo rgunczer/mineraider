@@ -8,8 +8,6 @@ import static com.almagems.mineraider.Constants.*;
 
 public final class StatSectionGemTypes extends StatSectionBase {
 
-    public static final Quad gemImages = new Quad();
-
     private final BatchGemDrawer batchGemDrawer;
 
     private final Text[] textsGemTypes;
@@ -18,11 +16,10 @@ public final class StatSectionGemTypes extends StatSectionBase {
     private final ArrayList<GemPosition> list;
     private final ArrayList<Color> gemColors;
 
+
     // ctor
     public StatSectionGemTypes() {    	
     	System.out.println("StatSectionGemTypes ctor...");
-
-    	scoreCounter = null;
 
         final int maxItemCountPerGemType = 1;
         batchGemDrawer = new BatchGemDrawer(maxItemCountPerGemType);

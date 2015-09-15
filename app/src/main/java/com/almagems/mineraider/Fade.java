@@ -28,7 +28,7 @@ public final class Fade extends EffectAnim {
         t = 0f;
     }
 
-    public void init2(Color colorTop, Color colorBottom, float h) {
+    public void init(Color colorTop, Color colorBottom, float h) {
         useSingleColoredQuad = false;
         t = 0.0f;
         done = false;

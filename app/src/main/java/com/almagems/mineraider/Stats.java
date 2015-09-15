@@ -1,7 +1,6 @@
 package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
-import static com.almagems.mineraider.Constants.*;
 
 
 public final class Stats extends Overlay {
@@ -17,7 +16,7 @@ public final class Stats extends Overlay {
 
     private final MenuItemAnim menuItemAnim;
     private final MenuItem backButton;
-    private final Fade background;
+
     private final Fade top;
     private final Fade bottom;
     
@@ -25,7 +24,9 @@ public final class Stats extends Overlay {
     private final StatSectionMatchTypes statSectionMatchTypes; 
     private final StatSectionExtras statSectionExtras;
     private final StatSectionBalance statSectionBalance;
-    
+
+    private final Color colorOpaque;
+    private final Color colorTransparent;
     
     // ctor
     public Stats() {
@@ -36,9 +37,12 @@ public final class Stats extends Overlay {
         // general
         backButton = new MenuItem();
         menuItemAnim = new MenuItemAnim();
-        background = new Fade();
+
         top = new Fade();
         bottom = new Fade();
+
+        colorOpaque =  new Color(0f, 0f, 0f, 1.0f);
+        colorTransparent = new Color(0f, 0f, 0f, 0.0f);
 
         // sections
         statSectionGemTypes = new StatSectionGemTypes();
@@ -63,14 +67,12 @@ public final class Stats extends Overlay {
         backButton.setRot(0f, 0f, 0f);
         backButton.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
 
-        background.init(new Color(0f, 0f, 0f, 0.4f), new Color(0f, 0f, 0f, 0.6f));
-
         float h = 0.6f;
 
-        top.init2(new Color(0f, 0f, 0f, 1.0f), new Color(0f, 0f, 0f, 0.0f), h);
+        top.init(colorOpaque, colorTransparent, h);
         top.coloredQuad.pos.ty = Graphics.aspectRatio - h;
 
-        bottom.init2(new Color(0f, 0f, 0f, 0.0f), new Color(0f, 0f, 0f, 1.0f), h);
+        bottom.init(colorTransparent, colorOpaque, h);
         bottom.coloredQuad.pos.ty = -Graphics.aspectRatio + h;
 
         // stat sections
@@ -80,6 +82,8 @@ public final class Stats extends Overlay {
         statSectionMatchTypes.init();
         statSectionExtras.init();
         statSectionBalance.init();
+
+        background.init(colorBackground, colorBackground);
     }
 
     public void update() {

@@ -17,6 +17,7 @@ import java.util.Random;
 
 public final class Physics {
 
+	private static Vec2 vector = new Vec2(0f, 0f);
     private static Vec2 pos = new Vec2(0f, 0f);
     private static Vec2 posZero =  new Vec2(0f, 0f);
 
@@ -114,8 +115,7 @@ public final class Physics {
     }
 
 	// ctor
-	private Physics() {
-    }
+	private Physics() {}
 
 	private static Body getBodyFromPool(int gemType) {
 		ArrayList<Body> pool = fragmentsPool.get(gemType);
@@ -153,8 +153,16 @@ public final class Physics {
 		float angle = (float)Math.toRadians( random.nextFloat() * 360f );
         pos.x = x;
         pos.y = y;
-        body.setLinearVelocity(posZero);
-        body.setAngularVelocity(0);
+        float d = random.nextFloat() * 2f - 1f;
+        if (MyUtils.randInt(0, 10) > 5) {
+            vector.x = 3f + d * 9f;
+        } else {
+            vector.x = -3f + d * 9f;
+        }
+		vector.y = 6f + (random.nextFloat() * 6f);
+
+        body.setLinearVelocity(vector);
+        body.setAngularVelocity( 30f + random.nextFloat() * 60f  );
 		body.setTransform(pos, angle);
 		body.setActive(true);
 	}

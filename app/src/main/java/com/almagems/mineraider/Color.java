@@ -6,6 +6,8 @@ public final class Color {
 	public static final Color BLACK = new Color(0f, 0f, 0f, 1f);
 	public static final Color WHITE = new Color(1f, 1f, 1f, 1f);
     public static final Color GRAY = new Color(0.5f, 0.5f, 0.5f, 1f);
+    public static final Color YELLOW = new Color(1f, 1f, 0f, 1f);
+    public static final Color RED = new Color(1f, 0f, 0f, 1f);
 
 	public float r, g, b, a;
 

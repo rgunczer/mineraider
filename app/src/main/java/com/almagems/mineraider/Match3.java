@@ -556,7 +556,7 @@ public final class Match3 {
 					removeGems(anim, firstSelected.boardX, firstSelected.boardY);
 				}
 
-                scoreCounter.addScore(anim);
+                scoreCounter.addScoreForMatch(anim);
 
                 if (first && second) {
                     scoreCounter.addBonusForPerfectSwap();
@@ -603,8 +603,7 @@ public final class Match3 {
 		if (!anim.isEmpty()) {
 			//System.out.println("COMBO(S)!!!");
 			addAnimToManager(anim);
-            scoreCounter.addScoreCombo(anim);
-            scoreCounter.addBonusForCombo();
+            scoreCounter.addScoreForCombo(anim);
 		}
 	}
 	

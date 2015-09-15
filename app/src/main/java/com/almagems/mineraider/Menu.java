@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import static android.opengl.GLES20.*;
 
+
 public final class Menu extends Overlay {
 
     public enum MenuOptions {
@@ -23,8 +24,6 @@ public final class Menu extends Overlay {
     private ArrayList<MenuGroup> groups = new ArrayList<MenuGroup>(9);
     private MenuGroup currentGroup;
 
-    private final Fade background;
-
     public MenuOptions getSelectedMenuOption() {
         return selectedMenuOption;
     }
@@ -41,9 +40,10 @@ public final class Menu extends Overlay {
         return null;
     }
 
+
     // ctor
     public Menu() {
-        background = new Fade();
+
     }
 
     public void init() {
@@ -248,8 +248,7 @@ public final class Menu extends Overlay {
 
         groups.add(menuGroup);
 
-        // fade
-        background.init(new Color(0f, 0f, 0f, 0.3f), new Color(0f, 0f, 0f, 0.6f));
+        background.init(colorBackground, colorBackground);
     }
 
     public void update() {

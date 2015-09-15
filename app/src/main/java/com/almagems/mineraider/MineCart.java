@@ -322,7 +322,7 @@ public final class MineCart {
 //			multiplyMM(visuals.mvpMatrix, 0, visuals.viewProjectionMatrix, 0, visuals.modelMatrix, 0);
 			
 			graphics.singleColorShader.useProgram();
-			graphics.singleColorShader.setUniforms(graphics.mvpMatrix, new Color(1f, 1f, 1f) );
+			graphics.singleColorShader.setUniforms(graphics.mvpMatrix, Color.WHITE);
 			edgeDrawer.bindData(graphics.singleColorShader);
 			edgeDrawer.draw();
 			fixture = fixture.getNext();

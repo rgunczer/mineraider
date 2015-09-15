@@ -9,7 +9,7 @@ import static com.almagems.mineraider.Constants.*;
 
 public final class ScoreCounter {
 
-    public static Hud hud;
+    public static HUD hud;
 
     private enum MatchType {
         Complex,
@@ -57,15 +57,15 @@ public final class ScoreCounter {
 
     // ctor
     public ScoreCounter() {
-        ScoreByGemType scoreByGemType;
+        ScoreByGemType scoreObj;
         scoreByGemTypes = new ArrayList<ScoreByGemType>(MAX_GEM_TYPES);
 
         for(int i = 0; i < MAX_GEM_TYPES; ++i) {
-            scoreByGemType = new ScoreByGemType();
-            scoreByGemType.type = i;
-            scoreByGemType.value = 0;
+            scoreObj = new ScoreByGemType();
+            scoreObj.type = i;
+            scoreObj.value = 0;
 
-            scoreByGemTypes.add(score);
+            scoreByGemTypes.add(scoreObj);
         }
         reset();
     }

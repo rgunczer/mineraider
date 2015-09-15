@@ -12,7 +12,7 @@ public final class HUD {
     private final Quad quad;
     private final Quad quadPauseButton;
 
-    private int _centerCounter;
+
 
     private float scoreX;
     private float scoreY;
@@ -64,7 +64,7 @@ public final class HUD {
     public void init() {
         fontScale = 0.9f;
         scoreText.setSpacingScale(0.06f);
-        scoreText.init("SCORE:" + cachedScore, new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), fontScale);
+        scoreText.init("SCORE:" + cachedScore, Color.YELLOW, Color.RED, fontScale);
 
         scoreX = -0.96f;
         scoreY = -Graphics.aspectRatio + (scoreText.getTextHeight() / 3f);
@@ -73,11 +73,11 @@ public final class HUD {
         scoreText.pos.scale(1f, 1f, 1f);
 
         extraText.setSpacingScale(0.065f);
-        extraText.init("WATCH FOR MINECARTS", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), comboScale);
+        extraText.init("WATCH FOR MINECARTS", Color.YELLOW, Color.RED, comboScale);
         extraText.pos.trans(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
 
         Rectangle rect = new Rectangle(0f, 0f, 128f, 128f);
-        quadPauseButton.init(Graphics.textureHudPauseButton, new Color(1f, 1f, 1f), rect, false);
+        quadPauseButton.init(Graphics.textureHudPauseButton, Color.WHITE, rect, false);
         quadPauseButton.pos.trans(0.94f, -Graphics.aspectRatio + 0.06f, 0f);
         float sc = 0.055f;
         quadPauseButton.pos.scale(sc, sc, 1f);
@@ -104,7 +104,6 @@ public final class HUD {
 
         _bonusPosX = -10f;
         _bonusCartGemsTextWidth = 0f;
-        _centerCounter = 0;
 
         extraTextCooling = 0;
         scoreCooling = 0;
@@ -112,7 +111,7 @@ public final class HUD {
     }
 
     public void showMessage(String message) {
-        extraText.init(message, new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), comboScale);
+        extraText.init(message, Color.YELLOW, Color.RED, comboScale);
         float textWidth = extraText.getTextWidth();
         extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
         extraText.pos.rot(0f, 0f, 0f);
@@ -126,12 +125,11 @@ public final class HUD {
     }
 
     public void showBonusCartGems(int numberOfGems) {
-        gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", new Color(1f, 1f, 0f, 1f), new Color(1f, 1f, 1f, 1f), 0.75f);
+        gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", Color.YELLOW, Color.WHITE, 0.75f);
         _bonusCartGemsTextWidth = gemsFromCartText.getTextWidth();
 
         _bonusTargetPosX = -_bonusCartGemsTextWidth / 2f;
         _bonusPosX = 1.0f; // + _bonusCartGemsTextWidth / 2f;
-        _centerCounter = 32;
 
         //gemsFromCartText.pos.trans(-textWidth / 2f, -0.9f, 0f);
         gemsFromCartText.pos.trans(_bonusPosX, -0.9f, 0f);
@@ -146,7 +144,7 @@ public final class HUD {
     public int showCombo() {
         ++comboCounter;
 
-        extraText.init("COMBOx" + comboCounter, new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), comboScale);
+        extraText.init("COMBOx" + comboCounter, Color.YELLOW, Color.RED, comboScale);
         float textWidth = extraText.getTextWidth();
         extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
         extraText.pos.rot(0f, 0f, 0f);

@@ -797,10 +797,9 @@ public final class Graphics {
 
     public void drawAxes() {
         EdgeDrawer edgeDrawer = new EdgeDrawer(2);
-        Color color = new Color(1f, 1f, 0f, 1f);
 
         float x = 1f;
-        float y = Graphics.aspectRatio; //1f;
+        float y = aspectRatio; // 1f
 
         edgeDrawer.begin();
         edgeDrawer.addLine(-x, 0f, 0f, x, 0f, 0f);
@@ -811,7 +810,7 @@ public final class Graphics {
         multiplyMM(mvpMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0);
 
         singleColorShader.useProgram();
-        singleColorShader.setUniforms(mvpMatrix, color);
+        singleColorShader.setUniforms(mvpMatrix, Color.YELLOW);
         edgeDrawer.bindData(singleColorShader);
         edgeDrawer.draw();
     }

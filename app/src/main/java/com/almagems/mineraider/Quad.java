@@ -8,6 +8,7 @@ public final class Quad {
     private int textureId;
     public static Graphics graphics;
 
+    public float posYorigin;
 
     // ctor
     public Quad() {

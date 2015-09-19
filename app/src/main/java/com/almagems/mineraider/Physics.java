@@ -12,7 +12,6 @@ import org.jbox2d.dynamics.FixtureDef;
 import static com.almagems.mineraider.Constants.*;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 
 public final class Physics {
@@ -22,8 +21,6 @@ public final class Physics {
     private static Vec2 posZero =  new Vec2(0f, 0f);
 
     private int counter = 0;
-
-	private static Random random = new Random();
 		
 	public final static int velIterations = 4;
 	public final static int posIterations = 8;
@@ -150,19 +147,19 @@ public final class Physics {
 	}
 
 	private static void setBodyPosAndRot(Body body, float x, float y) {
-		float angle = (float)Math.toRadians( random.nextFloat() * 360f );
+		float angle = (float)Math.toRadians( MyUtils.rand.nextFloat() * 360f );
         pos.x = x;
         pos.y = y;
-        float d = random.nextFloat() * 2f - 1f;
+        float d = MyUtils.rand.nextFloat() * 2f - 1f;
         if (MyUtils.randInt(0, 10) > 5) {
             vector.x = 3f + d * 9f;
         } else {
             vector.x = -3f + d * 9f;
         }
-		vector.y = 6f + (random.nextFloat() * 6f);
+		vector.y = 6f + (MyUtils.rand.nextFloat() * 6f);
 
         body.setLinearVelocity(vector);
-        body.setAngularVelocity( 30f + random.nextFloat() * 60f  );
+        body.setAngularVelocity( 30f + MyUtils.rand.nextFloat() * 60f  );
 		body.setTransform(pos, angle);
 		body.setActive(true);
 	}
@@ -221,7 +218,7 @@ public final class Physics {
 	private static Body createFragmentGem0() {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(0f, 0f);
-		bodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
+		bodyDef.angle = (float)Math.toRadians( MyUtils.rand.nextFloat() * 360f );
 		bodyDef.type = BodyType.DYNAMIC;
 		bodyDef.allowSleep = true;
 
@@ -252,7 +249,7 @@ public final class Physics {
 	private static Body createFragmentGem1() {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(0f, 0f);
-		bodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
+		bodyDef.angle = (float)Math.toRadians( MyUtils.rand.nextFloat() * 360f );
 		bodyDef.type = BodyType.DYNAMIC;
 		bodyDef.allowSleep = true;
 
@@ -287,7 +284,7 @@ public final class Physics {
 	private static Body createFragmentGem2() {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(0f, 0f);
-		bodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
+		bodyDef.angle = (float)Math.toRadians( MyUtils.rand.nextFloat() * 360f );
 		bodyDef.type = BodyType.DYNAMIC;
 		bodyDef.allowSleep = true;
 
@@ -320,7 +317,7 @@ public final class Physics {
 	private static Body createFragmentGem3() {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(0f, 0f);
-		bodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
+		bodyDef.angle = (float)Math.toRadians( MyUtils.rand.nextFloat() * 360f );
         bodyDef.type = BodyType.DYNAMIC;
         bodyDef.allowSleep = true;
 
@@ -353,7 +350,7 @@ public final class Physics {
 	private static Body createFragmentGem4() {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(0f, 0f);
-		bodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
+		bodyDef.angle = (float)Math.toRadians( MyUtils.rand.nextFloat() * 360f );
         bodyDef.type = BodyType.DYNAMIC;
         bodyDef.allowSleep = true;
 
@@ -388,7 +385,7 @@ public final class Physics {
 	private static Body createFragmentGem5() {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(0f, 0f);
-		bodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
+		bodyDef.angle = (float)Math.toRadians( MyUtils.rand.nextFloat() * 360f );
         bodyDef.type = BodyType.DYNAMIC;
         bodyDef.allowSleep = true;
 
@@ -423,7 +420,7 @@ public final class Physics {
 	private static Body createFragmentGem6() {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(0f, 0f);
-		bodyDef.angle = (float)Math.toRadians( random.nextFloat() * 360f );
+		bodyDef.angle = (float)Math.toRadians( MyUtils.rand.nextFloat() * 360f );
         bodyDef.type = BodyType.DYNAMIC;
         bodyDef.allowSleep = true;
 
@@ -526,9 +523,12 @@ public final class Physics {
 			body = fragments.get(i);
 			pos = body.getPosition();
 
-			if (pos.y < -18.7f && pos.x < 15f) {
+			//if (pos.y < -18.7f && pos.x < 15f) {
+            if (pos.y < -18.9f && pos.x < 15f) {
 				fragmentToPool.add(body);
                 ++wastedCounter;
+
+                Engine.graphics.particleManager.addParticleEmitterAtWastedGems(pos.x, pos.y, 1);
 			}
 		}
 

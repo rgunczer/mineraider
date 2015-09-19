@@ -25,6 +25,20 @@ public final class FBO {
     }
 
     public void create(int w, int h) {
+
+        if (m_TextureId != 0) {
+            return;
+            /*
+            System.out.println("FBO: Destroy old texture...");
+            int[] arr = new int[]{
+                m_TextureId
+            };
+
+            glDeleteTextures(arr.length, arr, 0);
+            m_TextureId = 0;
+            */
+        }
+
         width = w;
         height = h;
 

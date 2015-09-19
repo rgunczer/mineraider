@@ -4,8 +4,16 @@ import static android.opengl.Matrix.*;
 
 public final class Geometry {
 
+    private static final Vector rayToPlaneVector = new Vector();
+
+    private static final Vector p1ToPoint = new Vector();
+    private static final Vector p2ToPoint = new Vector();
+
+    private static final Vector vecBetween = new Vector();
+
+
     public static Vector intersectionPoint(Ray ray, Plane plane) {
-        Vector rayToPlaneVector = vectorBetween(ray.point, plane.point);
+        vectorBetween(ray.point, plane.point, rayToPlaneVector);
         float scaleFactor = rayToPlaneVector.dotProduct(plane.normal)
                 / ray.vector.dotProduct(plane.normal);
 
@@ -13,10 +21,10 @@ public final class Geometry {
         return intersectionPoint;
     }
 
-	public static Vector vectorBetween(Vector from, Vector to) {
-		return new Vector( to.x - from.x,
-				           to.y - from.y,
-				           to.z - from.z);
+	public static void vectorBetween(Vector from, Vector to, Vector result) {
+		result.x = to.x - from.x;
+        result.y = to.y - from.y;
+        result.z = to.z - from.z;
 	}
 
 	public static boolean intersects(Sphere sphere, Ray ray) {
@@ -24,8 +32,8 @@ public final class Geometry {
 	}
 
 	public static float distanceBetween(Vector point, Ray ray) {
-		Vector p1ToPoint = vectorBetween(ray.point, point);
-		Vector p2ToPoint = vectorBetween(ray.point.translate(ray.vector), point);
+        vectorBetween(ray.point, point, p1ToPoint);
+        vectorBetween(ray.point.translate(ray.vector), point, p2ToPoint);
 		
 		// the length of the cross product gives the area of an imagenary
 		// paralelogram having the two vectors as sides. A paralelogram can be
@@ -67,7 +75,8 @@ public final class Geometry {
         Vector nearPointRay = new Vector(nearPointWorld[0], nearPointWorld[1], nearPointWorld[2]);
         Vector farPointRay = new Vector(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
 
-        return new Ray(nearPointRay, Geometry.vectorBetween(nearPointRay, farPointRay));
+        Geometry.vectorBetween(nearPointRay, farPointRay, vecBetween);
+        return new Ray(nearPointRay, vecBetween);
     }
 
     // screen to world 2D

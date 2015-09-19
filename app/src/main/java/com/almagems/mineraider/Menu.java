@@ -311,8 +311,7 @@ public final class Menu extends Overlay {
             if (selectedMenuItem != null) {
                 //System.out.println("Selected Menu Option is: " + selectedMenuItem.menuOption.toString());
                 selectedMenuItem.setAnim(menuItemAnim);
-                Engine engine = Engine.getInstance();
-                engine.audio.playSound();
+                Engine.audio.playSound();
             } else {
                 updateVolumes(normalizedX, normalizedY);
             }
@@ -337,7 +336,7 @@ public final class Menu extends Overlay {
 
                 //System.out.println("normalized is: " + normalizedX);
                 //System.out.println("norm is: " + norm);
-                Engine.getInstance().audio.setMusicVolume(norm);
+                Engine.audio.setMusicVolume(norm);
             }
 
             if (pos.y > currentGroup.soundVolumeControl.pos.ty - diff  &&
@@ -349,7 +348,7 @@ public final class Menu extends Overlay {
 
                 //System.out.println("normalized is: " + normalizedX);
                 //System.out.println("norm is: " + norm);
-                Engine.getInstance().audio.setSoundVolume(norm);
+                Engine.audio.setSoundVolume(norm);
             }
         }
     }

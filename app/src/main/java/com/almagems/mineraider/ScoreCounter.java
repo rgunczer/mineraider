@@ -169,30 +169,30 @@ public final class ScoreCounter {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         
-        sb.append("Score: " + score + "\n");        
+        sb.append("\nScore: " + score);
         ScoreByGemType scoreByGemType;
         for (int i = 0; i < MAX_GEM_TYPES; ++i) {
             scoreByGemType = scoreByGemTypes.get(i);
-            sb.append("GemType" + scoreByGemType.type + ": " + scoreByGemType.value + "\n");
+            sb.append("\nGemType" + scoreByGemType.type + ": " + scoreByGemType.value);
         }
         
-        sb.append("Match3 Count Horizontal: " + match3CountHorizontal);
-        sb.append("Match3 Count Vertical: " + match3CountVertical);
+        sb.append("\nMatch3 Count Horizontal: " + match3CountHorizontal);
+        sb.append("\nMatch3 Count Vertical: " + match3CountVertical);
 
-        sb.append("Match4 Count Horizotal: " + match4CountHorizontal);
-        sb.append("Match4 Count Vertical: " + match4CountVertical);
+        sb.append("\nMatch4 Count Horizotal: " + match4CountHorizontal);
+        sb.append("\nMatch4 Count Vertical: " + match4CountVertical);
 
-        sb.append("Match5 Count Horizontal: " + match5CountHorizontal);
-        sb.append("Match5 Count Vertical: " + match5CountVertical);
+        sb.append("\nMatch5 Count Horizontal: " + match5CountHorizontal);
+        sb.append("\nMatch5 Count Vertical: " + match5CountVertical);
 
-        sb.append("Hint Counter: " + hintCounter);
-        sb.append("Perfect Swap Counter: " + perfectSwapCounter);
-        sb.append("Highest Combo Counter: " + highestComboCounter);
-        sb.append("Shared Matches Counter: " + sharedMatchesCounter);
+        sb.append("\nHint Counter: " + hintCounter);
+        sb.append("\nPerfect Swap Counter: " + perfectSwapCounter);
+        sb.append("\nHighest Combo Counter: " + highestComboCounter);
+        sb.append("\nShared Matches Counter: " + sharedMatchesCounter);
 
-        sb.append("Collected Gems: " + collectedGems);
-        sb.append("Wasted Gems: " + wastedGems);
-        sb.append("-------------\n");
+        sb.append("\nCollected Gems: " + collectedGems);
+        sb.append("\nWasted Gems: " + wastedGems);
+        sb.append("\n-------------\n");
 
         return sb.toString();
     }

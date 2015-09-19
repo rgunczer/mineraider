@@ -35,9 +35,7 @@ public final class Texture {
         return null;
     }
 
-    public void loadFrames(Context context, int jsonResourceId) {
-        String jsonText = TextResourceReader.readTextFileFromResource(context, jsonResourceId);
-
+    public void loadFrames(String jsonText) {
         try {
             JSONObject jObject = new JSONObject(jsonText);
             JSONArray arr = jObject.getJSONArray("frames");

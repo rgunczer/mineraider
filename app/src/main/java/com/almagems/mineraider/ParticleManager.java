@@ -66,7 +66,21 @@ public final class ParticleManager {
             pool.add(emitter);
         }
 	}
-	
+
+	public void addParticleEmitterAtWastedGems(float x, float y, int type) {
+		//System.out.println("in MineRaiderRenderer add Particle Emitter at: " + x + ", " + y);
+		int size = pool.size();
+		if (size > 0) {
+			ParticleEmitter pe = pool.remove(size - 1);
+			pe.position.x = x;
+			pe.position.y = y;
+			pe.position.z = 0f;
+			pe.numberOfParticlesToEmit = 3;
+			pe.color = Color.rgb(60, 0, 0); //visuals.colorFromGemType(gemType);
+			live.add(pe);
+		}
+	}
+
 	public void addParticleEmitterAt(float x, float y, int type) {
 		//System.out.println("in MineRaiderRenderer add Particle Emitter at: " + x + ", " + y);
         int size = pool.size();

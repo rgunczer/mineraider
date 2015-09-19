@@ -1,10 +1,8 @@
 package com.almagems.mineraider;
 
-import java.util.Random;
 
 public final class ZigZag extends EffectAnim {
 
-    private Random rand = new Random();
     private float dx = 0.01f;
     private float dy = 0.01f;
     private boolean flip = false;
@@ -36,8 +34,8 @@ public final class ZigZag extends EffectAnim {
         }
 
         if (cooling % 2 == 0) {
-            dx = rand.nextFloat() * 0.01f;
-            dy = rand.nextFloat() * 0.01f;
+            dx = MyUtils.rand.nextFloat() * 0.01f;
+            dy = MyUtils.rand.nextFloat() * 0.01f;
 
             if (cooling < 0) {
                 flip = !flip;

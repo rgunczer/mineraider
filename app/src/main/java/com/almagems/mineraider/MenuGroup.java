@@ -54,8 +54,8 @@ public final class MenuGroup {
         }
 
         if (musicVolumeControl != null && soundVolumeControl != null) {
-            musicVolumeControl.value = Engine.getInstance().audio.musicVolume;
-            soundVolumeControl.value = Engine.getInstance().audio.soundVolume;
+            musicVolumeControl.value = Engine.audio.musicVolume;
+            soundVolumeControl.value = Engine.audio.soundVolume;
         }
     }
 

@@ -5,6 +5,9 @@ import android.util.FloatMath;
 	
 public final class Vector {
 	public float x, y, z;
+
+	public static final Vector translatedVector = new Vector();
+    public static final Vector crossVector = new Vector();
 	
 	// ctor
     public Vector() {
@@ -34,10 +37,10 @@ public final class Vector {
 	}
 	
 	public Vector crossProduct(Vector other) {
-		return new Vector(
-				(y * other.z) - (z * other.y),
-				(z * other.x) - (x * other.z),
-				(x * other.y) - (y * other.x));
+		crossVector.x = (y * other.z) - (z * other.y);
+        crossVector.y = (z * other.x) - (x * other.z);
+        crossVector.z = (x * other.y) - (y * other.x);
+        return crossVector;
 	}
 	
 	public float dotProduct(Vector other) {
@@ -62,9 +65,13 @@ public final class Vector {
 	}
 
     public Vector translate(Vector vector) {
-        return new Vector( x + vector.x,
-                           y + vector.y,
-                           z + vector.z);
+//        return new Vector( x + vector.x,
+//                           y + vector.y,
+//                           z + vector.z);
+		translatedVector.x = x + vector.x;
+		translatedVector.y = y + vector.y;
+		translatedVector.z = z + vector.z;
+		return translatedVector;
     }
 
 }

@@ -1,12 +1,6 @@
 package com.almagems.mineraider;
 
-import static android.opengl.GLES20.GL_BLEND;
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
-import static android.opengl.GLES20.GL_SRC_ALPHA;
-import static android.opengl.GLES20.glBlendFunc;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
+import static android.opengl.GLES20.*;
 
 
 public final class Loading extends Overlay {
@@ -59,7 +53,7 @@ public final class Loading extends Overlay {
             case 8:  graphics.loadModelsPart03(); break;
             case 9:  Engine.game.createObjects(); break;
             case 10: Engine.game.renderToFBO(); break;
-            case 11: break;
+            case 11: graphics.releaseModelLoader(); break;
             case 12: graphics.particleManager.init(); break;
             case 13: Engine.loadPreferences(); break;
             case 14: Engine.audio.init(Engine.activity); break;

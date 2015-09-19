@@ -5,6 +5,7 @@ import static android.opengl.Matrix.*;
 import static com.almagems.mineraider.Constants.*;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +21,8 @@ public final class Graphics {
     public static float scaleFactor;
 
 	public static Context context;
+
+    private ModelLoader modelLoader;
 
     public final ParticleManager particleManager;
     public final BatchGemDrawer batchGemDrawer;
@@ -122,6 +125,8 @@ public final class Graphics {
         batchGemDrawer = new BatchGemDrawer(maxItemCountPerGemType);
         ParticleManager.graphics = this;
         particleManager = new ParticleManager();
+
+        modelLoader = new ModelLoader();
 	}
 
     public void initialSetup() {
@@ -165,158 +170,160 @@ public final class Graphics {
 	}
 	
 	public void loadModelsPart01() {
-        ModelLoader ml;
+        String buffer;
 
-        //  gems
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem0, "Gem0");
-        gems[GEM_TYPE_0] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem0);
+        modelLoader.init("Gem0", buffer);
+        gems[GEM_TYPE_0] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem1, "Gem1");
-        gems[GEM_TYPE_1] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem1);
+        modelLoader.init("Gem1", buffer);
+        gems[GEM_TYPE_1] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem2, "Gem2");
-        gems[GEM_TYPE_2] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem2);
+        modelLoader.init("Gem2", buffer);
+        gems[GEM_TYPE_2] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem3, "Gem3");
-        gems[GEM_TYPE_3] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem3);
+        modelLoader.init("Gem3", buffer);
+        gems[GEM_TYPE_3] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem4, "Gem4");
-        gems[GEM_TYPE_4] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem4);
+        modelLoader.init("Gem4", buffer);
+        gems[GEM_TYPE_4] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem5, "Gem5");
-        gems[GEM_TYPE_5] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem5);
+        modelLoader.init("Gem5", buffer);
+        gems[GEM_TYPE_5] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem6, "Gem6");
-        gems[GEM_TYPE_6] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem6);
+        modelLoader.init("Gem6", buffer);
+        gems[GEM_TYPE_6] = new Model(modelLoader);
 
-        // plates
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem0_plate, "Gem0Plate");
-        gemsPlates[GEM_TYPE_0] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem0_plate);
+        modelLoader.init("Gem0Plate", buffer);
+        gemsPlates[GEM_TYPE_0] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem1_plate, "Gem1Plate");
-        gemsPlates[GEM_TYPE_1] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem1_plate);
+        modelLoader.init("Gem1Plate", buffer);
+        gemsPlates[GEM_TYPE_1] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem2_plate, "Gem2Plate");
-        gemsPlates[GEM_TYPE_2] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem2_plate);
+        modelLoader.init("Gem2Plate", buffer);
+        gemsPlates[GEM_TYPE_2] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem3_plate, "Gem3Plate");
-        gemsPlates[GEM_TYPE_3] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem3_plate);
+        modelLoader.init("Gem3Plate", buffer);
+        gemsPlates[GEM_TYPE_3] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem4_plate, "Gem4Plate");
-        gemsPlates[GEM_TYPE_4] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem4_plate);
+        modelLoader.init("Gem4Plate", buffer);
+        gemsPlates[GEM_TYPE_4] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem5_plate, "Gem5Plate");
-        gemsPlates[GEM_TYPE_5] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem5_plate);
+        modelLoader.init("Gem5Plate", buffer);
+        gemsPlates[GEM_TYPE_5] = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.gem6_plate, "Gem6Plate");
-        gemsPlates[GEM_TYPE_6] = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.gem6_plate);
+        modelLoader.init("Gem6Plate", buffer);
+        gemsPlates[GEM_TYPE_6] = new Model(modelLoader);
     }
 
     public void loadModelsPart02() {
-        ModelLoader ml;
+        String buffer;
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.marker, "Marker");
-        marker = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.marker);
+        modelLoader.init("Marker", buffer);
+        marker = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.hint, "Hint");
-        hint = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.hint);
+        modelLoader.init("Hint", buffer);
+        hint = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.cart, "MineCart");
-        mineCart = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.cart);
+        modelLoader.init("MineCart", buffer);
+        mineCart = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.railroad, "RailRoad");
-        railroad = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.railroad);
+        modelLoader.init("RailRoad", buffer);
+        railroad = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.floor, "Floor");
-        floor = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.floor);
+        modelLoader.init("Floor", buffer);
+        floor = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.wall, "Wall");
-        wall = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.wall);
+        modelLoader.init("Wall", buffer);
+        wall = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.pillar, "Pillar");
-        pillar = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.pillar);
+        modelLoader.init("Pillar", buffer);
+        pillar = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.crate, "Crate");
-        crate = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.crate);
+        modelLoader.init("Crate", buffer);
+        crate = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.soil, "Soil");
-        soil = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.soil);
+        modelLoader.init("Soil", buffer);
+        soil = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.wheel, "Wheel");
-        wheel = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.wheel);
+        modelLoader.init("Wheel", buffer);
+        wheel = new Model(modelLoader);
 
-        ml = new ModelLoader();
-        ml.init(context, R.drawable.beam, "Beam");
-        beam = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.beam);
+        modelLoader.init("Beam", buffer);
+        beam = new Model(modelLoader);
     }
 
     public void loadModelsPart03() {
-        ModelLoader ml;
+        String buffer;
 
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.rock0, "Rock0");
-		rock0 = new Model(ml);
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.rock1, "Rock1");
-		rock1 = new Model(ml);
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.rock2, "Rock2");
-		rock2 = new Model(ml);		
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.rock3, "Rock3");
-		rock3 = new Model(ml);		
-				
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.rock4, "Rock4");
-		rock4 = new Model(ml);		
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.rock5, "Rock5");
-		rock5 = new Model(ml);		
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.rock0);
+        modelLoader.init("Rock0", buffer);
+		rock0 = new Model(modelLoader);
 
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.rock6, "Rock6");
-		rock6 = new Model(ml);		
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.rock1);
+        modelLoader.init("Rock1", buffer);
+		rock1 = new Model(modelLoader);
 
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.rock7, "Rock7");
-		rock7 = new Model(ml);		
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.rock2);
+        modelLoader.init("Rock2", buffer);
+		rock2 = new Model(modelLoader);
 
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.rock8, "Rock8");
-		rock8 = new Model(ml);		
-		
-		ml = new ModelLoader();
-		ml.init(context, R.drawable.pickaxe, "PickAxe");
-		pickAxe = new Model(ml);
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.rock3);
+        modelLoader.init("Rock3", buffer);
+		rock3 = new Model(modelLoader);
+
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.rock4);
+        modelLoader.init("Rock4", buffer);
+		rock4 = new Model(modelLoader);
+
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.rock5);
+        modelLoader.init("Rock5", buffer);
+		rock5 = new Model(modelLoader);
+
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.rock6);
+        modelLoader.init("Rock6", buffer);
+		rock6 = new Model(modelLoader);
+
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.rock7);
+        modelLoader.init("Rock7", buffer);
+		rock7 = new Model(modelLoader);
+
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.rock8);
+        modelLoader.init("Rock8", buffer);
+		rock8 = new Model(modelLoader);
+
+        buffer = TextResourceReader.readTextFileFromResource(context, R.drawable.pickaxe);
+        modelLoader.init("PickAxe", buffer);
+		pickAxe = new Model(modelLoader);
 	}
+
+    public void releaseModelLoader() {
+        modelLoader = null;
+    }
 
     private int loadTexture(int resourceId) {
         Texture texture = TextureHelper.loadTexture(context, resourceId);
@@ -326,11 +333,13 @@ public final class Graphics {
 
     private int loadTextureAndJson(int textureResourceId, int jsonResourceId) {
         Texture texture = TextureHelper.loadTexture(context, textureResourceId);
-        texture.loadFrames(context, jsonResourceId);
+        String jsonText = TextResourceReader.readTextFileFromResource(context, jsonResourceId);
+        texture.loadFrames(jsonText);
         textures.add(texture);
         return texture.id;
     }
 
+    @Nullable
     public Texture getTextureObj(int textureId) {
         Texture texture;
         int size = textures.size();

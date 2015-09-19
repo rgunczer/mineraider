@@ -12,8 +12,6 @@ public final class HUD {
     private final Quad quad;
     private final Quad quadPauseButton;
 
-
-
     private float scoreX;
     private float scoreY;
     private float fontScale;
@@ -111,17 +109,17 @@ public final class HUD {
     }
 
     public void showMessage(String message) {
-        extraText.init(message, Color.YELLOW, Color.RED, comboScale);
-        float textWidth = extraText.getTextWidth();
-        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
-        extraText.pos.rot(0f, 0f, 0f);
-        extraText.pos.scale(1f, 1f, 1f);
-
-        extraTextCooling = 125;
-        comboScale += 0.05f;
-
-        //extraText.addAnimEffect(effectWahWah);
-        extraText.addAnimEffect(effectZigZag);
+//        extraText.init(message, Color.YELLOW, Color.RED, comboScale);
+//        float textWidth = extraText.getTextWidth();
+//        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
+//        extraText.pos.rot(0f, 0f, 0f);
+//        extraText.pos.scale(1f, 1f, 1f);
+//
+//        extraTextCooling = 125;
+//        comboScale += 0.05f;
+//
+//        //extraText.addAnimEffect(effectWahWah);
+//        extraText.addAnimEffect(effectZigZag);
     }
 
     public void showBonusCartGems(int numberOfGems) {
@@ -143,63 +141,63 @@ public final class HUD {
 
     public int showCombo() {
         ++comboCounter;
-
-        extraText.init("COMBOx" + comboCounter, Color.YELLOW, Color.RED, comboScale);
-        float textWidth = extraText.getTextWidth();
-        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
-        extraText.pos.rot(0f, 0f, 0f);
-        extraText.pos.scale(1f, 1f, 1f);
-
-        extraTextCooling = 100;
-        comboScale += 0.05f;
-
-        //extraText.addAnimEffect(effectWahWah);
-        extraText.addAnimEffect(effectZigZag);
-
+//
+//        extraText.init("COMBOx" + comboCounter, Color.YELLOW, Color.RED, comboScale);
+//        float textWidth = extraText.getTextWidth();
+//        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
+//        extraText.pos.rot(0f, 0f, 0f);
+//        extraText.pos.scale(1f, 1f, 1f);
+//
+//        extraTextCooling = 100;
+//        comboScale += 0.05f;
+//
+//        //extraText.addAnimEffect(effectWahWah);
+//        extraText.addAnimEffect(effectZigZag);
+//
         return comboCounter;
     }
 
     public void showPerfectSwap() {
-        extraText.init("PERFECT SWAP", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
-        float textWidth = extraText.getTextWidth();
-        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
-        extraText.pos.rot(0f, 0f, 0f);
-        extraText.pos.scale(2f, 2f, 1f);
-
-        extraTextCooling = 30;
-        effectWahWah.wahScale = 1.0f;
-        extraText.addAnimEffect(effectWahWah);
+//        extraText.init("PERFECT SWAP", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
+//        float textWidth = extraText.getTextWidth();
+//        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
+//        extraText.pos.rot(0f, 0f, 0f);
+//        extraText.pos.scale(2f, 2f, 1f);
+//
+//        extraTextCooling = 30;
+//        effectWahWah.wahScale = 1.0f;
+//        extraText.addAnimEffect(effectWahWah);
     }
 
     public void showMatch4InARowBonus() {
-        extraText.init("FOUR IN A ROW", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
-        float textWidth = extraText.getTextWidth() * 1.75f;
-        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
-        extraText.pos.rot(0f, 0f, 0f);
-        extraText.pos.scale(1.75f, 2f, 1f);
-
-        extraTextCooling = 45;
-        effectWahWah.wahScale = 0.9f;
-        extraText.addAnimEffect(effectZigZag);
+//        extraText.init("FOUR IN A ROW", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
+//        float textWidth = extraText.getTextWidth() * 1.75f;
+//        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
+//        extraText.pos.rot(0f, 0f, 0f);
+//        extraText.pos.scale(1.75f, 2f, 1f);
+//
+//        extraTextCooling = 45;
+//        effectWahWah.wahScale = 0.9f;
+//        extraText.addAnimEffect(effectZigZag);
     }
 
     public void showMatch4InAColBonus() {
-        extraText.init("FOUR IN A COLUMN", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
-        float textWidth = extraText.getTextWidth() * 1.75f;
-        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
-        extraText.pos.rot(0f, 0f, 0f);
-        extraText.pos.scale(1.75f, 2f, 1f);
-
-        extraTextCooling = 45;
-        effectWahWah.wahScale = 0.9f;
-        extraText.addAnimEffect(effectZigZag);
+//        extraText.init("FOUR IN A COLUMN", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
+//        float textWidth = extraText.getTextWidth() * 1.75f;
+//        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
+//        extraText.pos.rot(0f, 0f, 0f);
+//        extraText.pos.scale(1.75f, 2f, 1f);
+//
+//        extraTextCooling = 45;
+//        effectWahWah.wahScale = 0.9f;
+//        extraText.addAnimEffect(effectZigZag);
     }
 
     public void updateScore(int score) {
         if (score != cachedScore) {
             scoreCooling = 30;
             String str = "SCORE:" + score;
-            scoreText.init(str, new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), fontScale);
+            scoreText.init(str, Color.YELLOW, Color.RED, fontScale);
             cachedScore = score;
             effectWahWahScore.wahScale = 0.2f;
             scoreText.addAnimEffect(effectWahWahScore);
@@ -247,16 +245,6 @@ public final class HUD {
                 _bonusTargetPosX = -1.2f - _bonusCartGemsTextWidth;
             }
 
-
-/*
-            if (_centerCounter != 0) {
-                if (diff < _bonusDiff) {
-                    --_centerCounter;
-                    _bonusPosX += speed;
-                }
-            }
-*/
-
             gemsFromCartText.pos.trans(_bonusPosX, -0.9f, 0f);
 
             if (bonusFromCartCooling == 0) {
@@ -278,9 +266,7 @@ public final class HUD {
             gemsFromCartText.draw();
         }
 
-
-        Game game = Engine.getInstance().game;
-        if ( game.gameState == Game.GameState.Playing ) {
+        if ( Engine.game.gameState == Game.GameState.Playing ) {
             quadPauseButton.draw();
         }
 

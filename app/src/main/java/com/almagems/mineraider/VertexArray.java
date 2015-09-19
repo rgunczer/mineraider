@@ -7,10 +7,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+
 public final class VertexArray {
 
 	private final FloatBuffer floatBuffer;
-	
+
+
+	// ctor
 	public VertexArray(float[] vertexData) {
 		floatBuffer = ByteBuffer.allocateDirect(vertexData.length * BYTES_PER_FLOAT)
 				                .order(ByteOrder.nativeOrder())
@@ -30,6 +33,5 @@ public final class VertexArray {
 		floatBuffer.put(vertexData, start, count);
 		floatBuffer.position(0);
 	}
-	
-	
+
 }

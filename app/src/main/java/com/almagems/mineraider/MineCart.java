@@ -1,6 +1,5 @@
 package com.almagems.mineraider;
 
-import java.util.Random;
 import static android.opengl.GLES20.*;
 
 import org.jbox2d.collision.shapes.CircleShape;
@@ -24,6 +23,8 @@ public final class MineCart {
         WaitingForGems,
         Leaving
     };
+
+    private final Vec2 repositionPos = new Vec2(0f, 0f);
 
     public CartState state;
     public int id;
@@ -185,10 +186,11 @@ public final class MineCart {
     }
 
     public void reposition(float x, float y) {
-        Vec2 pos = new Vec2(x, y);
-        body.setTransform(pos, 0f);
-        wheel1.setTransform(pos, 0f);
-        wheel2.setTransform(pos, 0f);
+        repositionPos.x = x;
+        repositionPos.y = y;
+        body.setTransform(repositionPos, 0f);
+        wheel1.setTransform(repositionPos, 0f);
+        wheel2.setTransform(repositionPos, 0f);
     }
 
     public void restartCart() {
@@ -202,8 +204,6 @@ public final class MineCart {
         if (state == CartState.Entering) {
             state = CartState.StoppedHitOtherCart;
             stop();
-        } else {
-            System.out.println("Got you! " + state.toString() );
         }
     }
 
@@ -234,7 +234,7 @@ public final class MineCart {
                 if (counter > 400) {
                     state = CartState.Leaving;
                     start(-3f);
-                    Engine.getInstance().game.notifyOtherMinecartToStart();
+                    Engine.game.notifyOtherMinecartToStart();
                 }
                 break;
 
@@ -250,8 +250,7 @@ public final class MineCart {
     }
 
     private void moveToStart(Vec2 pos) {
-        Random rand = new Random();
-        pos.x = -19.0f - (rand.nextFloat() * 3f);
+        pos.x = -19.0f - (MyUtils.rand.nextFloat() * 3f);
         pos.y = -16.5f;
         reposition(pos.x, pos.y);
     }
@@ -274,7 +273,7 @@ public final class MineCart {
         }
 
         if (count > 0) {
-            Engine.getInstance().game.scoreCounter.handleGemsFromCart(count);
+            Engine.game.scoreCounter.handleGemsFromCart(count);
         }
 
         Physics.sortFragmentsFromPool();

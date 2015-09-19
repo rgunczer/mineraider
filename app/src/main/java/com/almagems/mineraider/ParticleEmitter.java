@@ -1,17 +1,18 @@
 package com.almagems.mineraider;
 
-import java.util.Random;
-
 import static android.opengl.Matrix.*;
 
+
 public final class ParticleEmitter {
+
 	public Vector position;
+    private final Vector direction = new Vector();
 	public int color;
 	private final float angleVariance;
 	private final float speedVariance;
-	
-	private final Random random = new Random();
-	
+
+	//private final Random random = new Random();
+
 	private float[] rotationMatrix = new float[16];
 	private float[] directionVector = new float[4];
 	private float[] resultVector = new float[4];
@@ -44,8 +45,11 @@ public final class ParticleEmitter {
 //		int b = Color.blue(color);
 		
 		//System.out.println("Particle: " + r + "," + g + "," + b);
-				
-		numberOfParticlesToEmit -= count; 
+
+		RandomXS128 random = MyUtils.rand;
+
+		numberOfParticlesToEmit -= count;
+        float speedAdjustment;
 		for (int i = 0; i < count; ++i) {			
 			setRotateEulerM(rotationMatrix, 0,
 							(random.nextFloat() - 0.5f) * angleVariance,
@@ -53,18 +57,17 @@ public final class ParticleEmitter {
 							(random.nextFloat() - 0.5f) * angleVariance);
 			
 			multiplyMV(
-					resultVector, 0,
-					rotationMatrix, 0,
-					directionVector, 0);
+                    resultVector, 0,
+                    rotationMatrix, 0,
+                    directionVector, 0);
 			
-			float speedAdjustment = 1f + random.nextFloat() * speedVariance;
+			speedAdjustment = 1f + random.nextFloat() * speedVariance;
 			
-			Vector thisDirection = new Vector(
-					(random.nextFloat() - 0.5f) * speedAdjustment,  //resultVector[0] * speedAdjustment, 
-					(random.nextFloat() - 0.5f) * speedAdjustment, // resultVector[1] * speedAdjustment,
-					resultVector[2] * speedAdjustment);
+			direction.x = (random.nextFloat() - 0.5f) * speedAdjustment;
+            direction.y = (random.nextFloat() - 0.5f) * speedAdjustment;
+            direction.z = resultVector[2] * speedAdjustment;
 						
-			particleSystem.addParticle(position, color, thisDirection, currentTime);
+			particleSystem.addParticle(position, color, direction, currentTime);
 		}
 	}
 }

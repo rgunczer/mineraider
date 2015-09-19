@@ -14,75 +14,70 @@ public final class MineRaiderRenderer implements Renderer {
 
 	private long frameStartTimeMS;
 	private final Context context;
-    private Engine engine;
 
 	// ctor
 	public MineRaiderRenderer(Context context) {
 		this.context = context;
-		engine = Engine.getInstance();
 
-		engine.activity = (MineRaiderActivity)context;
-		engine.renderer = this;
+		Engine.activity = (MineRaiderActivity)context;
+		Engine.renderer = this;
 	}
 
-	private void limitFrameRate(int framesPerSecond) {
-		long elapsedFrameTimeMS = SystemClock.elapsedRealtime() - frameStartTimeMS;
-		long expectedFrameTimeMS = 1000 / framesPerSecond;
-		long timeToSleepMS = expectedFrameTimeMS - elapsedFrameTimeMS;
-		
-		if (timeToSleepMS > 0) {
-			SystemClock.sleep(timeToSleepMS);
-		}
-		frameStartTimeMS = SystemClock.elapsedRealtime();
-	}	
-	
 	@Override
 	public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
-		limitFrameRate(30);
+        System.out.println("onSurfaceCreated...");
+        frameStartTimeMS = SystemClock.elapsedRealtime();
 
-        engine.createGraphicsObject();
-        engine.initGraphicsObject();
+        Engine.createGraphicsObject();
+        Engine.initGraphicsObject();
 
-		try {
-            engine.graphics.loadStartupAssets();
-		} catch (final Exception ex) {
-			Activity activity = (Activity) context;
-			activity.runOnUiThread(new Runnable() {
-				public void run() {
-					Toast.makeText(context, "Error loading assets. " + ex.toString() , Toast.LENGTH_LONG).show();
-				}
-			});
-			return;
-		}
+        try {
+            Engine.graphics.loadStartupAssets();
+        } catch (final Exception ex) {
+            Activity activity = (Activity) context;
+            activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(context, "Error loading assets. " + ex.toString(), Toast.LENGTH_LONG).show();
+                }
+            });
+            return;
+        }
 
-        engine.createGameObject();
-        engine.initGameObject();
+        Engine.createGameObject();
+        Engine.initGameObject();
 	}
 
 	@Override
 	public void onSurfaceChanged(GL10 glUnused, int width, int height) {
-		engine.onSurfaceChanged(width, height);
+		Engine.onSurfaceChanged(width, height);
     }
 
 	@Override
 	public void onDrawFrame(GL10 glUnused) {
-		engine.update();
-		engine.draw();
-		limitFrameRate(30);		
-	}
+		Engine.update();
+		Engine.draw();
+
+        // limit frame rate
+        final int framesPerSecond = 30;
+        long elapsedFrameTimeMS = SystemClock.elapsedRealtime() - frameStartTimeMS;
+        long expectedFrameTimeMS = 1000 / framesPerSecond;
+        long timeToSleepMS = expectedFrameTimeMS - elapsedFrameTimeMS;
+
+        if (timeToSleepMS > 0) {
+            SystemClock.sleep(timeToSleepMS);
+        }
+        frameStartTimeMS = SystemClock.elapsedRealtime();
+    }
 			
 	public void handleTouchPress(float normalizedX, float normalizedY) {
-		//System.out.println("TouchPress: " + normalizedX + " " + normalizedY);
-		engine.handleTouchPress(normalizedX, normalizedY);
+		Engine.handleTouchPress(normalizedX, normalizedY);
 	}
 	
 	public void handleTouchDrag(float normalizedX, float normalizedY) {
-		//System.out.println("TouchDrag:" + normalizedX + " " + normalizedY);
-		engine.handleTouchDrag(normalizedX, normalizedY);
+		Engine.handleTouchDrag(normalizedX, normalizedY);
 	}
 	
 	public void handleTouchRelease(float normalizedX, float normalizedY) {
-		//System.out.println("TouchRelease:" + normalizedX + " " + normalizedY);
-		engine.handleTouchRelease(normalizedX, normalizedY);
+		Engine.handleTouchRelease(normalizedX, normalizedY);
 	}	
 }

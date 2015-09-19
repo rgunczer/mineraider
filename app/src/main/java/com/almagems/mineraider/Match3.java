@@ -4,6 +4,7 @@ import static com.almagems.mineraider.Constants.*;
 
 import java.util.ArrayList;
 
+
 public final class Match3 {
 
     public int showHintCounterStartValue = 200;
@@ -30,7 +31,7 @@ public final class Match3 {
         isAnimating = true;
         this.animManager = animManager;
         this.scoreCounter = scoreCounter;
-        swapHintManager = new SwapHintManager(Engine.getInstance().graphics);
+        swapHintManager = new SwapHintManager(Engine.graphics);
         swapAnim = new SwapAnimation();
         pooledFallGroupAnim = new FallGroupAnimation();
         pooledPopAnimation = new PopAnimation();

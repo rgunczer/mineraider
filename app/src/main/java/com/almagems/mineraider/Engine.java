@@ -8,14 +8,11 @@ import android.content.SharedPreferences;
 
 public final class Engine {
 
-    private static Engine instance;
-    public static float adHeight;
-
     // android
     public static MineRaiderRenderer renderer;
     public static MineRaiderActivity activity;
 
-    //
+    // basic
     public static Graphics graphics;
     public static Audio audio;
     public static Game game;
@@ -26,33 +23,34 @@ public final class Engine {
         System.out.println("Engine ctor...");
     }
 
-	public static Engine getInstance() {
-		if (instance == null) {
-			instance = new Engine();
-		}
-		return instance;
-	}
-
-    public void createGraphicsObject() {
-        System.out.println("Engine createGraphicsObject...");
-        graphics = new Graphics(activity);
+    public static void createGraphicsObject() {
+        if (graphics == null) {
+            System.out.println("Engine createGraphicsObject...");
+            graphics = new Graphics(activity);
+        } else {
+            System.out.println("Graphics object already exits!");
+        }
     }
 
-    public void initGraphicsObject() {
+    public static void initGraphicsObject() {
         System.out.println("Engine initGraphicsObject...");
         graphics.initialSetup();
     }
 
-    public void createGameObject() {
-        System.out.println("Engine createGameObject...");
-        game = new Game();
+    public static void createGameObject() {
+        if (game == null) {
+            System.out.println("Engine createGameObject...");
+            game = new Game();
+        } else {
+            System.out.println("Game object already exists!");
+        }
     }
 
-    public void initGameObject() {
+    public static void initGameObject() {
         game.init();
     }
 
-    public void savePreferences() {
+    public static void savePreferences() {
         System.out.println("Save Preferences...");
 
         SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
@@ -138,41 +136,42 @@ public final class Engine {
         game.scoreCounter.dump();
     }
 
-    public void pauseAudio() {
+    public static void pauseAudio() {
         if (audio != null) {
             audio.pause();
         }
     }
 
-    public void resumeAudio() {
+    public static void resumeAudio() {
         if (audio != null) {
             audio.resume();
         }
     }
 
-    public void update() {
+    public static void update() {
         game.update();
     }
-    public void draw() {
+
+    public static void draw() {
         graphics.prepareFrame();
         game.draw();
     }
 
-    public void onSurfaceChanged(int width, int height) {
+    public static void onSurfaceChanged(int width, int height) {
         graphics.onSurfaceChanged(width, height);
         game.onSurfaceChanged(width, height);
     }
 
     // input
-    public void handleTouchPress(float normalizedX, float normalizedY) {
+    public static void handleTouchPress(float normalizedX, float normalizedY) {
         game.handleTouchPress(normalizedX, normalizedY);
     }
 
-    public void handleTouchDrag(float normalizedX, float normalizedY) {
+    public static void handleTouchDrag(float normalizedX, float normalizedY) {
         game.handleTouchDrag(normalizedX, normalizedY);
     }
 
-    public void handleTouchRelease(float normalizedX, float normalizedY) {
+    public static void handleTouchRelease(float normalizedX, float normalizedY) {
         game.handleTouchRelease(normalizedX, normalizedY);
     }
 

@@ -54,7 +54,7 @@ public final class StatSectionBalance extends StatSectionBase {
 
         rect = textureObj.getFrame("libra_vertical.png");
         libraVertical.init(Graphics.textureMenuItems, Color.WHITE, rect, false);
-        libraVertical.pos.trans(0f, y, 0f);
+        libraVertical.pos.trans(0f, y + 0.04f, 0f);
         libraVertical.pos.scale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
         libraVertical.posYorigin = libraVertical.pos.ty;
 
@@ -62,18 +62,33 @@ public final class StatSectionBalance extends StatSectionBase {
         libraHorizontal.init(Graphics.textureMenuItems, Color.WHITE, rect, false);
         libraHorizontal.pos.trans(0f, y + 0.3f, 0f);
         libraHorizontal.pos.scale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
+
+        int collected = scoreCounter.collectedGems;
+        int wasted = scoreCounter.wastedGems;
+
+        float basketYDiffLeft = 0f;
+        float basketYDiffRight = 0f;
+        if (collected > wasted) {
+            basketYDiffLeft = -0.02f;
+            basketYDiffRight = 0.02f;
+            libraHorizontal.pos.rz = 5f;
+        } else if (collected < wasted) {
+            basketYDiffLeft = 0.02f;
+            basketYDiffRight = -0.02f;
+            libraHorizontal.pos.rz = -5f;
+        }
         libraHorizontal.posYorigin = libraHorizontal.pos.ty;
 
         y+=0.05f;
 
         rect = textureObj.getFrame("libra_basket.png");
         libraBasketLeft.init(Graphics.textureMenuItems, Color.WHITE, rect, false);
-        libraBasketLeft.pos.trans(-0.3f, y, 0f);
+        libraBasketLeft.pos.trans(-0.3f, y+basketYDiffLeft, 0f);
         libraBasketLeft.pos.scale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
         libraBasketLeft.posYorigin = libraBasketLeft.pos.ty;
 
         libraBasketRight.init(Graphics.textureMenuItems, Color.WHITE, rect, false);
-        libraBasketRight.pos.trans(0.3f, y, 0f);
+        libraBasketRight.pos.trans(0.3f, y+basketYDiffRight, 0f);
         libraBasketRight.pos.scale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
         libraBasketRight.posYorigin = libraBasketRight.pos.ty;
     }
@@ -99,10 +114,10 @@ public final class StatSectionBalance extends StatSectionBase {
 
         // draw libra
         graphics.textureShader.setTexture(Graphics.textureMenuItems);
-        libraVertical.draw();
-        libraHorizontal.draw();
         libraBasketLeft.draw();
         libraBasketRight.draw();
+        libraVertical.draw();
+        libraHorizontal.draw();
 	}
 
 }

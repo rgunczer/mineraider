@@ -1,9 +1,6 @@
 package com.almagems.mineraider;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.pm.ConfigurationInfo;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -17,7 +14,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -37,15 +33,15 @@ public final class MineRaiderActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		glSurfaceView = new GLSurfaceView(this);
-		//glSurfaceView.getHolder().setFormat(PixelFormat.RGB_565);
-		glSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
+		glSurfaceView.getHolder().setFormat(PixelFormat.RGB_565);
+		//glSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
 		setContentView(glSurfaceView);
 		//setContentView(R.layout.activity_hello_world);
 		//glSurfaceView = (GLSurfaceView)findViewById(R.id.glSurfaceView);
 		glSurfaceView.setPreserveEGLContextOnPause(true);
 				
-		final ActivityManager activityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
-		final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
+		//final ActivityManager activityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+		//final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
 		final MineRaiderRenderer renderer = new MineRaiderRenderer(this);
 		
 		glSurfaceView.setEGLContextClientVersion(2);
@@ -57,15 +53,13 @@ public final class MineRaiderActivity extends Activity {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
             if (event != null) {
-                System.out.println("Touch Event: " + event.getX() + ", " + event.getY() );
-
+                //System.out.println("Touch Event: " + event.getX() + ", " + event.getY() );
                 // convert touch coordinates into normalized device
                 // coordinates, keeping in mind that Android's Y coordinates are inverted
                 final float normalizedX = (event.getX() / (float) v.getWidth()) * 2 - 1;
                 final float normalizedY = -((event.getY() / (float)v.getHeight() ) * 2 - 1);
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    System.out.println("Action Down... " + normalizedX + ", " + normalizedY);
                     glSurfaceView.queueEvent(new Runnable() {
 
                         @Override
@@ -74,7 +68,6 @@ public final class MineRaiderActivity extends Activity {
                         }
                     });
                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    //System.out.println("Action Move...");
                     glSurfaceView.queueEvent(new Runnable() {
 
                         @Override
@@ -83,7 +76,6 @@ public final class MineRaiderActivity extends Activity {
                         }
                     });
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    //System.out.println("Action Up...");
                     glSurfaceView.queueEvent(new Runnable() {
 
                         @Override
@@ -92,7 +84,6 @@ public final class MineRaiderActivity extends Activity {
                         }
                     });
                 }
-
                 return true;
             } else {
                 return false;
@@ -107,20 +98,12 @@ public final class MineRaiderActivity extends Activity {
 		// get deviceId
 		String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         String deviceId = md5.md5(android_id).toUpperCase();
+        //System.out.println(deviceId);
 
-//        if (deviceId.equals("5FD98F5344B72D203C178E0B2095F330")) {
-//            System.out.print("They are equal....");
-//        }
-
-
-        System.out.println(deviceId);
-        //5FD98F5344B72D203C178E0B2095F330
-        // note3 device id: 8EEDF3F54B832F9C4EBFB9B05391CF11
-        		
 		//AdView adView = (AdView)findViewById(R.id.adView);
 		
 		AdRequest adRequest = new AdRequest.Builder()
-		// to show real ads comment out the next two lines!
+		// to show real ads comment out the next few lines
 		.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
 		//.addTestDevice("F689981D411369408E68481517CDBDF7")
 		.addTestDevice(deviceId)
@@ -140,10 +123,7 @@ public final class MineRaiderActivity extends Activity {
 		RelativeLayout rl = new RelativeLayout(this);
 
 		//LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		final FrameLayout.LayoutParams params =
-		        new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-		                FrameLayout.LayoutParams.WRAP_CONTENT,
-		                                     Gravity.RIGHT|Gravity.TOP);
+		final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.RIGHT|Gravity.TOP);
 		this.addContentView(rl, params);
 		
 		rl.addView(adView);
@@ -157,7 +137,6 @@ public final class MineRaiderActivity extends Activity {
                 if (height > 0) {
                     // now the height is gotten, you can do things you want
                     System.out.println("Here the ad size is: " + height);
-                    Engine.adHeight = height;
                 }
             }
         });
@@ -167,35 +146,33 @@ public final class MineRaiderActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
+		super.onPause();
+
 		if (adView != null) {
 			adView.pause();
 		}
-
-		super.onPause();
 
 		if (rendererSet) {
             glSurfaceView.onPause();
         }
 
-        Engine engine = Engine.getInstance();
-        engine.savePreferences();
-        engine.pauseAudio();
+        Engine.savePreferences();
+        Engine.pauseAudio();
 	}
 	
 	@Override
 	protected void onResume() {
+		super.onResume();
+
 		if (adView != null) {
 			adView.resume();
 		}
-
-		super.onResume();
 
 		if (rendererSet) {
 			glSurfaceView.onResume();
 		}
 
-        Engine engine = Engine.getInstance();
-        engine.resumeAudio();
+        Engine.resumeAudio();
 	}
 
 }

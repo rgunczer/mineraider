@@ -3,12 +3,9 @@ package com.almagems.mineraider;
 import static com.almagems.mineraider.Constants.*;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 
 public final class PopAnimation extends BaseAnimation {
-
-    private static Random rand = new Random();
 
 	public enum State {
         Blow,
@@ -83,7 +80,7 @@ public final class PopAnimation extends BaseAnimation {
         float d = Constants.GEM_FRAGMENT_SIZE;
         float tx = d / 2f;
         float ty = d / 2f;
-        float degree = (float)rand.nextInt(360);
+        float degree = (float)MyUtils.rand.nextInt(360);
         float theta = (float)Math.toRadians(degree);
         float s = (float)Math.sin(theta);
         float c = (float)Math.cos(theta);
@@ -133,7 +130,7 @@ public final class PopAnimation extends BaseAnimation {
             case Blow: {
                 dt = 3;
                 GemPosition gp;
-                ParticleManager particleManager = Engine.getInstance().graphics.particleManager;
+                ParticleManager particleManager = Engine.graphics.particleManager;
                 int size = list.size();
                 for(int i = 0; i < size; ++i) {
                     gp = list.get(i);

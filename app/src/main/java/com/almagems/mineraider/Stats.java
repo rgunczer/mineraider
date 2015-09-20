@@ -155,14 +155,14 @@ public final class Stats extends Overlay {
     }
 
     private void keepOffsetInRange() {
-        System.out.println("Prev offset: " + offsetY);
+        //System.out.println("Prev offset: " + offsetY);
 
         if (offsetY < -0.25f) {
             offsetY = -0.25f;
         }
 
-        if (offsetY > 4.3f) {
-            offsetY = 4.3f;
+        if (offsetY > 4.6f) {
+            offsetY = 4.6f;
         }
     }
 

@@ -2,6 +2,7 @@ package com.almagems.mineraider;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+import javax.net.ssl.SSLContext;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,22 +13,31 @@ import android.widget.Toast;
 
 public final class MineRaiderRenderer implements Renderer {
 
+    private boolean surfaceCreated;
+    private int width;
+    private int height;
+
 	private long frameStartTimeMS;
 	private final Context context;
 
 	// ctor
 	public MineRaiderRenderer(Context context) {
 		this.context = context;
-
+        surfaceCreated = false;
 		Engine.activity = (MineRaiderActivity)context;
 		Engine.renderer = this;
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
-        System.out.println("onSurfaceCreated...");
+        System.out.println("on  SurfaceCreated...");
+        surfaceCreated = true;
+        width = -1;
+        height = -1;
         frameStartTimeMS = SystemClock.elapsedRealtime();
+    }
 
+    private void onCreate(int width, int height, boolean contextLost) {
         Engine.createGraphicsObject();
         Engine.initGraphicsObject();
 
@@ -41,15 +51,34 @@ public final class MineRaiderRenderer implements Renderer {
                 }
             });
             return;
-        }
+       }
 
-        Engine.createGameObject();
-        Engine.initGameObject();
-	}
+       Engine.createGameObject();
+       Engine.initGameObject();
+    }
 
 	@Override
 	public void onSurfaceChanged(GL10 glUnused, int width, int height) {
+        if (!surfaceCreated && width == this.width && height == this.height) {
+            return;
+        }
+
+        String msg = "Surface changed width: " + width + ", height: " + height;
+
+        if (surfaceCreated) {
+            msg += " context lost";
+        } else {
+            msg += ".";
+        }
+
+        System.out.println(msg);
+
+        this.width = width;
+        this.height = height;
+
+        onCreate(width, height, surfaceCreated);
 		Engine.onSurfaceChanged(width, height);
+        surfaceCreated = false;
     }
 
 	@Override

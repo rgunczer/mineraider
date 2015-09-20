@@ -40,11 +40,13 @@ public final class StatSectionBalance extends StatSectionBase {
         textBalanceCollected.pos.tx = -0.5f - textBalanceCollected.getTextWidth() / 2.0f;
         textBalanceCollected.pos.ty = y;
         textBalanceCollected.posYorigin = textBalanceCollected.pos.ty;
+        textBalanceCollected.pos.scale(1.3f, 1f, 1f);
 
         textBalanceWasted.init("" + scoreCounter.wastedGems, Color.GRAY, Color.WHITE, fontScale);
         textBalanceWasted.pos.tx = 0.5f - textBalanceWasted.getTextWidth() / 2.0f;
         textBalanceWasted.pos.ty = y;
         textBalanceWasted.posYorigin = textBalanceWasted.pos.ty;
+        textBalanceWasted.pos.scale(1.3f, 1f, 1f);
 
         y += 0.3f;
 

@@ -23,6 +23,6 @@ public final class WahWah extends EffectAnim {
         elapsed += 0.9f;
         d = (((float)Math.sin(elapsed) + 1f) / 2f) * wahScale; // 0.095f; // for combo
         //d = (((float)Math.sin(elapsed) + 1f) / 2f) * 0.2f;
-        pos.scale(1f, 1f + d, 1f);
+        pos.scale( posOrigin.sx , posOrigin.sy + d, 1f);
     }
 }

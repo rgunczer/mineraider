@@ -113,14 +113,17 @@ public final class ScoreCounter {
         hud.updateScore(score);
     }
 
-    public void addScoreForCombo(PopAnimation anim) {
-        score += (anim.count() + bonusForCombo);
-        
-        int comboCounter = hud.showCombo();
+    public void updateHighestComboCount(int comboCount) {
+        hud.hideCombo();
 
-        if (comboCounter > highestComboCounter) {
-            highestComboCounter  = comboCounter;
+        if (comboCount > highestComboCounter) {
+            highestComboCounter = comboCount;
         }
+    }
+
+    public void addScoreForCombo(PopAnimation anim, int comboCount) {
+        score += (anim.count() + bonusForCombo);
+        hud.showCombo(comboCount);
     }
 
     public void addBonusForPerfectSwap() {
@@ -272,37 +275,37 @@ public final class ScoreCounter {
         MatchType matchType = determineMatchType(list);
         switch (matchType) {
             case Horizontal3:
-                hud.showMessage("MATCH3 HORIZONTAL");
+                //hud.showMessage("MATCH3 HORIZONTAL");
                 ++match3CountHorizontal;
                 break;
 
             case Vertical3:
-                hud.showMessage("MATCH3 VERTICAL");
+                //hud.showMessage("MATCH3 VERTICAL");
                 ++match3CountVertical;
                 break;
 
             case Horizontal4:
-                hud.showMessage("MATCH4 HORIZONTAL");
+                hud.showFourInARow();
                 ++match4CountHorizontal;
                 break;
 
             case Vertical4:
-                hud.showMessage("MATCH4 VERTICAL");
+                hud.showFourInACol();
                 ++match4CountVertical;
                 break;
 
             case Horizontal5:
-                hud.showMessage("MATCH5 HORIZONTAL");
+                //hud.showMessage("MATCH5 HORIZONTAL");
                 ++match5CountHorizontal;
                 break;
 
             case Vertical5:
-                hud.showMessage("MATCH5 VERTICAL");
+                //hud.showMessage("MATCH5 VERTICAL");
                 ++match5CountVertical;
                 break;
 
             case Complex:
-                hud.showMessage("MATCH COMPLEX");
+                //hud.showMessage("MATCH COMPLEX");
                 handleComplexMatch(list);                
                 break;
         }

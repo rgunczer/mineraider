@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public final class Match3 {
 
+	private int comboCount;
     public int showHintCounterStartValue = 200;
 	public int showHintCounter = showHintCounterStartValue;
     public int boardSize;
@@ -37,6 +38,7 @@ public final class Match3 {
         pooledPopAnimation = new PopAnimation();
         gemsList = new ArrayList<GemPosition>(boardSize * boardSize); // multiply by 2 for buffer board
         dirtyHint = false;
+        comboCount = 0;
         createBoards();
     }
 
@@ -70,7 +72,11 @@ public final class Match3 {
 		board[2][2].type = GEM_TYPE_1;
 		
 		board[0][1].type = GEM_TYPE_1;
-				
+
+        //board[0][6].type = GEM_TYPE_2;
+
+        board[1][4].type = GEM_TYPE_2;
+
 		board[0][0].type = GEM_TYPE_2;
 				
 		board[0][3].type = GEM_TYPE_2;
@@ -80,7 +86,7 @@ public final class Match3 {
 		board[3][2].type = GEM_TYPE_3;
 				
 		board[0][5].type = GEM_TYPE_2;
-		board[1][5].type = GEM_TYPE_1;
+		//board[1][5].type = GEM_TYPE_1;
 		board[2][5].type = GEM_TYPE_1;
 		
 		board[3][4].type = GEM_TYPE_1;
@@ -602,10 +608,14 @@ public final class Match3 {
 		}
 		
 		if (!anim.isEmpty()) {
+            ++comboCount;
 			//System.out.println("COMBO(S)!!!");
 			addAnimToManager(anim);
-            scoreCounter.addScoreForCombo(anim);
-		}
+            scoreCounter.addScoreForCombo(anim, comboCount);
+		} else {
+            scoreCounter.updateHighestComboCount(comboCount);
+            comboCount = 0;
+        }
 	}
 	
 	private void popAnimFinished(PopAnimation popAnim) {

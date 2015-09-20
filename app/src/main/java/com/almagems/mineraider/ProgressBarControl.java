@@ -61,7 +61,7 @@ public final class ProgressBarControl {
     }
 
     private void createVertexArrayFrame() {
-        final float x = (-width / 2f) - border;  //-0.92f;
+        final float x = Math.abs( (-width / 2f) - border );  //-0.92f;
         final float y = height + border; //0.02f; //0.07f;
         float[] vertexData = {
             // x, y, z,

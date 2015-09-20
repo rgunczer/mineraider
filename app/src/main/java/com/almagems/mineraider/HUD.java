@@ -2,171 +2,175 @@ package com.almagems.mineraider;
 
 
 public final class HUD {
+
     public static Graphics graphics;
 
-    private int cachedScore;
+    private static final float startingComboFontScale = 1.2f;
 
-    private final Text scoreText;
-    private final Text extraText;
-    private final Text gemsFromCartText;
-    private final Quad quad;
-    private final Quad quadPauseButton;
+    private int cachedScore;
+    private boolean showCombo;
+
+    private final Text textPerfectSwap;
+    private final Text textScore;
+    private final Text textBonusForCollected;
+    private final Text textCombo;
+    private final Text textFourInARow;
+    private final Text textFourInACol;
+
+    private final Quad quadMenuButton;
 
     private float scoreX;
     private float scoreY;
     private float fontScale;
-    private int extraTextCooling;
-    private int comboCounter;
     private float comboScale;
 
-    private float perfectSwapScale;
-    private float _bonusPosX;
-    private float _bonusCartGemsTextWidth;
-    private float _bonusDiff;
-    private float _bonusTargetPosX;
+    private float bonusPosX;
+    private float bonusCartGemsTextWidth;
+    private float bonusDiff;
+    private float bonusTargetPosX;
 
-    private int scoreCooling;
-    private int bonusFromCartCooling;
+    private int coolingScore;
+    private int coolingPerfectSwap;
+    private int coolingBonusForCollected;
+    private int coolingFourInARow;
+    private int coolingFourInACol;
 
-    private WahWah effectWahWahScore;
-    private WahWah effectWahWah;
-    private ZigZag effectZigZag;
+    private final WahWah effectWahWahScore;
+    private final WahWah effectWahWah;
+    private final ZigZag effectZigZag;
+    private final UpDown effectUpDown4InCol;
+    private final LeftRight effectLeftRight4InRow;
+
+    private static final float yCombo = -0.1f;
+    private static final float yFourInARow = -0.3f;
+    private static final float yFourInACol = -0.5f;
+    private static final float yPerfectSwap = -0.7f;
+    private static final float yBonusCollected = -0.9f;
+
 
     // ctor
     public HUD() {
-        scoreText = new Text();
-        extraText = new Text();
-        gemsFromCartText = new Text();
+        textScore = new Text();
+        textPerfectSwap = new Text();
+        textBonusForCollected = new Text();
+        textCombo = new Text();
+        textFourInARow = new Text();
+        textFourInACol = new Text();
 
-        quad = new Quad();
+        quadMenuButton = new Quad();
 
-        comboCounter = 0;
-        comboScale = 1.0f;
         effectWahWah = new WahWah();
         effectZigZag = new ZigZag();
         effectWahWahScore = new WahWah();
-
-        quadPauseButton = new Quad();
-
-        _bonusPosX = 0f;
-        _bonusCartGemsTextWidth = 0f;
-
-        // cooling
-        extraTextCooling = 0;
-        scoreCooling = 0;
-        bonusFromCartCooling = 0;
-
-        perfectSwapScale = 1.2f;
+        effectUpDown4InCol = new UpDown();
+        effectLeftRight4InRow = new LeftRight();
     }
 
     public void init() {
+        // score
         fontScale = 0.9f;
-        scoreText.setSpacingScale(0.06f);
-        scoreText.init("SCORE:" + cachedScore, Color.YELLOW, Color.RED, fontScale);
-
+        textScore.setSpacingScale(0.052f);
+        textScore.init("SCORE:" + cachedScore, Color.YELLOW, Color.RED, fontScale);
         scoreX = -0.96f;
-        scoreY = -Graphics.aspectRatio + (scoreText.getTextHeight() / 3f);
-        scoreText.pos.trans(scoreX, scoreY, 0f);
-        scoreText.pos.rot(0f, 0f, 0f);
-        scoreText.pos.scale(1f, 1f, 1f);
+        scoreY = -Graphics.aspectRatio + (textScore.getTextHeight() / 3f);
+        textScore.pos.trans(scoreX, scoreY, 0f);
+        textScore.pos.rot(0f, 0f, 0f);
+        textScore.pos.scale(1.1f, 1f, 1f);
 
-        extraText.setSpacingScale(0.065f);
-        extraText.init("WATCH FOR MINECARTS", Color.YELLOW, Color.RED, comboScale);
-        extraText.pos.trans(-extraText.getTextWidth() / 2f, -0.5f, 0.0f);
+        // perfect swap
+        final float perfectSwapScale = 1.1f;
+        textPerfectSwap.init("PERFECT SWAP", Color.YELLOW, Color.WHITE, perfectSwapScale);
+        textPerfectSwap.pos.trans(-textPerfectSwap.getTextWidth() / 2f, yPerfectSwap, 0f);
+        textPerfectSwap.pos.rot(0f, 0f, 0f);
+        textPerfectSwap.pos.scale(1.1f, 1.1f, 1f);
 
-        Rectangle rect = new Rectangle(0f, 0f, 128f, 128f);
-        quadPauseButton.init(Graphics.textureHudPauseButton, Color.WHITE, rect, false);
-        quadPauseButton.pos.trans(0.94f, -Graphics.aspectRatio + 0.06f, 0f);
-        float sc = 0.055f;
-        quadPauseButton.pos.scale(sc, sc, 1f);
+        // four in a row
+        textFourInARow.init("FOUR IN A ROW", Color.YELLOW, Color.RED, 1.2f);
+        textFourInARow.pos.trans(-textFourInARow.getTextWidth() / 2f, yFourInARow, 0f);
+        textFourInARow.pos.rot(0f, 0f, 0f);
+        textFourInARow.pos.scale(1f, 1f, 1f);
 
-        float scale = Graphics.aspectRatio * 0.1f;
+        // four in a col
+        textFourInACol.init("FOUR IN A COLUMN", Color.YELLOW, Color.RED, 1.2f);
+        textFourInACol.pos.trans(-textFourInACol.getTextWidth() / 2f, yFourInACol, 0f);
+        textFourInACol.pos.rot(0f, 0f, 0f);
+        textFourInACol.pos.scale(1f, 1f, 1f);
 
-/*
-        final boolean flipUCoordinate = false;
-        quad.init(Visuals.getInstance().textureHelmets, new MyColor(1f, 1f, 1f, 1f), rect, flipUCoordinate);
-        quad.pos.trans(-0.92f, -Visuals.aspectRatio + 0.06f, 0f);
-        quad.pos.rot(0f, 0f, 0f);
-*/
-        sc = 0.075f;
-        quad.pos.scale(sc, sc, 1f);
+        // menu button
+        quadMenuButton.init(Graphics.textureHudPauseButton, Color.WHITE, new Rectangle(0f, 0f, 128f, 128f), false);
+        quadMenuButton.pos.trans(0.94f, -Graphics.aspectRatio + 0.06f, 0f);
+        quadMenuButton.pos.scale(0.055f, 0.055f, 1f);
 
-        extraTextCooling = 0;
-        comboCounter = 0;
-        comboScale = 1.0f;
+        reset();
     }
 
     public void reset() {
-        comboCounter = 0;
-        comboScale = 1.0f;
+        // cooling
+        coolingScore = 0;
+        coolingPerfectSwap = 0;
+        coolingBonusForCollected = 0;
+        coolingFourInARow = 0;
+        coolingFourInACol = 0;
 
-        _bonusPosX = -10f;
-        _bonusCartGemsTextWidth = 0f;
+        // other
+        showCombo = false;
+        comboScale = startingComboFontScale;
 
-        extraTextCooling = 0;
-        scoreCooling = 0;
-        bonusFromCartCooling = 0;
+        bonusPosX = 0f;
+        bonusCartGemsTextWidth = 0f;
     }
 
-    public void showMessage(String message) {
-//        extraText.init(message, Color.YELLOW, Color.RED, comboScale);
-//        float textWidth = extraText.getTextWidth();
-//        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
-//        extraText.pos.rot(0f, 0f, 0f);
-//        extraText.pos.scale(1f, 1f, 1f);
-//
-//        extraTextCooling = 125;
-//        comboScale += 0.05f;
-//
-//        //extraText.addAnimEffect(effectWahWah);
-//        extraText.addAnimEffect(effectZigZag);
+    public void showFourInARow() {
+        coolingFourInARow = 50;
+        textFourInARow.addAnimEffect(effectLeftRight4InRow);
+    }
+
+    public void showFourInACol() {
+        coolingFourInACol = 50;
+        textFourInACol.addAnimEffect(effectUpDown4InCol);
     }
 
     public void showBonusCartGems(int numberOfGems) {
-        gemsFromCartText.init("BONUS " + numberOfGems + " GEMS COLLECTED", Color.YELLOW, Color.WHITE, 0.75f);
-        _bonusCartGemsTextWidth = gemsFromCartText.getTextWidth();
+        textBonusForCollected.init("BONUS " + numberOfGems + " GEMS COLLECTED", Color.YELLOW, Color.WHITE, 0.8f);
+        bonusCartGemsTextWidth = textBonusForCollected.getTextWidth();
 
-        _bonusTargetPosX = -_bonusCartGemsTextWidth / 2f;
-        _bonusPosX = 1.0f; // + _bonusCartGemsTextWidth / 2f;
+        bonusTargetPosX = -bonusCartGemsTextWidth / 2f;
+        bonusPosX = 1.0f;
 
-        //gemsFromCartText.pos.trans(-textWidth / 2f, -0.9f, 0f);
-        gemsFromCartText.pos.trans(_bonusPosX, -0.9f, 0f);
-        gemsFromCartText.pos.rot(0f, 0f, 0f);
-        gemsFromCartText.pos.scale(1f, 1f, 1f);
+        textBonusForCollected.pos.trans(bonusPosX, yBonusCollected, 0f);
+        textBonusForCollected.pos.rot(0f, 0f, 0f);
+        textBonusForCollected.pos.scale(1.1f, 1f, 1f);
 
-        bonusFromCartCooling = 200;
+        coolingBonusForCollected = 200;
 
-        _bonusDiff = -100f;
+        bonusDiff = -100f;
     }
 
-    public int showCombo() {
-        ++comboCounter;
-//
-//        extraText.init("COMBOx" + comboCounter, Color.YELLOW, Color.RED, comboScale);
-//        float textWidth = extraText.getTextWidth();
-//        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
-//        extraText.pos.rot(0f, 0f, 0f);
-//        extraText.pos.scale(1f, 1f, 1f);
-//
-//        extraTextCooling = 100;
-//        comboScale += 0.05f;
-//
-//        //extraText.addAnimEffect(effectWahWah);
-//        extraText.addAnimEffect(effectZigZag);
-//
-        return comboCounter;
+    public void showCombo(int count) {
+        if (MyUtils.rand.nextBoolean()) {
+            textCombo.init("COMBOx" + count, Color.YELLOW, Color.WHITE, comboScale);
+        } else {
+            textCombo.init("COMBOx" + count, Color.WHITE, Color.YELLOW, comboScale);
+        }
+        textCombo.pos.trans(-textCombo.getTextWidth() / 2f, yCombo, 0f);
+        textCombo.pos.rot(0f, 0f, 0f);
+        textCombo.pos.scale(1f, 1f, 1f);
+
+        textCombo.addAnimEffect(effectZigZag);
+        showCombo = true;
+        comboScale += 0.1f;
+    }
+
+    public void hideCombo() {
+        comboScale = startingComboFontScale;
+        showCombo = false;
+        textCombo.removeAnimEffect();
     }
 
     public void showPerfectSwap() {
-//        extraText.init("PERFECT SWAP", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
-//        float textWidth = extraText.getTextWidth();
-//        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
-//        extraText.pos.rot(0f, 0f, 0f);
-//        extraText.pos.scale(2f, 2f, 1f);
-//
-//        extraTextCooling = 30;
-//        effectWahWah.wahScale = 1.0f;
-//        extraText.addAnimEffect(effectWahWah);
+        coolingPerfectSwap = 30;
+        effectWahWah.wahScale = 0.3f;
+        textPerfectSwap.addAnimEffect(effectWahWah);
     }
 
     public void showMatch4InARowBonus() {
@@ -195,81 +199,100 @@ public final class HUD {
 
     public void updateScore(int score) {
         if (score != cachedScore) {
-            scoreCooling = 30;
-            String str = "SCORE:" + score;
-            scoreText.init(str, Color.YELLOW, Color.RED, fontScale);
+            if (coolingScore > 0) {
+                textScore.removeAnimEffect();
+            }
+            coolingScore = 30;
+            textScore.init("SCORE:" + score, Color.YELLOW, Color.RED, fontScale);
             cachedScore = score;
             effectWahWahScore.wahScale = 0.2f;
-            scoreText.addAnimEffect(effectWahWahScore);
+            textScore.addAnimEffect(effectWahWahScore);
         }
     }
 
     public void update() {
-        scoreText.update();
-        extraText.update();
-        gemsFromCartText.update();
-        quad.update();
+        textScore.update();
+        textPerfectSwap.update();
+        textBonusForCollected.update();
+        textFourInARow.update();
+        textFourInACol.update();
 
-        if (extraTextCooling > 0) {
-            --extraTextCooling;
+        if (showCombo) {
+            textCombo.update();
+        }
 
-            if (extraTextCooling == 0) {
-                comboCounter = 0;
-                comboScale = 1.0f;
-                extraText.removeAnimEffect();
+        if (coolingScore > 0) {
+            --coolingScore;
+            if (coolingScore == 0) {
+                textScore.removeAnimEffect();
             }
         }
 
-        //System.out.println("Score cooling: " + scoreCooling);
-
-        if (scoreCooling > 0) {
-            --scoreCooling;
-
-            if (scoreCooling == 0) {
-                scoreText.removeAnimEffect();
+        if (coolingPerfectSwap > 0) {
+            --coolingPerfectSwap;
+            if (coolingPerfectSwap == 0) {
+                textPerfectSwap.removeAnimEffect();
             }
         }
 
-        if (bonusFromCartCooling > 0) {
-            --bonusFromCartCooling;
+        if (coolingFourInARow > 0) {
+            --coolingFourInARow;
+            if (coolingFourInARow == 0) {
+                textFourInARow.removeAnimEffect();
+            }
+        }
 
-            float easing = 0.075f;
-            float vx = (_bonusTargetPosX - _bonusPosX) * easing;
+        if (coolingFourInACol > 0) {
+            --coolingFourInACol;
+            if (coolingFourInACol == 0) {
+                textFourInACol.removeAnimEffect();
+            }
+        }
 
-            //System.out.println("vx is: " + vx);
-            //System.out.println("posX is: " + _bonusPosX);
+        if (coolingBonusForCollected > 0) {
+            --coolingBonusForCollected;
 
-            _bonusPosX += vx;
+            final float easing = 0.075f;
+            final float vx = (bonusTargetPosX - bonusPosX) * easing;
 
-            if (_bonusPosX < -0.47) {
-                _bonusTargetPosX = -1.2f - _bonusCartGemsTextWidth;
+            bonusPosX += vx;
+            if (bonusPosX < -0.47) {
+                bonusTargetPosX = -1.2f - bonusCartGemsTextWidth;
             }
 
-            gemsFromCartText.pos.trans(_bonusPosX, -0.9f, 0f);
-
-            if (bonusFromCartCooling == 0) {
-                // TODO: remove effect if any on text obj
-            }
+            textBonusForCollected.pos.trans(bonusPosX, -0.9f, 0f);
         }
     }
 
     public void draw() {
         graphics.textureShader.useProgram();
-
         graphics.textureShader.setTexture(Graphics.textureFonts);
-        scoreText.draw();
-        if (extraTextCooling > 0) {
-            extraText.draw();
+        textScore.draw();
+
+        if (showCombo) {
+            textCombo.draw();
         }
 
-        if (bonusFromCartCooling > 0) {
-            gemsFromCartText.draw();
+        if (coolingPerfectSwap > 0) {
+            textPerfectSwap.draw();
+        }
+
+        if (coolingBonusForCollected > 0) {
+            textBonusForCollected.draw();
+        }
+
+        if (coolingFourInARow > 0) {
+            textFourInARow.draw();
+        }
+
+        if (coolingFourInACol > 0) {
+            textFourInACol.draw();
         }
 
         if ( Engine.game.gameState == Game.GameState.Playing ) {
-            quadPauseButton.draw();
+            quadMenuButton.draw();
         }
 
-        //visuals.drawAxes();
+        //graphics.drawAxes();
     }
 }

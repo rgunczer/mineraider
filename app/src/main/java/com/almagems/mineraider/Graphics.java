@@ -134,9 +134,12 @@ public final class Graphics {
         //glClearColor(1.0f, 0.3f, 0.3f, 0.0f);
         //glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
 
-        glDisable(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);
+        //glDisable(GL_CULL_FACE);
+
         glDepthFunc(GL_LESS);
         //glDepthMask(true);
+        glDisable(GL_DITHER);
 
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         //glBlendFunc(GL_ONE_MINUS_DST_ALPHA,GL_DST_ALPHA);

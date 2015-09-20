@@ -8,32 +8,36 @@ import android.graphics.Color;
 public final class ParticleManager {
 
     public static Graphics graphics;
+
 	private long globalStartTime;
-	final Vector particleDirection = new Vector(2.0f, 0.0f, 0.0f);
+	final Vector particleDirection = new Vector(2f, 0f, 0f);
 	final float angleVarianceInDegrees = 5f;
 	final float speedVariance = 1.6f;
 
-    public ArrayList<ParticleEmitter> remove = new ArrayList<ParticleEmitter>(8);
-	public ArrayList<ParticleEmitter> pool = new ArrayList<ParticleEmitter>(32);
-	public ArrayList<ParticleEmitter> live = new ArrayList<ParticleEmitter>(16);
+    public final ArrayList<ParticleEmitter> remove = new ArrayList<ParticleEmitter>(8);
+	public final ArrayList<ParticleEmitter> pool = new ArrayList<ParticleEmitter>(32);
+	public final ArrayList<ParticleEmitter> live = new ArrayList<ParticleEmitter>(16);
 	
-	private ParticleSystem particleSystem;
-	
+	private final ParticleSystem particleSystem;
+
+
+    // ctor
+    public ParticleManager() {
+        particleSystem = new ParticleSystem(10000);
+    }
 
 	public void init() {
-		int color = Color.rgb(255, 255, 255);
-		
-		particleSystem = new ParticleSystem(10000);
+		//int color = Color.rgb(255, 255, 255);
 		globalStartTime = System.nanoTime();
 
         ParticleEmitter emitter;
-
+/*
 		emitter = new ParticleEmitter( new Vector(-10.0f, 18.0f, 0.0f),
 				particleDirection, 
 				color,
 				angleVarianceInDegrees,
 				speedVariance );
-		emitter.numberOfParticlesToEmit = 100;
+		emitter.numberOfParticlesToEmit = 1;
 
         live.add(emitter);
 
@@ -42,7 +46,7 @@ public final class ParticleManager {
 				color,
 				angleVarianceInDegrees,
 				speedVariance );
-		emitter.numberOfParticlesToEmit = 50;
+		emitter.numberOfParticlesToEmit = 1;
 
         live.add(emitter);
 
@@ -51,10 +55,10 @@ public final class ParticleManager {
 				color,
 				angleVarianceInDegrees,
 				speedVariance );
-		emitter.numberOfParticlesToEmit = 25;
+		emitter.numberOfParticlesToEmit = 1;
 
 		live.add(emitter);
-
+*/
 
         for(int i = 0; i < 24; ++i) {
             emitter = new ParticleEmitter(new Vector(10.0f, 18.0f, 0.0f),
@@ -89,8 +93,10 @@ public final class ParticleManager {
 			pe.position.x = x;
             pe.position.y = y;
             pe.position.z = -2f;
-			pe.numberOfParticlesToEmit = 10;
-			pe.color = Color.rgb(100, 100, 100); //visuals.colorFromGemType(gemType);
+			pe.numberOfParticlesToEmit = 9;
+			pe.color = Color.rgb(75, 75, 75); //visuals.colorFromGemType(gemType);
+			//pe.color = Color.rgb(100, 73, 43);
+            //pe.color = Color.rgb(46, 42, 27);
 			live.add(pe);
 		}
 	}

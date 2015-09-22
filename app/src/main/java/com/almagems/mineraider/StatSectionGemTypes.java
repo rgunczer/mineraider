@@ -15,11 +15,12 @@ public final class StatSectionGemTypes extends StatSectionBase {
     private final float[] positionsY;
     private final ArrayList<GemPosition> list;
     private final ArrayList<Color> gemColors;
+    final float fontScale = 0.9f;
 
 
     // ctor
     public StatSectionGemTypes() {    	
-    	System.out.println("StatSectionGemTypes ctor...");
+    	//System.out.println("StatSectionGemTypes ctor...");
 
         final int maxItemCountPerGemType = 1;
         batchGemDrawer = new BatchGemDrawer(maxItemCountPerGemType);
@@ -32,8 +33,22 @@ public final class StatSectionGemTypes extends StatSectionBase {
             textsGemTypes[i] = new Text();
         }
 
+        for(int i = 0; i < MAX_GEM_TYPES; ++i) {
+            textsGemTypes[i].init("00000000", Color.WHITE, Color.GRAY, fontScale);
+        }
+
         list = new ArrayList<GemPosition>(MAX_GEM_TYPES);
         gemColors = new ArrayList<Color>(MAX_GEM_TYPES);
+
+        // set gem type colors
+        Color color;
+        color = new Color(188,  38,  38, 255); gemColors.add(color);
+        color = new Color(197,  94, 124, 255); gemColors.add(color);
+        color = new Color(194, 150,  76, 255); gemColors.add(color);
+        color = new Color( 26,  61, 186, 255); gemColors.add(color);
+        color = new Color(193, 102, 193, 255); gemColors.add(color);
+        color = new Color(196, 123,  99, 255); gemColors.add(color);
+        color = new Color(172, 152, 158, 255); gemColors.add(color);
     }
 
     public void init() {        
@@ -77,13 +92,11 @@ public final class StatSectionGemTypes extends StatSectionBase {
         }
 
         // texts
-        final float fontScale = 0.9f;
-        final Color textColor = new Color(Color.WHITE);
         for(int i = 0; i < MAX_GEM_TYPES; ++i) {
-            textsGemTypes[i].init("" + gems.get(i).value, textColor, textColor, fontScale);
+            textsGemTypes[i].updateText("" + gems.get(i).value, Color.WHITE, Color.GRAY, fontScale);
         }
 
-        int min = gems.get( gems.size() - 1).value;
+        int min = gems.get( gems.size() - 1 ).value;
         int max = gems.get( 0 ).value;
         //System.out.println("Min : " + min + ", max: " + max);
 
@@ -107,16 +120,6 @@ public final class StatSectionGemTypes extends StatSectionBase {
                 gems.get(i).value = 1;
             }
         }
-
-        // set gem type colors
-        Color color;
-        color = new Color(188,  38,  38, 255); gemColors.add(color);
-        color = new Color(197,  94, 124, 255); gemColors.add(color);
-        color = new Color(194, 150,  76, 255); gemColors.add(color);
-        color = new Color( 26,  61, 186, 255); gemColors.add(color);
-        color = new Color(193, 102, 193, 255); gemColors.add(color);
-        color = new Color(196, 123,  99, 255); gemColors.add(color);
-        color = new Color(172, 152, 158, 255); gemColors.add(color);
 
         // bars
         final float xpos = -0.6f;
@@ -154,18 +157,18 @@ public final class StatSectionGemTypes extends StatSectionBase {
         barsGemTypes[6].pos.tx = w - xminus;
 
         // title
-        textTitle.init("MATCHED GEMS", new Color(1f, 1f, 0f), new Color(1f, 1f, 1f), 1.6f);
+        textTitle.init("MATCHED GEMS", Color.YELLOW, Color.WHITE, 1.6f);
         textTitle.pos.tx = -textTitle.getTextWidth() / 2.0f;
         textTitle.pos.ty = 1f;
 
         // text x positions
-        textsGemTypes[0].pos.tx = xpos; // barsGemTypes[0].pos.tx - textsGemTypes[0].getTextWidth() / 2f;
-        textsGemTypes[1].pos.tx = xpos; // barsGemTypes[1].pos.tx - textsGemTypes[1].getTextWidth() / 2f;
-        textsGemTypes[2].pos.tx = xpos; // barsGemTypes[2].pos.tx - textsGemTypes[2].getTextWidth() / 2f;
-        textsGemTypes[3].pos.tx = xpos; // barsGemTypes[3].pos.tx - textsGemTypes[3].getTextWidth() / 2f;
-        textsGemTypes[4].pos.tx = xpos; // barsGemTypes[4].pos.tx - textsGemTypes[4].getTextWidth() / 2f;
-        textsGemTypes[5].pos.tx = xpos; // barsGemTypes[5].pos.tx - textsGemTypes[5].getTextWidth() / 2f;
-        textsGemTypes[6].pos.tx = xpos; // barsGemTypes[6].pos.tx - textsGemTypes[6].getTextWidth() / 2f;
+        textsGemTypes[0].pos.tx = xpos;
+        textsGemTypes[1].pos.tx = xpos;
+        textsGemTypes[2].pos.tx = xpos;
+        textsGemTypes[3].pos.tx = xpos;
+        textsGemTypes[4].pos.tx = xpos;
+        textsGemTypes[5].pos.tx = xpos;
+        textsGemTypes[6].pos.tx = xpos;
 
         // gems images
         GemPosition gp;

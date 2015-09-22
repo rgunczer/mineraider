@@ -19,14 +19,12 @@ public final class HUD {
 
     private final Quad quadMenuButton;
 
-    private float scoreX;
-    private float scoreY;
-    private float fontScale;
+    private final float fontScale = 0.9f;
     private float comboScale;
+    private final float collectedScale = 0.8f;
 
     private float bonusPosX;
     private float bonusCartGemsTextWidth;
-    private float bonusDiff;
     private float bonusTargetPosX;
 
     private int coolingScore;
@@ -68,14 +66,19 @@ public final class HUD {
 
     public void init() {
         // score
-        fontScale = 0.9f;
         textScore.setSpacingScale(0.052f);
-        textScore.init("SCORE:" + cachedScore, Color.YELLOW, Color.RED, fontScale);
-        scoreX = -0.96f;
-        scoreY = -Graphics.aspectRatio + (textScore.getTextHeight() / 3f);
-        textScore.pos.trans(scoreX, scoreY, 0f);
+        textScore.init("SCORE: 0000000000", Color.YELLOW, Color.RED, fontScale);
+        final float x = -0.96f;
+        final float y = -Graphics.aspectRatio + (textScore.getTextHeight() / 3f);
+        textScore.pos.trans(x, y, 0f);
         textScore.pos.rot(0f, 0f, 0f);
         textScore.pos.scale(1.1f, 1f, 1f);
+
+        // collected
+        textBonusForCollected.init("BONUS 000 GEMS COLLECTED", Color.YELLOW, Color.WHITE, collectedScale);
+
+        // combo
+        textCombo.init("COMBOx00", Color.YELLOW, Color.WHITE, comboScale);
 
         // perfect swap
         final float perfectSwapScale = 1.1f;
@@ -131,7 +134,7 @@ public final class HUD {
     }
 
     public void showBonusCartGems(int numberOfGems) {
-        textBonusForCollected.init("BONUS " + numberOfGems + " GEMS COLLECTED", Color.YELLOW, Color.WHITE, 0.8f);
+        textBonusForCollected.updateText("BONUS " + numberOfGems + " GEMS COLLECTED", Color.YELLOW, Color.WHITE, collectedScale);
         bonusCartGemsTextWidth = textBonusForCollected.getTextWidth();
 
         bonusTargetPosX = -bonusCartGemsTextWidth / 2f;
@@ -142,15 +145,13 @@ public final class HUD {
         textBonusForCollected.pos.scale(1.1f, 1f, 1f);
 
         coolingBonusForCollected = 200;
-
-        bonusDiff = -100f;
     }
 
     public void showCombo(int count) {
         if (MyUtils.rand.nextBoolean()) {
-            textCombo.init("COMBOx" + count, Color.YELLOW, Color.WHITE, comboScale);
+            textCombo.updateText("COMBOx" + count, Color.YELLOW, Color.WHITE, comboScale);
         } else {
-            textCombo.init("COMBOx" + count, Color.WHITE, Color.YELLOW, comboScale);
+            textCombo.updateText("COMBOx" + count, Color.WHITE, Color.YELLOW, comboScale);
         }
         textCombo.pos.trans(-textCombo.getTextWidth() / 2f, yCombo, 0f);
         textCombo.pos.rot(0f, 0f, 0f);
@@ -173,37 +174,13 @@ public final class HUD {
         textPerfectSwap.addAnimEffect(effectWahWah);
     }
 
-    public void showMatch4InARowBonus() {
-//        extraText.init("FOUR IN A ROW", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
-//        float textWidth = extraText.getTextWidth() * 1.75f;
-//        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
-//        extraText.pos.rot(0f, 0f, 0f);
-//        extraText.pos.scale(1.75f, 2f, 1f);
-//
-//        extraTextCooling = 45;
-//        effectWahWah.wahScale = 0.9f;
-//        extraText.addAnimEffect(effectZigZag);
-    }
-
-    public void showMatch4InAColBonus() {
-//        extraText.init("FOUR IN A COLUMN", new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f), perfectSwapScale);
-//        float textWidth = extraText.getTextWidth() * 1.75f;
-//        extraText.pos.trans(-textWidth / 2f, -0.4f, 0f);
-//        extraText.pos.rot(0f, 0f, 0f);
-//        extraText.pos.scale(1.75f, 2f, 1f);
-//
-//        extraTextCooling = 45;
-//        effectWahWah.wahScale = 0.9f;
-//        extraText.addAnimEffect(effectZigZag);
-    }
-
     public void updateScore(int score) {
         if (score != cachedScore) {
             if (coolingScore > 0) {
                 textScore.removeAnimEffect();
             }
             coolingScore = 30;
-            textScore.init("SCORE:" + score, Color.YELLOW, Color.RED, fontScale);
+            textScore.updateText("SCORE: " + score, Color.YELLOW, Color.RED, fontScale);
             cachedScore = score;
             effectWahWahScore.wahScale = 0.2f;
             textScore.addAnimEffect(effectWahWahScore);

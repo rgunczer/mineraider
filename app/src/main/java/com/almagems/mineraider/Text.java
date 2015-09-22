@@ -24,17 +24,39 @@ public final class Text {
         final int numOfTriangles = 2;
         final int verticesPerTriangle = 3;
         final int numOfComponentsPerVertex = 9; // x, y, z,     r, g, b, a,     u, v
-        int index = 0;
-        float[] vertexData = new float[text.length() * numOfTriangles * verticesPerTriangle * numOfComponentsPerVertex];
+        final float[] vertexData = new float[text.length() * numOfTriangles * verticesPerTriangle * numOfComponentsPerVertex];
 
+        int index = 0;
         final int len = text.length();
+        float[] array;
         for (int i = 0; i < len; i++) {
-            float[] array = getCharArray( Character.toString(text.charAt(i)), i, colorUp, colorDown);
+            array = getCharArray( Character.toString(text.charAt(i)), i, colorUp, colorDown);
             for (int j = 0; j < array.length; ++j, ++index) {
                 vertexData[index] = array[j]; // fill
             }
         }
         vertexArray = new VertexArray(vertexData);
+    }
+
+    public void updateText(String text, Color colorUp, Color colorDown, float fontScale) {
+        this.text = text;
+        this.fontScale = fontScale;
+
+        final int numOfTriangles = 2;
+        final int verticesPerTriangle = 3;
+        final int numOfComponentsPerVertex = 9; // x, y, z,     r, g, b, a,     u, v
+        final float[] vertexData = new float[text.length() * numOfTriangles * verticesPerTriangle * numOfComponentsPerVertex];
+
+        int index = 0;
+        final int len = text.length();
+        float[] array;
+        for (int i = 0; i < len; i++) {
+            array = getCharArray( Character.toString(text.charAt(i)), i, colorUp, colorDown);
+            for (int j = 0; j < array.length; ++j, ++index) {
+                vertexData[index] = array[j]; // fill
+            }
+        }
+        vertexArray.update(vertexData);
     }
 
     public float getTextWidth() {

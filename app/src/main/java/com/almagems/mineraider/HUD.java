@@ -67,7 +67,7 @@ public final class HUD {
     public void init() {
         // score
         textScore.setSpacingScale(0.052f);
-        textScore.init("SCORE: 0000000000", Color.YELLOW, Color.RED, fontScale);
+        textScore.init("SCORE:00000000000", Color.YELLOW, Color.RED, fontScale);
         final float x = -0.96f;
         final float y = -Graphics.aspectRatio + (textScore.getTextHeight() / 3f);
         textScore.pos.trans(x, y, 0f);
@@ -180,7 +180,7 @@ public final class HUD {
                 textScore.removeAnimEffect();
             }
             coolingScore = 30;
-            textScore.updateText("SCORE: " + score, Color.YELLOW, Color.RED, fontScale);
+            textScore.updateText("SCORE:" + score, Color.YELLOW, Color.RED, fontScale);
             cachedScore = score;
             effectWahWahScore.wahScale = 0.2f;
             textScore.addAnimEffect(effectWahWahScore);

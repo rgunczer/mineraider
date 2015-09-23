@@ -87,17 +87,18 @@ public final class HUD {
         textPerfectSwap.pos.rot(0f, 0f, 0f);
         textPerfectSwap.pos.scale(1.1f, 1.1f, 1f);
 
-        // four in a row
+        // four/five in a row
         textFourInARow.init("FOUR IN A ROW", Color.YELLOW, Color.RED, 1.2f);
         textFourInARow.pos.trans(-textFourInARow.getTextWidth() / 2f, yFourInARow, 0f);
         textFourInARow.pos.rot(0f, 0f, 0f);
         textFourInARow.pos.scale(1f, 1f, 1f);
 
-        // four in a col
+        // four/five in a col
         textFourInACol.init("FOUR IN A COLUMN", Color.YELLOW, Color.RED, 1.2f);
         textFourInACol.pos.trans(-textFourInACol.getTextWidth() / 2f, yFourInACol, 0f);
         textFourInACol.pos.rot(0f, 0f, 0f);
         textFourInACol.pos.scale(1f, 1f, 1f);
+
 
         // menu button
         quadMenuButton.init(Graphics.textureHudPauseButton, Color.WHITE, new Rectangle(0f, 0f, 128f, 128f), false);
@@ -125,11 +126,25 @@ public final class HUD {
 
     public void showFourInARow() {
         coolingFourInARow = 50;
+        textFourInARow.updateText("FOUR IN A ROW", Color.YELLOW, Color.RED, 1.2f);
         textFourInARow.addAnimEffect(effectLeftRight4InRow);
     }
 
     public void showFourInACol() {
         coolingFourInACol = 50;
+        textFourInACol.init("FOUR IN A COLUMN", Color.YELLOW, Color.RED, 1.2f);
+        textFourInACol.addAnimEffect(effectUpDown4InCol);
+    }
+
+    public void showFiveInARow() {
+        textFourInARow.updateText("FIVE IN A ROW", Color.WHITE, Color.GRAY, 1.3f);
+        coolingFourInARow = 50;
+        textFourInARow.addAnimEffect(effectLeftRight4InRow);
+    }
+
+    public void showFiveInACol() {
+        coolingFourInACol = 50;
+        textFourInACol.init("FIVE IN A COLUMN", Color.WHITE, Color.GRAY, 1.3f);
         textFourInACol.addAnimEffect(effectUpDown4InCol);
     }
 

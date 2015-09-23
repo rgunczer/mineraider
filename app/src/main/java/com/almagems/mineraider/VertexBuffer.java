@@ -8,10 +8,12 @@ import java.nio.FloatBuffer;
 
 import static com.almagems.mineraider.Constants.*;
 
+
 public final class VertexBuffer {
 
 	public final int bufferId;
-	
+
+	// ctor
 	public VertexBuffer(float[] vertexData) {
 		// allocate buffer
 		final int buffers[] = new int[1];

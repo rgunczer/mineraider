@@ -1,7 +1,5 @@
 package com.almagems.mineraider;
 
-import android.content.Context;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,7 +17,7 @@ public final class Texture {
 
     // ctor
     public Texture() {
-        System.out.println("Texture ctor...");
+        //System.out.println("Texture ctor...");
     }
 
     public Rectangle getFrame(String key) {
@@ -31,7 +29,7 @@ public final class Texture {
             return newRect;
         }
 
-        System.out.println("Frame with key: [" + key + "]. Not found!" );
+        //System.out.println("Frame with key: [" + key + "]. Not found!" );
         return null;
     }
 

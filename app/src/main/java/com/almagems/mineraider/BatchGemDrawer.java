@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 
+
 public final class BatchGemDrawer {
+
     public static Graphics graphics;
 
     public final ArrayList<PositionInfo> gemsType0;
@@ -79,7 +81,7 @@ public final class BatchGemDrawer {
 
     public void add(ArrayList<GemPosition> gems) {
         GemPosition gp;
-        int len = gems.size();
+        final int len = gems.size();
         for (int i = 0; i < len; ++i) {
             gp = gems.get(i);
             sortItem(gp.pos, gp.type, gp.visible);
@@ -95,7 +97,7 @@ public final class BatchGemDrawer {
     public void add(Match3 match3) {
         PositionInfo pos;
         GemPosition gp;
-        int size = match3.gemsList.size();
+        final int size = match3.gemsList.size();
         for(int i = 0; i < size; ++i) {
             gp = match3.gemsList.get(i);
             pos = getFromPool();
@@ -145,8 +147,8 @@ public final class BatchGemDrawer {
         Body body;
         Vec2 pos;
         float degree;
-        float d = GEM_FRAGMENT_SIZE;
-        int size = Physics.fragments.size();
+        final float d = GEM_FRAGMENT_SIZE;
+        final int size = Physics.fragments.size();
         for(int i = 0; i < size; ++i) {
             body = Physics.fragments.get(i);
             pos = body.getPosition();
@@ -183,27 +185,13 @@ public final class BatchGemDrawer {
     public void sortItem(PositionInfo pos, int type, boolean visible) {
         if (visible && type != GEM_TYPE_NONE && pos.tx < 14.5f) {
             switch (type) {
-                case GEM_TYPE_0:
-                    gemsType0.add(pos);
-                    break;
-                case GEM_TYPE_1:
-                    gemsType1.add(pos);
-                    break;
-                case GEM_TYPE_2:
-                    gemsType2.add(pos);
-                    break;
-                case GEM_TYPE_3:
-                    gemsType3.add(pos);
-                    break;
-                case GEM_TYPE_4:
-                    gemsType4.add(pos);
-                    break;
-                case GEM_TYPE_5:
-                    gemsType5.add(pos);
-                    break;
-                case GEM_TYPE_6:
-                    gemsType6.add(pos);
-                    break;
+                case GEM_TYPE_0: gemsType0.add(pos); break;
+                case GEM_TYPE_1: gemsType1.add(pos); break;
+                case GEM_TYPE_2: gemsType2.add(pos); break;
+                case GEM_TYPE_3: gemsType3.add(pos); break;
+                case GEM_TYPE_4: gemsType4.add(pos); break;
+                case GEM_TYPE_5: gemsType5.add(pos); break;
+                case GEM_TYPE_6: gemsType6.add(pos); break;
             }
         } else {
             pool.add(pos);
@@ -211,7 +199,7 @@ public final class BatchGemDrawer {
     }
 
     void drawGemsByType(ArrayList<PositionInfo> gems, int type) {
-        int size = gems.size();
+        final int size = gems.size();
         if (size > 0) {
             PositionInfo pos;
             Model model = graphics.gems[type];
@@ -227,7 +215,7 @@ public final class BatchGemDrawer {
     }
 
     void drawGemsPlatesByType(ArrayList<PositionInfo> gems, int type) {
-        int size = gems.size();
+        final int size = gems.size();
         if (size > 0) {
             graphics.singleColorShader.useProgram();
 
@@ -248,6 +236,6 @@ public final class BatchGemDrawer {
 
             graphics.pointLightShader.useProgram();
         }
-
     }
+
 }

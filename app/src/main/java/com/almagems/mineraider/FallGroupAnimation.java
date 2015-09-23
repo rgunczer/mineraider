@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 public final class FallGroupAnimation extends BaseAnimation {
 
-    private ArrayList<FallAnimation> pool = new ArrayList<FallAnimation>();
-	private ArrayList<FallAnimation> list = new ArrayList<FallAnimation>();
+    private ArrayList<FallAnimation> pool = new ArrayList<FallAnimation>(30);
+	private ArrayList<FallAnimation> list = new ArrayList<FallAnimation>(30);
 
 	public FallGroupAnimation() {
         done = false;
@@ -67,4 +67,5 @@ public final class FallGroupAnimation extends BaseAnimation {
             }
 		}
 	}
+
 }

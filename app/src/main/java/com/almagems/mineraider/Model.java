@@ -4,6 +4,7 @@ import static android.opengl.GLES20.*;
 
 import static com.almagems.mineraider.Constants.*;
 
+
 public final class Model {
 
 	private static final int POSITION_COMPONENT_COUNT = 3;              // x, y, z
@@ -21,7 +22,8 @@ public final class Model {
 
 	private final int startVertex;
 	public final int numVertices;	
-	
+
+    // ctor
 	public Model(ModelLoader modelLoader) {
 		name = modelLoader.name;
 		

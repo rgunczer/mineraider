@@ -1,6 +1,8 @@
 package com.almagems.mineraider;
 
+
 public final class SwapHint {
+
 	public final PositionInfo pos;
 	
 	private float animStep = 0.0f;
@@ -11,6 +13,7 @@ public final class SwapHint {
 
     public GemPosition first;
     public GemPosition second;
+
 
     // ctor
 	public SwapHint() {
@@ -83,4 +86,5 @@ public final class SwapHint {
 			}
 		}
 	}
+
 }

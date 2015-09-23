@@ -13,6 +13,9 @@ public final class StatSectionBalance extends StatSectionBase {
     private final Quad libraBasketLeft;
     private final Quad libraBasketRight;
 
+    private final float fontScale = 0.9f;
+    private static final String titleText = "COLLECTED vs WASTED";
+
     // ctor
 	public StatSectionBalance() {
         textBalanceCollected = new Text();
@@ -22,27 +25,31 @@ public final class StatSectionBalance extends StatSectionBase {
         libraHorizontal = new Quad();
         libraBasketLeft = new Quad();
         libraBasketRight = new Quad();
+
+        final String maxText = "00000000000";
+        textTitle.init(titleText, Color.YELLOW, Color.WHITE, 1.6f);
+        textBalanceCollected.init(maxText, Color.GRAY, Color.WHITE, fontScale);
+        textBalanceWasted.init(maxText, Color.GRAY, Color.WHITE, fontScale);
 	}
 
 	public void init() {
-        final float fontScale = 0.9f;
         float y = -4.0f;
 
         // title
-        textTitle.init("COLLECTED vs WASTED", new Color(1f, 1f, 0f), new Color(1f, 1f, 1f), 1.6f);
+        textTitle.updateText(titleText, Color.YELLOW, Color.WHITE, 1.6f);
         textTitle.pos.tx = -textTitle.getTextWidth() / 2.0f;
         textTitle.pos.ty = y;
         textTitle.posYorigin = textTitle.pos.ty;
 
         y -= 0.9f;
 
-        textBalanceCollected.init("" + scoreCounter.collectedGems, Color.GRAY, Color.WHITE, fontScale);
+        textBalanceCollected.updateText("" + scoreCounter.collectedGems, Color.GRAY, Color.WHITE, fontScale);
         textBalanceCollected.pos.tx = -0.5f - textBalanceCollected.getTextWidth() / 2.0f;
         textBalanceCollected.pos.ty = y;
         textBalanceCollected.posYorigin = textBalanceCollected.pos.ty;
         textBalanceCollected.pos.scale(1.3f, 1f, 1f);
 
-        textBalanceWasted.init("" + scoreCounter.wastedGems, Color.GRAY, Color.WHITE, fontScale);
+        textBalanceWasted.updateText("" + scoreCounter.wastedGems, Color.GRAY, Color.WHITE, fontScale);
         textBalanceWasted.pos.tx = 0.5f - textBalanceWasted.getTextWidth() / 2.0f;
         textBalanceWasted.pos.ty = y;
         textBalanceWasted.posYorigin = textBalanceWasted.pos.ty;
@@ -109,12 +116,13 @@ public final class StatSectionBalance extends StatSectionBase {
 	public void draw() {
 		glEnable(GL_BLEND);
         graphics.textureShader.setTexture(Graphics.textureFonts);
-        
+
+        // draw texts
         textTitle.draw();
         textBalanceCollected.draw();
         textBalanceWasted.draw();
 
-        // draw libra
+        // draw libra parts
         graphics.textureShader.setTexture(Graphics.textureMenuItems);
         libraBasketLeft.draw();
         libraBasketRight.draw();

@@ -147,10 +147,10 @@ public final class Physics {
 	}
 
 	private static void setBodyPosAndRot(Body body, float x, float y) {
-		float angle = (float)Math.toRadians( MyUtils.rand.nextFloat() * 360f );
+		final float angle = (float)Math.toRadians( MyUtils.rand.nextFloat() * 360f );
         pos.x = x;
         pos.y = y;
-        float d = MyUtils.rand.nextFloat() * 2f - 1f;
+        final float d = MyUtils.rand.nextFloat() * 2f - 1f;
         if (MyUtils.randInt(0, 10) > 5) {
             vector.x = 3f + d * 9f;
         } else {
@@ -539,7 +539,7 @@ public final class Physics {
 
 	public static void sortFragmentsFromPool() {
 		Body body;
-		int size = fragmentToPool.size();
+		final int size = fragmentToPool.size();
 		for(int i = 0; i < size; ++i) {
 			body = fragmentToPool.get(i);
 			body.setActive(false);
@@ -555,7 +555,7 @@ public final class Physics {
 	}
 
 	private static void poolObject(Body body) {		
-		int gemType = (Integer) body.m_userData;
+		final int gemType = (Integer) body.m_userData;
 		ArrayList<Body> pool = fragmentsPool.get(gemType);
 		pool.add(body);
 	}

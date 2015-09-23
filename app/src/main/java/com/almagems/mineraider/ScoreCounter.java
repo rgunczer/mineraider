@@ -275,12 +275,10 @@ public final class ScoreCounter {
         MatchType matchType = determineMatchType(list);
         switch (matchType) {
             case Horizontal3:
-                //hud.showMessage("MATCH3 HORIZONTAL");
                 ++match3CountHorizontal;
                 break;
 
             case Vertical3:
-                //hud.showMessage("MATCH3 VERTICAL");
                 ++match3CountVertical;
                 break;
 
@@ -295,12 +293,12 @@ public final class ScoreCounter {
                 break;
 
             case Horizontal5:
-                //hud.showMessage("MATCH5 HORIZONTAL");
+                hud.showFiveInARow();
                 ++match5CountHorizontal;
                 break;
 
             case Vertical5:
-                //hud.showMessage("MATCH5 VERTICAL");
+                hud.showFiveInACol();
                 ++match5CountVertical;
                 break;
 

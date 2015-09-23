@@ -16,6 +16,7 @@ public final class StatSectionGemTypes extends StatSectionBase {
     private final ArrayList<GemPosition> list;
     private final ArrayList<Color> gemColors;
     final float fontScale = 0.9f;
+    private static final String titleText = "MATCHED GEMS";
 
 
     // ctor
@@ -49,6 +50,9 @@ public final class StatSectionGemTypes extends StatSectionBase {
         color = new Color(193, 102, 193, 255); gemColors.add(color);
         color = new Color(196, 123,  99, 255); gemColors.add(color);
         color = new Color(172, 152, 158, 255); gemColors.add(color);
+
+        textTitle.init(titleText, Color.YELLOW, Color.WHITE, 1.6f);
+
     }
 
     public void init() {        
@@ -125,7 +129,7 @@ public final class StatSectionGemTypes extends StatSectionBase {
         final float xpos = -0.6f;
         final float wmax = 0.65f;
         final float h = 0.05f;
-        final float xminus = wmax;
+        final float xminus = wmax - 0.01f;
         float w;
 
         w = ((float)gems.get(0).value / (float)max) * wmax;
@@ -157,7 +161,7 @@ public final class StatSectionGemTypes extends StatSectionBase {
         barsGemTypes[6].pos.tx = w - xminus;
 
         // title
-        textTitle.init("MATCHED GEMS", Color.YELLOW, Color.WHITE, 1.6f);
+        textTitle.updateText(titleText, Color.YELLOW, Color.WHITE, 1.6f);
         textTitle.pos.tx = -textTitle.getTextWidth() / 2.0f;
         textTitle.pos.ty = 1f;
 

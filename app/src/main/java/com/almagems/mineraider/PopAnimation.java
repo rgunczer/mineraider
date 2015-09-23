@@ -16,8 +16,8 @@ public final class PopAnimation extends BaseAnimation {
     private int dt;
     private State state = State.Pop;
 
-    private ArrayList<GemPosition> pool = new ArrayList<GemPosition>();
-	public ArrayList<GemPosition> list = new ArrayList<GemPosition>();
+    private ArrayList<GemPosition> pool = new ArrayList<GemPosition>(30);
+	public ArrayList<GemPosition> list = new ArrayList<GemPosition>(30);
 
 
 	// ctor
@@ -118,7 +118,7 @@ public final class PopAnimation extends BaseAnimation {
 
             case Fall: {
                 GemPosition gp;
-                int size = list.size();
+                final int size = list.size();
                  for(int i = 0; i < size; ++i) {
                     gp = list.get(i);
                     addPhysicsEntity(gp.pos.tx, gp.pos.ty, gp.type);
@@ -131,7 +131,7 @@ public final class PopAnimation extends BaseAnimation {
                 dt = 3;
                 GemPosition gp;
                 ParticleManager particleManager = Engine.graphics.particleManager;
-                int size = list.size();
+                final int size = list.size();
                 for(int i = 0; i < size; ++i) {
                     gp = list.get(i);
                     particleManager.addParticleEmitterAt(gp.pos.tx, gp.pos.ty, gp.type);
@@ -141,4 +141,5 @@ public final class PopAnimation extends BaseAnimation {
             break;
         }
 	}
+
 }

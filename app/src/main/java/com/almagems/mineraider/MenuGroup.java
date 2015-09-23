@@ -18,7 +18,6 @@ public final class MenuGroup {
     private MenuGameTitleAnim gameTitleAnim;
 
 
-
     public void init(String name) {
         this.name = name;
     }
@@ -43,7 +42,7 @@ public final class MenuGroup {
 
     public void update() {
         MenuItem menuItem;
-        int size = items.size();
+        final int size = items.size();
         for(int i = 0; i < size; ++i) {
             menuItem = items.get(i);
             menuItem.update();
@@ -81,7 +80,6 @@ public final class MenuGroup {
         }
 
         if (musicVolumeControl != null && soundVolumeControl != null) {
-
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glEnable(GL_BLEND);
 
@@ -99,7 +97,7 @@ public final class MenuGroup {
     }
 
     public MenuItem handleTouchPress(float normalizedX, float normalizedY) {
-        Vector pos = Geometry.convertNormalized2DPointToNormalizedDevicePoint2D(normalizedX, normalizedY, graphics.invertedViewProjectionMatrix);
+        final Vector pos = Geometry.convertNormalized2DPointToNormalizedDevicePoint2D(normalizedX, normalizedY, graphics.invertedViewProjectionMatrix);
 
         MenuItem item;
         int size = items.size();
@@ -111,27 +109,5 @@ public final class MenuGroup {
         }
         return null;
     }
-
-/*
-        if (menuItemPlay.isHit(pos.x, pos.y)) {
-            gameState = GameState.ButtonAnim;
-            selectedMenuOption = MenuOptions.Play;
-            menuAnimCurrentValue = menuItemPlay.pos.sy;
-            menuAnimEndValue = menuAnimCurrentValue + 0.1f;
-        } else if (menuItemOptions.isHit(pos.x, pos.y)) {
-            gameState = GameState.ButtonAnim;
-            selectedMenuOption = MenuOptions.Options;
-            menuAnimCurrentValue = menuItemOptions.pos.sy;
-            menuAnimEndValue = menuAnimCurrentValue + 0.1f;
-        } else if (menuItemHelp.isHit(pos.x, pos.y)) {
-            gameState = GameState.ButtonAnim;
-            selectedMenuOption = MenuOptions.Help;
-            menuAnimCurrentValue = menuItemHelp.pos.sy;
-            menuAnimEndValue = menuAnimCurrentValue + 0.1f;
-        } else {
-            selectedMenuOption = MenuOptions.None;
-        }
-*/
-
 
 }

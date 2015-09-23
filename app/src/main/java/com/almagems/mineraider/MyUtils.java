@@ -1,11 +1,9 @@
 package com.almagems.mineraider;
 
-import java.util.Random;
 
 public final class MyUtils {
 
 	public static final RandomXS128 rand = new RandomXS128();
-    //Random rand = new Random();
 
 	public static int randInt(int min, int max) {
 
@@ -28,4 +26,5 @@ public final class MyUtils {
         return fromValue + (toValue - fromValue) * progress;
 
     }
+
 }

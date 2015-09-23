@@ -8,12 +8,12 @@ import java.util.ArrayList;
 public final class Match3 {
 
 	private int comboCount;
-    public int showHintCounterStartValue = 200;
+    public final int showHintCounterStartValue = 240;
 	public int showHintCounter = showHintCounterStartValue;
     public int boardSize;
 	public boolean isAnimating;
-    private int[] gemTypesArray = new int[MAX_GEM_TYPES];
-    public ArrayList<GemPosition> gemsList;
+    private final int[] gemTypesArray = new int[MAX_GEM_TYPES];
+    public final ArrayList<GemPosition> gemsList;
 	public GemPosition[][] board;
     private GemPosition[][] tempBoard;
 	public GemPosition firstSelected;
@@ -25,6 +25,7 @@ public final class Match3 {
     private final PopAnimation pooledPopAnimation;
     public final ScoreCounter scoreCounter;
     private boolean dirtyHint;
+
 
     // ctor
 	public Match3(int boardSize, AnimationManager animManager, ScoreCounter scoreCounter) {
@@ -78,6 +79,8 @@ public final class Match3 {
         board[1][4].type = GEM_TYPE_2;
 
 		board[0][0].type = GEM_TYPE_2;
+
+		board[0][6].type = GEM_TYPE_2;
 				
 		board[0][3].type = GEM_TYPE_2;
 		board[1][3].type = GEM_TYPE_3;

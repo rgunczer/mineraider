@@ -4,6 +4,7 @@ import android.util.FloatMath;
 
 	
 public final class Vector {
+
 	public float x, y, z;
 
 	public static final Vector translatedVector = new Vector();

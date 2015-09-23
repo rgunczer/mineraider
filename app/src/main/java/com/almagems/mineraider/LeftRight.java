@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 public class LeftRight extends EffectAnim {
 
-    private float dy = 0.01f;
+    private float dy = 0.02f;
     private boolean flip = false;
     private int cooling = 0;
 

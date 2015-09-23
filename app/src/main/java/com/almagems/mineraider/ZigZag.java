@@ -3,8 +3,8 @@ package com.almagems.mineraider;
 
 public final class ZigZag extends EffectAnim {
 
-    private float dx = 0.01f;
-    private float dy = 0.01f;
+    private float dx = 0.02f;
+    private float dy = 0.02f;
     private boolean flip = false;
     private int cooling = 0;
 

@@ -8,7 +8,7 @@ public final class StatSectionExtras extends StatSectionBase {
     private final int maxTextCount = 4;
     private final Text[] texts = new Text[maxTextCount];
     private final float fontScale = 0.9f;
-
+    private static final String titleText = "EXTRAS";
 
     // ctor
 	public StatSectionExtras() {
@@ -17,7 +17,7 @@ public final class StatSectionExtras extends StatSectionBase {
         }
 
         final String maxNumberChars = "0000000";
-        textTitle.init("EXTRAS", Color.YELLOW, Color.WHITE, 1.6f);
+        textTitle.init(titleText, Color.YELLOW, Color.WHITE, 1.6f);
         texts[0].init("Shared Matches: " + maxNumberChars, Color.GRAY, Color.WHITE, fontScale);
         texts[1].init("Highest Combos: " + maxNumberChars, Color.GRAY, Color.WHITE, fontScale);
         texts[2].init("Perfect Swaps: " + maxNumberChars, Color.GRAY, Color.WHITE, fontScale);
@@ -29,7 +29,7 @@ public final class StatSectionExtras extends StatSectionBase {
         float y = -2.7f;
 
         // title
-        textTitle.updateText("EXTRAS", Color.YELLOW, Color.WHITE, 1.6f);
+        textTitle.updateText(titleText, Color.YELLOW, Color.WHITE, 1.6f);
         textTitle.pos.tx = -textTitle.getTextWidth() / 2.0f;
         textTitle.pos.ty = y;
         textTitle.posYorigin = textTitle.pos.ty;

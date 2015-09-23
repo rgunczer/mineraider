@@ -1,6 +1,7 @@
 package com.almagems.mineraider;
 
 public final class Rectangle {
+
     public float x;
     public float y;
     public float w;
@@ -28,4 +29,5 @@ public final class Rectangle {
         this.w = other.w;
         this.h = other.h;
     }
+
 }

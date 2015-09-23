@@ -2,6 +2,7 @@ package com.almagems.mineraider;
 
 
 public final class Fade extends EffectAnim {
+
     private final Color colorFrom;
     private final Color colorTo;
     public final Color colorCurrent;

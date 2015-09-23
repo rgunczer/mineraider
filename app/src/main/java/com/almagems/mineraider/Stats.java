@@ -30,7 +30,7 @@ public final class Stats extends Overlay {
     
     // ctor
     public Stats() {
-        System.out.println("Stats ctor...");
+        //System.out.println("Stats ctor...");
 
         offsetY = 0f;
 
@@ -56,8 +56,8 @@ public final class Stats extends Overlay {
         selectedMenuItem = null;
         ScoreCounter scoreCounter = Engine.game.scoreCounter;
 
-        float sc = 1.76f;
-        float aspect = Graphics.aspectRatio;
+        final float sc = 1.76f;
+        final float aspect = Graphics.aspectRatio;
         final boolean flipUTextureCoordinate = false;
         Texture textureObj = graphics.getTextureObj(Graphics.textureMenuItems);
 
@@ -102,8 +102,6 @@ public final class Stats extends Overlay {
     }
 
     public void draw() {
-        //System.out.println("Stats draw...");
-
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
         glDisable(GL_DEPTH_TEST);

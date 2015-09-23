@@ -1,6 +1,8 @@
 package com.almagems.mineraider;
 
+
 public final class MenuItem {
+
     private String name;
     private Quad quad;
     public Menu.MenuOptions menuOption;
@@ -62,11 +64,11 @@ public final class MenuItem {
     }
 
     public void draw() {
-        //System.out.println("MenuItem draw...");
         if (anim != null) {
             anim.draw();
         } else {
             quad.draw();
         }
     }
+
 }

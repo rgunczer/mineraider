@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public final class SwapHintManager {
 
-    private ArrayList<SwapHint> pool = new ArrayList<SwapHint>();
-    private ArrayList<SwapHint> live = new ArrayList<SwapHint>();
+    private ArrayList<SwapHint> pool = new ArrayList<SwapHint>(20);
+    private ArrayList<SwapHint> live = new ArrayList<SwapHint>(20);
 
     private final Graphics graphics;
 
@@ -15,7 +15,7 @@ public final class SwapHintManager {
     }
 
     public void reset() {
-        int size = live.size();
+        final int size = live.size();
         for(int i = 0; i < size; ++i) {
             pool.add( live.get(i) );
         }
@@ -36,7 +36,7 @@ public final class SwapHintManager {
     }
 
     private SwapHint getFromPool() {
-        int size = pool.size();
+        final int size = pool.size();
         if (size > 0) {
             SwapHint swapHint = pool.get( size - 1 );
             pool.remove( size - 1 );
@@ -48,7 +48,7 @@ public final class SwapHintManager {
 
     public void draw() {
         SwapHint hint;
-        int size = live.size();
+        final int size = live.size();
         for(int i = 0; i < size; ++i) {
             hint = live.get(i);
             hint.update();
@@ -59,7 +59,7 @@ public final class SwapHintManager {
     }
 
     public void selectOneHint() {
-        int index =  MyUtils.randInt(0, live.size() - 1);
+        final int index =  MyUtils.randInt(0, live.size() - 1);
 
         SwapHint swapHint = live.get(index);
         reset();

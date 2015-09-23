@@ -30,7 +30,7 @@ public final class Menu extends Overlay {
 
     private MenuGroup getMenuGroupByName(String name) {
         MenuGroup group;
-        int size = groups.size();
+        final int size = groups.size();
         for(int i = 0; i < size; ++i) {
             group = groups.get(i);
             if (group.name == name) {

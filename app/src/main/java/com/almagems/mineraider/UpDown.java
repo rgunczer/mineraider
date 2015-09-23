@@ -2,7 +2,7 @@ package com.almagems.mineraider;
 
 public final class UpDown extends EffectAnim {
 
-    private float dy = 0.01f;
+    private float dy = 0.02f;
     private boolean flip = false;
     private int cooling = 0;
 

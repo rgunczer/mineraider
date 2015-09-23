@@ -11,11 +11,11 @@ public final class StatSectionMatchTypes extends StatSectionBase {
     private final int maxCols;
 
     private final float fontScale = 0.9f;
-
+    private static final String titleText = "MATCH TYPES";
 
 	// ctor
 	public StatSectionMatchTypes() {
-        System.out.println("StatSectionMatchTypes ctor...");
+        //System.out.println("StatSectionMatchTypes ctor...");
 
         maxRows = 4;
         maxCols = 3;
@@ -26,7 +26,7 @@ public final class StatSectionMatchTypes extends StatSectionBase {
                 texts[row][col] = new Text();
             }
         }
-        textTitle.init("MATCH TYPES", Color.YELLOW, Color.WHITE, 1.6f);
+        textTitle.init(titleText, Color.YELLOW, Color.WHITE, 1.6f);
 
         texts[0][0].init("TYPE", Color.GRAY, Color.WHITE, fontScale);
         texts[0][1].init("HORIZONTAL", Color.GRAY, Color.WHITE, fontScale);
@@ -52,13 +52,12 @@ public final class StatSectionMatchTypes extends StatSectionBase {
 	public void init() {
         // 3 columns: type | horizontal | vertical
         // rows 3, 4, 5
-
         final float[] x = new float[] { -0.75f, -0.4f,  0.3f };
         final float yStart = -1.2f;
-            final float yStep = -0.25f;
+        final float yStep = -0.25f;
 
         // title
-        textTitle.updateText("MATCH TYPES", Color.YELLOW, Color.WHITE, 1.6f);
+        textTitle.updateText(titleText, Color.YELLOW, Color.WHITE, 1.6f);
         textTitle.pos.tx = -textTitle.getTextWidth() / 2.0f;
         textTitle.pos.ty = yStart;
 
@@ -91,7 +90,6 @@ public final class StatSectionMatchTypes extends StatSectionBase {
 
         texts[3][1].updateText("" + scoreCounter.match5CountHorizontal, Color.GRAY, Color.WHITE, fontScale);
         texts[3][2].updateText("" + scoreCounter.match5CountVertical, Color.GRAY, Color.WHITE, fontScale);
-
 
         // pos y origin
         textTitle.posYorigin = textTitle.pos.ty;
@@ -127,4 +125,5 @@ public final class StatSectionMatchTypes extends StatSectionBase {
         }
         textTitle.draw();
 	}
+
 }

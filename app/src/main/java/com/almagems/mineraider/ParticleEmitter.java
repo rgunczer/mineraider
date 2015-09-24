@@ -6,6 +6,7 @@ import static android.opengl.Matrix.*;
 public final class ParticleEmitter {
 
 	public Vector position;
+	private final Vector positionAlt = new Vector();
     private final Vector direction = new Vector();
 	public int color;
 	private final float angleVariance;
@@ -66,8 +67,12 @@ public final class ParticleEmitter {
 			direction.x = (random.nextFloat() - 0.5f) * speedAdjustment;
             direction.y = (random.nextFloat() - 0.5f) * speedAdjustment;
             direction.z = resultVector[2] * speedAdjustment;
-						
-			particleSystem.addParticle(position, color, direction, currentTime);
+
+            positionAlt.x = position.x + (random.nextFloat() - 0.5f) * 0.5f;
+            positionAlt.y = position.y + (random.nextFloat() - 0.5f) * 0.5f;
+            positionAlt.z = position.z;
+
+			particleSystem.addParticle(positionAlt, color, direction, currentTime);
 		}
 	}
 }

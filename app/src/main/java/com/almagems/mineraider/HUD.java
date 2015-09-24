@@ -78,7 +78,7 @@ public final class HUD {
         textBonusForCollected.init("BONUS 000 GEMS COLLECTED", Color.YELLOW, Color.WHITE, collectedScale);
 
         // combo
-        textCombo.init("COMBOx00", Color.YELLOW, Color.WHITE, comboScale);
+        textCombo.init("COMBOx00", Color.GRAY, Color.WHITE, comboScale);
 
         // perfect swap
         final float perfectSwapScale = 1.1f;
@@ -88,17 +88,16 @@ public final class HUD {
         textPerfectSwap.pos.scale(1.1f, 1.1f, 1f);
 
         // four/five in a row
-        textFourInARow.init("FOUR IN A ROW", Color.YELLOW, Color.RED, 1.2f);
+        textFourInARow.init("FOUR IN A ROW", Color.WHITE, Color.RED, 1.2f);
         textFourInARow.pos.trans(-textFourInARow.getTextWidth() / 2f, yFourInARow, 0f);
         textFourInARow.pos.rot(0f, 0f, 0f);
         textFourInARow.pos.scale(1f, 1f, 1f);
 
         // four/five in a col
-        textFourInACol.init("FOUR IN A COLUMN", Color.YELLOW, Color.RED, 1.2f);
+        textFourInACol.init("FOUR IN A COLUMN", Color.RED, Color.WHITE, 1.2f);
         textFourInACol.pos.trans(-textFourInACol.getTextWidth() / 2f, yFourInACol, 0f);
         textFourInACol.pos.rot(0f, 0f, 0f);
         textFourInACol.pos.scale(1f, 1f, 1f);
-
 
         // menu button
         quadMenuButton.init(Graphics.textureHudPauseButton, Color.WHITE, new Rectangle(0f, 0f, 128f, 128f), false);
@@ -126,30 +125,34 @@ public final class HUD {
 
     public void showFourInARow() {
         coolingFourInARow = 50;
-        textFourInARow.updateText("FOUR IN A ROW", Color.YELLOW, Color.RED, 1.2f);
+        textFourInARow.updateText("FOUR IN A ROW");
+        textFourInARow.centerText();
         textFourInARow.addAnimEffect(effectLeftRight4InRow);
     }
 
     public void showFourInACol() {
         coolingFourInACol = 50;
-        textFourInACol.init("FOUR IN A COLUMN", Color.YELLOW, Color.RED, 1.2f);
+        textFourInACol.updateText("FOUR IN A COLUMN");
+        textFourInACol.centerText();
         textFourInACol.addAnimEffect(effectUpDown4InCol);
     }
 
     public void showFiveInARow() {
-        textFourInARow.updateText("FIVE IN A ROW", Color.WHITE, Color.GRAY, 1.3f);
+        textFourInARow.updateText("FIVE IN A ROW");
+        textFourInARow.centerText();
         coolingFourInARow = 50;
         textFourInARow.addAnimEffect(effectLeftRight4InRow);
     }
 
     public void showFiveInACol() {
         coolingFourInACol = 50;
-        textFourInACol.init("FIVE IN A COLUMN", Color.WHITE, Color.GRAY, 1.3f);
+        textFourInACol.updateText("FIVE IN A COLUMN");
+        textFourInACol.centerText();
         textFourInACol.addAnimEffect(effectUpDown4InCol);
     }
 
     public void showBonusCartGems(int numberOfGems) {
-        textBonusForCollected.updateText("BONUS " + numberOfGems + " GEMS COLLECTED", Color.YELLOW, Color.WHITE, collectedScale);
+        textBonusForCollected.updateText("BONUS " + numberOfGems + " GEMS COLLECTED");
         bonusCartGemsTextWidth = textBonusForCollected.getTextWidth();
 
         bonusTargetPosX = -bonusCartGemsTextWidth / 2f;
@@ -195,7 +198,7 @@ public final class HUD {
                 textScore.removeAnimEffect();
             }
             coolingScore = 30;
-            textScore.updateText("SCORE:" + score, Color.YELLOW, Color.RED, fontScale);
+            textScore.updateText("SCORE:" + score);
             cachedScore = score;
             effectWahWahScore.wahScale = 0.2f;
             textScore.addAnimEffect(effectWahWahScore);

@@ -73,7 +73,7 @@ public final class ParticleManager {
 
 	public void addParticleEmitterAtWastedGems(float x, float y, int type) {
 		//System.out.println("in MineRaiderRenderer add Particle Emitter at: " + x + ", " + y);
-		int size = pool.size();
+		final int size = pool.size();
 		if (size > 0) {
 			ParticleEmitter pe = pool.remove(size - 1);
 			pe.position.x = x;
@@ -87,7 +87,7 @@ public final class ParticleManager {
 
 	public void addParticleEmitterAt(float x, float y, int type) {
 		//System.out.println("in MineRaiderRenderer add Particle Emitter at: " + x + ", " + y);
-        int size = pool.size();
+        final int size = pool.size();
 		if (size > 0) {
 			ParticleEmitter pe = pool.remove(size - 1);
 			pe.position.x = x;

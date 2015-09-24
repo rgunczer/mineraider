@@ -12,6 +12,15 @@ public final class Text {
     private float fontSpacingScale = 0.06f;
     public PositionInfo pos = new PositionInfo();
     private EffectAnim anim;
+    private final Color colorUp;
+    private final Color colorDown;
+
+
+    // ctor
+    public Text() {
+        colorUp = new Color();
+        colorDown = new Color();
+    }
 
     public void setSpacingScale(float scale) {
         fontSpacingScale = scale;
@@ -20,6 +29,8 @@ public final class Text {
     public void init(String text, Color colorUp, Color colorDown, float fontScale) {
         this.fontScale = fontScale;
         this.text = text;
+        this.colorUp.init(colorUp);
+        this.colorDown.init(colorDown);
 
         final int numOfTriangles = 2;
         final int verticesPerTriangle = 3;
@@ -36,6 +47,26 @@ public final class Text {
             }
         }
         vertexArray = new VertexArray(vertexData);
+    }
+
+    public void updateText(String text) {
+        this.text = text;
+
+        final int numOfTriangles = 2;
+        final int verticesPerTriangle = 3;
+        final int numOfComponentsPerVertex = 9; // x, y, z,     r, g, b, a,     u, v
+        final float[] vertexData = new float[text.length() * numOfTriangles * verticesPerTriangle * numOfComponentsPerVertex];
+
+        int index = 0;
+        final int len = text.length();
+        float[] array;
+        for (int i = 0; i < len; i++) {
+            array = getCharArray( Character.toString(text.charAt(i)), i, colorUp, colorDown);
+            for (int j = 0; j < array.length; ++j, ++index) {
+                vertexData[index] = array[j]; // fill
+            }
+        }
+        vertexArray.update(vertexData);
     }
 
     public void updateText(String text, Color colorUp, Color colorDown, float fontScale) {
@@ -57,6 +88,10 @@ public final class Text {
             }
         }
         vertexArray.update(vertexData);
+    }
+
+    public void centerText() {
+        pos.tx = -getTextWidth() / 2f;
     }
 
     public float getTextWidth() {

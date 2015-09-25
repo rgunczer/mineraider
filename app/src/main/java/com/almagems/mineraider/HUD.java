@@ -78,7 +78,7 @@ public final class HUD {
         textBonusForCollected.init("BONUS 000 GEMS COLLECTED", Color.YELLOW, Color.WHITE, collectedScale);
 
         // combo
-        textCombo.init("COMBOx00", Color.GRAY, Color.WHITE, comboScale);
+        textCombo.init("COMBOx00", Color.YELLOW, Color.WHITE, comboScale);
 
         // perfect swap
         final float perfectSwapScale = 1.1f;
@@ -88,13 +88,13 @@ public final class HUD {
         textPerfectSwap.pos.scale(1.1f, 1.1f, 1f);
 
         // four/five in a row
-        textFourInARow.init("FOUR IN A ROW", Color.WHITE, Color.RED, 1.2f);
+        textFourInARow.init("FOUR IN A ROW", Color.YELLOW, Color.WHITE, 1.3f);
         textFourInARow.pos.trans(-textFourInARow.getTextWidth() / 2f, yFourInARow, 0f);
         textFourInARow.pos.rot(0f, 0f, 0f);
         textFourInARow.pos.scale(1f, 1f, 1f);
 
         // four/five in a col
-        textFourInACol.init("FOUR IN A COLUMN", Color.RED, Color.WHITE, 1.2f);
+        textFourInACol.init("FOUR IN A COLUMN", Color.YELLOW, Color.WHITE, 1.3f);
         textFourInACol.pos.trans(-textFourInACol.getTextWidth() / 2f, yFourInACol, 0f);
         textFourInACol.pos.rot(0f, 0f, 0f);
         textFourInACol.pos.scale(1f, 1f, 1f);
@@ -121,6 +121,8 @@ public final class HUD {
 
         bonusPosX = 0f;
         bonusCartGemsTextWidth = 0f;
+
+        cachedScore = -1;
     }
 
     public void showFourInARow() {
@@ -166,11 +168,7 @@ public final class HUD {
     }
 
     public void showCombo(int count) {
-        if (MyUtils.rand.nextBoolean()) {
-            textCombo.updateText("COMBOx" + count, Color.YELLOW, Color.WHITE, comboScale);
-        } else {
-            textCombo.updateText("COMBOx" + count, Color.WHITE, Color.YELLOW, comboScale);
-        }
+        textCombo.updateText("COMBOx" + count, Color.YELLOW, Color.WHITE, comboScale);
         textCombo.pos.trans(-textCombo.getTextWidth() / 2f, yCombo, 0f);
         textCombo.pos.rot(0f, 0f, 0f);
         textCombo.pos.scale(1f, 1f, 1f);

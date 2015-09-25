@@ -527,8 +527,7 @@ public final class Physics {
             if (pos.y < -18.9f && pos.x < 15f) {
 				fragmentToPool.add(body);
                 ++wastedCounter;
-
-                Engine.graphics.particleManager.addParticleEmitterAtWastedGems(pos.x, pos.y, 1);
+                //Engine.graphics.particleManager.addParticleEmitterAtWastedGems(pos.x, pos.y, 1);
 			}
 		}
 

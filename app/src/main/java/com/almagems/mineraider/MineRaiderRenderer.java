@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 
@@ -30,7 +31,7 @@ public final class MineRaiderRenderer implements Renderer {
 
 	@Override
 	public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
-        System.out.println("on  SurfaceCreated...");
+        System.out.println("onSurfaceCreated...");
         surfaceCreated = true;
         width = -1;
         height = -1;
@@ -66,7 +67,7 @@ public final class MineRaiderRenderer implements Renderer {
         String msg = "Surface changed width: " + width + ", height: " + height;
 
         if (surfaceCreated) {
-            msg += " context lost";
+            msg += " (context lost)";
         } else {
             msg += ".";
         }
@@ -97,7 +98,7 @@ public final class MineRaiderRenderer implements Renderer {
         }
         frameStartTimeMS = SystemClock.elapsedRealtime();
     }
-			
+
 	public void handleTouchPress(float normalizedX, float normalizedY) {
 		Engine.handleTouchPress(normalizedX, normalizedY);
 	}
@@ -108,5 +109,13 @@ public final class MineRaiderRenderer implements Renderer {
 	
 	public void handleTouchRelease(float normalizedX, float normalizedY) {
 		Engine.handleTouchRelease(normalizedX, normalizedY);
-	}	
+	}
+
+    public void handleBackButtonPress() {
+        Engine.game.handleButton();
+    }
+
+    public void handleMenuButtonPress() {
+        Engine.game.showMenu();
+    }
 }

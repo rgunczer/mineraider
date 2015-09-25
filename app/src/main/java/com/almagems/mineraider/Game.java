@@ -221,14 +221,26 @@ public final class Game extends Scene {
         loading.init();
     }
 
+    public void handleButton() {
+        if (gameState == GameState.Menu) {
+            gameState = GameState.Playing;
+        }
+    }
+
+    public void showMenu() {
+        if (gameState != GameState.Menu) {
+            menu.reset();
+            gameState = GameState.Menu;
+        }
+    }
+
 	public void update() {
         graphics.updateViewProjMatrix();
 
         if (gameState == GameState.Loading) {
             loading.update();
             if (loading.done) {
-                menu.reset();
-                gameState = GameState.Menu;
+                showMenu();
                 update();
             }
         } else {

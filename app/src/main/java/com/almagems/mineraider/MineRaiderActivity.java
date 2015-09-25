@@ -6,6 +6,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -24,7 +25,35 @@ public final class MineRaiderActivity extends Activity {
 	private AdView adView;
 	private GLSurfaceView glSurfaceView;
 	private boolean rendererSet = false;
-	
+    private MineRaiderRenderer renderer;
+
+    @Override
+    public void onBackPressed() {
+        //System.out.println("Back button pressed!");
+        glSurfaceView.queueEvent(new Runnable() {
+
+            @Override
+            public void run() {
+                renderer.handleBackButtonPress();
+            }
+        });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU ) {
+            glSurfaceView.queueEvent(new Runnable() {
+                @Override
+                public void run() {
+                    renderer.handleMenuButtonPress();
+                }
+            });
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,7 +71,7 @@ public final class MineRaiderActivity extends Activity {
 				
 		//final ActivityManager activityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
 		//final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
-		final MineRaiderRenderer renderer = new MineRaiderRenderer(this);
+		renderer = new MineRaiderRenderer(this);
 		
 		glSurfaceView.setEGLContextClientVersion(2);
 		glSurfaceView.setRenderer(renderer);
@@ -159,7 +188,7 @@ public final class MineRaiderActivity extends Activity {
         Engine.savePreferences();
         Engine.pauseAudio();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();

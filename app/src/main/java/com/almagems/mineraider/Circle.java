@@ -1,6 +1,7 @@
 package com.almagems.mineraider;
 
 public final class Circle {
+
     public final Vector center;
     public final float radius;
 
@@ -12,4 +13,5 @@ public final class Circle {
     public Circle scale(float scale) {
         return new Circle(center, radius * scale);
     }
+
 }

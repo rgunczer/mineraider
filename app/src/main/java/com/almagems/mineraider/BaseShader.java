@@ -25,14 +25,14 @@ abstract class BaseShader {
 	protected int uTextureUnitLocation;
 	
 	protected BaseShader(int vertexShaderResourceId, int fragmentShaderResourceId) { //throws Exception {
-		program = buildProgram(graphics.context, vertexShaderResourceId, fragmentShaderResourceId);
+		program = buildProgram(Graphics.context, vertexShaderResourceId, fragmentShaderResourceId);
 	}
 	
 	private int buildProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) { //throws Exception {
 		//try {			
-			int program = ShaderHelper.buildProgram(TextResourceReader.readTextFileFromResource(context, vertexShaderResourceId),
-													TextResourceReader.readTextFileFromResource(context, fragmentShaderResourceId));
-			return program;
+			return ShaderHelper.buildProgram(TextResourceReader.readTextFileFromResource(context, vertexShaderResourceId),
+											 TextResourceReader.readTextFileFromResource(context, fragmentShaderResourceId));
+
 //		} catch (Exception ex) {
 //			System.out.println(ex.toString());
 //		}

@@ -19,7 +19,7 @@ public final class MineRaiderRenderer implements Renderer {
     private int height;
 
 	private long frameStartTimeMS;
-	private final Context context;
+	public final Context context;
 
 	// ctor
 	public MineRaiderRenderer(Context context) {

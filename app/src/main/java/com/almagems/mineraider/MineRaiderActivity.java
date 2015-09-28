@@ -53,7 +53,6 @@ public final class MineRaiderActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

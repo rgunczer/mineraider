@@ -103,21 +103,16 @@ public final class Game extends Scene {
 
 		initBoardGeometry();
 
-        float cartX = -20f;
-        float cartX2nd = -30f;
-        float cartY = -15f;
-
-        float x = cartX; //-20f;
-		float y = cartY; //-15.7f;
+        // carts
         MineCart.graphics = graphics;
 		MineCart mineCart;
 		
-		mineCart = new MineCart(x, y);
+		mineCart = new MineCart();
         mineCart.id = 1;
+        mineCart.
 		cart1 = mineCart;
-
-		x = cartX2nd;
-		mineCart = new MineCart(x, y);
+		
+		mineCart = new MineCart();
         mineCart.id = 2;
 		cart2 = mineCart;
 

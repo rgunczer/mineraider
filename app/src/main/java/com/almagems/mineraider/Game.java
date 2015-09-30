@@ -109,11 +109,22 @@ public final class Game extends Scene {
 		
 		mineCart = new MineCart();
         mineCart.id = 1;
-        mineCart.
+        mineCart.body = Physics.cart1body;
+        mineCart.wheel1 = Physics.cart1wheel1;
+        mineCart.wheel2 = Physics.cart1wheel2;
+        mineCart.wheelJoint1 = Physics.cart1wheelJoint1;
+        mineCart.wheelJoint2 = Physics.cart1wheelJoint2;
+        mineCart.body.m_userData = mineCart;
 		cart1 = mineCart;
 		
 		mineCart = new MineCart();
         mineCart.id = 2;
+        mineCart.body = Physics.cart2body;
+        mineCart.wheel1 = Physics.cart2wheel1;
+        mineCart.wheel2 = Physics.cart2wheel2;
+        mineCart.wheelJoint1 = Physics.cart2wheelJoint1;
+        mineCart.wheelJoint2 = Physics.cart2wheelJoint2;
+        mineCart.body.m_userData = mineCart;
 		cart2 = mineCart;
 
         menu = new Menu();

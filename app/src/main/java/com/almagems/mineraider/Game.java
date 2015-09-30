@@ -101,19 +101,7 @@ public final class Game extends Scene {
 		animManager = new AnimationManager();
 		match3 = new Match3(8, animManager, scoreCounter);
 
-		initBoardGeometry();		
-
-		//physics.addEdge(-13.5f, -21.5f,  13.5f, -21.5f); // bottom
-		Physics.addEdge(-13.0f, -7.0f, -13.5f, 20.0f); // left
-		Physics.addEdge(13.0f, -7.0f, 13.5f, 20.0f); // right
-		
-		Physics.addBoxStatic(8.0f, -5.9f, 24.8f, 12.0f, 0.8f);
-		Physics.addBoxStatic(-7.8f, -5.9f, -25.0f, 12.0f, 0.8f);
-		Physics.addBoxStatic(3.1f, -8.8f, 0f, 1.4f, 1.4f);
-		Physics.addBoxStatic(-3.0f, -8.8f, 0f, 1.4f, 1.4f);
-		
-		// sin
-		Physics.addBoxStatic(0.0f, -19.7f, 0f, 70.0f, 0.5f);
+		initBoardGeometry();
 
         float cartX = -20f;
         float cartX2nd = -30f;

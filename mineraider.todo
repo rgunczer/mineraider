@@ -1,7 +1,5 @@
-todo:
-	encrypt - decrypt saved data
-	fix activity lifecycle issue
-	create libra image for stat screen
+todo:	
+	fix activity lifecycle issue	
 
 experiment with:
  	- more anim on wasted gems like fall down after impact (super mario)

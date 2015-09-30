@@ -28,147 +28,28 @@ public final class MineCart {
 
     public CartState state;
     public int id;
+    
     public Body body;
     public Body wheel1;
     public Body wheel2;
-
-    private WheelJoint wheelJoint1;
-    private WheelJoint wheelJoint2;
-
-    private static int collisionGroupIndexCounter = -1;
+    public WheelJoint wheelJoint1;
+    public WheelJoint wheelJoint2;
+    
     public static Physics physics;
     public static Graphics graphics;
 
     private float z = 0f;
     private float speed = 0f;
 
-    private int counter = 0;
-    private int collisionGroupIndex = -42; // negative value = don't collide!
+    private int counter = 0;    
 
     private PositionInfo op = new PositionInfo();
 
 
     // ctor
-    public MineCart(float x, float y) {
+    public MineCart() {
         state = CartState.Entering;
-        z = 1.0f;
-        --collisionGroupIndexCounter;
-        collisionGroupIndex = collisionGroupIndexCounter;
-
-        System.out.println("Collision Group Index: " + collisionGroupIndex);
-
-        CreateCart(x, y);
-        wheel1 = CreateWheel(x - 2.0f, y - 2.2f);
-        wheel2 = CreateWheel(x + 2.0f, y - 2.2f);
-        CreateWheelJoint();
-    }
-
-    private void CreateWheelJoint() {
-        WheelJointDef wd = new WheelJointDef();
-        wd.bodyA = body;
-        wd.bodyB = wheel1;
-        wd.localAnchorA.set(-1.6f, -2.2f);
-        wd.frequencyHz = 6;
-        wd.dampingRatio = 0.3f;
-        wd.maxMotorTorque = 1000;
-        wd.motorSpeed = 0f; //-6.0f;
-        wd.enableMotor = true;
-        wd.localAxisA.set(0f, 1f);
-
-        wheelJoint1 = (WheelJoint) physics.world.createJoint(wd);
-
-        wd.bodyB = wheel2;
-        wd.localAnchorA.set(1.6f, -2.2f);
-        wheelJoint2 = (WheelJoint) physics.world.createJoint(wd);
-
-//		Vec2 axis = new Vec2(0.0f, 0.9f);
-
-//		wd = new WheelJointDef();	
-//		wd.dampingRatio = 0.9f;
-//		wd.motorSpeed = 0.0f;
-//		wd.maxMotorTorque = 0.0f;		
-//		wd.enableMotor = false;	
-
-//		wd.initialize(cart, wheel1, wheel1.getPosition(), axis);
-//		wheelJoint1 = (WheelJoint)physics.world.createJoint(wd);		
-//	
-//		wd.initialize(cart, wheel2, wheel1.getPosition(), axis);
-//		wheelJoint2 = (WheelJoint)physics.world.createJoint(wd);
-    }
-
-    private Body CreateWheel(float x, float y) {
-        CircleShape shape = new CircleShape();
-        shape.m_radius = 0.8f;
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 1.0f;
-        fixtureDef.restitution = 0.2f;
-        fixtureDef.filter.groupIndex = collisionGroupIndex;
-
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyType.DYNAMIC;
-        bodyDef.position.set(x, y);
-
-        Body body = physics.world.createBody(bodyDef);
-        body.createFixture(fixtureDef);
-        return body;
-    }
-
-    private void CreateCart(float x, float y) {
-        PolygonShape shape = new PolygonShape();
-        Vec2[] vertices = new Vec2[4];
-        vertices[0] = new Vec2(-3.2f, -2.0f);
-        vertices[1] = new Vec2(3.2f, -2.0f);
-        vertices[2] = new Vec2(3.4f, -0.01f);
-        vertices[3] = new Vec2(-3.4f, -0.01f);
-        shape.set(vertices, vertices.length);
-
-        FixtureDef fixture = new FixtureDef();
-        fixture.shape = shape;
-        fixture.density = 1.0f;
-        fixture.restitution = 0.1f;
-        fixture.filter.groupIndex = collisionGroupIndex;
-
-
-        PolygonShape shape1 = new PolygonShape();
-        Vec2[] vertices1 = new Vec2[4];
-        vertices1[0] = new Vec2(-3.4f, -1.0f);
-        vertices1[1] = new Vec2(-3.0f, -1.0f);
-        vertices1[2] = new Vec2(-4.0f, 2.2f);
-        vertices1[3] = new Vec2(-3.6f, 2.0f);
-        shape1.set(vertices1, vertices1.length);
-
-        FixtureDef fixture1 = new FixtureDef();
-        fixture1.shape = shape1;
-        fixture1.density = 1.0f;
-        fixture1.restitution = 0.1f;
-        fixture1.filter.groupIndex = collisionGroupIndex;
-
-
-        PolygonShape shape2 = new PolygonShape();
-        Vec2[] vertices2 = new Vec2[4];
-        vertices2[0] = new Vec2(3.4f, -1.0f);
-        vertices2[1] = new Vec2(3.0f, -1.0f);
-        vertices2[2] = new Vec2(4.0f, 2.2f);
-        vertices2[3] = new Vec2(3.6f, 2.0f);
-        shape2.set(vertices2, vertices2.length);
-
-        FixtureDef fixture2 = new FixtureDef();
-        fixture2.shape = shape2;
-        fixture2.density = 1.0f;
-        fixture2.restitution = 0.1f;
-        fixture2.filter.groupIndex = collisionGroupIndex;
-
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyType.DYNAMIC;
-        bodyDef.position.set(x, y);
-
-        body = physics.world.createBody(bodyDef);
-        body.m_userData = this;
-        body.createFixture(fixture);
-        body.createFixture(fixture1);
-        body.createFixture(fixture2);
+        z = 1f;                        
     }
 
     public void start(float xSpeed) {

@@ -142,6 +142,11 @@ public final class Game extends Scene {
 
         final float cartSpeed = -3f;
 
+        float cartX, cartY, cartX2nd;
+        cartX = -20f;
+        cartY = -15f;
+        cartX2nd = -30f;
+
         cart1.reposition(cartX, cartY);
         cart1.start(cartSpeed);
 

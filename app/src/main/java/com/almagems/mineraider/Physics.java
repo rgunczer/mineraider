@@ -1,5 +1,6 @@
 package com.almagems.mineraider;
 
+import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
@@ -8,6 +9,8 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.collision.shapes.EdgeShape;
 import org.jbox2d.dynamics.FixtureDef;
+import org.jbox2d.dynamics.joints.WheelJoint;
+import org.jbox2d.dynamics.joints.WheelJointDef;
 
 import static com.almagems.mineraider.Constants.*;
 
@@ -173,7 +176,6 @@ public final class Physics {
         fixture.restitution = 0.1f;
         fixture.filter.groupIndex = collisionGroupIndex;
 
-
         PolygonShape shape1 = new PolygonShape();
         Vec2[] vertices1 = new Vec2[4];
         vertices1[0] = new Vec2(-3.4f, -1.0f);
@@ -187,7 +189,6 @@ public final class Physics {
         fixture1.density = 1.0f;
         fixture1.restitution = 0.1f;
         fixture1.filter.groupIndex = collisionGroupIndex;
-
 
         PolygonShape shape2 = new PolygonShape();
         Vec2[] vertices2 = new Vec2[4];
@@ -213,7 +214,6 @@ public final class Physics {
         body.createFixture(fixture);
         body.createFixture(fixture1);
         body.createFixture(fixture2);
-
         return body;
     }   
 
@@ -240,7 +240,7 @@ public final class Physics {
         WheelJointDef wd = new WheelJointDef();
         wd.bodyA = body;
         wd.bodyB = wheel1;
-        wd.localAnchorA.set(-1.6f, -2.2f);
+        wd.localAnchorA.set(anchorX, -2.2f);
         wd.frequencyHz = 6;
         wd.dampingRatio = 0.3f;
         wd.maxMotorTorque = 1000;
@@ -248,14 +248,14 @@ public final class Physics {
         wd.enableMotor = true;
         wd.localAxisA.set(0f, 1f);
 
-        WheelJoint wheelJoint = (WheelJoint)world.createJoint(wd);
-
+        WheelJoint wheelJoint = (WheelJoint) world.createJoint(wd);
         return wheelJoint;
-/*
-        wd.bodyB = wheel2;
-        wd.localAnchorA.set(1.6f, -2.2f);
-        wheelJoint2 = (WheelJoint) physics.world.createJoint(wd);
-*/
+    }
+
+//        wd.bodyB = wheel2;
+//        wd.localAnchorA.set(1.6f, -2.2f);
+//        wheelJoint2 = (WheelJoint) physics.world.createJoint(wd);
+
 //      Vec2 axis = new Vec2(0.0f, 0.9f);
 
 //      wd = new WheelJointDef();   
@@ -269,7 +269,7 @@ public final class Physics {
 //  
 //      wd.initialize(cart, wheel2, wheel1.getPosition(), axis);
 //      wheelJoint2 = (WheelJoint)physics.world.createJoint(wd);
-    }
+
 
     // ctor
     private Physics() {}

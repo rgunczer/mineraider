@@ -23,13 +23,9 @@ public final class Engine {
         System.out.println("Engine ctor...");
     }
 
-    public static void createGraphicsObject() {
-        if (graphics == null) {
-            System.out.println("Engine createGraphicsObject...");
-            graphics = new Graphics(activity);
-        } else {
-            System.out.println("Graphics object already exits!");
-        }
+    public static void createGraphicsObject() {        
+        System.out.println("Engine createGraphicsObject...");
+        graphics = new Graphics(activity);                
     }
 
     public static void initGraphicsObject() {
@@ -37,13 +33,9 @@ public final class Engine {
         graphics.initialSetup();
     }
 
-    public static void createGameObject() {
-        if (game == null) {
-            System.out.println("Engine createGameObject...");
-            game = new Game();
-        } else {
-            System.out.println("Game object already exists!");
-        }
+    public static void createGameObject() {        
+        System.out.println("Engine createGameObject...");
+        game = new Game();                    
     }
 
     public static void initGameObject() {

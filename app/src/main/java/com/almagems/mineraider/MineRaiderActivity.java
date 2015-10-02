@@ -119,7 +119,7 @@ public final class MineRaiderActivity extends Activity {
 			}
 		});
 
-        initAds();
+        //initAds();
 	}
 	
 	private void initAds() {

@@ -39,6 +39,7 @@ public final class Engine {
     }
 
     public static void initGameObject() {
+        Physics.reset();
         game.init();
     }
 
@@ -61,6 +62,14 @@ public final class Engine {
     }
 
     private static void innerSavePreferences() {
+        if (game == null) {
+            return;
+        }
+
+        if (game.scoreCounter == null) {
+            return;
+        }
+
         SecurePreferences preferences = CreateSecurePreferencesObj();
 
         // Put (all puts are automatically committed)

@@ -130,6 +130,7 @@ public final class HUD {
         textFourInARow.updateText("FOUR IN A ROW");
         textFourInARow.centerText();
         textFourInARow.addAnimEffect(effectLeftRight4InRow);
+        Engine.audio.playSoundInfoBeep();
     }
 
     public void showFourInACol() {
@@ -137,6 +138,7 @@ public final class HUD {
         textFourInACol.updateText("FOUR IN A COLUMN");
         textFourInACol.centerText();
         textFourInACol.addAnimEffect(effectUpDown4InCol);
+        Engine.audio.playSoundInfoBeep();
     }
 
     public void showFiveInARow() {
@@ -144,6 +146,7 @@ public final class HUD {
         textFourInARow.centerText();
         coolingFourInARow = 50;
         textFourInARow.addAnimEffect(effectLeftRight4InRow);
+        Engine.audio.playSoundInfoBeep();
     }
 
     public void showFiveInACol() {
@@ -151,6 +154,7 @@ public final class HUD {
         textFourInACol.updateText("FIVE IN A COLUMN");
         textFourInACol.centerText();
         textFourInACol.addAnimEffect(effectUpDown4InCol);
+        Engine.audio.playSoundInfoBeep();
     }
 
     public void showBonusCartGems(int numberOfGems) {
@@ -165,6 +169,7 @@ public final class HUD {
         textBonusForCollected.pos.scale(1.1f, 1f, 1f);
 
         coolingBonusForCollected = 200;
+        Engine.audio.playSoundInfoBeep();
     }
 
     public void showCombo(int count) {
@@ -176,6 +181,7 @@ public final class HUD {
         textCombo.addAnimEffect(effectZigZag);
         showCombo = true;
         comboScale += 0.1f;
+        Engine.audio.playSoundInfoBeep();
     }
 
     public void hideCombo() {
@@ -188,6 +194,7 @@ public final class HUD {
         coolingPerfectSwap = 30;
         effectWahWah.wahScale = 0.3f;
         textPerfectSwap.addAnimEffect(effectWahWah);
+        Engine.audio.playSoundInfoBeep();
     }
 
     public void updateScore(int score) {

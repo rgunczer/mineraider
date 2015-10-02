@@ -274,6 +274,18 @@ public final class Physics {
     // ctor
     private Physics() {}
 
+    public static void reset() {
+        fragmentToPool.clear();
+        Body body;
+        int size = fragments.size();
+        for (int i = 0; i < size; ++i) {
+            body = fragments.get(i);
+            fragmentToPool.add(body);
+        }
+
+        sortFragmentsFromPool();
+    }
+
     private static Body getBodyFromPool(int gemType) {
         ArrayList<Body> pool = fragmentsPool.get(gemType);
         Body body = null;

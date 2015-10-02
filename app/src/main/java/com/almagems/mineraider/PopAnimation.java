@@ -135,6 +135,7 @@ public final class PopAnimation extends BaseAnimation {
                 for(int i = 0; i < size; ++i) {
                     gp = list.get(i);
                     particleManager.addParticleEmitterAt(gp.pos.tx, gp.pos.ty, gp.type);
+                    Engine.audio.playSoundGemHit();
                 }
                 state = State.Pop;
             }

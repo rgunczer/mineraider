@@ -52,7 +52,10 @@ public final class Loading extends Overlay {
             case 12: graphics.particleManager.init(); break;
             case 13: Engine.loadPreferences(); break;
             case 14: Engine.audio.init(Engine.activity); break;
-            case 15: graphics.releaseUnusedAssets(); break;
+            case 15:
+                graphics.releaseUnusedAssets();
+                Engine.audio.playMusic();
+                break;
         }
 
         progress.value = (float)loadingStepCounter / (float)maxLoadingStep;

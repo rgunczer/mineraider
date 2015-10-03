@@ -8,16 +8,17 @@ import android.media.SoundPool;
 
 public final class Audio {
 
-    SoundPool soundPool;
     MediaPlayer mediaPlayer;
-    int soundIds[] = new int [10];
-    public float musicVolume = 0.2f;
-    public float soundVolume = 0.75f;
+    SoundPool soundPool;
 
-    private int musicStreamId;
+
+    int soundIds[] = new int [10];
+    public float musicVolume = 0.5f;
+    public float soundVolume = 0.5f;
+
     private int soundStreamId;
 
-    private int musicTrackPos = -1;
+    private int musicTrackPos = 0;
 
 
     // ctor
@@ -28,13 +29,7 @@ public final class Audio {
     public void setMusicVolume(float value) {
         if (value != musicVolume) {
             musicVolume = value;
-            if (musicStreamId != 0) {
-                soundPool.setVolume(musicStreamId, musicVolume, musicVolume);
-            }
-
-            if (musicStreamId == 0) {
-                playMusic();
-            }
+            playMusic();
         }
     }
 
@@ -46,37 +41,47 @@ public final class Audio {
         }
     }
 
-    public void init(Context context) {
-        mediaPlayer = MediaPlayer.create(context, R.raw.darkwaryurmc_minor_key_music_box);
-        //mediaPlayer = MediaPlayer.create(context, R.raw.setuniman_percussive_loop1);
+    private void createMediaPlayer(Context context) {
+        //mediaPlayer = MediaPlayer.create(context, R.raw.darkwaryurmc_minor_key_music_box);
+        mediaPlayer = MediaPlayer.create(context, R.raw.jba_music_fastbeat);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-/*
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                if (mp == mediaPlayer) {
-                    playMusic();
-                }
-            }
-        });
-*/
+
+//        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                if (mp == mediaPlayer) {
+//                    playMusic();
+//                }
+//            }
+//        });
+    }
+
+    private void createSoundPool(Context context) {
         soundPool = new SoundPool(20, AudioManager.STREAM_MUSIC, 0);
+
         //soundIds[0] = soundPool.load(context, R.raw.pol_a_cpu_life_short, 1);
-/*
-        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                if (sampleId == soundIds[0]) {
-                    playMusic();
-                }
-            }
-        });
-*/
+
+//        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+//            @Override
+//            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+//                if (sampleId == soundIds[0]) {
+//                    playMusic();
+//                }
+//            }
+//        });
+
         //soundIds[0] = soundPool.load(context, R.raw.fins_menu_click1, 1);
-        soundIds[0] = soundPool.load(context, R.raw.pop2, 1);
+        soundIds[0] = soundPool.load(context, R.raw.fins_button_5 /*pop2*/, 1);
         soundIds[1] = soundPool.load(context, R.raw.mouth_07, 1);
         //soundIds[2] = soundPool.load(context, R.raw.infobleep, 1);
         soundIds[2] = soundPool.load(context, R.raw.sergeeo_xylophone_for_cartoon_2, 1);
+        soundIds[3] = soundPool.load(context, R.raw.dland_hint, 1);
+
+    }
+
+    public void init(Context context) {
+        createMediaPlayer(context);
+        createSoundPool(context);
     }
 
     public void playMusic() {
@@ -89,7 +94,7 @@ public final class Audio {
         } else {
             mediaPlayer.setLooping(true);
             mediaPlayer.setVolume(musicVolume, musicVolume);
-            mediaPlayer.seekTo(0);
+            mediaPlayer.seekTo(musicTrackPos);
             mediaPlayer.start();
         }
     }
@@ -113,33 +118,33 @@ public final class Audio {
         soundStreamId = soundPool.play(soundIds[2], soundVolume, soundVolume, 1, loopMode, 1.0f);
     }
 
+    public void playSoundHint() {
+        int loopMode = 0; // (0 = no loop, -1 = loop forever)
+        soundStreamId = soundPool.play(soundIds[3], soundVolume, soundVolume, 1, loopMode, 1.0f);
+    }
+
     public void stopSound(){
         soundPool.stop(soundStreamId);
     }
 
     public void pause() {
-        if (soundPool == null ) {
-            return;
+        if (soundPool != null ) {
+            soundPool.release();
+            soundPool = null;
         }
 
-        if (mediaPlayer == null) {
-            return;
+        if (mediaPlayer != null) {
+            musicTrackPos = mediaPlayer.getCurrentPosition();
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
-
-        musicTrackPos =  mediaPlayer.getCurrentPosition();
-        mediaPlayer.stop();
     }
 
     public void resume() {
-        if (soundPool == null) {
-            return;
-        }
+        createSoundPool(Engine.activity);
+        createMediaPlayer(Engine.activity);
 
-        if (mediaPlayer == null) {
-            return;
-        }
-
-        mediaPlayer.seekTo(musicTrackPos);
+        playMusic();
     }
 
 }

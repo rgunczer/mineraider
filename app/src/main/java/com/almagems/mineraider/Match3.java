@@ -459,6 +459,7 @@ public final class Match3 {
                 ++Engine.game.scoreCounter.hintCounter;
                 dirtyHint = true;
             }
+            Engine.audio.playSoundHint();
         } else {
             swapHintManager.reset();
         }

@@ -1,7 +1,8 @@
 package com.almagems.mineraider;
 
 import android.app.Activity;
-import android.graphics.PixelFormat;
+import android.graphics.*;
+import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -77,49 +78,49 @@ public final class MineRaiderActivity extends Activity {
 		rendererSet = true;
 
 		glSurfaceView.setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-            if (event != null) {
-                //System.out.println("Touch Event: " + event.getX() + ", " + event.getY() );
-                // convert touch coordinates into normalized device
-                // coordinates, keeping in mind that Android's Y coordinates are inverted
-                final float normalizedX = (event.getX() / (float) v.getWidth()) * 2 - 1;
-                final float normalizedY = -((event.getY() / (float)v.getHeight() ) * 2 - 1);
 
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    glSurfaceView.queueEvent(new Runnable() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event != null) {
+                    //System.out.println("Touch Event: " + event.getX() + ", " + event.getY() );
+                    // convert touch coordinates into normalized device
+                    // coordinates, keeping in mind that Android's Y coordinates are inverted
+                    final float normalizedX = (event.getX() / (float) v.getWidth()) * 2 - 1;
+                    final float normalizedY = -((event.getY() / (float) v.getHeight()) * 2 - 1);
 
-                        @Override
-                        public void run() {
-                            renderer.handleTouchPress(normalizedX, normalizedY);
-                        }
-                    });
-                } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    glSurfaceView.queueEvent(new Runnable() {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        glSurfaceView.queueEvent(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            renderer.handleTouchDrag(normalizedX, normalizedY);
-                        }
-                    });
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    glSurfaceView.queueEvent(new Runnable() {
+                            @Override
+                            public void run() {
+                                renderer.handleTouchPress(normalizedX, normalizedY);
+                            }
+                        });
+                    } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                        glSurfaceView.queueEvent(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            renderer.handleTouchRelease(normalizedX, normalizedY);
-                        }
-                    });
+                            @Override
+                            public void run() {
+                                renderer.handleTouchDrag(normalizedX, normalizedY);
+                            }
+                        });
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        glSurfaceView.queueEvent(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                renderer.handleTouchRelease(normalizedX, normalizedY);
+                            }
+                        });
+                    }
+                    return true;
+                } else {
+                    return false;
                 }
-                return true;
-            } else {
-                return false;
             }
-			}
-		});
+        });
 
-        //initAds();
+        initAds();
 	}
 	
 	private void initAds() {
@@ -147,7 +148,7 @@ public final class MineRaiderActivity extends Activity {
 		adView = new AdView(this);
 		adView.setAdSize(AdSize.SMART_BANNER);
 		adView.setAdUnitId("ca-app-pub-1002179312870743/4200681514");
-		adView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+		adView.setBackgroundColor(Color.BLACK); // TRANSPARENT);
 		RelativeLayout rl = new RelativeLayout(this);
 
 		//LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);

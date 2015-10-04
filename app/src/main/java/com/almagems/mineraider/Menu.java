@@ -33,7 +33,7 @@ public final class Menu extends Overlay {
         final int size = groups.size();
         for(int i = 0; i < size; ++i) {
             group = groups.get(i);
-            if (group.name == name) {
+            if ( group.name.equals(name) ) {
                 return group;
             }
         }
@@ -61,7 +61,7 @@ public final class Menu extends Overlay {
         float itemY = aspect * 0.18f;
         float itemYStep = 0.4f;
 
-        Texture textureObj = graphics.getTextureObj(graphics.textureMenuItems);
+        Texture textureObj = graphics.getTextureObj(Graphics.textureMenuItems);
 
         // main menu
         menuGroup = new MenuGroup();
@@ -73,7 +73,7 @@ public final class Menu extends Overlay {
 
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_play.png");
-        menuItem.init("Play", MenuOptions.Play, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuItem.init("Play", MenuOptions.Play, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, itemY - (0f * itemYStep) , 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -81,7 +81,7 @@ public final class Menu extends Overlay {
 
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_options.png");
-        menuItem.init("Options", MenuOptions.Options, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuItem.init("Options", MenuOptions.Options, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, itemY - (1f * itemYStep), 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -89,7 +89,7 @@ public final class Menu extends Overlay {
 
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_stats.png");
-        menuItem.init("Stats", MenuOptions.Stats, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuItem.init("Stats", MenuOptions.Stats, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, itemY - (2f * itemYStep), 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -98,7 +98,7 @@ public final class Menu extends Overlay {
 
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_help.png");
-        menuItem.init("Help", MenuOptions.Help, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuItem.init("Help", MenuOptions.Help, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, itemY - (3f * itemYStep), 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -117,7 +117,7 @@ public final class Menu extends Overlay {
         // back
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_back.png");
-        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuItem.init("Back", MenuOptions.Back, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -127,7 +127,7 @@ public final class Menu extends Overlay {
         // music
         menuImage = new MenuImage();
         rect = textureObj.getFrame("menu_title_music.png");
-        menuImage.init("music", graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuImage.init("music", Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.5f, 0f);
         menuImage.setRot(0f, 0f, 0f);
         menuImage.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -136,7 +136,7 @@ public final class Menu extends Overlay {
         // sound
         menuImage = new MenuImage();
         rect = textureObj.getFrame("menu_title_sound.png");
-        menuImage.init("sound", graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuImage.init("sound", Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.1f, 0f);
         menuImage.setRot(0f, 0f, 0f);
         menuImage.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -167,7 +167,7 @@ public final class Menu extends Overlay {
         // credits
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_credits.png");
-        menuItem.init("Credits", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuItem.init("Credits", MenuOptions.Back, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, aspect * 0.2f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -177,7 +177,7 @@ public final class Menu extends Overlay {
         // about
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_about.png");
-        menuItem.init("About", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuItem.init("About", MenuOptions.Back, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.1f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -187,7 +187,7 @@ public final class Menu extends Overlay {
         // back
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_back.png");
-        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuItem.init("Back", MenuOptions.Back, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.4f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -204,7 +204,7 @@ public final class Menu extends Overlay {
         // credits image
         menuImage = new MenuImage();
         rect = textureObj.getFrame("menu_credits.png");
-        menuImage.init("credits", graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuImage.init("credits", Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.2f, 0f);
         menuImage.setRot(0f, 0f, 0f);
         menuImage.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -213,8 +213,8 @@ public final class Menu extends Overlay {
         // back
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_back.png");
-        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
-        menuItem.setTrans(0f, -aspect * 0.4f, 0f);
+        menuItem.init("Back", MenuOptions.Back, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuItem.setTrans(0f, -aspect * 0.5f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
         menuItem.tag = "Help";
@@ -230,7 +230,7 @@ public final class Menu extends Overlay {
         // about image
         menuImage = new MenuImage();
         rect = textureObj.getFrame("menu_about_text.png");
-        menuImage.init("about", graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuImage.init("about", Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuImage.setTrans(0f, aspect * 0.2f, 0f);
         menuImage.setRot(0f, 0f, 0f);
         menuImage.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -239,7 +239,7 @@ public final class Menu extends Overlay {
         // back
         menuItem = new MenuItem();
         rect = textureObj.getFrame("menu_item_back.png");
-        menuItem.init("Back", MenuOptions.Back, graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
+        menuItem.init("Back", MenuOptions.Back, Graphics.textureMenuItems, Color.WHITE, rect, flipUTextureCoordinate);
         menuItem.setTrans(0f, -aspect * 0.5f, 0f);
         menuItem.setRot(0f, 0f, 0f);
         menuItem.setScale((rect.w / Graphics.referenceScreenWidth) * sc, (rect.h / Graphics.referenceScreenWidth) * sc, 1.0f);
@@ -266,7 +266,7 @@ public final class Menu extends Overlay {
                             currentGroup = group;
                             selectedMenuOption = MenuOptions.None;
                         } else {
-                            System.out.println("Something is wrong Menu Options button");
+                            //System.out.println("Something is wrong Menu Options button");
                         }
                     }
                     break;
@@ -279,7 +279,7 @@ public final class Menu extends Overlay {
                             currentGroup = group;
                             selectedMenuOption = MenuOptions.None;
                         } else {
-                            System.out.println("Something is wrong Tag button");
+                            //System.out.println("Something is wrong Tag button");
                         }
                     }
                     break;

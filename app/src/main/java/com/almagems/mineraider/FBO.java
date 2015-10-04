@@ -67,23 +67,23 @@ public final class FBO {
         int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
         if (status != GL_FRAMEBUFFER_COMPLETE) {
-            System.out.println("ERROR Creating FBO...");
+            //System.out.println("ERROR Creating FBO...");
 
             switch (status) {
                 case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-                    System.out.println("GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
+                    //System.out.println("GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
                     break;
 
                 case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-                    System.out.println("GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT");
+                    //System.out.println("GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT");
                     break;
 
                 case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-                    System.out.println("GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS");
+                    //System.out.println("GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS");
                     break;
 
                 case GL_FRAMEBUFFER_UNSUPPORTED:
-                    System.out.println("GL_FRAMEBUFFER_UNSUPPORTED");
+                    //System.out.println("GL_FRAMEBUFFER_UNSUPPORTED");
                     break;
             }
         }

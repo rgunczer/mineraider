@@ -15,7 +15,7 @@ public final class Fade extends EffectAnim {
 
     // ctor
     public Fade() {
-        System.out.println("Fade ctor...");
+        //System.out.println("Fade ctor...");
         colorFrom = new Color();
         colorTo = new Color();
         colorCurrent = new Color(colorFrom);

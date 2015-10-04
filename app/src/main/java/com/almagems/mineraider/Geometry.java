@@ -94,7 +94,7 @@ public final class Geometry {
                     invertedViewProjectionMatrix, 0,
                     normalizedPoint, 0);
 
-        System.out.println("outPoint is: " + outPoint[0] + ", " + outPoint[1]);
+        //System.out.println("outPoint is: " + outPoint[0] + ", " + outPoint[1]);
 
         return new Vector(outPoint[0], outPoint[1], 0f);
     }

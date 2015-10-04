@@ -49,7 +49,7 @@ public final class Model {
 				vertexData[offset++] = v.u;
 				vertexData[offset++] = v.v;
 			} else {
-				System.out.println("Our guy!");
+				//System.out.println("Our guy!");
 			}
 		}		
 		

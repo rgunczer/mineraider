@@ -138,6 +138,7 @@ public final class Stats extends Overlay {
         if (selectedMenuItem == null) {
             if (backButton.isHit(pos.x, pos.y)) {
                 selectedMenuItem = backButton;
+                Engine.audio.playSound();
                 backButton.setAnim(menuItemAnim);
             }
         }

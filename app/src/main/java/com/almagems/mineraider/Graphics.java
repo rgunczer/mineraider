@@ -116,7 +116,7 @@ public final class Graphics {
 
     // ctor
 	public Graphics(Context context) {
-        System.out.println("Visuals ctor...");
+        //System.out.println("Visuals ctor...");
 		Graphics.context = context;
         fboBackground = new FBO();
 
@@ -149,7 +149,7 @@ public final class Graphics {
     }
 
     public void loadStartupAssets() throws Exception {
-        System.out.println("Load startup Assets...");
+        //System.out.println("Load startup Assets...");
 
         // shader
         BaseShader.graphics = this;
@@ -161,7 +161,7 @@ public final class Graphics {
     }
 
 	public void loadShaders() { //throws Exception {
-		System.out.println("loadShaders - BEGIN");
+		//System.out.println("loadShaders - BEGIN");
 
 		dirLightShader = new DirLightShader();
 		particleShader = new ParticleShader();
@@ -169,7 +169,7 @@ public final class Graphics {
 		pointLightShader = new PointLightShader();
         colorShader = new ColorShader();
 
-		System.out.println("loadShaders - END");
+		//System.out.println("loadShaders - END");
 	}
 	
 	public void loadModelsPart01() {

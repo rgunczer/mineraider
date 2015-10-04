@@ -55,7 +55,7 @@ public final class Texture {
                 frames.put(fileName, new Rectangle(x, y, w, h));
             }
         } catch (final Exception ex) {
-            System.out.println( ex.toString() );
+            //System.out.println( ex.toString() );
         }
     }
 

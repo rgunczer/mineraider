@@ -307,7 +307,7 @@ public final class Physics {
 
         if (body == null) {
             // TODO: place a breakpoint here
-            System.out.println("Body is null in getBodyFromPool....");
+            //System.out.println("Body is null in getBodyFromPool....");
         }
 
         return body;
@@ -641,7 +641,7 @@ public final class Physics {
         edges.add(body);
     }
 
-    public static Body addBoxStatic(float x, float y, float angle, float w, float h) {
+    public static void addBoxStatic(float x, float y, float angle, float w, float h) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyType.STATIC;
         bodyDef.position.set(x, y);
@@ -660,8 +660,6 @@ public final class Physics {
         body.createFixture(fixtureDef);
 
         statics.add(body);
-
-        return body;
     }
 
     public static void update() {

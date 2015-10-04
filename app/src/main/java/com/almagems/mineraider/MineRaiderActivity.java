@@ -11,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -133,14 +132,14 @@ public final class MineRaiderActivity extends Activity {
 		
 		AdRequest adRequest = new AdRequest.Builder()
 		// to show real ads comment out the next few lines
-		.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+		//.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
 		//.addTestDevice("F689981D411369408E68481517CDBDF7")
-		.addTestDevice(deviceId)
-        .addTestDevice("6503CEAA4CF8DC33F5F88E5984BA09C7") // LG LG Optimus L3 || - 4.1.1 API 16 - 240x320
-        .addTestDevice("5FD98F5344B72D203C178E0B2095F330") // Google Nexus 6 - 5.0.0 API 21 1440x2560
-        .addTestDevice("D4029AFBC2B78394E46D8777362D7881") // Google Nexus S - 4.1.1 - API 16 - 480x800
-        .addTestDevice("F3390873D15CC25BE479A1667DC09EB3") // Google Nexus 7
-        .addTestDevice("8A424B010E21ED3F9B72CF51A03E6D00") // Note 3 emulator genymotion
+		//.addTestDevice(deviceId)
+        //.addTestDevice("6503CEAA4CF8DC33F5F88E5984BA09C7") // LG LG Optimus L3 || - 4.1.1 API 16 - 240x320
+        //.addTestDevice("5FD98F5344B72D203C178E0B2095F330") // Google Nexus 6 - 5.0.0 API 21 1440x2560
+        //.addTestDevice("D4029AFBC2B78394E46D8777362D7881") // Google Nexus S - 4.1.1 - API 16 - 480x800
+        //.addTestDevice("F3390873D15CC25BE479A1667DC09EB3") // Google Nexus 7
+        //.addTestDevice("8A424B010E21ED3F9B72CF51A03E6D00") // Note 3 emulator genymotion
 		.build();
 		
 		//adView.loadAd(adRequest);
@@ -159,16 +158,16 @@ public final class MineRaiderActivity extends Activity {
 		rl.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 		rl.bringToFront();
 
-        adView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int height = adView.getHeight();
-                if (height > 0) {
-                    // now the height is gotten, you can do things you want
-                    System.out.println("Here the ad size is: " + height);
-                }
-            }
-        });
+//        adView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                int height = adView.getHeight();
+//                if (height > 0) {
+//                    // now the height is gotten, you can do things you want
+//                    System.out.println("Here the ad size is: " + height);
+//                }
+//            }
+//        });
 
 		adView.loadAd(adRequest);
 	}

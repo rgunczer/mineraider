@@ -33,7 +33,7 @@ public final class TextureHelper {
         final int w = bmp.getWidth();
         final int h = bmp.getHeight();
         final String resourceName = context.getResources().getResourceEntryName(resourceId);
-        System.out.println("Texture info[" + resourceName + "], w:" + w + " h:" + h);
+        //System.out.println("Texture info[" + resourceName + "], w:" + w + " h:" + h);
 
         texture.name = resourceName;
         texture.width = w;

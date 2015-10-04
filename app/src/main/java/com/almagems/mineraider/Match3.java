@@ -134,7 +134,7 @@ public final class Match3 {
 		do 
 		{			
 			emptyBoard();
-			placeTestGems();
+			//placeTestGems();
 			
 			for(int y = 0; y < boardSize; ++y) {
 				for (int x = 0; x < boardSize; ++x) {

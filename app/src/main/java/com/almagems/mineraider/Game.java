@@ -592,7 +592,7 @@ public final class Game extends Scene {
 			//for (RockData rd : rocks) {
 			int size = rocks.size();
 			for(int i = 0; i < size; ++i) {
-				System.out.println("[ROCK]" + rocks.get(i).toString());
+				//System.out.println("[ROCK]" + rocks.get(i).toString());
 			}
 			return;
 		}		

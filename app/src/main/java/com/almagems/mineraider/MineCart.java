@@ -2,16 +2,11 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 
-import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
-import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.joints.WheelJoint;
-import org.jbox2d.dynamics.joints.WheelJointDef;
 
 
 public final class MineCart {
@@ -22,7 +17,7 @@ public final class MineCart {
         Restarting,
         WaitingForGems,
         Leaving
-    };
+    }
 
     private final Vec2 repositionPos = new Vec2(0f, 0f);
 

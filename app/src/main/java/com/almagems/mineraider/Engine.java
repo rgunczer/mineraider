@@ -20,21 +20,21 @@ public final class Engine {
 
     // ctor
 	private Engine() {
-        System.out.println("Engine ctor...");
+        //System.out.println("Engine ctor...");
     }
 
     public static void createGraphicsObject() {        
-        System.out.println("Engine createGraphicsObject...");
+        //System.out.println("Engine createGraphicsObject...");
         graphics = new Graphics(activity);                
     }
 
     public static void initGraphicsObject() {
-        System.out.println("Engine initGraphicsObject...");
+        //System.out.println("Engine initGraphicsObject...");
         graphics.initialSetup();
     }
 
     public static void createGameObject() {        
-        System.out.println("Engine createGameObject...");
+        //System.out.println("Engine createGameObject...");
         game = new Game();                    
     }
 
@@ -44,12 +44,12 @@ public final class Engine {
     }
 
     public static void savePreferences() {
-        System.out.println("Save Preferences...");
+        //System.out.println("Save Preferences...");
         innerSavePreferences();
     }
 
     public static void loadPreferences() {
-        System.out.println("Load preferences...");
+        //System.out.println("Load preferences...");
         innerLoadPreferences();
     }
 

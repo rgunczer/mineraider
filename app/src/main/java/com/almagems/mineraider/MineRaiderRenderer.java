@@ -2,13 +2,11 @@ package com.almagems.mineraider;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import javax.net.ssl.SSLContext;
 
 import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
-import android.view.KeyEvent;
 import android.widget.Toast;
 
 
@@ -31,7 +29,7 @@ public final class MineRaiderRenderer implements Renderer {
 
 	@Override
 	public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
-        System.out.println("onSurfaceCreated...");
+        //System.out.println("onSurfaceCreated...");
         surfaceCreated = true;
         width = -1;
         height = -1;
@@ -72,7 +70,7 @@ public final class MineRaiderRenderer implements Renderer {
             msg += ".";
         }
 
-        System.out.println(msg);
+        //System.out.println(msg);
 
         this.width = width;
         this.height = height;

@@ -38,11 +38,11 @@
 },
 {
 	"filename": "menu_credits.png",
-	"frame": {"x":1191,"y":0,"w":493,"h":387},
+	"frame": {"x":1191,"y":0,"w":527,"h":566},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":493,"h":387},
-	"sourceSize": {"w":493,"h":387},
+	"spriteSourceSize": {"x":0,"y":0,"w":527,"h":566},
+	"sourceSize": {"w":527,"h":566},
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
@@ -151,6 +151,6 @@
 	"format": "RGBA8888",
 	"size": {"w":2048,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:6d433349ae9c1f144873727675bc9de5:252f9024720e63fccf9fddf976f11070:ea2097ea46c26be7d61c62452cfa2479$"
+	"smartupdate": "$TexturePacker:SmartUpdate:781f416961e253e2a506147cad5672b5:c9b7c23414cfbf54a9b798cac289f63b:ea2097ea46c26be7d61c62452cfa2479$"
 }
 }

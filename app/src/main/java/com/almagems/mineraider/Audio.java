@@ -23,7 +23,7 @@ public final class Audio {
 
     // ctor
     public Audio() {
-        System.out.println("Audio ctor...");
+        //System.out.println("Audio ctor...");
     }
 
     public void setMusicVolume(float value) {
@@ -42,8 +42,7 @@ public final class Audio {
     }
 
     private void createMediaPlayer(Context context) {
-        //mediaPlayer = MediaPlayer.create(context, R.raw.darkwaryurmc_minor_key_music_box);
-        mediaPlayer = MediaPlayer.create(context, R.raw.jba_music_fastbeat);
+        mediaPlayer = MediaPlayer.create(context, R.raw.pol_better_world_short1);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
 //        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -135,6 +134,7 @@ public final class Audio {
 
         if (mediaPlayer != null) {
             musicTrackPos = mediaPlayer.getCurrentPosition();
+            mediaPlayer.reset();
             mediaPlayer.release();
             mediaPlayer = null;
         }

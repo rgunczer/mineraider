@@ -17,7 +17,7 @@ public final class Model {
 	
 	private final float[] vertexData;	
 	private final VertexArray vertexArray;
-	//private final VertexBuffer vertexBuffer;
+	//private final VertexBuffer vertexArray;
 	//private final VertexBuffer vertexArray;
 
 	private final int startVertex;
@@ -62,28 +62,31 @@ public final class Model {
 	}
 	
 	public void bindData(SingleColorShader colorProgram) {
+        //vertexArray.bind();
 		vertexArray.setVertexAttribPointer(
                 0,
-				colorProgram.getPositionAttributeLocation(), 
-				POSITION_COMPONENT_COUNT, 
-				STRIDE);
+                colorProgram.getPositionAttributeLocation(),
+                POSITION_COMPONENT_COUNT,
+                STRIDE);
 	}
 	
 	public void bindData(TextureShader textureProgram) {
+        //vertexArray.bind();
 		vertexArray.setVertexAttribPointer(
-				0, 
-				textureProgram.getPositionAttributeLocation(), 
-				POSITION_COMPONENT_COUNT, 
-				STRIDE);
+                0,
+                textureProgram.getPositionAttributeLocation(),
+                POSITION_COMPONENT_COUNT,
+                STRIDE);
 		
 		vertexArray.setVertexAttribPointer(
 				POSITION_COMPONENT_COUNT, 
 				textureProgram.getTextureAttributeLocation(), 
 				TEXTURE_COORDINATES_COMPONENT_COUNT, 
-				STRIDE);		
+				STRIDE);
 	}
 	
 	public void bindData(DirLightShader shader) {
+        //vertexArray.bind();
 		vertexArray.setVertexAttribPointer(
                 0,
                 shader.getPositionAttributeLocation(),
@@ -104,11 +107,12 @@ public final class Model {
 	}
 
 	public void bindData(PointLightShader shader) {
+        //vertexArray.bind();
 		vertexArray.setVertexAttribPointer(
-				0, 
-				shader.getPositionAttributeLocation(), 
-				POSITION_COMPONENT_COUNT, 
-				STRIDE);
+                0,
+                shader.getPositionAttributeLocation(),
+                POSITION_COMPONENT_COUNT,
+                STRIDE);
 
 		vertexArray.setVertexAttribPointer(
 				POSITION_COMPONENT_COUNT, 
@@ -124,18 +128,20 @@ public final class Model {
 	}	
 	
 	public void bindData(PixelLightShader pixelProgram) {
-		vertexArray.setVertexAttribPointer(	0, 
-											pixelProgram.getPositionAttributeLocation(), 
-											POSITION_COMPONENT_COUNT, 
-											STRIDE);
+        //vertexArray.bind();
+		vertexArray.setVertexAttribPointer(0,
+                pixelProgram.getPositionAttributeLocation(),
+                POSITION_COMPONENT_COUNT,
+                STRIDE);
 
 		vertexArray.setVertexAttribPointer(	POSITION_COMPONENT_COUNT, 
 											pixelProgram.getNormalAttributeLocation(), 
 											NORMAL_COMPONENT_COUNT, 
-											STRIDE);		
+											STRIDE);
 	}
 	
 	public void bindData(NormalColorShader shader) {
+        //vertexArray.bind();
 		final int stride = (POSITION_COMPONENT_COUNT + NORMAL_COMPONENT_COUNT) * BYTES_PER_FLOAT;
 		vertexArray.setVertexAttribPointer(	0, 
 											shader.getPositionAttributeLocation(), 
@@ -145,15 +151,11 @@ public final class Model {
 		vertexArray.setVertexAttribPointer(	POSITION_COMPONENT_COUNT, 
 											shader.getNormalAttributeLocation(), 
 											NORMAL_COMPONENT_COUNT, 
-											stride);		
+											stride);
 	}
-	
-	public void bind() {
-//        vertexArray.bind();
-	}	
-	
-	public void unbind() {
-//        vertexArray.unbind();
-	}
-	
+
+    public void unbind() {
+		//vertexArray.unbind();
+    }
+
 }

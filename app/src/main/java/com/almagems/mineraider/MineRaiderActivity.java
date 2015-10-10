@@ -16,12 +16,15 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 
 public final class MineRaiderActivity extends Activity {
+    private InterstitialAd interstitialAd;
 	private AdView adView;
 	private GLSurfaceView glSurfaceView;
 	private boolean rendererSet = false;
@@ -121,29 +124,29 @@ public final class MineRaiderActivity extends Activity {
 
         initAds();
 	}
-	
-	private void initAds() {
-		// get deviceId
-		String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+    private AdRequest createAdRequest() {
+        String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         String deviceId = md5.md5(android_id).toUpperCase();
         //System.out.println(deviceId);
 
-		//AdView adView = (AdView)findViewById(R.id.adView);
-		
-		AdRequest adRequest = new AdRequest.Builder()
-		// to show real ads comment out the next few lines
-		//.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-		//.addTestDevice("F689981D411369408E68481517CDBDF7")
-		//.addTestDevice(deviceId)
-        //.addTestDevice("6503CEAA4CF8DC33F5F88E5984BA09C7") // LG LG Optimus L3 || - 4.1.1 API 16 - 240x320
-        //.addTestDevice("5FD98F5344B72D203C178E0B2095F330") // Google Nexus 6 - 5.0.0 API 21 1440x2560
-        //.addTestDevice("D4029AFBC2B78394E46D8777362D7881") // Google Nexus S - 4.1.1 - API 16 - 480x800
-        //.addTestDevice("F3390873D15CC25BE479A1667DC09EB3") // Google Nexus 7
-        //.addTestDevice("8A424B010E21ED3F9B72CF51A03E6D00") // Note 3 emulator genymotion
-		.build();
-		
-		//adView.loadAd(adRequest);
-					
+        AdRequest adRequest = new AdRequest.Builder()
+                // to show real ads comment out the next few lines
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+//                .addTestDevice("F689981D411369408E68481517CDBDF7")
+//                .addTestDevice(deviceId)
+//                .addTestDevice("6503CEAA4CF8DC33F5F88E5984BA09C7") // LG LG Optimus L3 || - 4.1.1 API 16 - 240x320
+//                .addTestDevice("5FD98F5344B72D203C178E0B2095F330") // Google Nexus 6 - 5.0.0 API 21 1440x2560
+//                .addTestDevice("D4029AFBC2B78394E46D8777362D7881") // Google Nexus S - 4.1.1 - API 16 - 480x800
+//                .addTestDevice("F3390873D15CC25BE479A1667DC09EB3") // Google Nexus 7
+//                .addTestDevice("8A424B010E21ED3F9B72CF51A03E6D00") // Note 3 emulator genymotion
+                .build();
+
+        return adRequest;
+    }
+	
+	private void initAds() {
+        //AdView adView = (AdView)findViewById(R.id.adView);
 		adView = new AdView(this);
 		adView.setAdSize(AdSize.SMART_BANNER);
 		adView.setAdUnitId("ca-app-pub-1002179312870743/4200681514");
@@ -169,9 +172,36 @@ public final class MineRaiderActivity extends Activity {
 //            }
 //        });
 
-		adView.loadAd(adRequest);
+		adView.loadAd( createAdRequest() );
+
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId("ca-app-pub-1002179312870743/2692696712");
+
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                innerRequestNewInterstitial();
+            }
+        });
+
+        innerRequestNewInterstitial();
 	}
-	
+
+    public void requestNewInterstitial() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (interstitialAd.isLoaded()) {
+                    interstitialAd.show();
+                }
+            }
+        });
+    }
+
+    private void innerRequestNewInterstitial() {
+        interstitialAd.loadAd( createAdRequest() );
+    }
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -185,7 +215,7 @@ public final class MineRaiderActivity extends Activity {
         }
 
         Engine.savePreferences();
-        Engine.pauseAudio();
+        Engine.releaseAudio();
 	}
 
 	@Override
@@ -200,7 +230,7 @@ public final class MineRaiderActivity extends Activity {
 			glSurfaceView.onResume();
 		}
 
-        Engine.resumeAudio();
+        Engine.createAudio();
 	}
 
 }

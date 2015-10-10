@@ -211,6 +211,7 @@ public final class BatchGemDrawer {
                 graphics.pointLightShader.setUniforms();
                 model.draw();
             }
+            model.unbind();
         }
     }
 
@@ -234,6 +235,7 @@ public final class BatchGemDrawer {
                 pos.tz = temp;
             }
 
+            model.unbind();
             graphics.pointLightShader.useProgram();
         }
     }

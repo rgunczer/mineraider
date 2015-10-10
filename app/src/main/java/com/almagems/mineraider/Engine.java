@@ -248,15 +248,27 @@ public final class Engine {
         game.scoreCounter.dump();
     }
 
-    public static void pauseAudio() {
+    public static void pause() {
         if (audio != null) {
             audio.pause();
         }
     }
 
-    public static void resumeAudio() {
+    public static void resume() {
         if (audio != null) {
             audio.resume();
+        }
+    }
+
+    public static void releaseAudio() {
+        if (audio != null) {
+            audio.release();
+        }
+    }
+
+    public static void createAudio() {
+        if (audio != null) {
+            audio.create();
         }
     }
 
@@ -272,6 +284,10 @@ public final class Engine {
     public static void onSurfaceChanged(int width, int height) {
         graphics.onSurfaceChanged(width, height);
         game.onSurfaceChanged(width, height);
+    }
+
+    public static void showInterstitialAd() {
+        activity.requestNewInterstitial();
     }
 
     // input

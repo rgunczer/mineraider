@@ -127,6 +127,14 @@ public final class Audio {
     }
 
     public void pause() {
+        mediaPlayer.pause();
+    }
+
+    public void resume() {
+        mediaPlayer.start();
+    }
+
+    public void release() {
         if (soundPool != null ) {
             soundPool.release();
             soundPool = null;
@@ -140,7 +148,7 @@ public final class Audio {
         }
     }
 
-    public void resume() {
+    public void create() {
         createSoundPool(Engine.activity);
         createMediaPlayer(Engine.activity);
 

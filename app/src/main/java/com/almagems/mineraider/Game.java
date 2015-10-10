@@ -326,6 +326,7 @@ public final class Game extends Scene {
                 graphics.pointLightShader.setUniforms();
                 graphics.marker.bindData(graphics.pointLightShader);
                 graphics.marker.draw();
+                graphics.marker.unbind();
             }
 
             if (!match3.swapHintManager.isEmpty()) {
@@ -345,11 +346,13 @@ public final class Game extends Scene {
             graphics.mineCart.bindData(graphics.dirLightShader);
             cart1.drawCart();
             cart2.drawCart();
+            graphics.mineCart.unbind();
 
             graphics.dirLightShader.setTexture(Graphics.textureWheel);
             graphics.wheel.bindData(graphics.dirLightShader);
             cart1.drawWheels();
             cart2.drawWheels();
+            graphics.wheel.unbind();
 
 
             // particle system
@@ -430,6 +433,7 @@ public final class Game extends Scene {
             if (normalizedX > 0.86f) {
                 gameState = GameState.Menu;
                 menu.reset();
+                Engine.showInterstitialAd();
             } else if (normalizedX < -0.65f) {
                 //gameState = GameState.Stats;
                 //menu.reset();
@@ -831,7 +835,7 @@ public final class Game extends Scene {
 
 			z = tempZ;
 			x += 10.0f;
-		}		
+		}
 	}	
 	
 	private void drawRock(Model rock, float x, float y, float z, float degree) {
@@ -842,7 +846,8 @@ public final class Game extends Scene {
 		graphics.calcMatricesForObject(pos);
 		graphics.dirLightShader.setUniforms();
 		rock.bindData(graphics.dirLightShader);
-		rock.draw();		
+		rock.draw();
+        rock.unbind();
 	}
 
 	private void drawPickAxes() {
@@ -855,7 +860,8 @@ public final class Game extends Scene {
 		graphics.calcMatricesForObject(pos);
 		graphics.dirLightShader.setUniforms();
 		pickAxe.bindData(graphics.dirLightShader);
-		pickAxe.draw();				
+		pickAxe.draw();
+        pickAxe.unbind();
 	}
 			
 	private void drawRocks() {
@@ -941,7 +947,6 @@ public final class Game extends Scene {
         graphics.calcMatricesForObject(pos);
         graphics.dirLightShader.setUniforms();
         graphics.floor.bindData(graphics.dirLightShader);
-        graphics.floor.bind();
         graphics.floor.draw();
         graphics.floor.unbind();
     }
@@ -953,7 +958,6 @@ public final class Game extends Scene {
         graphics.calcMatricesForObject(pos);
         graphics.dirLightShader.setUniforms();
         graphics.wall.bindData(graphics.dirLightShader);
-        graphics.wall.bind();
         graphics.wall.draw();
         graphics.wall.unbind();
     }
@@ -966,6 +970,7 @@ public final class Game extends Scene {
 		graphics.dirLightShader.setUniforms();
 		graphics.soil.bindData(graphics.dirLightShader);
 		graphics.soil.draw();
+        graphics.soil.unbind();
 	}
 	
 	private void drawCrates() {
@@ -984,6 +989,7 @@ public final class Game extends Scene {
 		graphics.calcMatricesForObject(pos);
 		graphics.dirLightShader.setUniforms();
 		graphics.crate.draw();
+        graphics.crate.unbind();
 	}
 
 	private void drawBeam() {
@@ -994,6 +1000,7 @@ public final class Game extends Scene {
 		graphics.dirLightShader.setUniforms();
 		graphics.beam.bindData(graphics.dirLightShader);
 		graphics.beam.draw();
+        graphics.beam.unbind();
 	}
 	
 	private void drawPillars() {
@@ -1012,6 +1019,7 @@ public final class Game extends Scene {
 		graphics.calcMatricesForObject(pos);
 		graphics.dirLightShader.setUniforms();
 		graphics.pillar.draw();
+        graphics.pillar.unbind();
 	}
 
     public void notifyOtherMinecartToStart() {

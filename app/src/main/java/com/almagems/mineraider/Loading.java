@@ -55,6 +55,7 @@ public final class Loading extends Overlay {
             case 15:
                 graphics.releaseUnusedAssets();
                 Engine.audio.playMusic();
+                Engine.showInterstitialAd();
                 break;
         }
 

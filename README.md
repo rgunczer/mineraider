@@ -1,4 +1,4 @@
 # mineraider
 Published Match 3 Game on Android
 
-Classsical Match 3 Game written in Java using OpenGL and Box2D phyisics
+Simple Match 3 Game written in Java using OpenGL|ES 2.0 and Box2D phyisics

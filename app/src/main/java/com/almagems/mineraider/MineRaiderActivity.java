@@ -122,7 +122,7 @@ public final class MineRaiderActivity extends Activity {
             }
         });
 
-        initAds();
+        //initAds();
 	}
 
     private AdRequest createAdRequest() {
@@ -191,7 +191,7 @@ public final class MineRaiderActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (interstitialAd.isLoaded()) {
+                if (interstitialAd != null && interstitialAd.isLoaded()) {
                     interstitialAd.show();
                 }
             }
@@ -199,7 +199,9 @@ public final class MineRaiderActivity extends Activity {
     }
 
     private void innerRequestNewInterstitial() {
-        interstitialAd.loadAd( createAdRequest() );
+        if (interstitialAd != null) {
+            interstitialAd.loadAd(createAdRequest());
+        }
     }
 
 	@Override

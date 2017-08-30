@@ -1,8 +1,5 @@
 package com.almagems.mineraider;
 
-import android.util.FloatMath;
-
-	
 public final class Vector {
 
 	public float x, y, z;
@@ -34,7 +31,7 @@ public final class Vector {
 	}
 			
 	public float length() {
-		return FloatMath.sqrt(x*x + y*y + z*z);
+		return (float)Math.sqrt(x*x + y*y + z*z);
 	}
 	
 	public Vector crossProduct(Vector other) {

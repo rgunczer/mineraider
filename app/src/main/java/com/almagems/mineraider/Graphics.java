@@ -5,7 +5,6 @@ import static android.opengl.Matrix.*;
 import static com.almagems.mineraider.Constants.*;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -342,7 +341,7 @@ public final class Graphics {
         return texture.id;
     }
 
-    @Nullable
+
     public Texture getTextureObj(int textureId) {
         Texture texture;
         int size = textures.size();

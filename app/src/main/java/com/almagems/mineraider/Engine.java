@@ -287,7 +287,7 @@ public final class Engine {
     }
 
     public static void showInterstitialAd() {
-        activity.requestNewInterstitial();
+
     }
 
     // input

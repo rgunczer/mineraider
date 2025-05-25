@@ -9,6 +9,8 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
 import android.widget.Toast;
 
+import com.almagems.mineraider.activity.MineRaiderActivity;
+
 
 public final class MineRaiderRenderer implements Renderer {
 

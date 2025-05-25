@@ -5,6 +5,8 @@ import static com.almagems.mineraider.Constants.*;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.almagems.mineraider.activity.MineRaiderActivity;
+
 
 public final class Engine {
 

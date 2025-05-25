@@ -1,5 +1,7 @@
 package com.almagems.mineraider;
 
+import com.almagems.mineraider.effect.EffectAnim;
+
 public class LeftRight extends EffectAnim {
 
     private float dy = 0.02f;

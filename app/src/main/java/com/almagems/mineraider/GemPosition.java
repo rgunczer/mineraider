@@ -2,6 +2,8 @@ package com.almagems.mineraider;
 
 import static com.almagems.mineraider.Constants.*;
 
+import com.almagems.mineraider.math.Sphere;
+
 
 public final class GemPosition {
 

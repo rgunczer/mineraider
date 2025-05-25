@@ -1,6 +1,12 @@
 package com.almagems.mineraider;
 
 
+import com.almagems.mineraider.effect.UpDown;
+import com.almagems.mineraider.effect.WahWah;
+import com.almagems.mineraider.effect.ZigZag;
+import com.almagems.mineraider.graphics.Quad;
+import com.almagems.mineraider.math.Rectangle;
+
 public final class HUD {
 
     public static Graphics graphics;

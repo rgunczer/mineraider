@@ -1,5 +1,7 @@
 package com.almagems.mineraider;
 
+import com.almagems.mineraider.math.Vector;
+
 public final class TexturedQuad {
     public char ch;
 

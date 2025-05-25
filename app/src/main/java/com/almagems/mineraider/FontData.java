@@ -1,5 +1,7 @@
 package com.almagems.mineraider;
 
+import com.almagems.mineraider.math.Rectangle;
+
 public final class FontData {
     public char ch;
     public Rectangle rect;

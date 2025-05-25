@@ -3,6 +3,8 @@ package com.almagems.mineraider;
 import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 
+import com.almagems.mineraider.graphics.VertexArray;
+
 
 public final class EdgeDrawer {
 	private static final int POSITION_COMPONENT_COUNT = 3;	
@@ -10,7 +12,7 @@ public final class EdgeDrawer {
 	private static final int STRIDE = TOTAL_COMPONENT_COUNT * BYTES_PER_FLOAT;
 	
 	private final float[] particles;
-	private final VertexArray vertexArray;	
+	private final VertexArray vertexArray;
 	
 	private int index;
 	private int lineCount;

@@ -2,6 +2,10 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 
+import com.almagems.mineraider.graphics.Overlay;
+import com.almagems.mineraider.graphics.Quad;
+import com.almagems.mineraider.math.Rectangle;
+
 
 public final class Loading extends Overlay {
 

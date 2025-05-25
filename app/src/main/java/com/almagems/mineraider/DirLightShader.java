@@ -3,6 +3,8 @@ package com.almagems.mineraider;
 import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.BYTES_PER_FLOAT;
 
+import com.almagems.mineraider.graphics.VertexArray;
+
 
 public final class DirLightShader extends BaseShader {
 	// uniform locations

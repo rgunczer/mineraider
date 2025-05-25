@@ -15,7 +15,7 @@
         android:theme="@android:style/Theme.NoTitleBar">
 
         <activity
-            android:name="com.almagems.mineraider.MineRaiderActivity"
+            android:name="com.almagems.mineraider.activity.MineRaiderActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:exported="true">
             <intent-filter>

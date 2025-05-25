@@ -8,3 +8,7 @@ local.properties
 # Build artifacts
 /app/build/
 /.gradle/
+
+build
+
+*.obj

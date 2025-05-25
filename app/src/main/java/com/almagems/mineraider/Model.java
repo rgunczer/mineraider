@@ -4,6 +4,9 @@ import static android.opengl.GLES20.*;
 
 import static com.almagems.mineraider.Constants.*;
 
+import com.almagems.mineraider.graphics.Vertex;
+import com.almagems.mineraider.graphics.VertexArray;
+
 
 public final class Model {
 

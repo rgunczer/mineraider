@@ -3,6 +3,8 @@ package com.almagems.mineraider;
 import static android.opengl.GLES20.*;
 import static com.almagems.mineraider.Constants.*;
 
+import com.almagems.mineraider.graphics.VertexArray;
+
 
 public final class SingleColorShader extends BaseShader {
     private static final int POSITION_COMPONENT_COUNT = 3;

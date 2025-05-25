@@ -2,6 +2,9 @@ package com.almagems.mineraider;
 
 import static com.almagems.mineraider.Constants.*;
 
+import com.almagems.mineraider.particle_system.ParticleManager;
+import com.almagems.mineraider.util.MyUtils;
+
 import java.util.ArrayList;
 
 
@@ -80,7 +83,7 @@ public final class PopAnimation extends BaseAnimation {
         float d = Constants.GEM_FRAGMENT_SIZE;
         float tx = d / 2f;
         float ty = d / 2f;
-        float degree = (float)MyUtils.rand.nextInt(360);
+        float degree = (float) MyUtils.rand.nextInt(360);
         float theta = (float)Math.toRadians(degree);
         float s = (float)Math.sin(theta);
         float c = (float)Math.cos(theta);

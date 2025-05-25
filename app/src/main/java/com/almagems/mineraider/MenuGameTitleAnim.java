@@ -1,6 +1,9 @@
 package com.almagems.mineraider;
 
 
+import com.almagems.mineraider.graphics.Quad;
+import com.almagems.mineraider.math.Rectangle;
+
 public final class MenuGameTitleAnim {
 
     private final Quad imageMine;

@@ -2,6 +2,8 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 
+import com.almagems.mineraider.math.Vector;
+
 public final class PixelLightShader extends BaseShader {
 
 	// uniform locations [vertex shader]

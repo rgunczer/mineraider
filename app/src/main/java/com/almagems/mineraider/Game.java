@@ -17,6 +17,17 @@ import org.jbox2d.dynamics.Fixture;
 // mine
 import static com.almagems.mineraider.Constants.*;
 
+import com.almagems.mineraider.effect.EffectAnim;
+import com.almagems.mineraider.graphics.Overlay;
+import com.almagems.mineraider.graphics.Quad;
+import com.almagems.mineraider.math.Ray;
+import com.almagems.mineraider.menu.Menu;
+import com.almagems.mineraider.menu.MenuGroup;
+import com.almagems.mineraider.menu.MenuImage;
+import com.almagems.mineraider.menu.MenuItem;
+import com.almagems.mineraider.stats.StatSectionBase;
+import com.almagems.mineraider.stats.Stats;
+
 
 public final class Game extends Scene {
 

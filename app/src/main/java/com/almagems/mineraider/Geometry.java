@@ -2,6 +2,11 @@ package com.almagems.mineraider;
 
 import static android.opengl.Matrix.*;
 
+import com.almagems.mineraider.math.Plane;
+import com.almagems.mineraider.math.Ray;
+import com.almagems.mineraider.math.Sphere;
+import com.almagems.mineraider.math.Vector;
+
 public final class Geometry {
 
     private static final Vector rayToPlaneVector = new Vector();

@@ -2,6 +2,8 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 
+import com.almagems.mineraider.graphics.VertexArray;
+
 
 public final class SingleColoredQuad {
     public static Graphics graphics;

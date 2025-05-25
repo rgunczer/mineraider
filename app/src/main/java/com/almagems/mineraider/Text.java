@@ -2,6 +2,9 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 
+import com.almagems.mineraider.effect.EffectAnim;
+import com.almagems.mineraider.graphics.VertexArray;
+
 public final class Text {
 
     public float posYorigin;

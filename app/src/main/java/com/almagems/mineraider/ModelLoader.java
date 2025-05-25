@@ -1,5 +1,8 @@
 package com.almagems.mineraider;
 
+import com.almagems.mineraider.graphics.Vertex;
+import com.almagems.mineraider.math.Vector;
+
 import java.util.ArrayList;
 
 

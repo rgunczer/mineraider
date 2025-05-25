@@ -1,5 +1,7 @@
 package com.almagems.mineraider;
 
+import com.almagems.mineraider.math.Rectangle;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 

@@ -2,6 +2,8 @@ package com.almagems.mineraider;
 
 import static android.opengl.GLES20.*;
 
+import com.almagems.mineraider.util.MyUtils;
+
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;

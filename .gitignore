@@ -1,4 +1,10 @@
-app/build/*
-.idea/*
-build/*
-.gradle/
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# Local SDK config
+local.properties
+
+# Build artifacts
+/app/build/
+/.gradle/

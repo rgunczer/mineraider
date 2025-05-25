@@ -68,9 +68,9 @@ public final class Menu extends Overlay {
         final boolean flipUTextureCoordinate = false;
         Rectangle rect;
         float aspect = Graphics.aspectRatio;
-        sc = 1.76f;
+        sc = 1.9f;
         float itemY = aspect * 0.18f;
-        float itemYStep = 0.4f;
+        float itemYStep = 0.5f;
 
         Texture textureObj = graphics.getTextureObj(Graphics.textureMenuItems);
 
